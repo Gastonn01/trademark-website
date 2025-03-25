@@ -1,0 +1,856 @@
+"use client"
+
+import type React from "react"
+
+import { Suspense } from "react"
+import { useState, useEffect } from "react"
+import { useSearchParams } from "next/navigation"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Textarea } from "@/components/ui/textarea"
+import { Badge } from "@/components/ui/badge"
+import { CountrySelectCard } from "@/components/country-select-card"
+import Image from "next/image"
+import { Upload, ChevronDown, ChevronUp } from "lucide-react"
+import { loadStripe } from "@stripe/stripe-js"
+import { Elements } from "@stripe/react-stripe-js"
+import { PaymentForm } from "@/components/payment-form"
+import { TrademarkClassesDialog } from "@/components/trademark-classes-dialog"
+import { useRouter } from "next/navigation"
+import { useMemo } from "react"
+
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
+
+interface FormData {
+  trademarkType: string
+  trademarkName: string
+  logo?: File
+  goodsAndServices: string
+  countries: CountrySelection[]
+  selectedClasses: number[]
+  name: string
+  surname: string
+  email: string
+  phone: string
+  marketing: boolean
+}
+
+interface CountrySelection {
+  name: string
+  classes: number
+}
+
+interface CountryData {
+  name: string
+  flag: string
+  price: number
+  additionalClassPrice: number
+}
+
+interface RegionData {
+  name: string
+  countries: CountryData[]
+}
+
+const topCountries: CountryData[] = [
+  { name: "European Union", flag: "eu", price: 1310, additionalClassPrice: 425 },
+  { name: "United States", flag: "us", price: 749, additionalClassPrice: 499 },
+  { name: "Germany", flag: "de", price: 750, additionalClassPrice: 500 },
+  { name: "Spain", flag: "es", price: 490, additionalClassPrice: 385 },
+  { name: "United Kingdom", flag: "gb", price: 790, additionalClassPrice: 300 },
+  { name: "China", flag: "cn", price: 590, additionalClassPrice: 550 },
+]
+
+const regions: RegionData[] = [
+  {
+    name: "North America",
+    countries: [
+      { name: "United States", flag: "us", price: 749, additionalClassPrice: 499 },
+      { name: "Canada", flag: "ca", price: 199, additionalClassPrice: 100 },
+      { name: "Mexico", flag: "mx", price: 540, additionalClassPrice: 270 },
+    ],
+  },
+  {
+    name: "Europe",
+    countries: [
+      { name: "European Union", flag: "eu", price: 1310, additionalClassPrice: 425 },
+      { name: "Spain", flag: "es", price: 490, additionalClassPrice: 385 },
+      { name: "France", flag: "fr", price: 580, additionalClassPrice: 190 },
+      { name: "United Kingdom", flag: "gb", price: 790, additionalClassPrice: 300 },
+      { name: "Italy", flag: "it", price: 680, additionalClassPrice: 180 },
+      { name: "Benelux", flag: "be", price: 690, additionalClassPrice: 190 },
+      { name: "Portugal", flag: "pt", price: 500, additionalClassPrice: 265 },
+      { name: "Germany", flag: "de", price: 750, additionalClassPrice: 500 },
+      { name: "Greece", flag: "gr", price: 640, additionalClassPrice: 570 },
+      { name: "Malta", flag: "mt", price: 500, additionalClassPrice: 500 },
+      { name: "Bosnia and Herzegovina", flag: "ba", price: 570, additionalClassPrice: 170 },
+    ],
+  },
+  {
+    name: "South America",
+    countries: [
+      { name: "Argentina", flag: "ar", price: 400, additionalClassPrice: 350 },
+      { name: "Bolivia", flag: "bo", price: 675, additionalClassPrice: 585 },
+      { name: "Brazil", flag: "br", price: 499, additionalClassPrice: 418 },
+      { name: "Chile", flag: "cl", price: 599, additionalClassPrice: 499 },
+      { name: "Colombia", flag: "co", price: 690, additionalClassPrice: 490 },
+      { name: "Ecuador", flag: "ec", price: 549, additionalClassPrice: 549 },
+      { name: "Paraguay", flag: "py", price: 399, additionalClassPrice: 399 },
+      { name: "Peru", flag: "pe", price: 580, additionalClassPrice: 570 },
+      { name: "Uruguay", flag: "uy", price: 479, additionalClassPrice: 299 },
+      { name: "Venezuela", flag: "ve", price: 510, additionalClassPrice: 510 },
+    ],
+  },
+  {
+    name: "Central America and Caribbean",
+    countries: [
+      { name: "Anguilla", flag: "ai", price: 880, additionalClassPrice: 430 },
+      { name: "Antigua and Barbuda", flag: "ag", price: 660, additionalClassPrice: 330 },
+      { name: "Aruba", flag: "aw", price: 820, additionalClassPrice: 170 },
+      { name: "Bahamas", flag: "bs", price: 935, additionalClassPrice: 935 },
+      { name: "Barbados", flag: "bb", price: 1150, additionalClassPrice: 1150 },
+      { name: "Belize", flag: "bz", price: 795, additionalClassPrice: 795 },
+      { name: "Bermuda", flag: "bm", price: 1539, additionalClassPrice: 1539 },
+      { name: "BES Islands", flag: "bq", price: 760, additionalClassPrice: 199 },
+      { name: "British Virgin Islands", flag: "vg", price: 870, additionalClassPrice: 480 },
+      { name: "Cayman Islands", flag: "ky", price: 1080, additionalClassPrice: 350 },
+      { name: "Costa Rica", flag: "cr", price: 460, additionalClassPrice: 299 },
+      { name: "Cuba", flag: "cu", price: 1100, additionalClassPrice: 730 },
+      { name: "Curacao", flag: "cw", price: 1050, additionalClassPrice: 200 },
+      { name: "Dominica", flag: "dm", price: 890, additionalClassPrice: 530 },
+      { name: "Dominican Republic", flag: "do", price: 540, additionalClassPrice: 420 },
+      { name: "El Salvador", flag: "sv", price: 495, additionalClassPrice: 495 },
+      { name: "Grenada", flag: "gd", price: 995, additionalClassPrice: 280 },
+      { name: "Guatemala", flag: "gt", price: 520, additionalClassPrice: 520 },
+      { name: "Guyana", flag: "gy", price: 490, additionalClassPrice: 210 },
+      { name: "Haiti", flag: "ht", price: 640, additionalClassPrice: 430 },
+      { name: "Honduras", flag: "hn", price: 595, additionalClassPrice: 595 },
+      { name: "Jamaica", flag: "jm", price: 1070, additionalClassPrice: 355 },
+      { name: "Montserrat", flag: "ms", price: 645, additionalClassPrice: 315 },
+      { name: "Nicaragua", flag: "ni", price: 540, additionalClassPrice: 299 },
+      { name: "Panama", flag: "pa", price: 540, additionalClassPrice: 440 },
+      { name: "Puerto Rico", flag: "pr", price: 710, additionalClassPrice: 680 },
+      { name: "Saint Kitts and Nevis", flag: "kn", price: 930, additionalClassPrice: 390 },
+      { name: "Saint Lucia", flag: "lc", price: 890, additionalClassPrice: 390 },
+      { name: "Saint Vincent and the Grenadines", flag: "vc", price: 570, additionalClassPrice: 570 },
+      { name: "Sint Maarten", flag: "sx", price: 1090, additionalClassPrice: 200 },
+      { name: "Suriname", flag: "sr", price: 760, additionalClassPrice: 160 },
+      { name: "Trinidad and Tobago", flag: "tt", price: 720, additionalClassPrice: 250 },
+      { name: "Turks and Caicos Islands", flag: "tc", price: 1850, additionalClassPrice: 1850 },
+    ],
+  },
+  {
+    name: "Africa",
+    countries: [
+      { name: "Algeria", flag: "dz", price: 990, additionalClassPrice: 300 },
+      { name: "Angola", flag: "ao", price: 1050, additionalClassPrice: 1050 },
+      { name: "ARIPO", flag: "aripo", price: 3150, additionalClassPrice: 3150 },
+      { name: "Botswana", flag: "bw", price: 1090, additionalClassPrice: 1090 },
+      { name: "Burundi", flag: "bi", price: 1550, additionalClassPrice: 1550 },
+      { name: "Djibouti", flag: "dj", price: 2050, additionalClassPrice: 2050 },
+      { name: "Egypt", flag: "eg", price: 765, additionalClassPrice: 765 },
+      { name: "Ethiopia", flag: "et", price: 1290, additionalClassPrice: 1290 },
+      { name: "Gambia", flag: "gm", price: 1350, additionalClassPrice: 1350 },
+      { name: "Ghana", flag: "gh", price: 1499, additionalClassPrice: 1499 },
+      { name: "Kenya", flag: "ke", price: 1600, additionalClassPrice: 1600 },
+      { name: "Libya", flag: "ly", price: 1100, additionalClassPrice: 1100 },
+      { name: "Madagascar", flag: "mg", price: 1050, additionalClassPrice: 1050 },
+      { name: "Morocco", flag: "ma", price: 1050, additionalClassPrice: 300 },
+      { name: "Mauritania", flag: "mr", price: 1190, additionalClassPrice: 1190 },
+      { name: "Mozambique", flag: "mz", price: 1050, additionalClassPrice: 1050 },
+      { name: "Namibia", flag: "na", price: 1100, additionalClassPrice: 1100 },
+      { name: "Nigeria", flag: "ng", price: 1150, additionalClassPrice: 1150 },
+      { name: "OAPI", flag: "oapi", price: 1690, additionalClassPrice: 1690 },
+      { name: "DR Congo", flag: "cd", price: 1199, additionalClassPrice: 1199 },
+      { name: "Rwanda", flag: "rw", price: 1350, additionalClassPrice: 1350 },
+      { name: "Seychelles", flag: "sc", price: 1150, additionalClassPrice: 1150 },
+      { name: "South Africa", flag: "za", price: 1110, additionalClassPrice: 1110 },
+      { name: "Sudan", flag: "sd", price: 1050, additionalClassPrice: 1050 },
+      { name: "Tanzania (TANU)", flag: "tz", price: 1000, additionalClassPrice: 1000 },
+      { name: "Tanzania (ZAN)", flag: "tz", price: 1050, additionalClassPrice: 1050 },
+      { name: "Tunisia", flag: "tn", price: 990, additionalClassPrice: 200 },
+      { name: "Uganda", flag: "ug", price: 1850, additionalClassPrice: 1850 },
+      { name: "Zambia", flag: "zm", price: 1299, additionalClassPrice: 1299 },
+      { name: "Zimbabwe", flag: "zw", price: 1350, additionalClassPrice: 1350 },
+    ],
+  },
+  {
+    name: "Asia and Middle East",
+    countries: [
+      { name: "Afghanistan", flag: "af", price: 1090, additionalClassPrice: 1090 },
+      { name: "Saudi Arabia", flag: "sa", price: 2450, additionalClassPrice: 2450 },
+      { name: "Armenia", flag: "am", price: 1300, additionalClassPrice: 1300 },
+      { name: "Azerbaijan", flag: "az", price: 870, additionalClassPrice: 470 },
+      { name: "Bahrain", flag: "bh", price: 2620, additionalClassPrice: 2620 },
+      { name: "Bangladesh", flag: "bd", price: 775, additionalClassPrice: 775 },
+      { name: "Bhutan", flag: "bt", price: 600, additionalClassPrice: 380 },
+      { name: "Brunei", flag: "bn", price: 750, additionalClassPrice: 750 },
+      { name: "Cambodia", flag: "kh", price: 629, additionalClassPrice: 629 },
+      { name: "China", flag: "cn", price: 450, additionalClassPrice: 450 },
+      { name: "Hong Kong", flag: "hk", price: 850, additionalClassPrice: 490 },
+      { name: "India", flag: "in", price: 575, additionalClassPrice: 450 },
+      { name: "Indonesia", flag: "id", price: 990, additionalClassPrice: 950 },
+      { name: "Iran", flag: "ir", price: 1500, additionalClassPrice: 490 },
+      { name: "Iraq (Baghdad)", flag: "iq", price: 1510, additionalClassPrice: 300 },
+      { name: "Iraq (Kurdistan)", flag: "iq", price: 1749, additionalClassPrice: 1749 },
+      { name: "Japan", flag: "jp", price: 675, additionalClassPrice: 500 },
+      { name: "Jordan", flag: "jo", price: 1300, additionalClassPrice: 1300 },
+      { name: "Kazakhstan", flag: "kz", price: 800, additionalClassPrice: 430 },
+      { name: "Kyrgyzstan", flag: "kg", price: 740, additionalClassPrice: 520 },
+      { name: "South Korea", flag: "kr", price: 699, additionalClassPrice: 600 },
+      { name: "Kuwait", flag: "kw", price: 1820, additionalClassPrice: 1820 },
+      { name: "Laos", flag: "la", price: 640, additionalClassPrice: 640 },
+      { name: "Lebanon", flag: "lb", price: 880, additionalClassPrice: 470 },
+      { name: "Macao", flag: "mo", price: 770, additionalClassPrice: 770 },
+      { name: "Malaysia", flag: "my", price: 1150, additionalClassPrice: 970 },
+      { name: "Maldives", flag: "mv", price: 890, additionalClassPrice: 490 },
+      { name: "Mongolia", flag: "mn", price: 680, additionalClassPrice: 480 },
+      { name: "Myanmar", flag: "mm", price: 630, additionalClassPrice: 520 },
+      { name: "Nepal", flag: "np", price: 630, additionalClassPrice: 630 },
+      { name: "North Korea", flag: "kp", price: 1350, additionalClassPrice: 570 },
+      { name: "Oman", flag: "om", price: 1430, additionalClassPrice: 1430 },
+      { name: "Pakistan", flag: "pk", price: 750, additionalClassPrice: 690 },
+      { name: "Palestine (Gaza)", flag: "ps", price: 880, additionalClassPrice: 880 },
+      { name: "Palestine (West Bank)", flag: "ps", price: 840, additionalClassPrice: 840 },
+      { name: "Philippines", flag: "ph", price: 650, additionalClassPrice: 530 },
+      { name: "Qatar", flag: "qa", price: 2180, additionalClassPrice: 2180 },
+      { name: "Singapore", flag: "sg", price: 890, additionalClassPrice: 750 },
+      { name: "Syria", flag: "sy", price: 1750, additionalClassPrice: 1750 },
+      { name: "Sri Lanka", flag: "lk", price: 595, additionalClassPrice: 595 },
+      { name: "Taiwan", flag: "tw", price: 710, additionalClassPrice: 710 },
+      { name: "Tajikistan", flag: "tj", price: 1749, additionalClassPrice: 1749 },
+      { name: "Thailand", flag: "th", price: 1200, additionalClassPrice: 1000 },
+      { name: "Turkey", flag: "tr", price: 560, additionalClassPrice: 265 },
+      { name: "Turkmenistan", flag: "tm", price: 995, additionalClassPrice: 545 },
+      { name: "United Arab Emirates", flag: "ae", price: 2600, additionalClassPrice: 2475 },
+      { name: "Uzbekistan", flag: "uz", price: 1340, additionalClassPrice: 590 },
+      { name: "Vietnam", flag: "vn", price: 500, additionalClassPrice: 500 },
+      { name: "Yemen", flag: "ye", price: 1600, additionalClassPrice: 1600 },
+    ],
+  },
+  {
+    name: "Oceania",
+    countries: [
+      { name: "Papua New Guinea", flag: "pg", price: 930, additionalClassPrice: 780 },
+      { name: "Tonga", flag: "to", price: 1700, additionalClassPrice: 1550 },
+      { name: "Fiji", flag: "fj", price: 1850, additionalClassPrice: 1750 },
+    ],
+  },
+]
+
+const trademarkClasses = Array.from({ length: 45 }, (_, i) => i + 1)
+
+const VerificationFormContent = () => {
+  const [step, setStep] = useState(1)
+  const totalSteps = 5
+  const [formData, setFormData] = useState<FormData>({
+    trademarkType: "",
+    trademarkName: "",
+    goodsAndServices: "",
+    countries: [],
+    selectedClasses: [],
+    name: "",
+    surname: "",
+    email: "",
+    phone: "",
+    marketing: false,
+  })
+
+  const searchParams = useSearchParams()
+  const [selectedCountries, setSelectedCountries] = useState<CountrySelection[]>([])
+  const [searchTerm, setSearchTerm] = useState("")
+  const [expandedRegions, setExpandedRegions] = useState<string[]>([])
+  const [clientSecret, setClientSecret] = useState<string | null>(null)
+  const router = useRouter()
+  const [files, setFiles] = useState<File[]>([])
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const searchId = searchParams.get("search_id")
+
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [step])
+
+  useEffect(() => {
+    const countriesParam = searchParams.get("countries")
+    if (countriesParam) {
+      try {
+        const parsedCountries = JSON.parse(decodeURIComponent(countriesParam))
+        const initialSelectedCountries = parsedCountries.map((countryName: string) => ({
+          name: countryName,
+          classes: 1,
+        }))
+        setSelectedCountries(initialSelectedCountries)
+        setFormData((prev) => ({ ...prev, countries: initialSelectedCountries }))
+      } catch (error) {
+        console.error("Error parsing countries from URL:", error)
+      }
+    }
+    if (searchId) {
+      fetch(`/api/submit-free-search?search_id=${searchId}`)
+        .then((response) => response.json())
+        .then((data) => {
+          setFormData((prevData) => ({
+            ...prevData,
+            ...data,
+            countries: data.countries ? JSON.parse(data.countries) : [],
+            selectedClasses: data.selectedClasses ? JSON.parse(data.selectedClasses) : [],
+          }))
+          setSelectedCountries(
+            data.countries ? JSON.parse(data.countries).map((country: string) => ({ name: country, classes: 1 })) : [],
+          )
+        })
+        .catch((error) => console.error("Error fetching search results:", error))
+    }
+  }, [searchId, searchParams])
+
+  const toggleCountry = (country: string) => {
+    setSelectedCountries((prev) => {
+      const isSelected = prev.some((c) => c.name === country)
+      if (isSelected) {
+        const newSelection = prev.filter((c) => c.name !== country)
+        setFormData((prevData) => ({ ...prevData, countries: newSelection }))
+        return newSelection
+      }
+      const newSelection = [...prev, { name: country, classes: Math.max(1, formData.selectedClasses.length) }]
+      setFormData((prevData) => ({ ...prevData, countries: newSelection }))
+      return newSelection
+    })
+  }
+
+  const totalPrice = useMemo(() => {
+    return selectedCountries.reduce((sum, country) => {
+      const countryData = [...topCountries, ...regions.flatMap((r) => r.countries)].find((c) => c.name === country.name)
+      if (!countryData) return sum
+      const basePrice = countryData.price
+      const additionalClassesPrice =
+        (Math.max(1, formData.selectedClasses.length) - 1) * countryData.additionalClassPrice
+      return sum + basePrice + additionalClassesPrice
+    }, 0)
+  }, [selectedCountries, formData.selectedClasses])
+
+  useEffect(() => {
+    if (step === 5 && totalPrice > 0) {
+      fetch("/api/create-payment-intent", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount: totalPrice }),
+      })
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error("Network response was not ok")
+          }
+          return res.json()
+        })
+        .then((data) => {
+          if (data.clientSecret) {
+            setClientSecret(data.clientSecret)
+          } else {
+            throw new Error("No client secret received")
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error)
+          setErrorMessage("Failed to initialize payment. Please try again.")
+        })
+    }
+  }, [step, totalPrice])
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const nonEmptyFiles = Array.from(e.target.files).filter((file) => file.size > 0)
+      setFiles(nonEmptyFiles)
+    }
+  }
+
+  const filteredRegions = useMemo(() => {
+    return regions
+      .map((region) => ({
+        ...region,
+        countries: region.countries.filter((country) => country.name.toLowerCase().includes(searchTerm.toLowerCase())),
+      }))
+      .filter((region) => region.countries.length > 0)
+  }, [searchTerm])
+
+  const filteredTopCountries = useMemo(() => {
+    return topCountries.filter((country) => country.name.toLowerCase().includes(searchTerm.toLowerCase()))
+  }, [searchTerm])
+
+  const toggleRegion = (regionName: string, event: React.MouseEvent) => {
+    event.preventDefault() // Previene la propagación del evento
+    setExpandedRegions((prev) =>
+      prev.includes(regionName) ? prev.filter((r) => r !== regionName) : [...prev, regionName],
+    )
+  }
+
+  const renderNavigationButtons = (nextStep: number, isNextDisabled: boolean) => (
+    <div className="flex justify-between mt-8">
+      {step > 1 && (
+        <Button variant="outline" onClick={() => setStep(step - 1)} className="px-4 py-2">
+          Back
+        </Button>
+      )}
+      <div className="flex-grow"></div>
+      <Button
+        className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white"
+        onClick={() => setStep(nextStep)}
+        disabled={isNextDisabled}
+      >
+        Continue
+      </Button>
+    </div>
+  )
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    const formDataToSend = new FormData()
+    formDataToSend.append("formType", "verification")
+
+    // Añadir todos los campos del formulario a formData
+    Object.entries(formData).forEach(([key, value]) => {
+      if (typeof value === "string" || value instanceof Blob) {
+        formDataToSend.append(key, value)
+      } else if (Array.isArray(value)) {
+        value.forEach((item, index) => {
+          formDataToSend.append(`${key}[${index}]`, JSON.stringify(item))
+        })
+      } else if (typeof value === "object" && value !== null) {
+        formDataToSend.append(key, JSON.stringify(value))
+      }
+    })
+
+    // Añadir archivos no vacíos
+    files.forEach((file) => {
+      if (file.size > 0) {
+        formDataToSend.append("files", file)
+      }
+    })
+
+    try {
+      const response = await fetch("/api/submit-form", {
+        method: "POST",
+        body: formDataToSend,
+      })
+
+      if (response.ok) {
+        router.push("/thank-you")
+      } else {
+        console.error("Error al enviar el formulario")
+      }
+    } catch (error) {
+      console.error("Error:", error)
+    }
+  }
+
+  const handleClassesChange = (classes: number[]) => {
+    setFormData((prev) => ({
+      ...prev,
+      selectedClasses: classes,
+      countries: prev.countries.map((country) => ({
+        ...country,
+        classes: Math.max(1, classes.length),
+      })),
+    }))
+  }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <div id="verification-form" className="max-w-6xl mx-auto px-4 pt-24 pb-12 scroll-mt-16">
+        <div className="grid lg:grid-cols-7 gap-12">
+          <div className="lg:col-span-5">
+            <div className="mb-8">
+              <h1 className="text-4xl font-bold mb-4 text-indigo-700">Protect Your Brand</h1>
+              <p className="text-lg text-gray-600">Start your trademark journey in just a few steps.</p>
+              <p className="text-lg text-gray-600 mb-8">
+                Fill out this simple form to get your free trademark search and expert assessment within 24 hours.
+              </p>
+            </div>
+
+            {/* Progress bar */}
+            <div className="mb-12">
+              <div className="flex justify-between mb-2">
+                {["Trademark Details", "Countries", "Classes", "Contact Info", "Payment"].map((label, index) => (
+                  <span
+                    key={label}
+                    className={`text-sm font-medium ${step > index ? "text-indigo-600" : "text-gray-500"}`}
+                  >
+                    {label}
+                  </span>
+                ))}
+              </div>
+              <div className="h-2 bg-gray-200 rounded-full">
+                <div
+                  className="h-full bg-indigo-600 rounded-full transition-all duration-300 ease-in-out"
+                  style={{ width: `${(step / totalSteps) * 100}%` }}
+                ></div>
+              </div>
+            </div>
+
+            {step === 1 && (
+              <div className="space-y-8">
+                <div>
+                  <h2 className="text-2xl font-semibold mb-4 text-indigo-700">What type of trademark do you have?</h2>
+                  <RadioGroup
+                    value={formData.trademarkType}
+                    onValueChange={(value) => setFormData((prev) => ({ ...prev, trademarkType: value }))}
+                    className="space-y-4"
+                  >
+                    {[
+                      {
+                        value: "word",
+                        label: "Word Mark",
+                        description: "Text-based trademark (e.g., brand name)",
+                        icon: "A",
+                      },
+                      {
+                        value: "logo",
+                        label: "Logo Mark",
+                        description: "Visual trademark with or without text",
+                        icon: "🖼️",
+                      },
+                      {
+                        value: "figurative",
+                        label: "Figurative Mark",
+                        description: "Stylized design or symbol",
+                        icon: "✨",
+                      },
+                    ].map((option) => (
+                      <div
+                        key={option.value}
+                        className="flex items-center space-x-3 border rounded-lg p-4 hover:bg-indigo-50 transition-colors"
+                      >
+                        <RadioGroupItem value={option.value} id={option.value} />
+                        <Label htmlFor={option.value} className="flex items-center gap-4 cursor-pointer flex-1">
+                          <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-2xl">
+                            {option.icon}
+                          </div>
+                          <div>
+                            <div className="font-medium">{option.label}</div>
+                            <div className="text-sm text-gray-600">{option.description}</div>
+                          </div>
+                        </Label>
+                      </div>
+                    ))}
+                  </RadioGroup>
+                </div>
+
+                {(formData.trademarkType === "word" || formData.trademarkType === "logo") && (
+                  <div>
+                    <Label htmlFor="trademarkName" className="block text-lg font-medium text-gray-700 mb-2">
+                      What's your trademark name?
+                    </Label>
+                    <Input
+                      id="trademarkName"
+                      value={formData.trademarkName}
+                      onChange={(e) => setFormData((prev) => ({ ...prev, trademarkName: e.target.value }))}
+                      placeholder="Enter your trademark name"
+                      className="w-full text-lg p-3"
+                    />
+                  </div>
+                )}
+
+                {(formData.trademarkType === "logo" || formData.trademarkType === "figurative") && (
+                  <div>
+                    <h3 className="text-lg font-semibold mb-4 text-indigo-700">Upload your logo</h3>
+                    <div className="border-2 border-dashed border-indigo-300 rounded-lg p-8 text-center hover:border-indigo-500 transition-colors">
+                      <Upload className="mx-auto h-12 w-12 text-indigo-400 mb-4" />
+                      <div className="text-indigo-600 font-medium mb-2">Click to upload or drag and drop</div>
+                      <div className="text-sm text-gray-500">PNG, JPG, SVG or GIF (max. 5 MB)</div>
+                      <input type="file" className="hidden" accept="image/*" onChange={handleFileUpload} />
+                      <Button
+                        onClick={(e) => {
+                          e.preventDefault()
+                          ;(document.querySelector('input[type="file"]') as HTMLInputElement)?.click()
+                        }}
+                        variant="outline"
+                        className="mt-4"
+                        type="button"
+                      >
+                        Select File
+                      </Button>
+                    </div>
+                  </div>
+                )}
+                {(formData.trademarkType === "logo" || formData.trademarkType === "figurative") &&
+                  files.length === 0 && (
+                    <div className="text-red-500 mt-2 text-sm">Please upload your logo to continue</div>
+                  )}
+
+                <div>
+                  <Label htmlFor="goodsAndServices" className="block text-lg font-medium text-gray-700 mb-2">
+                    Describe your goods and services
+                  </Label>
+                  <Textarea
+                    id="goodssservices"
+                    value={formData.goodsAndServices}
+                    onChange={(e) => setFormData((prev) => ({ ...prev, goodsAndServices: e.target.value }))}
+                    placeholder="e.g., Clothing, namely shirts, pants, and hats"
+                    className="w-full text-lg p-3"
+                    rows={4}
+                  />
+                </div>
+
+                {renderNavigationButtons(
+                  2,
+                  !formData.trademarkType ||
+                    !formData.goodsAndServices ||
+                    (formData.trademarkType !== "figurative" && !formData.trademarkName) ||
+                    ((formData.trademarkType === "logo" || formData.trademarkType === "figurative") &&
+                      files.length === 0),
+                )}
+              </div>
+            )}
+
+            {step === 2 && (
+              <div className="space-y-8">
+                <h2 className="text-2xl font-semibold mb-4 text-indigo-700">Where do you need protection?</h2>
+                <p className="text-gray-600">
+                  Select the countries or regions where you want to register your trademark.
+                </p>
+
+                <Input
+                  type="text"
+                  placeholder="Search for countries..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="mb-6"
+                />
+
+                <div className="space-y-6">
+                  {/* Top Countries Section */}
+                  <div>
+                    <h3 className="text-xl font-semibold mb-4 text-indigo-700">Most Requested Countries</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {filteredTopCountries.map((country) => (
+                        <CountrySelectCard
+                          key={country.name}
+                          country={country.name}
+                          flag={`https://flagcdn.com/${country.flag}.svg`}
+                          price={country.price}
+                          additionalClassPrice={country.additionalClassPrice}
+                          onSelect={() => toggleCountry(country.name)}
+                          selected={selectedCountries.some((c) => c.name === country.name)}
+                        />
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Other Regions */}
+                  {filteredRegions.map((region) => (
+                    <div key={region.name}>
+                      <button
+                        onClick={(e) => toggleRegion(region.name, e)}
+                        className="flex items-center justify-between w-full text-left text-lg font-semibold mb-2 text-indigo-700 hover:text-indigo-900"
+                      >
+                        <span>{region.name}</span>
+                        {expandedRegions.includes(region.name) ? (
+                          <ChevronUp className="h-5 w-5" />
+                        ) : (
+                          <ChevronDown className="h-5 w-5" />
+                        )}
+                      </button>
+                      {expandedRegions.includes(region.name) && (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                          {region.countries.map((country) => (
+                            <CountrySelectCard
+                              key={country.name}
+                              country={country.name}
+                              flag={`https://flagcdn.com/${country.flag}.svg`}
+                              price={country.price}
+                              additionalClassPrice={country.additionalClassPrice}
+                              onSelect={() => toggleCountry(country.name)}
+                              selected={selectedCountries.some((c) => c.name === country.name)}
+                            />
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+
+                {renderNavigationButtons(3, selectedCountries.length === 0)}
+              </div>
+            )}
+
+            {step === 3 && (
+              <div className="space-y-8">
+                <h2 className="text-2xl font-semibold mb-4 text-indigo-700">Which classes do you need?</h2>
+                <p className="text-gray-600 mb-4">Select the classes that apply to your goods and services.</p>
+                <TrademarkClassesDialog
+                  selectedClasses={formData.selectedClasses}
+                  setSelectedClasses={handleClassesChange}
+                />
+                {renderNavigationButtons(4, formData.selectedClasses.length === 0)}
+              </div>
+            )}
+
+            {step === 4 && (
+              <div className="space-y-8">
+                <h2 className="text-2xl font-semibold mb-4 text-indigo-700">Your Contact Information</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="name" className="block text-lg font-medium text-gray-700 mb-2">
+                      Name
+                    </Label>
+                    <Input
+                      id="name"
+                      value={formData.name}
+                      onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
+                      placeholder="Enter your name"
+                      className="w-full text-lg p-3"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="surname" className="block text-lg font-medium text-gray-700 mb-2">
+                      Surname
+                    </Label>
+                    <Input
+                      id="surname"
+                      value={formData.surname}
+                      onChange={(e) => setFormData((prev) => ({ ...prev, surname: e.target.value }))}
+                      placeholder="Enter your surname"
+                      className="w-full text-lg p-3"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="email" className="block text-lg font-medium text-gray-700 mb-2">
+                      Email
+                    </Label>
+                    <Input
+                      type="email"
+                      id="email"
+                      value={formData.email}
+                      onChange={(e) => setFormData((prev) => ({ ...prev, email: e.target.value }))}
+                      placeholder="Enter your email"
+                      className="w-full text-lg p-3"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="phone" className="block text-lg font-medium text-gray-700 mb-2">
+                      Phone
+                    </Label>
+                    <Input
+                      id="phone"
+                      value={formData.phone}
+                      onChange={(e) => setFormData((prev) => ({ ...prev, phone: e.target.value }))}
+                      placeholder="Enter your phone number"
+                      className="w-full text-lg p-3"
+                    />
+                  </div>
+                </div>
+                <div className="flex items-center space-x-4">
+                  <Checkbox
+                    id="marketing"
+                    checked={formData.marketing}
+                    onCheckedChange={(checked: boolean) => setFormData((prev) => ({ ...prev, marketing: checked }))}
+                  />
+                  <Label htmlFor="marketing" className="text-lg text-gray-700">
+                    I agree to receive marketing emails.
+                  </Label>
+                </div>
+                <div>
+                  <Label htmlFor="files">Adjuntar archivos (JPG, PNG, PDF)</Label>
+                  <Input id="files" type="file" onChange={handleFileUpload} accept=".jpg,.jpeg,.png,.pdf" multiple />
+                </div>
+                {renderNavigationButtons(5, !formData.name || !formData.surname || !formData.email || !formData.phone)}
+              </div>
+            )}
+
+            {step === 5 && (
+              <div>
+                <h2 className="text-2xl font-semibold mb-4 text-indigo-700">Payment</h2>
+                <p className="text-gray-600 mb-4">Total: {totalPrice.toFixed(2)} EUR</p>
+                {clientSecret && (
+                  <Elements stripe={stripePromise} options={{ clientSecret }}>
+                    <PaymentForm amount={totalPrice} formData={formData} setFormData={setFormData} />
+                  </Elements>
+                )}
+                {errorMessage && (
+                  <div className="mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">{errorMessage}</div>
+                )}
+                <Button
+                  type="submit"
+                  onClick={handleSubmit}
+                  className="mt-4 w-full bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2"
+                >
+                  Submit
+                </Button>
+              </div>
+            )}
+          </div>
+          <div className="lg:col-span-2">
+            <div className="sticky top-20 pt-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Your Selection</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-2xl font-bold mb-4">Estimated price: ${totalPrice}</p>
+                  <div className="mb-6 max-h-[calc(100vh-300px)] overflow-y-auto">
+                    <ul>
+                      {selectedCountries.map((country) => {
+                        const countryData = [...topCountries, ...regions.flatMap((r) => r.countries)].find(
+                          (c) => c.name === country.name,
+                        )
+                        const basePrice = countryData?.price || 0
+                        const additionalClassesPrice =
+                          (Math.max(1, formData.selectedClasses.length) - 1) * (countryData?.additionalClassPrice || 0)
+                        const totalCountryPrice = basePrice + additionalClassesPrice
+
+                        return (
+                          <li key={country.name} className="flex justify-between items-center mb-4 border-b pb-2">
+                            <div className="flex items-center">
+                              <Image
+                                src={`https://flagcdn.com/${countryData?.flag}.svg`}
+                                alt={`${country.name} flag`}
+                                width={20}
+                                height={15}
+                                className="mr-2"
+                              />
+                              <span>{country.name}</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <span>{Math.max(1, formData.selectedClasses.length)} classes</span>
+                              <span className="min-w-[80px] text-right">${totalCountryPrice}</span>
+                            </div>
+                          </li>
+                        )
+                      })}
+                    </ul>
+                  </div>
+                  <div className="mt-4">
+                    <h3 className="text-lg font-semibold mb-2">Selected Classes</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {formData.selectedClasses.length > 0 ? (
+                        formData.selectedClasses.map((classNumber) => (
+                          <Badge key={classNumber} variant="secondary">
+                            Class {classNumber}
+                          </Badge>
+                        ))
+                      ) : (
+                        <Badge variant="secondary">Class 1</Badge>
+                      )}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  )
+}
+
+export function VerificationForm() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <VerificationFormContent />
+    </Suspense>
+  )
+}
+

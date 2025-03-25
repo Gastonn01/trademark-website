@@ -1,0 +1,37 @@
+<svg width="300" height="300" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="globe-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4a90e2;stop-opacity:0.2" />
+      <stop offset="100%" style="stop-color:#4a90e2;stop-opacity:0.6" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Globe background -->
+  <circle cx="150" cy="150" r="145" fill="url(#globe-gradient)" />
+  
+  <!-- Latitude lines -->
+  <path d="M5,150 h290" stroke="#fff" stroke-width="1" opacity="0.3" />
+  <path d="M150,5 v290" stroke="#fff" stroke-width="1" opacity="0.3" />
+  <ellipse cx="150" cy="150" rx="145" ry="50" fill="none" stroke="#fff" stroke-width="1" opacity="0.3" />
+  <ellipse cx="150" cy="150" rx="145" ry="100" fill="none" stroke="#fff" stroke-width="1" opacity="0.3" />
+  
+  <!-- Longitude lines -->
+  <path d="M150,5 A145,145 0 0 1 150,295" fill="none" stroke="#fff" stroke-width="1" opacity="0.3" />
+  <path d="M150,5 A145,145 0 0 0 150,295" fill="none" stroke="#fff" stroke-width="1" opacity="0.3" />
+  <path d="M5,150 A145,145 0 0 1 295,150" fill="none" stroke="#fff" stroke-width="1" opacity="0.3" />
+  
+  <!-- Continents (simplified shapes) -->
+  <path d="M100,100 Q120,80 140,100 T180,100 Q200,80 220,100 L220,180 Q200,200 180,180 T140,180 Q120,200 100,180 Z" fill="#a5d6a7" stroke="#2e7d32" stroke-width="1" />
+  <path d="M60,140 Q80,120 100,140 T140,140 L140,200 Q120,220 100,200 T60,200 Z" fill="#a5d6a7" stroke="#2e7d32" stroke-width="1" />
+  <path d="M180,160 Q200,140 220,160 T260,160 L260,220 Q240,240 220,220 T180,220 Z" fill="#a5d6a7" stroke="#2e7d32" stroke-width="1" />
+  
+  <!-- Connection points -->
+  <circle cx="140" cy="120" r="3" fill="#e57373" />
+  <circle cx="200" cy="180" r="3" fill="#e57373" />
+  <circle cx="100" cy="160" r="3" fill="#e57373" />
+  
+  <!-- Connection lines -->
+  <path d="M140,120 Q170,140 200,180" fill="none" stroke="#e57373" stroke-width="1" stroke-dasharray="3,3" />
+  <path d="M140,120 Q120,140 100,160" fill="none" stroke="#e57373" stroke-width="1" stroke-dasharray="3,3" />
+</svg>
+

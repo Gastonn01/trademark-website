@@ -1,0 +1,6 @@
+<svg width="60" height="30" viewBox="0 0 60 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M60 12.5C60 19.4036 54.4036 25 47.5 25C40.5964 25 35 19.4036 35 12.5C35 5.59644 40.5964 0 47.5 0C54.4036 0 60 5.59644 60 12.5Z" fill="#111"/>
+  <path d="M0 25L15.5 5L25 15L35 0" stroke="#111" stroke-width="2"/>
+  <text x="5" y="28" font-family="Arial" font-size="12" fill="#111">NIKE</text>
+</svg>
+

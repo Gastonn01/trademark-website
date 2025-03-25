@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://justprotected.com/sitemap.xml
+
+# Rutas principales
+Allow: /about
+Allow: /pricing
+Allow: /how-it-works
+Allow: /contact
+Allow: /verification
+Allow: /blog
+
+# No indexar rutas de API
+Disallow: /api/*
+

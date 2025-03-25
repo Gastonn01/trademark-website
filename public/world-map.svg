@@ -1,0 +1,30 @@
+<svg width="800" height="400" viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="ocean" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4a90e2;stop-opacity:0.2" />
+      <stop offset="100%" style="stop-color:#4a90e2;stop-opacity:0.6" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Ocean background -->
+  <rect width="800" height="400" fill="url(#ocean)" />
+  
+  <!-- Continents -->
+  <path d="M200,80 Q220,50 240,80 T280,80 T320,80 Q340,50 360,80 T400,80 L400,200 Q380,220 360,200 T320,200 T280,200 Q260,220 240,200 L200,200 Z" fill="#a5d6a7" stroke="#2e7d32" stroke-width="2" />
+  <path d="M450,150 Q470,120 490,150 T530,150 T570,150 Q590,120 610,150 L610,250 Q590,270 570,250 T530,250 T490,250 Q470,270 450,250 Z" fill="#a5d6a7" stroke="#2e7d32" stroke-width="2" />
+  <path d="M100,250 Q120,220 140,250 T180,250 T220,250 Q240,220 260,250 L260,350 Q240,370 220,350 T180,350 T140,350 Q120,370 100,350 Z" fill="#a5d6a7" stroke="#2e7d32" stroke-width="2" />
+  
+  <!-- Connection lines -->
+  <path d="M300,140 Q400,50 500,180" fill="none" stroke="#e57373" stroke-width="2" stroke-dasharray="5,5" />
+  <path d="M400,180 Q500,250 600,200" fill="none" stroke="#e57373" stroke-width="2" stroke-dasharray="5,5" />
+  <path d="M200,180 Q300,300 400,250" fill="none" stroke="#e57373" stroke-width="2" stroke-dasharray="5,5" />
+  
+  <!-- Connection points -->
+  <circle cx="300" cy="140" r="5" fill="#e57373" />
+  <circle cx="500" cy="180" r="5" fill="#e57373" />
+  <circle cx="400" cy="180" r="5" fill="#e57373" />
+  <circle cx="600" cy="200" r="5" fill="#e57373" />
+  <circle cx="200" cy="180" r="5" fill="#e57373" />
+  <circle cx="400" cy="250" r="5" fill="#e57373" />
+</svg>
+
