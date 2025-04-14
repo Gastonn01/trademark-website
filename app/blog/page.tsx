@@ -48,7 +48,7 @@ function getBlogPosts() {
   // Starting from recent date and working backwards
   const generateConsistentDates = () => {
     const dates = []
-    const today = new Date() // March 25, 2025
+    const today = new Date() // Current date
 
     // Start from today and work backwards
     // We'll generate dates for Tuesdays and Thursdays in the past
@@ -84,7 +84,7 @@ function getBlogPosts() {
   const publishDates = generateConsistentDates()
 
   // More diverse and engaging titles for country articles
-  const countryTitles = {
+  const countryTitles: Record<string, string> = {
     "register-trademark-usa": "Securing Your Brand in America: US Trademark Guide (2024)",
     "register-trademark-eu": "Protecting Brands Across Europe: EU Trademark Essentials",
     "register-trademark-china": "Navigating China's Trademark System: A Western Brand's Guide",
@@ -98,7 +98,7 @@ function getBlogPosts() {
     "register-trademark-argentina": "Trademark Protection in Argentina: A Strategic Approach",
     "register-trademark-poland": "Securing Trademarks in Poland: Eastern European Market Guide",
     "register-trademark-czech-republic": "Czech Republic Trademark System: Central European Brand Protection",
-    "register-trademark-california": "How to Register a Trademark in California (2025) | Complete Guide",
+    "register-trademark-california": "How to Register a Trademark in California (2024) | Complete Guide",
     "register-trademark-france": "French Trademark Registration: Protecting Your Brand in the Heart of Europe",
   }
 
@@ -204,7 +204,7 @@ function getBlogPosts() {
     "register-trademark-czech-republic":
       "https://images.unsplash.com/photo-1592906209472-a36b1f3782ef?w=600&h=400&fit=crop", // Prague or Czech landmark
     "register-trademark-california":
-      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/8777996los-angeles-hollywood-sign.jpg-rLwjzZLJASUIniBUJeIU7NFLJiQuYO.jpeg", // Hollywood Sign
+      "https://images.unsplash.com/photo-1580655653885-65763b2597d0?w=600&h=400&fit=crop", // Hollywood Sign
   }
 
   // Topic-specific images for non-country articles
@@ -222,8 +222,7 @@ function getBlogPosts() {
     "importance-of-brand-protection":
       "https://images.unsplash.com/photo-1611224885990-ab7363d1f2a9?w=600&h=400&fit=crop", // Shield/protection concept
     "trademark-registration-process": "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600&h=400&fit=crop", // Process/steps
-    "global-trademark-strategies":
-      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/5de467a0b0a5ed5119a8eca3_65958bb3-07cb-4477-9d3365398a681c0a.jpg-yROVP2qd3234VhKJM93EW75IGSYbRA.jpeg", // Global brand logos
+    "global-trademark-strategies": "https://images.unsplash.com/photo-1529119368496-2dfda6ec2804?w=600&h=400&fit=crop", // Global brand logos
     "trademark-classification": "https://images.unsplash.com/photo-1568234928966-359c35dd8327?w=600&h=400&fit=crop", // Organization/classification
     "trademark-registration-comparison":
       "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=400&fit=crop", // Comparison/analysis
@@ -242,29 +241,25 @@ function getBlogPosts() {
       title: "Meghan Markle's 'As Ever' Trademark Challenges",
       description:
         "Explore the trademark challenges faced by Meghan Markle for her lifestyle brand 'As Ever' and the lessons businesses can learn about trademark protection.",
-      image:
-        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202025-04-14%20at%2010.46.10-WcVoyDMfkeWudzpXWjFbS3IN0btvA9.png",
+      image: "https://images.unsplash.com/photo-1566554273541-37a9ca77b91f?w=600&h=400&fit=crop",
     },
     "jiffy-bag-genericized-trademark": {
       title: "Jiffy Bag: How a Trademark Became Generic",
       description:
         "Explore how the Jiffy bag trademark became genericized and the lessons businesses can learn about protecting their trademarks from suffering the same fate.",
-      image:
-        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202025-04-14%20at%2010.38.01-SdyzlyLbKphtJeXRyUf0QhseC9xpuZ.png",
+      image: "https://images.unsplash.com/photo-1584438875844-d4628dadafd7?w=600&h=400&fit=crop",
     },
     "registered-trademark-symbol-history": {
       title: "The History and Evolution of the Registered Trademark Symbol",
       description:
         "Discover the fascinating history behind the registered trademark symbol (®), its legal significance, and how its usage has evolved over time.",
-      image:
-        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202025-04-14%20at%2010.49.28-bfsG72VsP3CnndjNBK31ozzGhhFsCF.png",
+      image: "https://images.unsplash.com/photo-1607703703674-df96941cfa24?w=600&h=400&fit=crop",
     },
     "register-trademark-france": {
       title: "French Trademark Registration: Protecting Your Brand in the Heart of Europe",
       description:
         "Learn how to register your trademark in France with our comprehensive guide. Understand the INPI process, costs, and essential steps to protect your brand in this key European market.",
-      image:
-        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202025-04-14%20at%2010.50.30-Fv0tNjrsFIFFm2pSKpej9W1d46TyIP.png",
+      image: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=600&h=400&fit=crop",
     },
     "cole-palmer-celebration-trademark": {
       title: "Cole Palmer's Iconic Celebration: The Path to Trademarking It",
@@ -408,11 +403,10 @@ function getBlogPosts() {
       image: countryImages["register-trademark-united-kingdom"],
     },
     "register-trademark-california": {
-      title: "How to Register a Trademark in California (2025) | Complete Guide",
+      title: "How to Register a Trademark in California (2024) | Complete Guide",
       description:
         "Learn how to register a trademark in California with our step-by-step guide. Understand the process and benefits of trademark registration for California businesses.",
-      image:
-        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/8777996los-angeles-hollywood-sign.jpg-rLwjzZLJASUIniBUJeIU7NFLJiQuYO.jpeg",
+      image: countryImages["register-trademark-california"],
     },
   }
 
