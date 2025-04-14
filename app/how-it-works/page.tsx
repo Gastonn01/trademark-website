@@ -1,14 +1,22 @@
 import { NavBar } from "@/components/nav-bar"
 import { HowItWorksContent } from "@/components/how-it-works-content"
 import { Footer } from "@/components/footer"
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "How It Works | Just Protected",
+  description:
+    "Learn how Just Protected simplifies global trademark registration in 4 easy steps. Get a free search and expert legal support.",
+}
 
 export default function HowItWorksPage() {
   return (
-    <main className="bg-gradient-to-b from-blue-900 to-blue-700 min-h-screen pt-24">
+    <main className="bg-white min-h-screen">
       <NavBar />
-      <HowItWorksContent />
+      <div className="bg-blue-800 pt-1">
+        <HowItWorksContent />
+      </div>
       <Footer />
     </main>
   )
 }
-

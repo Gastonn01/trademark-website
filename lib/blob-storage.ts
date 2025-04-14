@@ -8,4 +8,3 @@ export async function uploadToBlob(file: File) {
   })
   return url
 }
-

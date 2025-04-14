@@ -8,26 +8,26 @@ export function HeroSection() {
   return (
     <>
       {/* 
-        Current gradient colors:
-        - from-blue-900: #1e3a8a (deep navy blue)
-        - to-blue-700: #1d4ed8 (rich medium blue)
+        Updated gradient colors:
+        - from-blue-800: #1e40af (darker blue for top)
+        - to-blue-700: #1d4ed8 (lighter blue for bottom)
       */}
-      <div className="bg-gradient-to-b from-blue-900 to-blue-700 text-white">
+      <div className="bg-gradient-to-b from-blue-800 to-blue-700 text-white">
         <div className="container mx-auto px-4 py-20">
           <div className="max-w-4xl mx-auto text-center">
             {/* Main heading */}
             <motion.h1
-              className="text-5xl sm:text-6xl font-bold mb-6"
+              className="text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
             >
-              Global Trademark Protection
+              Global Trademark Registration Services
             </motion.h1>
 
             {/* Subheading */}
             <motion.p
-              className="text-xl mb-12"
+              className="text-xl mb-12 mt-6"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3, duration: 0.8 }}
@@ -66,7 +66,7 @@ export function HeroSection() {
             >
               <Link
                 href="/free-search"
-                className="inline-block px-8 py-4 text-lg font-semibold text-blue-900 bg-white rounded-md shadow-lg hover:bg-blue-50 transition-colors duration-300"
+                className="inline-block px-8 py-4 text-lg font-semibold text-blue-700 bg-white rounded-md shadow-lg hover:bg-blue-50 transition-colors duration-300"
               >
                 Start Free Search
               </Link>
@@ -93,7 +93,7 @@ export function HeroSection() {
                     <Shield className="h-8 w-8" />
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold text-blue-900 mb-1">Trademark Registration</h3>
+                    <h3 className="text-xl font-bold text-blue-700 mb-1">Trademark Registration</h3>
                     <p className="text-gray-600 mb-2">Secure your brand identity legally</p>
                     <p className="text-blue-600 font-bold">Starting from $299</p>
                   </div>
@@ -114,7 +114,7 @@ export function HeroSection() {
                   <Globe className="h-8 w-8" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-blue-900 mb-1">Worldwide Trademark Monitoring</h3>
+                  <h3 className="text-xl font-bold text-blue-700 mb-1">Worldwide Trademark Monitoring</h3>
                   <p className="text-gray-600 mb-2">Official trademark offices and web domains</p>
                   <p className="text-blue-600 font-bold inline-flex items-center">Starting from €10/month</p>
                 </div>
@@ -126,4 +126,3 @@ export function HeroSection() {
     </>
   )
 }
-

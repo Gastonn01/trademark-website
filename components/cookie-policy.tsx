@@ -52,4 +52,3 @@ export function CookiePolicy() {
     </div>
   )
 }
-

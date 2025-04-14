@@ -30,7 +30,7 @@ export function WhyChooseUsSection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h2 className="text-4xl font-bold text-blue-900 mb-4">Beyond The Process</h2>
+          <h2 className="text-4xl font-bold text-blue-700 mb-4">Beyond The Process</h2>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
             While our streamlined process ensures efficiency, here's what makes our service truly exceptional
           </p>
@@ -44,8 +44,8 @@ export function WhyChooseUsSection() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1, duration: 0.5 }}
             >
-              <reason.icon className="h-12 w-12 mb-4 text-blue-600" />
-              <h3 className="text-xl font-semibold mb-2 text-blue-900">{reason.title}</h3>
+              <reason.icon className="h-12 w-12 mb-4 text-blue-700" />
+              <h3 className="text-xl font-semibold mb-2 text-blue-700">{reason.title}</h3>
               <p className="text-gray-700">{reason.description}</p>
             </motion.div>
           ))}
@@ -54,4 +54,3 @@ export function WhyChooseUsSection() {
     </section>
   )
 }
-

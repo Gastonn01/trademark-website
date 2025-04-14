@@ -148,4 +148,3 @@ export function PaymentForm({ amount, formData, currency = "EUR" }: PaymentFormP
     </Card>
   )
 }
-

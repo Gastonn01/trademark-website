@@ -32,7 +32,7 @@ export function ProcessSection() {
     <div className="py-20 bg-white">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold text-blue-900 mb-4">The Registration Process</h2>
+          <h2 className="text-4xl font-bold text-blue-700 mb-4">The Registration Process</h2>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
             Our streamlined approach makes trademark registration simple and efficient
           </p>
@@ -119,4 +119,3 @@ export function ProcessSection() {
     </div>
   )
 }
-

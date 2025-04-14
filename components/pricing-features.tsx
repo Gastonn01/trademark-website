@@ -51,4 +51,3 @@ export function PricingFeatures() {
     </div>
   )
 }
-

@@ -111,4 +111,3 @@ export function StripePaymentWrapper({ amount, currency = "EUR", formData }: Str
     </div>
   )
 }
-

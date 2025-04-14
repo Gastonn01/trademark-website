@@ -1,70 +1,92 @@
 "use client"
-import { useState, useRef, useEffect } from "react"
+
 import Link from "next/link"
+import { useState } from "react"
 import { Menu, X } from "lucide-react"
 
 export function NavBar() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const menuRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (mobileMenuOpen) {
-        setMobileMenuOpen(false)
-      }
-    }
-
-    document.addEventListener("mousedown", handleClickOutside)
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside)
-    }
-  }, [mobileMenuOpen])
-
-  const navItems = [
-    { href: "/how-it-works", label: "How it works" },
-    { href: "/about", label: "About" },
-    { href: "/detailed-pricelist#top", label: "Pricing" },
-    { href: "/blog", label: "Blog" },
-  ]
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-md">
-      <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        <Link href="/" className="flex items-center space-x-2">
-          <span className="text-2xl font-bold text-blue-900">Just Protected</span>
+    <header className="w-full bg-white shadow-sm py-6 relative z-10">
+      <div className="container mx-auto px-4 flex justify-between items-center">
+        <Link href="/" className="text-3xl font-bold text-blue-600 hover:text-blue-700 transition-colors">
+          Just Protected
         </Link>
-        <nav className="hidden md:flex md:items-center md:space-x-6">
-          {navItems.map((item) => (
-            <a
-              key={item.href}
-              href={item.href}
-              className="text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors"
-            >
-              {item.label}
-            </a>
-          ))}
-        </nav>
+
+        {/* Mobile menu button */}
         <button
-          className="md:hidden p-2 rounded-md hover:bg-gray-100"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          className="md:hidden p-2 text-gray-600 hover:text-gray-900 focus:outline-none"
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
-          {mobileMenuOpen ? <X className="h-6 w-6 text-gray-600" /> : <Menu className="h-6 w-6 text-gray-600" />}
+          {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
-      </div>
-      {mobileMenuOpen && (
-        <nav className="md:hidden bg-white border-t border-gray-200 px-4 py-2">
-          {navItems.map((item) => (
-            <a
-              key={item.href}
-              href={item.href}
-              className="block py-2 text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors"
-            >
-              {item.label}
-            </a>
-          ))}
+
+        {/* Desktop navigation */}
+        <nav className="hidden md:flex items-center space-x-8">
+          <Link href="/how-it-works" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
+            How it works
+          </Link>
+          <Link href="/about" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
+            About
+          </Link>
+          <Link href="/detailed-pricelist" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
+            Pricing
+          </Link>
+          <Link href="/blog" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
+            Blog
+          </Link>
+          <Link
+            href="/free-search"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium transition-colors"
+          >
+            Free Search
+          </Link>
         </nav>
-      )}
+
+        {/* Mobile navigation */}
+        {isMenuOpen && (
+          <div className="absolute top-16 left-0 right-0 bg-white shadow-md z-50 md:hidden">
+            <div className="flex flex-col p-4 space-y-4">
+              <Link
+                href="/how-it-works"
+                className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                How it works
+              </Link>
+              <Link
+                href="/about"
+                className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                About
+              </Link>
+              <Link
+                href="/detailed-pricelist"
+                className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Pricing
+              </Link>
+              <Link
+                href="/blog"
+                className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Blog
+              </Link>
+              <Link
+                href="/free-search"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium transition-colors text-center"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Free Search
+              </Link>
+            </div>
+          </div>
+        )}
+      </div>
     </header>
   )
 }
-

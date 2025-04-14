@@ -210,4 +210,3 @@ export function TrademarkClassesDialog({ selectedClasses, setSelectedClasses }: 
     </div>
   )
 }
-

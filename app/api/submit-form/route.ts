@@ -14,6 +14,9 @@ export async function POST(req: Request) {
     const formType = formData.get("formType")
     const files = formData.getAll("files") as File[]
 
+    // Extraer el nombre de la marca si existe
+    const trademarkName = formData.get("trademarkName") || "Unnamed Trademark"
+
     let emailBody = `Nuevo formulario recibido: ${formType}\n\n`
     for (const [key, value] of formData.entries()) {
       if (key !== "files" && key !== "formType") {
@@ -37,9 +40,9 @@ export async function POST(req: Request) {
 
       console.log("Intentando enviar email con Resend...")
       const result = await resend.emails.send({
-        from: "Just Protected <onboarding@resend.dev>",
-        to: ["lacortgaston@gmail.com"], // Cambiado a la dirección de correo asociada con tu cuenta de Resend
-        subject: `Nuevo formulario recibido: ${formType}`,
+        from: "Just Protected <noreply@justprotected.com>",
+        to: ["lacortgaston@gmail.com"], // Cambiado a tu correo personal
+        subject: `Nuevo formulario recibido: ${trademarkName}`,
         text: emailBody,
         attachments: validAttachments,
       })
@@ -58,4 +61,3 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Método no permitido" }, { status: 405 })
   }
 }
-

@@ -427,4 +427,3 @@ export function TrademarkMonitoringContent() {
     </div>
   )
 }
-

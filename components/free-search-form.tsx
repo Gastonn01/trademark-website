@@ -3,7 +3,7 @@
 import type React from "react"
 
 import { useState, useEffect, useMemo } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -11,7 +11,6 @@ import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { CountrySelectCard } from "@/components/country-select-card"
 import Image from "next/image"
 import { Upload, CheckCircle, ChevronDown, ChevronUp } from "lucide-react"
@@ -27,8 +26,8 @@ interface FormData {
   name: string
   surname: string
   email: string
-  phone: string
   marketing: boolean
+  acceptTerms: boolean
 }
 
 interface CountryData {
@@ -176,6 +175,7 @@ const regions: RegionData[] = [
 
 export function FreeSearchForm() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [step, setStep] = useState(1)
   const totalSteps = 3
   const [formData, setFormData] = useState<FormData>({
@@ -187,8 +187,8 @@ export function FreeSearchForm() {
     name: "",
     surname: "",
     email: "",
-    phone: "",
     marketing: false,
+    acceptTerms: false,
   })
 
   const [selectedCountries, setSelectedCountries] = useState<string[]>([])
@@ -198,6 +198,78 @@ export function FreeSearchForm() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
+  const [initialLoadDone, setInitialLoadDone] = useState(false)
+
+  const [searchResults, setSearchResults] = useState<CountryData[]>([])
+  const [isSearching, setIsSearching] = useState(false)
+
+  // Función para buscar países en todas las regiones
+  const searchCountries = (term: string) => {
+    if (!term.trim()) {
+      setSearchResults([])
+      setIsSearching(false)
+      return
+    }
+
+    setIsSearching(true)
+    const normalizedTerm = term.toLowerCase().trim()
+
+    // Buscar en todas las regiones
+    const results = regions
+      .flatMap((region) => region.countries)
+      .filter((country) => country.name.toLowerCase().includes(normalizedTerm))
+
+    // Eliminar duplicados (por si un país aparece en múltiples regiones)
+    const uniqueResults = Array.from(new Map(results.map((item) => [item.name, item])).values())
+
+    setSearchResults(uniqueResults)
+  }
+
+  useEffect(() => {
+    searchCountries(searchTerm)
+
+    // Expandir automáticamente todas las regiones que contienen países que coinciden con la búsqueda
+    if (searchTerm.trim()) {
+      const matchingRegions = regions
+        .filter((region) =>
+          region.countries.some((country) => country.name.toLowerCase().includes(searchTerm.toLowerCase())),
+        )
+        .map((region) => region.name)
+
+      setExpandedRegions((prev) => {
+        const newExpanded = [...prev]
+        matchingRegions.forEach((region) => {
+          if (!newExpanded.includes(region)) {
+            newExpanded.push(region)
+          }
+        })
+        return newExpanded
+      })
+    }
+  }, [searchTerm])
+
+  // Efecto para cargar países desde la URL cuando se monta el componente
+  useEffect(() => {
+    if (initialLoadDone) return
+
+    const countriesParam = searchParams?.get("countries")
+    if (countriesParam) {
+      try {
+        const parsedCountries = JSON.parse(countriesParam)
+        if (Array.isArray(parsedCountries) && parsedCountries.length > 0) {
+          setSelectedCountries(parsedCountries)
+          setFormData((prev) => ({
+            ...prev,
+            countries: parsedCountries,
+          }))
+        }
+      } catch (error) {
+        console.error("Error parsing countries from URL:", error)
+      }
+    }
+
+    setInitialLoadDone(true)
+  }, [searchParams, initialLoadDone])
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -251,7 +323,9 @@ export function FreeSearchForm() {
 
     // Añadir todos los campos del formulario a formData
     Object.entries(formData).forEach(([key, value]) => {
-      if (typeof value === "string" || value instanceof Blob) {
+      if (key === "logo" && value instanceof File) {
+        // No añadimos el logo aquí, lo manejaremos por separado
+      } else if (typeof value === "string" || value instanceof Blob) {
         formDataToSend.append(key, value)
       } else if (Array.isArray(value)) {
         formDataToSend.append(key, JSON.stringify(value))
@@ -260,7 +334,12 @@ export function FreeSearchForm() {
       }
     })
 
-    // Añadir archivos
+    // Añadir el logo si existe
+    if (formData.logo instanceof File) {
+      formDataToSend.append("logo", formData.logo)
+    }
+
+    // Añadir archivos adicionales
     files.forEach((file) => {
       formDataToSend.append("files", file)
     })
@@ -502,8 +581,26 @@ export function FreeSearchForm() {
                   className="mb-6"
                 />
 
-                <div className="space-y-6">
-                  {/* Top Countries Section */}
+                {/* Resultados de búsqueda */}
+                {searchResults.length > 0 && (
+                  <div>
+                    <h3 className="text-xl font-semibold mb-4 text-indigo-700">Search Results</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      {searchResults.map((country) => (
+                        <CountrySelectCard
+                          key={country.name}
+                          country={country.name}
+                          flag={`https://flagcdn.com/${country.flag}.svg`}
+                          onSelect={() => toggleCountry(country.name)}
+                          selected={selectedCountries.includes(country.name)}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Top Countries Section - solo mostrar si no hay búsqueda */}
+                {!isSearching && (
                   <div>
                     <h3 className="text-xl font-semibold mb-4 text-indigo-700">Most Requested Countries</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -518,9 +615,11 @@ export function FreeSearchForm() {
                       ))}
                     </div>
                   </div>
+                )}
 
-                  {/* Other Regions */}
-                  {filteredRegions.map((region) => (
+                {/* Other Regions - solo mostrar si no hay búsqueda */}
+                {!isSearching &&
+                  filteredRegions.map((region) => (
                     <div key={region.name}>
                       <button
                         type="button"
@@ -549,7 +648,6 @@ export function FreeSearchForm() {
                       )}
                     </div>
                   ))}
-                </div>
 
                 <div className="flex gap-4">
                   <Button type="button" variant="outline" onClick={() => setStep(1)} className="flex-1 py-3 text-lg">
@@ -609,43 +707,42 @@ export function FreeSearchForm() {
                       className="mt-1"
                     />
                   </div>
-                  <div className="md:col-span-2">
-                    <Label htmlFor="phone" className="text-gray-700">
-                      Phone Number (optional)
+                </div>
+
+                <div className="space-y-4">
+                  <div className="flex items-start gap-2">
+                    <Checkbox
+                      id="acceptTerms"
+                      checked={formData.acceptTerms}
+                      onCheckedChange={(checked) =>
+                        setFormData((prev) => ({ ...prev, acceptTerms: checked as boolean }))
+                      }
+                      required
+                    />
+                    <Label htmlFor="acceptTerms" className="text-sm text-gray-600">
+                      I accept the{" "}
+                      <a href="/terms" className="text-indigo-600 hover:underline" target="_blank" rel="noreferrer">
+                        Terms and Conditions
+                      </a>{" "}
+                      and{" "}
+                      <a href="/privacy" className="text-indigo-600 hover:underline" target="_blank" rel="noreferrer">
+                        Privacy Policy
+                      </a>
                     </Label>
-                    <div className="flex gap-2 mt-1">
-                      <Select defaultValue="+1">
-                        <SelectTrigger className="w-[100px]">
-                          <SelectValue placeholder="Country" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="+1">🇺🇸 +1</SelectItem>
-                          <SelectItem value="+44">🇬🇧 +44</SelectItem>
-                          <SelectItem value="+33">🇫🇷 +33</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <Input
-                        id="phone"
-                        type="tel"
-                        placeholder="(555) 555-5555"
-                        value={formData.phone}
-                        onChange={(e) => setFormData((prev) => ({ ...prev, phone: e.target.value }))}
-                        className="flex-1"
-                      />
-                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-2">
+                    <Checkbox
+                      id="marketing"
+                      checked={formData.marketing}
+                      onCheckedChange={(checked) => setFormData((prev) => ({ ...prev, marketing: checked as boolean }))}
+                    />
+                    <Label htmlFor="marketing" className="text-sm text-gray-600">
+                      I'd like to receive helpful tips and updates about trademark protection (optional)
+                    </Label>
                   </div>
                 </div>
 
-                <div className="flex items-start gap-2">
-                  <Checkbox
-                    id="marketing"
-                    checked={formData.marketing}
-                    onCheckedChange={(checked) => setFormData((prev) => ({ ...prev, marketing: checked as boolean }))}
-                  />
-                  <Label htmlFor="marketing" className="text-sm text-gray-600">
-                    I'd like to receive helpful tips and updates about trademark protection (optional)
-                  </Label>
-                </div>
                 <div>
                   <Label htmlFor="files">Adjuntar archivos (JPG, PNG, PDF)</Label>
                   <Input
@@ -667,7 +764,9 @@ export function FreeSearchForm() {
                   <Button
                     type="submit"
                     className="flex-1 py-3 text-lg bg-indigo-600 hover:bg-indigo-700 text-white"
-                    disabled={!formData.name || !formData.surname || !formData.email || isSubmitting}
+                    disabled={
+                      !formData.name || !formData.surname || !formData.email || !formData.acceptTerms || isSubmitting
+                    }
                   >
                     {isSubmitting ? "Submitting..." : "Submit Free Search Request"}
                   </Button>
@@ -769,4 +868,3 @@ export function FreeSearchForm() {
     </div>
   )
 }
-

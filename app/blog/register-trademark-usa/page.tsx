@@ -72,9 +72,6 @@ export default function RegisterTrademarkUSA() {
           </div>
           <div className="text-sm">
             <p>Published: March 15, 2025</p>
-            <p>
-              Last Updated: {new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}
-            </p>
           </div>
         </div>
 
@@ -707,10 +704,6 @@ export default function RegisterTrademarkUSA() {
                 q: "Do I need separate registrations for different products or services?",
                 a: "Not necessarily. A single trademark application can cover multiple related goods and services, grouped into different 'classes.' Each class requires additional fees, but it's often more cost-effective than filing separate applications. In 2025, strategic class selection is more important than ever as the USPTO has become stricter about enforcing class boundaries.",
               },
-              {
-                q: "What if my application is refused?",
-                a: "If your application is refused, you have several options: (1) Respond to the office action addressing the examiner's concerns, (2) Amend your application to overcome the refusal, (3) Appeal the decision to the Trademark Trial and Appeal Board, or (4) File a new application with modifications to address the issues. The best approach depends on the specific grounds for refusal.",
-              },
             ].map((faq, index) => (
               <div key={index} className="bg-white p-5 rounded-lg border border-gray-200 shadow-sm">
                 <h3 className="font-semibold text-lg mb-2 text-indigo-800">{faq.q}</h3>
@@ -727,14 +720,14 @@ export default function RegisterTrademarkUSA() {
               future.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <Button asChild size="lg" className="bg-white text-indigo-700 hover:bg-indigo-50">
+              <Button asChild size="lg" className="bg-white text-indigo-700 hover:bg-indigo-50 text-white">
                 <Link href="/free-search">Get a Free Trademark Search</Link>
               </Button>
               <Button
                 asChild
                 variant="outline"
                 size="lg"
-                className="bg-transparent border-white text-white hover:bg-white/10"
+                className="bg-transparent border-white text-white hover:bg-white/10 text-white"
               >
                 <Link href="/verification">Learn About Our Services</Link>
               </Button>
@@ -754,4 +747,3 @@ export default function RegisterTrademarkUSA() {
     </main>
   )
 }
-

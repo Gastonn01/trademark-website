@@ -1,5 +1,6 @@
 import type React from "react"
 import "@/app/globals.css"
+import "@/app/fix-top-space.css"
 import { Inter } from "next/font/google"
 import Script from "next/script"
 import { Analytics } from "@vercel/analytics/react"
@@ -7,10 +8,12 @@ import { Analytics } from "@vercel/analytics/react"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata = {
-  title: "Just Protected - Global Trademark Registration Services",
+  title: "Just Protected | Global Trademark Registration Services",
   description: "Secure your brand worldwide with Just Protected's comprehensive trademark registration services.",
+  metadataBase: new URL("https://justprotected.com"),
+  applicationName: "Just Protected",
   openGraph: {
-    title: "Just Protected - Global Trademark Registration Services",
+    title: "Just Protected | Global Trademark Registration Services",
     description: "Secure your brand worldwide with Just Protected's comprehensive trademark registration services.",
     url: "https://justprotected.com",
     siteName: "Just Protected",
@@ -27,7 +30,7 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Just Protected - Global Trademark Registration Services",
+    title: "Just Protected | Global Trademark Registration Services",
     description: "Secure your brand worldwide with Just Protected's comprehensive trademark registration services.",
     images: ["https://justprotected.com/logo.png"],
   },
@@ -54,7 +57,14 @@ export default function RootLayout({
     <html lang="en" className={inter.className}>
       <head>
         <meta name="google-site-verification" content="6dpN_v4tVuDR1yKD24oiRYmdwt1EdkvfL9rjHBe4dUo" />
+        <meta name="msvalidate.01" content="4F29914D377793189675972516715A23" />
         <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="manifest" href="/site.webmanifest" />
+        <link rel="shortcut icon" href="https://justprotected.com/favicon.ico" type="image/x-icon" />
       </head>
       <body>
         {children}
@@ -65,13 +75,14 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "Organization",
               "name": "Just Protected",
+              "alternateName": "JP",
               "url": "https://justprotected.com",
               "logo": {
                 "@type": "ImageObject",
                 "url": "https://justprotected.com/logo.png",
                 "width": 512,
                 "height": 512,
-                "caption": "JP - Just Protected"
+                "caption": "Just Protected"
               },
               "sameAs": [
                 "https://www.facebook.com/justprotected",
@@ -90,7 +101,6 @@ export default function RootLayout({
     </html>
   )
 }
-
 
 
 import './globals.css'

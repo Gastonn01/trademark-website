@@ -133,4 +133,3 @@ export function TermsOfService() {
     </div>
   )
 }
-

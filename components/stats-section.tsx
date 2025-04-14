@@ -34,4 +34,3 @@ export function StatsSection() {
     </div>
   )
 }
-

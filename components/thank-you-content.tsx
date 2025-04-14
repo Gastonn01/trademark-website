@@ -4,7 +4,7 @@ import Link from "next/link"
 
 export function ThankYouContent() {
   return (
-    <div className="container mx-auto px-4 py-16 text-center">
+    <div className="container mx-auto px-4 py-24 mt-12 text-center">
       <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
       <h1 className="text-3xl font-bold mb-4 text-indigo-700">Thank You for Your Submission!</h1>
       <p className="text-xl mb-8 text-gray-600">
@@ -20,4 +20,3 @@ export function ThankYouContent() {
     </div>
   )
 }
-

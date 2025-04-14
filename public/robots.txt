@@ -14,4 +14,3 @@ Allow: /blog
 
 # No indexar rutas de API
 Disallow: /api/*
-

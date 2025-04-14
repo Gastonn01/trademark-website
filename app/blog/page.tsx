@@ -3,8 +3,15 @@ import { Footer } from "@/components/footer"
 import { BlogPostPreview } from "@/components/blog-post-preview"
 import fs from "fs"
 import path from "path"
+import type { Metadata } from "next"
 
-export const metadata = {
+export const metadata: Metadata = {
+  title: "Trademark Registration Blog | Expert Insights & Guides",
+  description:
+    "Explore our blog for expert insights on trademark registration, brand protection strategies, and intellectual property tips for businesses worldwide.",
+}
+
+export const metadata2 = {
   title: "Trademark Registration Blog | Expert Insights & Guides",
   description:
     "Explore our blog for expert insights on trademark registration, brand protection strategies, and intellectual property tips for businesses worldwide.",
@@ -97,6 +104,8 @@ function getBlogPosts() {
     "register-trademark-argentina": "Trademark Protection in Argentina: A Strategic Approach",
     "register-trademark-poland": "Securing Trademarks in Poland: Eastern European Market Guide",
     "register-trademark-czech-republic": "Czech Republic Trademark System: Central European Brand Protection",
+    "register-trademark-california": "How to Register a Trademark in California (2025) | Complete Guide",
+    "register-trademark-france": "French Trademark Registration: Protecting Your Brand in the Heart of Europe",
   }
 
   // Group articles by category for strategic dating
@@ -106,6 +115,10 @@ function getBlogPosts() {
       "cole-palmer-celebration-trademark", // Sports/celebrity content is timely
       "five-things-about-trademark-registration", // Listicle - good for recent content
       "make-trademark-stand-out", // Practical advice - good for recent content
+      "meghan-markle-as-ever-trademark-challenges", // Add this line
+      "jiffy-bag-genericized-trademark", // Add this line
+      "registered-trademark-symbol-history", // Add this line
+      "register-trademark-france", // Add this line
     ],
     fundamentals: [
       "importance-of-brand-protection", // Foundational content
@@ -118,11 +131,13 @@ function getBlogPosts() {
     ],
     majorMarkets: [
       "register-trademark-usa", // US (English only)
+      "register-trademark-california", // California
       "register-trademark-eu", // EU (English only)
       "register-trademark-china", // China
       "register-trademark-india", // India
       "register-trademark-united-kingdom", // UK
       "register-trademark-germany", // Germany
+      "register-trademark-france", // France
     ],
     otherMarkets: [
       "register-trademark-spain",
@@ -194,6 +209,8 @@ function getBlogPosts() {
     "register-trademark-poland": "https://images.unsplash.com/photo-1562109245-c9f084749538?w=600&h=400&fit=crop", // Warsaw or Polish scene
     "register-trademark-czech-republic":
       "https://images.unsplash.com/photo-1592906209472-a36b1f3782ef?w=600&h=400&fit=crop", // Prague or Czech landmark
+    "register-trademark-california":
+      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/8777996los-angeles-hollywood-sign.jpg-rLwjzZLJASUIniBUJeIU7NFLJiQuYO.jpeg", // Hollywood Sign
   }
 
   // Topic-specific images for non-country articles
@@ -211,7 +228,8 @@ function getBlogPosts() {
     "importance-of-brand-protection":
       "https://images.unsplash.com/photo-1611224885990-ab7363d1f2a9?w=600&h=400&fit=crop", // Shield/protection concept
     "trademark-registration-process": "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600&h=400&fit=crop", // Process/steps
-    "global-trademark-strategies": "https://images.unsplash.com/photo-1526778548025-fa2f459cd5ce?w=600&h=400&fit=crop", // Global/world map
+    "global-trademark-strategies":
+      "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/5de467a0b0a5ed5119a8eca3_65958bb3-07cb-4477-9d3365398a681c0a.jpg-yROVP2qd3234VhKJM93EW75IGSYbRA.jpeg", // Global brand logos
     "trademark-classification": "https://images.unsplash.com/photo-1568234928966-359c35dd8327?w=600&h=400&fit=crop", // Organization/classification
     "trademark-registration-comparison":
       "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=400&fit=crop", // Comparison/analysis
@@ -225,6 +243,34 @@ function getBlogPosts() {
       description:
         "Explore how the landmark Hermès vs. MetaBirkins case reshaped trademark law for the digital age, setting crucial precedents for brand protection in NFTs and the metaverse.",
       image: topicImages["hermes-metabirkins-trademark-battle"],
+    },
+    "meghan-markle-as-ever-trademark-challenges": {
+      title: "Meghan Markle's 'As Ever' Trademark Challenges",
+      description:
+        "Explore the trademark challenges faced by Meghan Markle for her lifestyle brand 'As Ever' and the lessons businesses can learn about trademark protection.",
+      image:
+        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202025-04-14%20at%2010.46.10-WcVoyDMfkeWudzpXWjFbS3IN0btvA9.png",
+    },
+    "jiffy-bag-genericized-trademark": {
+      title: "Jiffy Bag: How a Trademark Became Generic",
+      description:
+        "Explore how the Jiffy bag trademark became genericized and the lessons businesses can learn about protecting their trademarks from suffering the same fate.",
+      image:
+        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202025-04-14%20at%2010.38.01-SdyzlyLbKphtJeXRyUf0QhseC9xpuZ.png",
+    },
+    "registered-trademark-symbol-history": {
+      title: "The History and Evolution of the Registered Trademark Symbol",
+      description:
+        "Discover the fascinating history behind the registered trademark symbol (®), its legal significance, and how its usage has evolved over time.",
+      image:
+        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202025-04-14%20at%2010.49.28-bfsG72VsP3CnndjNBK31ozzGhhFsCF.png",
+    },
+    "register-trademark-france": {
+      title: "French Trademark Registration: Protecting Your Brand in the Heart of Europe",
+      description:
+        "Learn how to register your trademark in France with our comprehensive guide. Understand the INPI process, costs, and essential steps to protect your brand in this key European market.",
+      image:
+        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202025-04-14%20at%2010.50.30-Fv0tNjrsFIFFm2pSKpej9W1d46TyIP.png",
     },
     "cole-palmer-celebration-trademark": {
       title: "Cole Palmer's Iconic Celebration: The Path to Trademarking It",
@@ -327,7 +373,7 @@ function getBlogPosts() {
     "register-trademark-czech-republic": {
       title: "Czech Republic Trademark System: Central European Brand Protection",
       description:
-        "Complete guide to trademark registration in the Czech Republic. Learn about the IPO CZ process, costs, and timeline.",
+        "Comprehensive guide to trademark registration in the Czech Republic. Learn about the IPO CZ process, costs, and timeline.",
       image: countryImages["register-trademark-czech-republic"],
     },
     "trademark-classification": {
@@ -366,6 +412,13 @@ function getBlogPosts() {
       description:
         "Protect your brand in the UK market with our comprehensive guide to trademark registration. Learn about the process, costs, and timeline for securing your brand identity.",
       image: countryImages["register-trademark-united-kingdom"],
+    },
+    "register-trademark-california": {
+      title: "How to Register a Trademark in California (2025) | Complete Guide",
+      description:
+        "Learn how to register a trademark in California with our step-by-step guide. Understand the process and benefits of trademark registration for California businesses.",
+      image:
+        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/8777996los-angeles-hollywood-sign.jpg-rLwjzZLJASUIniBUJeIU7NFLJiQuYO.jpeg",
     },
   }
 
@@ -440,30 +493,33 @@ export default function BlogPage() {
   return (
     <main className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
       <NavBar />
-      <div className="container mx-auto px-4 py-16">
-        <div className="text-center mb-16">
-          <h1 className="text-4xl font-bold mb-4 text-blue-900">Trademark Registration Blog</h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Expert insights, guides, and tips on trademark registration and brand protection strategies for businesses
-            worldwide.
-          </p>
-        </div>
+      <div className="pt-10 pb-16">
+        <div className="container mx-auto px-4">
+          <div className="bg-blue-50 rounded-lg py-12 mb-12">
+            <div className="text-center mb-8">
+              <h1 className="text-4xl font-bold mb-6 text-blue-900">Trademark Registration Blog</h1>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                Expert insights, guides, and tips on trademark registration and brand protection strategies for
+                businesses worldwide.
+              </p>
+            </div>
+          </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {blogPosts.map((post, index) => (
-            <BlogPostPreview
-              key={index}
-              title={post.title}
-              excerpt={post.description}
-              image={post.image}
-              slug={post.slug}
-              date={post.date}
-            />
-          ))}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {blogPosts.map((post, index) => (
+              <BlogPostPreview
+                key={index}
+                title={post.title}
+                excerpt={post.description}
+                image={post.image}
+                slug={post.slug}
+                date={post.date}
+              />
+            ))}
+          </div>
         </div>
       </div>
       <Footer />
     </main>
   )
 }
-

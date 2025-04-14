@@ -22,22 +22,37 @@ export function BlogPostPreview({ slug, title, excerpt, date, image }: BlogPostP
   const imageSrc =
     imageError || !image ? defaultImage : image.startsWith("http") ? image : `/blog/${slug}/featured-image.jpg`
 
+  // Function to handle click and ensure scroll to top
+  const handleClick = () => {
+    // Use setTimeout to ensure this runs after navigation
+    setTimeout(() => {
+      window.scrollTo(0, 0)
+    }, 100)
+  }
+
   return (
     <Card className="hover:shadow-lg transition-shadow duration-300">
       <div className="w-full h-48 relative overflow-hidden rounded-t-lg">
-        <Image
-          src={imageSrc || "/placeholder.svg"}
-          alt={title || "Blog post image"}
-          fill
-          style={{ objectFit: "cover" }}
-          className="hover:opacity-90 transition-opacity"
-          priority={true}
-          onError={() => setImageError(true)}
-        />
+        <Link href={`/blog/${slug}`} onClick={handleClick} scroll={true}>
+          <Image
+            src={imageSrc || "/placeholder.svg"}
+            alt={title || "Blog post image"}
+            fill
+            style={{ objectFit: "cover" }}
+            className="hover:opacity-90 transition-opacity"
+            priority={true}
+            onError={() => setImageError(true)}
+          />
+        </Link>
       </div>
       <CardHeader>
         <CardTitle className="text-xl font-semibold">
-          <Link href={`/blog/${slug}`} className="text-indigo-700 hover:text-indigo-900 transition-colors">
+          <Link
+            href={`/blog/${slug}`}
+            className="text-indigo-700 hover:text-indigo-900 transition-colors"
+            onClick={handleClick}
+            scroll={true}
+          >
             {title}
           </Link>
         </CardTitle>
@@ -48,6 +63,8 @@ export function BlogPostPreview({ slug, title, excerpt, date, image }: BlogPostP
         <Link
           href={`/blog/${slug}`}
           className="mt-4 inline-block text-indigo-600 hover:text-indigo-800 transition-colors"
+          onClick={handleClick}
+          scroll={true}
         >
           Read more →
         </Link>
@@ -55,4 +72,3 @@ export function BlogPostPreview({ slug, title, excerpt, date, image }: BlogPostP
     </Card>
   )
 }
-
