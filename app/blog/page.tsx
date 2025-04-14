@@ -9,12 +9,6 @@ export const metadata: Metadata = {
   title: "Trademark Registration Blog | Expert Insights & Guides",
   description:
     "Explore our blog for expert insights on trademark registration, brand protection strategies, and intellectual property tips for businesses worldwide.",
-}
-
-export const metadata2 = {
-  title: "Trademark Registration Blog | Expert Insights & Guides",
-  description:
-    "Explore our blog for expert insights on trademark registration, brand protection strategies, and intellectual property tips for businesses worldwide.",
   alternates: {
     canonical: "https://justprotected.com/blog/",
   },
@@ -152,7 +146,7 @@ function getBlogPosts() {
 
   // Assign dates strategically by category
   let dateIndex = 0
-  const dateMap = {}
+  const dateMap: Record<string, Date> = {}
 
   // Featured content gets the most recent dates
   categories.featured.forEach((slug) => {
@@ -183,7 +177,7 @@ function getBlogPosts() {
   })
 
   // Format date as "Month Day, Year"
-  const formatDate = (date) => {
+  const formatDate = (date: Date): string => {
     return date.toLocaleDateString("en-US", {
       month: "long",
       day: "numeric",
@@ -192,7 +186,7 @@ function getBlogPosts() {
   }
 
   // Country-specific images that match the content
-  const countryImages = {
+  const countryImages: Record<string, string> = {
     "register-trademark-usa": "https://images.unsplash.com/photo-1508433957232-3107f5fd5995?w=600&h=400&fit=crop", // US flag or landmark
     "register-trademark-eu": "https://images.unsplash.com/photo-1519985176271-adb1088fa94c?w=600&h=400&fit=crop", // EU flag or Brussels
     "register-trademark-china": "https://images.unsplash.com/photo-1547981609-4b6bfe67ca0b?w=600&h=400&fit=crop", // Great Wall or Shanghai skyline
@@ -214,7 +208,7 @@ function getBlogPosts() {
   }
 
   // Topic-specific images for non-country articles
-  const topicImages = {
+  const topicImages: Record<string, string> = {
     "hermes-metabirkins-trademark-battle":
       "https://images.unsplash.com/photo-1584273143981-41c073dfe8f8?w=600&h=400&fit=crop", // Luxury goods/digital art
     "cole-palmer-celebration-trademark":
@@ -236,7 +230,7 @@ function getBlogPosts() {
   }
 
   // Blog post metadata
-  const blogPostsData = {
+  const blogPostsData: Record<string, { title: string; description: string; image: string }> = {
     // Existing blog posts
     "hermes-metabirkins-trademark-battle": {
       title: "Virtual Handbags, Real Lawsuits: The Hermès MetaBirkins Trademark Battle",
@@ -423,7 +417,7 @@ function getBlogPosts() {
   }
 
   // Default images for different content types
-  const defaultImages = {
+  const defaultImages: Record<string, string> = {
     trademark: "https://images.unsplash.com/photo-1607703703674-df96941cfa24?w=600&h=400&fit=crop",
     brand: "https://images.unsplash.com/photo-1523726491678-bf852e717f6a?w=600&h=400&fit=crop",
     register: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600&h=400&fit=crop",
