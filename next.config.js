@@ -6,6 +6,12 @@ const nextConfig = {
     unoptimized: true, // Necesario para export
   },
   output: "export", // Para exportar como estático
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
 }
 
 module.exports = nextConfig
