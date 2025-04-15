@@ -71,11 +71,11 @@
     "stripe": "latest",
     "resend": "latest",
     "@supabase/supabase-js": "latest",
-    "fs": "latest",
-    "path": "latest",
     "framer-motion": "latest",
     "uuid": "latest",
-    "@vercel/analytics": "latest"
+    "@vercel/analytics": "latest",
+    "fs": "latest",
+    "path": "latest"
   },
   "devDependencies": {
     "@types/node": "^22",

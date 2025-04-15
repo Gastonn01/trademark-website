@@ -3,72 +3,63 @@ import fs from "fs"
 import path from "path"
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://justprotected.com"
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://justprotected.com"
 
-  // Función para obtener todos los artículos del blog dinámicamente
-  const getBlogPosts = () => {
-    const blogDir = path.join(process.cwd(), "app/blog")
-    const directories = fs
-      .readdirSync(blogDir, { withFileTypes: true })
-      .filter((dirent) => dirent.isDirectory())
-      .map((dirent) => dirent.name)
-      .filter((dir) => dir !== "assets" && !dir.startsWith(".")) // Excluir directorios que no son artículos
-
-    return directories
-  }
-
-  // Obtener todos los artículos del blog
-  const allBlogPosts = getBlogPosts()
-
-  // Rutas principales con alta prioridad
-  const mainRoutes = [
+  // Static routes with their last modification date
+  const staticRoutes = [
     {
-      url: baseUrl,
+      url: `${baseUrl}/`,
       lastModified: new Date(),
-      changeFrequency: "daily",
-      priority: 1,
-    },
-    {
-      url: `${baseUrl}/about`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
+      changeFrequency: "weekly",
+      priority: 1.0,
     },
     {
       url: `${baseUrl}/pricing`,
       lastModified: new Date(),
-      changeFrequency: "weekly",
-      priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/how-it-works`,
-      lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/contact`,
+      url: `${baseUrl}/detailed-pricelist`,
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/verification`,
-      lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/blog`,
-      lastModified: new Date(),
-      changeFrequency: "daily",
-      priority: 0.9,
     },
     {
       url: `${baseUrl}/services`,
       lastModified: new Date(),
       changeFrequency: "monthly",
       priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/how-it-works`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/about`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.6,
+    },
+    {
+      url: `${baseUrl}/contact`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/free-search`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/verification`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.7,
     },
     {
       url: `${baseUrl}/trademark-process`,
@@ -86,24 +77,54 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${baseUrl}/legal-services`,
       lastModified: new Date(),
       changeFrequency: "monthly",
-      priority: 0.8,
+      priority: 0.7,
     },
     {
-      url: `${baseUrl}/detailed-pricelist`,
+      url: `${baseUrl}/blog`,
       lastModified: new Date(),
-      changeFrequency: "monthly",
-      priority: 0.8,
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/privacy`,
+      lastModified: new Date(),
+      changeFrequency: "yearly",
+      priority: 0.3,
+    },
+    {
+      url: `${baseUrl}/terms`,
+      lastModified: new Date(),
+      changeFrequency: "yearly",
+      priority: 0.3,
+    },
+    {
+      url: `${baseUrl}/cookies`,
+      lastModified: new Date(),
+      changeFrequency: "yearly",
+      priority: 0.3,
     },
   ]
 
-  // Generar entradas para todos los artículos del blog
-  const blogEntries = allBlogPosts.map((slug) => ({
-    url: `${baseUrl}/blog/${slug}`,
-    lastModified: new Date(),
-    changeFrequency: "monthly" as const,
-    priority: 0.7,
-  }))
+  // Get all blog post routes
+  const blogDir = path.join(process.cwd(), "app/blog")
+  let blogRoutes: MetadataRoute.Sitemap = []
 
-  // Combinar todas las rutas
-  return [...mainRoutes, ...blogEntries]
+  try {
+    const directories = fs
+      .readdirSync(blogDir, { withFileTypes: true })
+      .filter((dirent) => dirent.isDirectory())
+      .map((dirent) => dirent.name)
+      .filter((dir) => dir !== "assets" && !dir.startsWith("."))
+
+    blogRoutes = directories.map((slug) => ({
+      url: `${baseUrl}/blog/${slug}`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.7,
+    }))
+  } catch (error) {
+    console.error("Error reading blog directory:", error)
+  }
+
+  return [...staticRoutes, ...blogRoutes]
 }
