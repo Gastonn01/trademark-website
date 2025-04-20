@@ -6,7 +6,6 @@ import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { useEffect } from "react"
-import { BlogFreeSearchCTA } from "@/components/blog-free-search-cta"
 
 export default function FiveThingsTrademarkPageClient() {
   useEffect(() => {
@@ -41,9 +40,6 @@ export default function FiveThingsTrademarkPageClient() {
             someone curious about intellectual property, these lesser-known facts about trademark registration will
             surprise you and help you protect your brand effectively.
           </p>
-
-          {/* Add the free search CTA here */}
-          <BlogFreeSearchCTA />
 
           <h2 className="text-2xl font-bold mt-8 mb-4 text-purple-800">1. Trademarks Aren't Just for Logos</h2>
 
@@ -254,8 +250,6 @@ export default function FiveThingsTrademarkPageClient() {
               </Button>
             </div>
           </div>
-          {/* Final CTA */}
-          <BlogFreeSearchCTA className="mt-12" />
         </div>
       </article>
       <Footer />

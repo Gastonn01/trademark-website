@@ -3,7 +3,6 @@ import { NavBar } from "@/components/nav-bar"
 import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { BlogFreeSearchCTA } from "@/components/blog-free-search-cta"
 import {
   CheckCircle,
   FileText,
@@ -159,9 +158,6 @@ export default function RegisterTrademarkUSA() {
             </div>
           </div>
         </div>
-
-        {/* Add free search CTA */}
-        <BlogFreeSearchCTA />
 
         <div className="prose prose-indigo max-w-none">
           <h2 id="why-it-matters" className="flex items-center text-2xl font-bold text-indigo-900 mb-4 scroll-mt-20">
@@ -737,9 +733,6 @@ export default function RegisterTrademarkUSA() {
               </Button>
             </div>
           </div>
-
-          {/* Final CTA */}
-          <BlogFreeSearchCTA className="mt-12" />
 
           <div className="border-t border-gray-200 pt-8 mt-12">
             <p className="text-sm text-gray-600 italic">

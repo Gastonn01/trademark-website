@@ -6,33 +6,20 @@ const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
-// Función para verificar y crear la tabla si no existe
+// Update the ensureTableExists function to check for the new schema
 export async function ensureTableExists() {
   try {
-    // Verificar si la tabla existe
+    // Verify the table exists by querying it
     const { error: checkError } = await supabase.from("trademark_searches").select("id").limit(1)
 
     if (checkError && checkError.message.includes("does not exist")) {
-      console.log("La tabla trademark_searches no existe, creándola...")
-
-      // Crear la tabla usando SQL
-      const { error: createError } = await supabase.rpc("create_trademark_searches_table")
-
-      if (createError) {
-        console.error("Error al crear la tabla:", createError)
-
-        // Implementación alternativa: almacenamiento en memoria
-        console.log("Usando almacenamiento en memoria como alternativa")
-        return false
-      }
-
-      console.log("Tabla trademark_searches creada exitosamente")
-      return true
+      console.log("Table trademark_searches does not exist, but should have been created during deployment")
+      return false
     }
 
     return true
   } catch (error) {
-    console.error("Error al verificar/crear la tabla:", error)
+    console.error("Error checking table:", error)
     return false
   }
 }
@@ -79,10 +66,10 @@ export async function uploadFileToStorage(file: File, searchId: string) {
 // Almacenamiento en memoria como respaldo
 const inMemoryStorage: { [key: string]: any } = {}
 
-// Función para guardar los datos de búsqueda
+// Update the saveSearchData function to match the new schema
 export async function saveSearchData(searchId: string, searchData: any, formType: string) {
   try {
-    // Verificar si ya existe un registro con este ID
+    // Check if record exists
     const { data: existingData, error: fetchError } = await supabase
       .from("trademark_searches")
       .select("*")
@@ -90,77 +77,96 @@ export async function saveSearchData(searchId: string, searchData: any, formType
       .single()
 
     if (fetchError && !fetchError.message.includes("No rows found")) {
-      console.error("Error al verificar si existe el registro:", fetchError)
+      console.error("Error checking existing record:", fetchError)
+    }
+
+    // Prepare data object with schema-compatible fields
+    const dataToSave = {
+      id: searchId,
+      trademark_name: searchData.trademarkName || searchData.trademark_name || "Unnamed",
+      email: searchData.email || "",
+      phone: searchData.phone || searchData.phoneNumber || "",
+      description: searchData.description || searchData.details || "",
+      status: "pending",
+      search_results: searchData, // Store all form data in the JSONB field
+      notes: formType, // Store form type in notes for reference
     }
 
     if (existingData) {
-      // Si existe, actualizar los datos
+      // Update existing record
       const { error } = await supabase
         .from("trademark_searches")
         .update({
-          search_data: { ...existingData.search_data, ...searchData },
+          ...dataToSave,
           updated_at: new Date().toISOString(),
         })
         .eq("id", searchId)
 
       if (error) {
-        console.error("Error al actualizar en Supabase, usando almacenamiento en memoria:", error)
-        // Actualizar en memoria si existe
-        if (inMemoryStorage[searchId]) {
-          inMemoryStorage[searchId] = {
-            ...inMemoryStorage[searchId],
-            search_data: { ...inMemoryStorage[searchId].search_data, ...searchData },
-            updated_at: new Date().toISOString(),
-          }
-        } else {
-          // Si no existe en memoria, crear nuevo
-          inMemoryStorage[searchId] = {
-            id: searchId,
-            form_type: formType,
-            search_data: searchData,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-            status: "pending",
-          }
-        }
+        console.error("Error updating record:", error)
+        return { success: false, error: error.message }
       }
     } else {
-      // Si no existe, insertar nuevo registro
+      // Insert new record
       const { error } = await supabase.from("trademark_searches").insert([
         {
-          id: searchId,
-          form_type: formType,
-          search_data: searchData,
+          ...dataToSave,
           created_at: new Date().toISOString(),
-          status: "pending",
+          updated_at: new Date().toISOString(),
         },
       ])
 
       if (error) {
-        // Si hay un error, guardar en memoria
-        console.error("Error al guardar en Supabase, usando almacenamiento en memoria:", error)
-        inMemoryStorage[searchId] = {
-          id: searchId,
-          form_type: formType,
-          search_data: searchData,
-          created_at: new Date().toISOString(),
-          status: "pending",
-        }
+        console.error("Error inserting record:", error)
+        return { success: false, error: error.message }
       }
     }
 
     return { success: true }
   } catch (error) {
-    // En caso de error, guardar en memoria
-    console.error("Error en la operación de Supabase, usando almacenamiento en memoria:", error)
-    inMemoryStorage[searchId] = {
-      id: searchId,
-      form_type: formType,
-      search_data: searchData,
-      created_at: new Date().toISOString(),
-      status: "pending",
+    console.error("Error in saveSearchData:", error)
+    return { success: false, error: error instanceof Error ? error.message : "Unknown error" }
+  }
+}
+
+// Update getAllSearchData to match the new schema
+export async function getAllSearchData(limit = 100, offset = 0, status?: string) {
+  try {
+    let query = supabase
+      .from("trademark_searches")
+      .select("*")
+      .range(offset, offset + limit - 1)
+      .order("created_at", { ascending: false })
+
+    if (status && status !== "all") {
+      query = query.eq("status", status)
     }
-    return { success: true }
+
+    const { data, error } = await query
+
+    if (error) {
+      console.error("Error fetching search data:", error)
+      throw new Error(`Fetch failed: ${error.message}`)
+    }
+
+    // Transform data to match expected format in admin panel
+    const transformedData = data.map((item) => ({
+      id: item.id,
+      form_type: item.notes || "Unknown",
+      search_data: {
+        ...item.search_results,
+        name: item.search_results?.firstName || item.search_results?.name || "",
+        surname: item.search_results?.lastName || item.search_results?.surname || "",
+        email: item.email,
+      },
+      created_at: item.created_at,
+      status: item.status,
+    }))
+
+    return { data: transformedData, error: null }
+  } catch (error) {
+    console.error("Error in getAllSearchData:", error)
+    return { data: null, error: error instanceof Error ? error.message : "Unknown error" }
   }
 }
 
@@ -181,33 +187,6 @@ export async function getSearchData(searchId: string) {
     // En caso de error, intentar obtener de memoria
     console.error("Error en la operación de Supabase, buscando en memoria:", error)
     return inMemoryStorage[searchId] || null
-  }
-}
-
-// Función para obtener todos los datos de búsqueda (para panel de administración)
-export async function getAllSearchData(limit = 100, offset = 0, status?: string) {
-  try {
-    let query = supabase
-      .from("trademark_searches")
-      .select("*")
-      .range(offset, offset + limit - 1)
-      .order("created_at", { ascending: false })
-
-    if (status && status !== "all") {
-      query = query.eq("status", status)
-    }
-
-    const { data, error } = await query
-
-    if (error) {
-      console.error("Error fetching all search data from Supabase:", error)
-      throw new Error(`Fetch all failed: ${error.message}`)
-    }
-
-    return { data, error: null }
-  } catch (error) {
-    console.error("Supabase getAll operation failed:", error)
-    return { data: null, error: error instanceof Error ? error.message : "Unknown error" }
   }
 }
 

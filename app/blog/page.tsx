@@ -1,311 +1,512 @@
 import { NavBar } from "@/components/nav-bar"
 import { Footer } from "@/components/footer"
 import { BlogPostPreview } from "@/components/blog-post-preview"
+import fs from "fs"
+import path from "path"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "Blog | Just Protected",
+  title: "Trademark Registration Blog | Expert Insights & Guides",
   description:
-    "Latest articles and insights about trademark registration, brand protection, and intellectual property.",
+    "Explore our blog for expert insights on trademark registration, brand protection strategies, and intellectual property tips for businesses worldwide.",
+  alternates: {
+    canonical: "https://justprotected.com/blog/",
+  },
 }
 
-// Comprehensive list of all blog posts based on the file structure
-const blogPosts = [
-  {
-    slug: "register-trademark-usa",
-    title: "How to Register a Trademark in the USA: Complete Guide",
-    excerpt:
-      "Learn the step-by-step process of registering a trademark in the United States, including requirements, costs, and timeline.",
-    date: "April 15, 2023",
-    image: "/images/blog/usa-trademark.jpg",
-  },
-  {
-    slug: "register-trademark-eu",
-    title: "Registering a Trademark in the European Union",
-    excerpt:
-      "Everything you need to know about protecting your brand across all EU member states with a single trademark registration.",
-    date: "March 22, 2023",
-    image: "/images/blog/eu-trademark.jpg",
-  },
-  {
-    slug: "register-trademark-european-union",
-    title: "Complete Guide to Registering a Trademark in the European Union",
-    excerpt:
-      "A comprehensive guide to protecting your brand across all EU member states with a single trademark registration.",
-    date: "March 20, 2023",
-    image: "/images/blog/european-union-trademark.jpg",
-  },
-  {
-    slug: "trademark-registration-china",
-    title: "Trademark Registration in China: Essential Guide",
-    excerpt:
-      "Navigate the complexities of China's trademark system and protect your brand in the world's largest consumer market.",
-    date: "February 18, 2023",
-    image: "/images/blog/china-trademark.jpg",
-  },
-  {
-    slug: "register-trademark-china",
-    title: "How to Register a Trademark in China: Step-by-Step Guide",
-    excerpt:
-      "A detailed guide to registering your trademark in China, including requirements, process, and common challenges.",
-    date: "February 15, 2023",
-    image: "/images/blog/china-registration.jpg",
-  },
-  {
-    slug: "trademark-registration-india",
-    title: "Trademark Registration in India: Complete Guide",
-    excerpt: "Everything you need to know about registering and protecting your trademark in India's growing market.",
-    date: "February 10, 2023",
-    image: "/images/blog/india-trademark.jpg",
-  },
-  {
-    slug: "register-trademark-india",
-    title: "How to Register a Trademark in India: Step-by-Step Process",
-    excerpt: "A comprehensive guide to navigating India's trademark registration system and protecting your brand.",
-    date: "February 8, 2023",
-    image: "/images/blog/india-registration.jpg",
-  },
-  {
-    slug: "trademark-registration-germany",
-    title: "Trademark Registration in Germany: Essential Guide",
-    excerpt: "Learn how to register and protect your trademark in Europe's largest economy.",
-    date: "February 5, 2023",
-    image: "/images/blog/germany-trademark.jpg",
-  },
-  {
-    slug: "register-trademark-germany",
-    title: "How to Register a Trademark in Germany: Complete Process",
-    excerpt: "A detailed guide to registering your trademark in Germany, including requirements, timeline, and costs.",
-    date: "February 3, 2023",
-    image: "/images/blog/germany-registration.jpg",
-  },
-  {
-    slug: "trademark-registration-united-kingdom",
-    title: "Trademark Registration in the United Kingdom: Complete Guide",
-    excerpt: "Everything you need to know about protecting your brand in the UK market post-Brexit.",
-    date: "January 28, 2023",
-    image: "/images/blog/uk-trademark.jpg",
-  },
-  {
-    slug: "register-trademark-united-kingdom",
-    title: "How to Register a Trademark in the UK: Step-by-Step Guide",
-    excerpt: "A comprehensive guide to registering your trademark in the United Kingdom after Brexit.",
-    date: "January 25, 2023",
-    image: "/images/blog/uk-registration.jpg",
-  },
-  {
-    slug: "trademark-registration-process",
-    title: "Understanding the Trademark Registration Process",
-    excerpt:
-      "A comprehensive overview of the trademark registration process, from search to registration and maintenance.",
-    date: "January 20, 2023",
-    image: "/images/blog/trademark-process.jpg",
-  },
-  {
-    slug: "trademark-priority-period",
-    title: "Understanding Trademark Priority Period",
-    excerpt: "Learn about the trademark priority period and how it can benefit your international trademark strategy.",
-    date: "January 15, 2023",
-    image: "/images/blog/priority-period.jpg",
-  },
-  {
-    slug: "register-trademark-spain",
-    title: "How to Register a Trademark in Spain: Complete Guide",
-    excerpt: "A detailed guide to protecting your brand in Spain through trademark registration.",
-    date: "January 10, 2023",
-    image: "/images/blog/spain-trademark.jpg",
-  },
-  {
-    slug: "register-trademark-france",
-    title: "How to Register a Trademark in France: Step-by-Step Guide",
-    excerpt: "Everything you need to know about registering and protecting your trademark in France.",
-    date: "January 5, 2023",
-    image: "/images/blog/france-trademark.jpg",
-  },
-  {
-    slug: "register-trademark-new-zealand",
-    title: "How to Register a Trademark in New Zealand",
-    excerpt:
-      "A comprehensive guide to trademark registration in New Zealand, including process, requirements, and costs.",
-    date: "December 28, 2022",
-    image: "/images/blog/new-zealand-trademark.jpg",
-  },
-  {
-    slug: "register-trademark-mexico",
-    title: "Registering a Trademark in Mexico: Complete Guide",
-    excerpt: "Learn how to protect your brand in Mexico through proper trademark registration.",
-    date: "December 20, 2022",
-    image: "/images/blog/mexico-trademark.jpg",
-  },
-  {
-    slug: "register-trademark-brazil",
-    title: "How to Register a Trademark in Brazil: Essential Guide",
-    excerpt: "Navigate Brazil's trademark system and protect your brand in South America's largest market.",
-    date: "December 15, 2022",
-    image: "/images/blog/brazil-trademark.jpg",
-  },
-  {
-    slug: "maximise-successful-trademark-registration",
-    title: "How to Maximize Your Chances of Successful Trademark Registration",
-    excerpt: "Expert tips to increase your chances of successful trademark registration and avoid common pitfalls.",
-    date: "December 12, 2022",
-    image: "/images/blog/successful-registration.jpg",
-  },
-  {
-    slug: "register-trademark-argentina",
-    title: "Trademark Registration in Argentina: Complete Guide",
-    excerpt: "Everything you need to know about protecting your brand in Argentina through trademark registration.",
-    date: "December 8, 2022",
-    image: "/images/blog/argentina-trademark.jpg",
-  },
-  {
-    slug: "register-trademark-poland",
-    title: "How to Register a Trademark in Poland: Step-by-Step Guide",
-    excerpt: "A comprehensive guide to navigating Poland's trademark system and protecting your brand.",
-    date: "December 5, 2022",
-    image: "/images/blog/poland-trademark.jpg",
-  },
-  {
-    slug: "register-trademark-czech-republic",
-    title: "Trademark Registration in the Czech Republic",
-    excerpt: "Learn how to register and protect your trademark in the Czech Republic's growing market.",
-    date: "December 1, 2022",
-    image: "/images/blog/czech-trademark.jpg",
-  },
-  {
-    slug: "global-trademark-strategies",
-    title: "Global Trademark Strategies for Businesses",
-    excerpt: "Develop an effective international trademark strategy to protect your brand across multiple markets.",
-    date: "November 28, 2022",
-    image: "/images/blog/global-strategy.jpg",
-  },
-  {
-    slug: "make-trademark-stand-out",
-    title: "How to Make Your Trademark Stand Out",
-    excerpt: "Tips for creating a distinctive and memorable trademark that will stand out in the marketplace.",
-    date: "November 10, 2022",
-    image: "/images/blog/distinctive-trademark.jpg",
-  },
-  {
-    slug: "cole-palmer-celebration-trademark",
-    title: "Cole Palmer's Celebration Trademark",
-    excerpt: "Exploring the potential trademark implications of Cole Palmer's distinctive goal celebration.",
-    date: "October 25, 2022",
-    image: "/images/blog/cole-palmer.jpg",
-  },
-  {
-    slug: "five-things-about-trademark-registration",
-    title: "Five Things You Should Know About Trademark Registration",
-    excerpt: "Essential information every business owner should understand before registering a trademark.",
-    date: "October 8, 2022",
-    image: "/images/blog/trademark-essentials.jpg",
-  },
-  {
-    slug: "hermes-metabirkins-trademark-battle",
-    title: "Hermès vs. MetaBirkins: The NFT Trademark Battle",
-    excerpt: "An analysis of the landmark trademark case between Hermès and MetaBirkins in the NFT space.",
-    date: "October 1, 2022",
-    image: "/images/blog/hermes-metabirkins.jpg",
-  },
-  {
-    slug: "trademark-classification",
-    title: "Understanding Trademark Classification: A Complete Guide",
-    excerpt: "Everything you need to know about the international classification system for trademarks.",
-    date: "September 25, 2022",
-    image: "/images/blog/trademark-classification.jpg",
-  },
-  {
-    slug: "jiffy-bag-genericized-trademark",
-    title: "Jiffy Bag: The Story of a Genericized Trademark",
-    excerpt: "How Jiffy Bag became a genericized trademark and lessons for brand owners.",
-    date: "September 20, 2022",
-    image: "/images/blog/jiffy-bag.jpg",
-  },
-  {
-    slug: "uspto-detroit-satellite-office",
-    title: "USPTO Detroit Satellite Office: What You Need to Know",
-    excerpt: "Information about the USPTO's Detroit satellite office and how it serves trademark applicants.",
-    date: "September 5, 2022",
-    image: "/images/blog/uspto-detroit.jpg",
-  },
-  {
-    slug: "meghan-markle-as-ever-trademark-challenges",
-    title: "Meghan Markle's 'American Riviera Orchard': Trademark Challenges",
-    excerpt: "Analyzing the trademark challenges faced by Meghan Markle's new lifestyle brand.",
-    date: "August 28, 2022",
-    image: "/images/blog/meghan-markle-trademark.jpg",
-  },
-  {
-    slug: "registered-trademark-symbol-history",
-    title: "The History of the Registered Trademark Symbol ®",
-    excerpt: "Exploring the origins and evolution of the registered trademark symbol and its legal significance.",
-    date: "August 20, 2022",
-    image: "/images/blog/trademark-symbol.jpg",
-  },
-  {
-    slug: "register-trademark-california",
-    title: "How to Register a Trademark in California",
-    excerpt: "A comprehensive guide to state trademark registration in California and its benefits.",
-    date: "August 15, 2022",
-    image: "/images/california-trademark.png",
-  },
-  {
-    slug: "importance-of-brand-protection",
-    title: "The Importance of Brand Protection in Today's Digital World",
-    excerpt: "Why protecting your brand through trademarks is more critical than ever in the digital age.",
-    date: "August 10, 2022",
-    image: "/images/blog/brand-protection.jpg",
-  },
-  {
-    slug: "registrar-marca-estados-unidos",
-    title: "Cómo Registrar una Marca en Estados Unidos",
-    excerpt: "Guía completa para registrar su marca en los Estados Unidos desde el extranjero.",
-    date: "August 5, 2022",
-    image: "/images/blog/usa-spanish.jpg",
-  },
-  {
-    slug: "registrar-marca-union-europea",
-    title: "Cómo Registrar una Marca en la Unión Europea",
-    excerpt: "Todo lo que necesita saber sobre el registro de marcas en la Unión Europea.",
-    date: "August 1, 2022",
-    image: "/images/blog/eu-spanish.jpg",
-  },
-  {
-    slug: "trademark-registration-comparison",
-    title: "Trademark Registration: Country-by-Country Comparison",
-    excerpt: "A comparative analysis of trademark registration processes across major global markets.",
-    date: "July 25, 2022",
-    image: "/images/blog/country-comparison.jpg",
-  },
-]
+// Function to get all blog posts dynamically
+function getBlogPosts() {
+  const blogDir = path.join(process.cwd(), "app/blog")
+  const directories = fs
+    .readdirSync(blogDir, { withFileTypes: true })
+    .filter((dirent) => dirent.isDirectory())
+    .map((dirent) => dirent.name)
+    .filter((dir) => dir !== "assets" && !dir.startsWith(".")) // Exclude non-blog directories
+
+  // Define duplicate/related content groups and their preferred version
+  const duplicateGroups = {
+    // EU trademark articles - keep the main English version
+    "register-trademark-eu": ["register-trademark-european-union"],
+
+    // Country duplicates - keep the "register-trademark-X" version and remove "trademark-registration-X"
+    "register-trademark-china": ["trademark-registration-china"],
+    "register-trademark-india": ["trademark-registration-india"],
+    "register-trademark-germany": ["trademark-registration-germany"],
+    "register-trademark-united-kingdom": ["trademark-registration-united-kingdom"],
+  }
+
+  // Spanish versions to exclude
+  const spanishVersions = ["registrar-marca-estados-unidos", "registrar-marca-union-europea"]
+
+  // Flatten the duplicate groups to get a list of all duplicates
+  const duplicates = Object.values(duplicateGroups).flat().concat(spanishVersions)
+
+  // Filter out duplicates and Spanish versions from the directories list
+  const uniqueSlugs = directories.filter((slug) => !duplicates.includes(slug))
+
+  // Create a consistent publishing schedule (every Tuesday and Thursday)
+  // Starting from recent date and working backwards
+  const generateConsistentDates = () => {
+    const dates = []
+    const today = new Date() // Current date
+
+    // Start from today and work backwards
+    // We'll generate dates for Tuesdays and Thursdays in the past
+    const currentDate = new Date(today)
+
+    // If today is a publishing day (Tuesday or Thursday), include it
+    // Otherwise, move to the most recent past publishing day
+    if (currentDate.getDay() !== 2 && currentDate.getDay() !== 4) {
+      // Move to the most recent past Tuesday or Thursday
+      while (currentDate.getDay() !== 2 && currentDate.getDay() !== 4) {
+        currentDate.setDate(currentDate.getDate() - 1)
+      }
+    }
+
+    // Generate dates going back in time (Tuesday and Thursday each week)
+    for (let i = 0; i < 100; i++) {
+      // Generate plenty of dates
+      dates.push(new Date(currentDate))
+
+      // Move to previous publishing day
+      if (currentDate.getDay() === 2) {
+        // Tuesday
+        currentDate.setDate(currentDate.getDate() - 5) // Move to previous Thursday
+      } else {
+        // Thursday
+        currentDate.setDate(currentDate.getDate() - 2) // Move to previous Tuesday
+      }
+    }
+
+    return dates // Already in reverse chronological order (newest to oldest)
+  }
+
+  const publishDates = generateConsistentDates()
+
+  // More diverse and engaging titles for country articles
+  const countryTitles: Record<string, string> = {
+    "register-trademark-usa": "Securing Your Brand in America: US Trademark Guide (2024)",
+    "register-trademark-eu": "Protecting Brands Across Europe: EU Trademark Essentials",
+    "register-trademark-china": "Navigating China's Trademark System: A Western Brand's Guide",
+    "register-trademark-india": "Brand Protection in India's Booming Market: Trademark Strategies",
+    "register-trademark-united-kingdom": "Post-Brexit Trademark Registration: UK Brand Protection",
+    "register-trademark-germany": "German Trademark Law: Protecting Your Brand in Europe's Largest Economy",
+    "register-trademark-spain": "Trademark Registration in Spain: Mediterranean Market Entry Guide",
+    "register-trademark-new-zealand": "Protecting Brands in New Zealand: Trademark Insights for Foreign Companies",
+    "register-trademark-mexico": "Mexican Trademark Strategy: Safeguarding Your Brand in Latin America",
+    "register-trademark-brazil": "Brazilian Trademark Essentials: Navigating South America's Largest Market",
+    "register-trademark-argentina": "Trademark Protection in Argentina: A Strategic Approach",
+    "register-trademark-poland": "Securing Trademarks in Poland: Eastern European Market Guide",
+    "register-trademark-czech-republic": "Czech Republic Trademark System: Central European Brand Protection",
+    "register-trademark-california": "How to Register a Trademark in California (2024) | Complete Guide",
+    "register-trademark-france": "French Trademark Registration: Protecting Your Brand in the Heart of Europe",
+  }
+
+  // Group articles by category for strategic dating
+  const categories = {
+    featured: [
+      "hermes-metabirkins-trademark-battle", // Most recent - NFT/digital is cutting edge
+      "cole-palmer-celebration-trademark", // Sports/celebrity content is timely
+      "five-things-about-trademark-registration", // Listicle - good for recent content
+      "make-trademark-stand-out", // Practical advice - good for recent content
+      "meghan-markle-as-ever-trademark-challenges", // Add this line
+      "jiffy-bag-genericized-trademark", // Add this line
+      "registered-trademark-symbol-history", // Add this line
+      "register-trademark-france", // Add this line
+    ],
+    fundamentals: [
+      "importance-of-brand-protection", // Foundational content
+      "trademark-registration-process", // Core process explanation
+      "global-trademark-strategies", // Strategic overview
+      "trademark-priority-period", // Important concept
+      "maximise-successful-trademark-registration", // General advice
+      "trademark-classification", // Technical knowledge
+      "trademark-registration-comparison", // Comparison content
+    ],
+    majorMarkets: [
+      "register-trademark-usa", // US (English only)
+      "register-trademark-california", // California
+      "register-trademark-eu", // EU (English only)
+      "register-trademark-china", // China
+      "register-trademark-india", // India
+      "register-trademark-united-kingdom", // UK
+      "register-trademark-germany", // Germany
+      "register-trademark-france", // France
+    ],
+    otherMarkets: [
+      "register-trademark-spain",
+      "register-trademark-new-zealand",
+      "register-trademark-mexico",
+      "register-trademark-brazil",
+      "register-trademark-argentina",
+      "register-trademark-poland",
+      "register-trademark-czech-republic",
+    ],
+  }
+
+  // Assign dates strategically by category
+  let dateIndex = 0
+  const dateMap: Record<string, Date> = {}
+
+  // Featured content gets the most recent dates
+  categories.featured.forEach((slug) => {
+    const date = publishDates[dateIndex]
+    dateMap[slug] = date
+    dateIndex++
+  })
+
+  // Fundamentals get slightly older dates but still recent
+  categories.fundamentals.forEach((slug) => {
+    const date = publishDates[dateIndex]
+    dateMap[slug] = date
+    dateIndex++
+  })
+
+  // Major markets get the next batch of dates
+  categories.majorMarkets.forEach((slug) => {
+    const date = publishDates[dateIndex]
+    dateMap[slug] = date
+    dateIndex++
+  })
+
+  // Other markets get the oldest dates
+  categories.otherMarkets.forEach((slug) => {
+    const date = publishDates[dateIndex]
+    dateMap[slug] = date
+    dateIndex++
+  })
+
+  // Format date as "Month Day, Year"
+  const formatDate = (date: Date): string => {
+    return date.toLocaleDateString("en-US", {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    })
+  }
+
+  // Country-specific images that match the content
+  const countryImages: Record<string, string> = {
+    "register-trademark-usa": "https://images.unsplash.com/photo-1508433957232-3107f5fd5995?w=600&h=400&fit=crop", // US flag or landmark
+    "register-trademark-eu": "https://images.unsplash.com/photo-1519985176271-adb1088fa94c?w=600&h=400&fit=crop", // EU flag or Brussels
+    "register-trademark-china": "https://images.unsplash.com/photo-1547981609-4b6bfe67ca0b?w=600&h=400&fit=crop", // Great Wall or Shanghai skyline
+    "register-trademark-india": "https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=600&h=400&fit=crop", // Taj Mahal or business district
+    "register-trademark-united-kingdom":
+      "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=600&h=400&fit=crop", // London or UK flag
+    "register-trademark-germany": "https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=600&h=400&fit=crop", // Berlin or German landmark
+    "register-trademark-spain": "https://images.unsplash.com/photo-1543783207-ec64e4d95325?w=600&h=400&fit=crop", // Spanish architecture
+    "register-trademark-new-zealand":
+      "https://images.unsplash.com/photo-1507699622108-4be3abd695ad?w=600&h=400&fit=crop", // NZ landscape
+    "register-trademark-mexico": "https://images.unsplash.com/photo-1518638150340-f706e86654de?w=600&h=400&fit=crop", // Mexican landmark
+    "register-trademark-brazil": "https://images.unsplash.com/photo-1483729558449-99ef09a8c325?w=600&h=400&fit=crop", // Rio or Brazilian scene
+    "register-trademark-argentina": "https://images.unsplash.com/photo-1589909202802-8f4aadce1849?w=600&h=400&fit=crop", // Buenos Aires or Argentine landmark
+    "register-trademark-poland": "https://images.unsplash.com/photo-1562109245-c9f084749538?w=600&h=400&fit=crop", // Warsaw or Polish scene
+    "register-trademark-czech-republic":
+      "https://images.unsplash.com/photo-1592906209472-a36b1f3782ef?w=600&h=400&fit=crop", // Prague or Czech landmark
+    "register-trademark-california":
+      "https://images.unsplash.com/photo-1580655653885-65763b2597d0?w=600&h=400&fit=crop", // Hollywood Sign
+  }
+
+  // Topic-specific images for non-country articles
+  const topicImages: Record<string, string> = {
+    "hermes-metabirkins-trademark-battle":
+      "https://images.unsplash.com/photo-1584273143981-41c073dfe8f8?w=600&h=400&fit=crop", // Luxury goods/digital art
+    "cole-palmer-celebration-trademark":
+      "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=600&h=400&fit=crop", // Football/sports
+    "five-things-about-trademark-registration":
+      "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=600&h=400&fit=crop", // Business/documents
+    "trademark-priority-period": "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=600&h=400&fit=crop", // Calendar/time concept
+    "make-trademark-stand-out": "https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?w=600&h=400&fit=crop", // Creative branding
+    "maximise-successful-trademark-registration":
+      "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=600&h=400&fit=crop", // Success/achievement
+    "importance-of-brand-protection":
+      "https://images.unsplash.com/photo-1611224885990-ab7363d1f2a9?w=600&h=400&fit=crop", // Shield/protection concept
+    "trademark-registration-process": "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600&h=400&fit=crop", // Process/steps
+    "global-trademark-strategies": "https://images.unsplash.com/photo-1529119368496-2dfda6ec2804?w=600&h=400&fit=crop", // Global brand logos
+    "trademark-classification": "https://images.unsplash.com/photo-1568234928966-359c35dd8327?w=600&h=400&fit=crop", // Organization/classification
+    "trademark-registration-comparison":
+      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=400&fit=crop", // Comparison/analysis
+  }
+
+  // Blog post metadata
+  const blogPostsData: Record<string, { title: string; description: string; image: string }> = {
+    // Existing blog posts
+    "hermes-metabirkins-trademark-battle": {
+      title: "Virtual Handbags, Real Lawsuits: The Hermès MetaBirkins Trademark Battle",
+      description:
+        "Explore how the landmark Hermès vs. MetaBirkins case reshaped trademark law for the digital age, setting crucial precedents for brand protection in NFTs and the metaverse.",
+      image: topicImages["hermes-metabirkins-trademark-battle"],
+    },
+    "meghan-markle-as-ever-trademark-challenges": {
+      title: "Meghan Markle's 'As Ever' Trademark Challenges",
+      description:
+        "Explore the trademark challenges faced by Meghan Markle for her lifestyle brand 'As Ever' and the lessons businesses can learn about trademark protection.",
+      image: "https://images.unsplash.com/photo-1566554273541-37a9ca77b91f?w=600&h=400&fit=crop",
+    },
+    "jiffy-bag-genericized-trademark": {
+      title: "Jiffy Bag: How a Trademark Became Generic",
+      description:
+        "Explore how the Jiffy bag trademark became genericized and the lessons businesses can learn about protecting their trademarks from suffering the same fate.",
+      image: "https://images.unsplash.com/photo-1584438875844-d4628dadafd7?w=600&h=400&fit=crop",
+    },
+    "registered-trademark-symbol-history": {
+      title: "The History and Evolution of the Registered Trademark Symbol",
+      description:
+        "Discover the fascinating history behind the registered trademark symbol (®), its legal significance, and how its usage has evolved over time.",
+      image: "https://images.unsplash.com/photo-1607703703674-df96941cfa24?w=600&h=400&fit=crop",
+    },
+    "register-trademark-france": {
+      title: "French Trademark Registration: Protecting Your Brand in the Heart of Europe",
+      description:
+        "Learn how to register your trademark in France with our comprehensive guide. Understand the INPI process, costs, and essential steps to protect your brand in this key European market.",
+      image: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=600&h=400&fit=crop",
+    },
+    "cole-palmer-celebration-trademark": {
+      title: "Cole Palmer's Iconic Celebration: The Path to Trademarking It",
+      description:
+        "Explore how football star Cole Palmer could trademark his iconic goal celebration and the benefits of protecting personal brands in sports.",
+      image: topicImages["cole-palmer-celebration-trademark"],
+    },
+    "five-things-about-trademark-registration": {
+      title: "5 Things You Didn't Know About Trademark Registration",
+      description:
+        "Discover surprising facts about trademark registration that could impact your brand protection strategy. Learn about unusual trademarks, territorial rights, and more.",
+      image: topicImages["five-things-about-trademark-registration"],
+    },
+    "trademark-priority-period": {
+      title: "Understanding the Trademark Priority Period",
+      description:
+        "Learn how the 6-month trademark priority period can help you protect your brand across multiple countries while maintaining your original filing date.",
+      image: topicImages["trademark-priority-period"],
+    },
+    "make-trademark-stand-out": {
+      title: "How to Make Your Trademark Stand Out",
+      description:
+        "Discover practical tips to create a distinctive, memorable trademark that stands out in the marketplace and provides stronger legal protection for your brand.",
+      image: topicImages["make-trademark-stand-out"],
+    },
+    "maximise-successful-trademark-registration": {
+      title: "How to Maximise the Chances of a Successful Trademark Registration",
+      description:
+        "Learn expert strategies to increase your chances of successful trademark registration. Avoid common pitfalls and protect your brand effectively.",
+      image: topicImages["maximise-successful-trademark-registration"],
+    },
+    "importance-of-brand-protection": {
+      title: "The Importance of Brand Protection",
+      description:
+        "Discover why protecting your brand is crucial in today's competitive market and how trademark registration can safeguard your business interests.",
+      image: topicImages["importance-of-brand-protection"],
+    },
+    "trademark-registration-process": {
+      title: "Trademark Registration Process",
+      description:
+        "A step-by-step guide to the trademark registration process, from initial search to final registration and maintenance.",
+      image: topicImages["trademark-registration-process"],
+    },
+    "global-trademark-strategies": {
+      title: "Global Trademark Strategies",
+      description:
+        "Learn how to develop an effective global trademark strategy to protect your brand across international markets.",
+      image: topicImages["global-trademark-strategies"],
+    },
+
+    // Additional blog posts with improved titles
+    "register-trademark-usa": {
+      title: "Securing Your Brand in America: US Trademark Guide (2024)",
+      description:
+        "Comprehensive guide to US trademark registration. Learn the step-by-step process, costs, timelines, and requirements to protect your brand in the United States.",
+      image: countryImages["register-trademark-usa"],
+    },
+    "register-trademark-eu": {
+      title: "Protecting Brands Across Europe: EU Trademark Essentials",
+      description:
+        "Complete guide to EU trademark registration through the EUIPO. Learn about the process, costs, and protection across all 27 member states.",
+      image: countryImages["register-trademark-eu"],
+    },
+    "register-trademark-spain": {
+      title: "Trademark Registration in Spain: Mediterranean Market Entry Guide",
+      description:
+        "Complete guide to registering your trademark in Spain. Learn about the Spanish Patent and Trademark Office process, costs, and timeline.",
+      image: countryImages["register-trademark-spain"],
+    },
+    "register-trademark-new-zealand": {
+      title: "Protecting Brands in New Zealand: Trademark Insights for Foreign Companies",
+      description:
+        "Comprehensive guide to trademark registration in New Zealand. Learn about the IPONZ process, costs, and protection for your brand.",
+      image: countryImages["register-trademark-new-zealand"],
+    },
+    "register-trademark-mexico": {
+      title: "Mexican Trademark Strategy: Safeguarding Your Brand in Latin America",
+      description:
+        "Complete guide to trademark registration in Mexico. Learn about the IMPI process, costs, and timeline for protecting your brand.",
+      image: countryImages["register-trademark-mexico"],
+    },
+    "register-trademark-brazil": {
+      title: "Brazilian Trademark Essentials: Navigating South America's Largest Market",
+      description:
+        "Comprehensive guide to trademark registration in Brazil. Learn about the INPI process, costs, and timeline for protecting your brand.",
+      image: countryImages["register-trademark-brazil"],
+    },
+    "register-trademark-argentina": {
+      title: "Trademark Protection in Argentina: A Strategic Approach",
+      description:
+        "Complete guide to trademark registration in Argentina. Learn about the INPI process, costs, and timeline for protecting your brand.",
+      image: countryImages["register-trademark-argentina"],
+    },
+    "register-trademark-poland": {
+      title: "Securing Trademarks in Poland: Eastern European Market Guide",
+      description:
+        "Comprehensive guide to trademark registration in Poland. Learn about the Polish Patent Office process, costs, and timeline.",
+      image: countryImages["register-trademark-poland"],
+    },
+    "register-trademark-czech-republic": {
+      title: "Czech Republic Trademark System: Central European Brand Protection",
+      description:
+        "Comprehensive guide to trademark registration in the Czech Republic. Learn about the IPO CZ process, costs, and timeline.",
+      image: countryImages["register-trademark-czech-republic"],
+    },
+    "trademark-classification": {
+      title: "Understanding Trademark Classification: A Complete Guide",
+      description:
+        "Learn about the 45 classes of the Nice Classification system and how to properly classify your goods and services for trademark registration.",
+      image: topicImages["trademark-classification"],
+    },
+    "trademark-registration-comparison": {
+      title: "Trademark Registration: Country-by-Country Comparison",
+      description:
+        "Compare trademark registration processes, costs, and timelines across major jurisdictions to develop your global brand protection strategy.",
+      image: topicImages["trademark-registration-comparison"],
+    },
+    // Adding standardized titles for country articles
+    "register-trademark-china": {
+      title: "Navigating China's Trademark System: A Western Brand's Guide",
+      description:
+        "Learn how to register your trademark in China with our comprehensive guide. Understand the first-to-file system, costs, and essential steps to protect your brand.",
+      image: countryImages["register-trademark-china"],
+    },
+    "register-trademark-india": {
+      title: "Brand Protection in India's Booming Market: Trademark Strategies",
+      description:
+        "Expand your business to India with confidence. Our guide covers the trademark registration process, costs, and timeline for protecting your brand in this dynamic market.",
+      image: countryImages["register-trademark-india"],
+    },
+    "register-trademark-germany": {
+      title: "German Trademark Law: Protecting Your Brand in Europe's Largest Economy",
+      description:
+        "Navigate the trademark registration process in Europe's largest economy. Our guide covers everything you need to know about protecting your brand in Germany.",
+      image: countryImages["register-trademark-germany"],
+    },
+    "register-trademark-united-kingdom": {
+      title: "Post-Brexit Trademark Registration: UK Brand Protection",
+      description:
+        "Protect your brand in the UK market with our comprehensive guide to trademark registration. Learn about the process, costs, and timeline for securing your brand identity.",
+      image: countryImages["register-trademark-united-kingdom"],
+    },
+    "register-trademark-california": {
+      title: "How to Register a Trademark in California (2024) | Complete Guide",
+      description:
+        "Learn how to register a trademark in California with our step-by-step guide. Understand the process and benefits of trademark registration for California businesses.",
+      image: countryImages["register-trademark-california"],
+    },
+  }
+
+  // Default images for different content types
+  const defaultImages: Record<string, string> = {
+    trademark: "https://images.unsplash.com/photo-1607703703674-df96941cfa24?w=600&h=400&fit=crop",
+    brand: "https://images.unsplash.com/photo-1523726491678-bf852e717f6a?w=600&h=400&fit=crop",
+    register: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600&h=400&fit=crop",
+    general: "https://images.unsplash.com/photo-1589578228447-e1a4e481c6c8?w=600&h=400&fit=crop",
+  }
+
+  // Map the unique slugs to blog post data
+  const blogPosts = uniqueSlugs.map((slug) => {
+    // Get the date for this slug from our date mapping
+    const date = dateMap[slug] ? dateMap[slug] : new Date() // Fallback to today
+    const formattedDate = formatDate(date)
+
+    // First check if we have specific data for this slug
+    if (blogPostsData[slug]) {
+      return {
+        ...blogPostsData[slug],
+        slug,
+        date: formattedDate,
+      }
+    }
+
+    // If not, create default data
+    // Create a title from the slug or use country-specific title
+    const title =
+      countryTitles[slug] ||
+      slug
+        .split("-")
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(" ")
+
+    // Determine the appropriate image
+    let image = countryImages[slug] || null
+
+    if (!image) {
+      // Assign more specific images based on slug keywords
+      if (slug.includes("trademark")) {
+        image = defaultImages.trademark
+      } else if (slug.includes("brand")) {
+        image = defaultImages.brand
+      } else if (slug.includes("register")) {
+        image = defaultImages.register
+      } else {
+        image = defaultImages.general
+      }
+    }
+
+    return {
+      title,
+      description: `Learn more about ${slug.split("-").join(" ")} in our comprehensive guide.`,
+      image,
+      slug,
+      date: formattedDate,
+    }
+  })
+
+  // Sort by date (newest first)
+  return blogPosts.sort((a, b) => {
+    const dateA = new Date(a.date)
+    const dateB = new Date(b.date)
+    return dateB.getTime() - dateA.getTime()
+  })
+}
 
 export default function BlogPage() {
+  const blogPosts = getBlogPosts()
+
   return (
-    <main className="min-h-screen bg-gray-50">
+    <main className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
       <NavBar />
+      <div className="pt-10 pb-16">
+        <div className="container mx-auto px-4">
+          <div className="bg-blue-50 rounded-lg py-12 mb-12">
+            <div className="text-center mb-8">
+              <h1 className="text-4xl font-bold mb-6 text-blue-900">Trademark Registration Blog</h1>
+              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+                Expert insights, guides, and tips on trademark registration and brand protection strategies for
+                businesses worldwide.
+              </p>
+            </div>
+          </div>
 
-      <div className="container mx-auto px-4 py-12">
-        <div className="max-w-4xl mx-auto mb-12 text-center">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Our Blog</h1>
-          <p className="text-xl text-gray-600">
-            Latest insights and guides on trademark registration and intellectual property protection
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {blogPosts.map((post) => (
-            <BlogPostPreview
-              key={post.slug}
-              slug={post.slug}
-              title={post.title}
-              excerpt={post.excerpt}
-              date={post.date}
-              image={post.image}
-            />
-          ))}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {blogPosts.map((post, index) => (
+              <BlogPostPreview
+                key={index}
+                title={post.title}
+                excerpt={post.description}
+                image={post.image}
+                slug={post.slug}
+                date={post.date}
+              />
+            ))}
+          </div>
         </div>
       </div>
-
       <Footer />
     </main>
   )
