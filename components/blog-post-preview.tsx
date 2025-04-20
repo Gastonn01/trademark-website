@@ -15,12 +15,17 @@ interface BlogPostPreviewProps {
 
 export function BlogPostPreview({ slug, title, excerpt, date, image }: BlogPostPreviewProps) {
   const [imageError, setImageError] = useState(false)
-  // Use a specific blog image as fallback instead of a generic placeholder
-  const defaultImage = "/blog-default-image.jpg" // You'll need to add this image to your public folder
 
-  // Ensure we have a valid image URL
-  const imageSrc =
-    imageError || !image ? defaultImage : image.startsWith("http") ? image : `/blog/${slug}/featured-image.jpg`
+  // Generate a consistent fallback image based on the slug
+  const generateFallbackImage = () => {
+    // Create a deterministic color based on the slug
+    const hash = slug.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0)
+    const hue = hash % 360
+    return `/api/placeholder?text=${encodeURIComponent(title.substring(0, 20))}&bg=hsl(${hue},70%,80%)&fg=hsl(${hue},70%,30%)`
+  }
+
+  // Determine the image source with proper fallbacks
+  const imageSrc = imageError ? generateFallbackImage() : image
 
   // Function to handle click and ensure scroll to top
   const handleClick = () => {
@@ -40,7 +45,7 @@ export function BlogPostPreview({ slug, title, excerpt, date, image }: BlogPostP
             fill
             style={{ objectFit: "cover" }}
             className="hover:opacity-90 transition-opacity"
-            priority={true}
+            priority={false}
             onError={() => setImageError(true)}
           />
         </Link>

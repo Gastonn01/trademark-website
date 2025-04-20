@@ -5,6 +5,7 @@ import { NavBar } from "@/components/nav-bar"
 import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import { BlogFreeSearchCTA } from "@/components/blog-free-search-cta"
 
 export default function ColePalmerTrademarkPageClient() {
   return (
@@ -35,6 +36,9 @@ export default function ColePalmerTrademarkPageClient() {
             with his personal brand, raising an important question: Can Cole Palmer secure exclusive rights to his
             iconic move? Here's how it works and why it matters.
           </p>
+
+          {/* Add the free search CTA here */}
+          <BlogFreeSearchCTA />
 
           <h2 className="text-2xl font-bold mt-8 mb-4 text-blue-800">Why Trademark a Celebration?</h2>
 
@@ -165,6 +169,8 @@ export default function ColePalmerTrademarkPageClient() {
               </Button>
             </div>
           </div>
+          {/* Final CTA */}
+          <BlogFreeSearchCTA className="mt-12" />
         </div>
       </article>
       <Footer />

@@ -43,7 +43,6 @@ export const metadata = {
       { url: "/favicon.ico" },
       { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
       { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
-      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
     ],
     apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
   },
@@ -69,36 +68,38 @@ export default function RootLayout({
         <link rel="shortcut icon" href="https://justprotected.com/favicon.ico" type="image/x-icon" />
       </head>
       <body>
-        <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>
-        <Analytics />
-        <Script id="schema-org" type="application/ld+json">
-          {`
-            {
-              "@context": "https://schema.org",
-              "@type": "Organization",
-              "name": "Just Protected",
-              "alternateName": "JP",
-              "url": "https://justprotected.com",
-              "logo": {
-                "@type": "ImageObject",
-                "url": "https://justprotected.com/logo.png",
-                "width": 512,
-                "height": 512,
-                "caption": "Just Protected"
-              },
-              "sameAs": [
-                "https://www.facebook.com/justprotected",
-                "https://www.linkedin.com/company/justprotected",
-                "https://twitter.com/justprotected"
-              ],
-              "description": "Global Trademark Registration Services. Protect your brand identity across borders with our AI-powered trademark search and registration services.",
-              "address": {
-                "@type": "PostalAddress",
-                "addressCountry": "US"
-              }
-            }
-          `}
-        </Script>
+        <Suspense fallback={<div>Loading...</div>}>
+          {children}
+          <Analytics />
+          <Script id="schema-org" type="application/ld+json">
+            {`
+             {
+               "@context": "https://schema.org",
+               "@type": "Organization",
+               "name": "Just Protected",
+               "alternateName": "JP",
+               "url": "https://justprotected.com",
+               "logo": {
+                 "@type": "ImageObject",
+                 "url": "https://justprotected.com/logo.png",
+                 "width": 512,
+                 "height": 512,
+                 "caption": "Just Protected"
+               },
+               "sameAs": [
+                 "https://www.facebook.com/justprotected",
+                 "https://www.linkedin.com/company/justprotected",
+                 "https://twitter.com/justprotected"
+               ],
+               "description": "Global Trademark Registration Services. Protect your brand identity across borders with our AI-powered trademark search and registration services.",
+               "address": {
+                 "@type": "PostalAddress",
+                 "addressCountry": "US"
+               }
+             }
+           `}
+          </Script>
+        </Suspense>
       </body>
     </html>
   )

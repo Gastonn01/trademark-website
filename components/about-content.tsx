@@ -1,6 +1,5 @@
 import Image from "next/image"
 import { Card, CardContent, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
 import { Shield, Users, Globe, Zap, Scale, Search, Clock, ArrowRight } from "lucide-react"
 import Link from "next/link"
 
@@ -145,18 +144,13 @@ export function AboutContent() {
         <p className="text-lg mb-6">
           Join the growing number of businesses choosing Protect.ly for their trademark needs.
         </p>
-        <Button
-          asChild
-          size="lg"
-          className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-6 transition-all duration-300"
+        <Link
+          href="/free-search"
+          className="inline-flex items-center justify-center px-6 py-3 border-2 border-white/50 rounded-md bg-blue-600 hover:bg-blue-700 text-white font-medium text-lg transition-colors duration-200"
         >
-          <Link href="/free-search">
-            <span className="flex items-center justify-center border-2 border-white/50 rounded-md px-6 py-2">
-              Get Started Today
-              <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform duration-200" />
-            </span>
-          </Link>
-        </Button>
+          Get Started Today
+          <ArrowRight className="ml-2 transition-transform duration-200 transform group-hover:translate-x-1" />
+        </Link>
       </section>
     </div>
   )
