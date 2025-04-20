@@ -68,7 +68,11 @@
     "@vercel/blob": "latest",
     "nanoid": "latest",
     "@stripe/react-stripe-js": "latest",
+    "stripe": "latest",
+    "resend": "latest",
     "@supabase/supabase-js": "latest",
+    "fs": "latest",
+    "path": "latest",
     "framer-motion": "latest",
     "uuid": "latest",
     "@vercel/analytics": "latest"
