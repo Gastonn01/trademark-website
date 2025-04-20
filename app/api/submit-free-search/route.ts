@@ -3,6 +3,14 @@ import { Resend } from "resend"
 import { v4 as uuidv4 } from "uuid"
 import { saveSearchData, getSearchData, ensureTableExists, uploadFileToStorage } from "@/lib/supabase"
 
+// Add these export statements for static export compatibility
+export const dynamic = "error"
+export const dynamicParams = false
+export const revalidate = false
+export const fetchCache = "only-no-store"
+export const runtime = "nodejs"
+export const preferredRegion = "auto"
+
 const resend = new Resend(process.env.RESEND_API_KEY)
 
 // Función auxiliar para manejar errores
