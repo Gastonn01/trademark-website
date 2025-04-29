@@ -241,19 +241,19 @@ function getBlogPosts() {
       title: "Meghan Markle's 'As Ever' Trademark Challenges",
       description:
         "Explore the trademark challenges faced by Meghan Markle for her lifestyle brand 'As Ever' and the lessons businesses can learn about trademark protection.",
-      image: "https://images.unsplash.com/photo-1566554273541-37a9ca77b91f?w=600&h=400&fit=crop",
+      image: "/images/meghan-markle-as-ever-trademark.png",
     },
     "jiffy-bag-genericized-trademark": {
       title: "Jiffy Bag: How a Trademark Became Generic",
       description:
         "Explore how the Jiffy bag trademark became genericized and the lessons businesses can learn about protecting their trademarks from suffering the same fate.",
-      image: "https://images.unsplash.com/photo-1584438875844-d4628dadafd7?w=600&h=400&fit=crop",
+      image: "/images/jiffy-bags.png",
     },
     "registered-trademark-symbol-history": {
       title: "The History and Evolution of the Registered Trademark Symbol",
       description:
         "Discover the fascinating history behind the registered trademark symbol (®), its legal significance, and how its usage has evolved over time.",
-      image: "https://images.unsplash.com/photo-1607703703674-df96941cfa24?w=600&h=400&fit=crop",
+      image: "/images/A_2D_digital_graphic_design_image_features_the_his.png",
     },
     "register-trademark-france": {
       title: "French Trademark Registration: Protecting Your Brand in the Heart of Europe",

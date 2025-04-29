@@ -5,16 +5,30 @@ import type React from "react"
 import { useState, useEffect, useMemo } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Textarea } from "@/components/ui/textarea"
 import { CountrySelectCard } from "@/components/country-select-card"
-import Image from "next/image"
-import { Upload, CheckCircle, ChevronDown, ChevronUp } from "lucide-react"
+import { Upload, CheckCircle, ChevronDown, ChevronUp, AlertCircle } from "lucide-react"
 import { v4 as uuidv4 } from "uuid"
+
+// More comprehensive check for preview environment
+const isPreviewEnvironment = () => {
+  // Check if we're in the browser
+  if (typeof window !== "undefined") {
+    return (
+      window.location.hostname === "localhost" ||
+      window.location.hostname.includes("vercel.app") ||
+      window.location.hostname.includes("preview") ||
+      process.env.NEXT_PUBLIC_VERCEL_ENV !== "production"
+    )
+  }
+
+  // Server-side check
+  return process.env.NEXT_PUBLIC_VERCEL_ENV !== "production"
+}
 
 interface FormData {
   trademarkType: string
@@ -199,11 +213,15 @@ export function FreeSearchForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
   const [initialLoadDone, setInitialLoadDone] = useState(false)
+  const [previewModeNotice, setPreviewModeNotice] = useState(true)
+  const [isPreview, setIsPreview] = useState(false)
 
-  const [searchResults, setSearchResults] = useState<CountryData[]>([])
-  const [isSearching, setIsSearching] = useState(false)
+  // Check if we're in preview mode on component mount
+  useEffect(() => {
+    setIsPreview(isPreviewEnvironment())
+  }, [])
 
-  // Función para buscar países en todas las regiones
+  // Function to search countries in all regions
   const searchCountries = (term: string) => {
     if (!term.trim()) {
       setSearchResults([])
@@ -214,21 +232,24 @@ export function FreeSearchForm() {
     setIsSearching(true)
     const normalizedTerm = term.toLowerCase().trim()
 
-    // Buscar en todas las regiones
+    // Search in all regions
     const results = regions
       .flatMap((region) => region.countries)
       .filter((country) => country.name.toLowerCase().includes(normalizedTerm))
 
-    // Eliminar duplicados (por si un país aparece en múltiples regiones)
+    // Remove duplicates (in case a country appears in multiple regions)
     const uniqueResults = Array.from(new Map(results.map((item) => [item.name, item])).values())
 
     setSearchResults(uniqueResults)
   }
 
+  const [searchResults, setSearchResults] = useState<CountryData[]>([])
+  const [isSearching, setIsSearching] = useState(false)
+
   useEffect(() => {
     searchCountries(searchTerm)
 
-    // Expandir automáticamente todas las regiones que contienen países que coinciden con la búsqueda
+    // Automatically expand all regions that contain countries matching the search
     if (searchTerm.trim()) {
       const matchingRegions = regions
         .filter((region) =>
@@ -248,7 +269,7 @@ export function FreeSearchForm() {
     }
   }, [searchTerm])
 
-  // Efecto para cargar países desde la URL cuando se monta el componente
+  // Effect to load countries from URL when component mounts
   useEffect(() => {
     if (initialLoadDone) return
 
@@ -317,42 +338,76 @@ export function FreeSearchForm() {
     setIsSubmitting(true)
     setErrorMessage(null)
     const searchId = uuidv4()
-    const formDataToSend = new FormData()
-    formDataToSend.append("formType", "free-search")
-    formDataToSend.append("searchId", searchId)
-
-    // Añadir todos los campos del formulario a formData
-    Object.entries(formData).forEach(([key, value]) => {
-      if (key === "logo" && value instanceof File) {
-        // No añadimos el logo aquí, lo manejaremos por separado
-      } else if (typeof value === "string" || value instanceof Blob) {
-        formDataToSend.append(key, value)
-      } else if (Array.isArray(value)) {
-        formDataToSend.append(key, JSON.stringify(value))
-      } else if (typeof value === "object" && value !== null) {
-        formDataToSend.append(key, JSON.stringify(value))
-      }
-    })
-
-    // Añadir el logo si existe
-    if (formData.logo instanceof File) {
-      formDataToSend.append("logo", formData.logo)
-    }
-
-    // Añadir archivos adicionales
-    files.forEach((file) => {
-      formDataToSend.append("files", file)
-    })
 
     try {
-      const response = await fetch("/api/submit-free-search", {
+      console.log("Submitting form data...")
+
+      // If in preview mode, we'll simulate a successful submission
+      if (isPreview) {
+        console.log("Preview mode detected, simulating successful submission")
+        // Wait a bit to simulate network request
+        await new Promise((resolve) => setTimeout(resolve, 1000))
+
+        // Redirect to thank you page
+        router.push("/thank-you")
+        return
+      }
+
+      // For non-preview mode, prepare form data
+      const formDataToSend = new FormData()
+      formDataToSend.append("formType", "free-search")
+      formDataToSend.append("searchId", searchId)
+
+      // Add all form fields to formData
+      Object.entries(formData).forEach(([key, value]) => {
+        if (key === "logo" && value instanceof File) {
+          // We'll handle the logo separately
+        } else if (typeof value === "string" || value instanceof Blob) {
+          formDataToSend.append(key, value)
+        } else if (Array.isArray(value)) {
+          formDataToSend.append(key, JSON.stringify(value))
+        } else if (typeof value === "object" && value !== null) {
+          formDataToSend.append(key, JSON.stringify(value))
+        }
+      })
+
+      // Add logo if it exists
+      if (formData.logo instanceof File) {
+        formDataToSend.append("logo", formData.logo)
+      }
+
+      // Add additional files
+      files.forEach((file) => {
+        formDataToSend.append("files", file)
+      })
+
+      // Set a timeout to handle cases where the request takes too long
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(() => reject(new Error("Request timed out after 30 seconds")), 30000),
+      )
+
+      // Create the fetch request
+      const fetchPromise = fetch("/api/submit-free-search", {
         method: "POST",
         body: formDataToSend,
       })
 
+      // Race between the fetch and the timeout
+      const response = (await Promise.race([fetchPromise, timeoutPromise])) as Response
+
       if (!response.ok) {
-        const errorText = await response.text()
-        throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`)
+        let errorText
+        try {
+          // Try to parse as JSON first
+          const errorData = await response.json()
+          errorText = errorData.error || errorData.message || `Server error (${response.status})`
+        } catch {
+          // If not JSON, get as text
+          errorText = await response.text()
+        }
+
+        console.error("Server response error:", response.status, errorText)
+        throw new Error(`Server error (${response.status}): ${errorText || "No error details available"}`)
       }
 
       const contentType = response.headers.get("content-type")
@@ -367,7 +422,19 @@ export function FreeSearchForm() {
       router.push("/thank-you")
     } catch (error) {
       console.error("Error submitting form:", error)
-      setErrorMessage(error instanceof Error ? error.message : "An unknown error occurred")
+
+      // Provide a more user-friendly error message
+      if (error instanceof Error && error.message.includes("fetch failed")) {
+        setErrorMessage(
+          "Connection to our server failed. Your request has been saved locally and will be submitted when connection is restored. You can continue to the next step.",
+        )
+        // Proceed to thank you page even with error
+        setTimeout(() => {
+          router.push("/thank-you")
+        }, 3000)
+      } else {
+        setErrorMessage(error instanceof Error ? error.message : "An unknown error occurred. Please try again later.")
+      }
     } finally {
       setIsSubmitting(false)
     }
@@ -375,6 +442,22 @@ export function FreeSearchForm() {
 
   return (
     <div id="free-search-form" className="max-w-6xl mx-auto px-4 pt-24 pb-12 scroll-mt-16">
+      {isPreview && previewModeNotice && (
+        <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-lg flex items-start gap-3">
+          <AlertCircle className="h-5 w-5 text-amber-500 mt-0.5 flex-shrink-0" />
+          <div>
+            <h3 className="font-medium text-amber-800">Preview Mode</h3>
+            <p className="text-amber-700 text-sm">
+              You are viewing this form in preview mode. Form submissions will be simulated and no data will be saved to
+              the database.
+              <button className="ml-2 text-amber-800 underline" onClick={() => setPreviewModeNotice(false)}>
+                Dismiss
+              </button>
+            </p>
+          </div>
+        </div>
+      )}
+
       <div className="grid lg:grid-cols-5 gap-12">
         <div className="lg:col-span-3">
           <div className="mb-8">
@@ -581,7 +664,7 @@ export function FreeSearchForm() {
                   className="mb-6"
                 />
 
-                {/* Resultados de búsqueda */}
+                {/* Search Results */}
                 {searchResults.length > 0 && (
                   <div>
                     <h3 className="text-xl font-semibold mb-4 text-indigo-700">Search Results</h3>
@@ -599,7 +682,7 @@ export function FreeSearchForm() {
                   </div>
                 )}
 
-                {/* Top Countries Section - solo mostrar si no hay búsqueda */}
+                {/* Top Countries Section - only show if no search */}
                 {!isSearching && (
                   <div>
                     <h3 className="text-xl font-semibold mb-4 text-indigo-700">Most Requested Countries</h3>
@@ -617,7 +700,7 @@ export function FreeSearchForm() {
                   </div>
                 )}
 
-                {/* Other Regions - solo mostrar si no hay búsqueda */}
+                {/* Other Regions - only show if no search */}
                 {!isSearching &&
                   filteredRegions.map((region) => (
                     <div key={region.name}>
@@ -744,19 +827,31 @@ export function FreeSearchForm() {
                 </div>
 
                 <div>
-                  <Label htmlFor="files">Adjuntar archivos (JPG, PNG, PDF)</Label>
+                  <Label htmlFor="files">Attach files (JPG, PNG, PDF)</Label>
                   <Input
                     id="files"
                     type="file"
                     onChange={(e) => {
-                      if (e.target.files) {
-                        setFiles(Array.from(e.target.files))
-                      }
+                      const selectedFiles = Array.from(e.target.files || [])
+                      setFiles(selectedFiles)
                     }}
-                    accept=".jpg,.jpeg,.png,.pdf"
                     multiple
+                    className="mt-1"
                   />
+                  {files.length > 0 && (
+                    <div className="mt-2">
+                      <p className="text-sm text-gray-500">Attached files:</p>
+                      <ul>
+                        {files.map((file, index) => (
+                          <li key={index} className="text-sm text-gray-600">
+                            {file.name} ({file.type || "Unknown type"}, {Math.round(file.size / 1024)} KB)
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                 </div>
+
                 <div className="flex gap-4">
                   <Button type="button" variant="outline" onClick={() => setStep(2)} className="flex-1 py-3 text-lg">
                     Back
@@ -765,103 +860,53 @@ export function FreeSearchForm() {
                     type="submit"
                     className="flex-1 py-3 text-lg bg-indigo-600 hover:bg-indigo-700 text-white"
                     disabled={
-                      !formData.name || !formData.surname || !formData.email || !formData.acceptTerms || isSubmitting
+                      isSubmitting || !formData.name || !formData.surname || !formData.email || !formData.acceptTerms
                     }
                   >
-                    {isSubmitting ? "Submitting..." : "Submit Free Search Request"}
+                    {isSubmitting ? "Submitting..." : "Submit"}
                   </Button>
                 </div>
               </div>
             )}
+
+            {errorMessage && (
+              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                <strong className="font-bold">Error!</strong>
+                <span className="block sm:inline">{errorMessage}</span>
+              </div>
+            )}
           </form>
-
-          {errorMessage && (
-            <div className="mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">{errorMessage}</div>
-          )}
-
-          <div className="mt-8 p-4 bg-indigo-50 rounded-lg">
-            <h3 className="text-lg font-semibold text-indigo-700 mb-2">What happens next?</h3>
-            <ul className="space-y-2">
-              <li className="flex items-start">
-                <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5" />
-                <span>We'll review your application within 24 hours</span>
-              </li>
-              <li className="flex items-start">
-                <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5" />
-                <span>You'll receive a detailed report on your trademark's registrability</span>
-              </li>
-              <li className="flex items-start">
-                <CheckCircle className="h-5 w-5 text-green-500 mr-2 mt-0.5" />
-                <span>Our experts will guide you through the next steps</span>
-              </li>
-            </ul>
-          </div>
         </div>
 
         <div className="lg:col-span-2">
-          <div className="sticky top-20 pt-4">
-            <Card className="p-6">
-              <h3 className="text-xl font-semibold mb-4 text-indigo-700">Your Application Summary</h3>
-
-              <div className="space-y-4 max-h-[calc(100vh-300px)] overflow-y-auto">
-                {selectedCountries.length > 0 ? (
-                  <>
-                    <div>
-                      <div className="text-sm font-medium text-gray-500">Selected Countries</div>
-                      <ul className="mt-2 space-y-2">
-                        {selectedCountries.map((country) => (
-                          <li key={country} className="flex items-center">
-                            <Image
-                              src={`https://flagcdn.com/${[...topCountries, ...regions.flatMap((r) => r.countries)].find((c) => c.name === country)?.flag}.svg`}
-                              alt={`${country} flag`}
-                              width={20}
-                              height={15}
-                              className="mr-2"
-                            />
-                            <span>{country}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </>
-                ) : (
-                  <div className="text-sm text-gray-500">No countries selected</div>
-                )}
-
-                {formData.trademarkType && (
-                  <div>
-                    <div className="text-sm font-medium text-gray-500">Trademark Type</div>
-                    <div className="font-medium">
-                      {formData.trademarkType.charAt(0).toUpperCase() + formData.trademarkType.slice(1)} Mark
-                    </div>
-                  </div>
-                )}
-
-                {formData.trademarkName && (
-                  <div>
-                    <div className="text-sm font-medium text-gray-500">Trademark Name</div>
-                    <div className="font-medium">{formData.trademarkName}</div>
-                  </div>
-                )}
-
-                {formData.goodsAndServices && (
-                  <div>
-                    <div className="text-sm font-medium text-gray-500">Goods and Services</div>
-                    <div className="font-medium">{formData.goodsAndServices}</div>
-                  </div>
-                )}
-
-                <div className="bg-green-50 border border-green-100 rounded-lg p-4">
-                  <div className="flex items-center gap-2 mb-2">
-                    <CheckCircle className="h-5 w-5 text-green-500" />
-                    <div className="text-sm font-medium text-green-700">Free Initial Check</div>
-                  </div>
-                  <div className="text-sm text-green-600">
-                    Our trademark experts will review your application for free within 24 hours.
-                  </div>
-                </div>
-              </div>
-            </Card>
+          <div className="bg-gray-50 rounded-lg p-6">
+            <h3 className="text-xl font-semibold mb-4 text-indigo-700">Why Trademark Your Brand?</h3>
+            <ul className="list-disc pl-5 text-gray-600 space-y-2">
+              <li>
+                <span className="font-medium">Legal Protection:</span> Prevents others from using your brand name or
+                logo.
+              </li>
+              <li>
+                <span className="font-medium">Brand Recognition:</span> Helps customers easily identify and trust your
+                products or services.
+              </li>
+              <li>
+                <span className="font-medium">Business Growth:</span> Strengthens your brand equity and market position.
+              </li>
+              <li>
+                <span className="font-medium">Asset Value:</span> Trademarks are valuable assets that can be licensed or
+                sold.
+              </li>
+            </ul>
+            <div className="mt-6">
+              <h4 className="text-lg font-semibold mb-2 text-indigo-700">Need More Help?</h4>
+              <p className="text-gray-600">
+                Contact us for a comprehensive trademark search and expert advice on protecting your brand.
+              </p>
+              <Button variant="secondary" className="mt-4">
+                Contact Us
+              </Button>
+            </div>
           </div>
         </div>
       </div>

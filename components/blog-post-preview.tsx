@@ -20,7 +20,11 @@ export function BlogPostPreview({ slug, title, excerpt, date, image }: BlogPostP
 
   // Ensure we have a valid image URL
   const imageSrc =
-    imageError || !image ? defaultImage : image.startsWith("http") ? image : `/blog/${slug}/featured-image.jpg`
+    imageError || !image
+      ? defaultImage
+      : image.startsWith("http") || image.startsWith("/")
+        ? image
+        : `/blog/${slug}/featured-image.jpg`
 
   // Function to handle click and ensure scroll to top
   const handleClick = () => {

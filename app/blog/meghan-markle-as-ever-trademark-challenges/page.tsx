@@ -12,6 +12,14 @@ export const metadata: Metadata = {
     type: "article",
     publishedTime: "2025-04-09T00:00:00Z",
     authors: ["Trademark Legal Team"],
+    images: [
+      {
+        url: "/images/meghan-markle-as-ever-trademark.png",
+        width: 1200,
+        height: 630,
+        alt: "Meghan Markle wearing a rust-colored outfit, discussing her 'As Ever' brand",
+      },
+    ],
   },
 }
 
