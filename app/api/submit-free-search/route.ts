@@ -3,8 +3,8 @@ import { Resend } from "resend"
 import { v4 as uuidv4 } from "uuid"
 import { saveSearchData, getSearchData, ensureTableExists, uploadFileToStorage } from "@/lib/supabase"
 
-// Configure the API route correctly
-export const dynamic = "force-dynamic"
+// Remove the dynamic directive that's causing the conflict with static export
+// export const dynamic = "force-dynamic"
 export const runtime = "nodejs"
 
 // Check if we're in a preview environment - more comprehensive check
