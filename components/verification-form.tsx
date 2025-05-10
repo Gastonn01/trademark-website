@@ -56,6 +56,11 @@ interface RegionData {
   countries: CountryData[]
 }
 
+interface VerificationFormProps {
+  initialData?: any
+  isLoading?: boolean
+}
+
 const topCountries: CountryData[] = [
   { name: "European Union", flag: "eu", price: 1310, additionalClassPrice: 425 },
   { name: "United States", flag: "us", price: 749, additionalClassPrice: 499 },
@@ -244,7 +249,11 @@ const regions: RegionData[] = [
 
 const trademarkClasses = Array.from({ length: 45 }, (_, i) => i + 1)
 
-const VerificationFormContent = () => {
+interface VerificationFormContentProps {
+  isLoading: boolean
+}
+
+const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoading }) => {
   const [step, setStep] = useState(1)
   const totalSteps = 5
   const [formData, setFormData] = useState<FormData>({
@@ -460,6 +469,11 @@ const VerificationFormContent = () => {
   return (
     <form onSubmit={handleSubmit}>
       <div id="verification-form" className="max-w-6xl mx-auto px-4 pt-24 pb-12 scroll-mt-16">
+        {isLoading && (
+          <div className="w-full p-4 mb-4 bg-blue-50 text-blue-700 rounded-md">
+            <p className="text-center">Loading your previous search data...</p>
+          </div>
+        )}
         <div className="grid lg:grid-cols-7 gap-12">
           <div className="lg:col-span-5">
             <div className="mb-8">
@@ -846,10 +860,42 @@ const VerificationFormContent = () => {
   )
 }
 
-export function VerificationForm() {
+export function VerificationForm({ initialData, isLoading = false }: VerificationFormProps) {
+  const [trademarkName, setTrademarkName] = useState("")
+  const [trademarkType, setTrademarkType] = useState("")
+  const [email, setEmail] = useState("")
+  const [firstName, setFirstName] = useState("")
+  const [lastName, setLastName] = useState("")
+  const [selectedCountries, setSelectedCountries] = useState<CountrySelection[]>([])
+
+  useEffect(() => {
+    if (initialData && !isLoading) {
+      // Pre-fill form fields with initialData
+      if (initialData.trademarkName) {
+        setTrademarkName(initialData.trademarkName)
+      }
+      if (initialData.trademarkType) {
+        setTrademarkType(initialData.trademarkType)
+      }
+      if (initialData.email) {
+        setEmail(initialData.email)
+      }
+      if (initialData.firstName) {
+        setFirstName(initialData.firstName)
+      }
+      if (initialData.lastName) {
+        setLastName(initialData.lastName)
+      }
+      if (initialData.selectedCountries && Array.isArray(initialData.selectedCountries)) {
+        setSelectedCountries(initialData.selectedCountries)
+      }
+      // Add any other fields you want to pre-fill
+    }
+  }, [initialData, isLoading])
+
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <VerificationFormContent />
+      <VerificationFormContent isLoading={isLoading} />
     </Suspense>
   )
 }

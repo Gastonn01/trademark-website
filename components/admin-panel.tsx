@@ -26,19 +26,32 @@ export function AdminPanel() {
     fetchSearches()
   }, [statusFilter])
 
+  // Update the fetchSearches function to better handle errors
   const fetchSearches = async () => {
     setLoading(true)
     try {
       const response = await fetch(`/api/admin/searches?status=${statusFilter}`)
+
       if (!response.ok) {
-        throw new Error("Failed to fetch searches")
+        const errorText = await response.text()
+        console.error("API response error:", errorText)
+        throw new Error(`Failed to fetch searches: ${response.status} ${response.statusText}`)
       }
+
       const data = await response.json()
-      setSearches(data.data || [])
+
+      if (!data || !data.data) {
+        console.warn("API returned unexpected data structure:", data)
+        setSearches([])
+      } else {
+        setSearches(data.data || [])
+      }
+
       setError(null)
     } catch (err) {
-      setError("Error loading search data")
-      console.error(err)
+      console.error("Error in fetchSearches:", err)
+      setError(`Error loading search data: ${err instanceof Error ? err.message : String(err)}`)
+      setSearches([])
     } finally {
       setLoading(false)
     }

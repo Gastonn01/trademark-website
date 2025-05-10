@@ -2,10 +2,10 @@ import { NextResponse } from "next/server"
 import { getAllSearchData, updateSearchStatus } from "@/lib/supabase"
 
 // Configure this route for static export
-export const dynamic = "error"
-export const dynamicParams = false
-export const revalidate = false
-export const fetchCache = "only-no-store"
+export const dynamic = "force-dynamic"
+export const dynamicParams = true // Changed from false to true
+export const revalidate = 0 // Changed from false to 0
+export const fetchCache = "default" // Changed from "only-no-store" to "default"
 export const runtime = "nodejs"
 export const preferredRegion = "auto"
 
@@ -23,23 +23,24 @@ export async function GET(req: Request) {
     return NextResponse.json(result)
   } catch (error) {
     console.error("Error fetching search data:", error)
-    return NextResponse.json({ error: "Error fetching search data" }, { status: 500 })
+    // Return a proper JSON error response
+    return NextResponse.json({ error: "Error fetching search data", details: String(error) }, { status: 500 })
   }
 }
 
 export async function PATCH(req: Request) {
-  const body = await req.json()
-  const { searchId, status } = body
-
-  if (!searchId || !status) {
-    return NextResponse.json({ error: "Search ID and status are required" }, { status: 400 })
-  }
-
   try {
+    const body = await req.json()
+    const { searchId, status } = body
+
+    if (!searchId || !status) {
+      return NextResponse.json({ error: "Search ID and status are required" }, { status: 400 })
+    }
+
     const result = await updateSearchStatus(searchId, status)
     return NextResponse.json(result)
   } catch (error) {
     console.error("Error updating search status:", error)
-    return NextResponse.json({ error: "Error updating search status" }, { status: 500 })
+    return NextResponse.json({ error: "Error updating search status", details: String(error) }, { status: 500 })
   }
 }

@@ -1,12 +1,46 @@
+"use client"
+
+import { useState, useEffect } from "react"
 import { VerificationForm } from "./verification-form"
 import Link from "next/link"
 import { Facebook, Linkedin, Instagram, Twitter } from "lucide-react"
 
-export function VerificationContent() {
+interface VerificationContentProps {
+  searchId?: string
+}
+
+export function VerificationContent({ searchId }: VerificationContentProps) {
+  const [searchData, setSearchData] = useState<any>(null)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+
+  useEffect(() => {
+    // Only fetch if searchId is provided
+    if (searchId) {
+      const fetchSearchData = async () => {
+        setIsLoading(true)
+        try {
+          const response = await fetch(`/api/submit-free-search?search_id=${searchId}`)
+          if (response.ok) {
+            const data = await response.json()
+            setSearchData(data)
+          } else {
+            console.error("Failed to fetch search data")
+          }
+        } catch (error) {
+          console.error("Error fetching search data:", error)
+        } finally {
+          setIsLoading(false)
+        }
+      }
+
+      fetchSearchData()
+    }
+  }, [searchId])
+
   return (
     <div className="min-h-screen flex flex-col">
       <div className="flex-grow">
-        <VerificationForm />
+        <VerificationForm initialData={searchData} isLoading={isLoading} />
       </div>
 
       <footer className="bg-gray-800 text-white py-16">
@@ -129,19 +163,4 @@ export function VerificationContent() {
       </footer>
     </div>
   )
-}
-
-// Actualiza la función fetchSearchData para usar la nueva API
-const fetchSearchData = async (searchId: string) => {
-  try {
-    const response = await fetch(`/api/submit-free-search?search_id=${searchId}`)
-    if (!response.ok) {
-      throw new Error("Failed to fetch search data")
-    }
-    const data = await response.json()
-    return data
-  } catch (error) {
-    console.error("Error fetching search data:", error)
-    return null
-  }
 }

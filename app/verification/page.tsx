@@ -8,10 +8,14 @@ export const metadata: Metadata = {
   description: "Verify and register your trademark globally with our comprehensive protection services.",
 }
 
-export default function VerificationPage() {
+export default function VerificationPage({
+  searchParams,
+}: {
+  searchParams: { search_id?: string }
+}) {
   return (
     <main className="flex flex-col min-h-screen">
-      <VerificationContent />
+      <VerificationContent searchId={searchParams.search_id} />
       <WorldwideProtection />
       <ComparisonTable />
     </main>

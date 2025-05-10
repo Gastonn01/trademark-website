@@ -308,6 +308,7 @@ export async function getAllSearchData(limit = 100, offset = 0, status?: string)
     const { data, error } = await query
 
     if (error) {
+      console.error("Supabase query error:", error)
       throw new Error(`Fetch failed: ${error.message}`)
     }
 
