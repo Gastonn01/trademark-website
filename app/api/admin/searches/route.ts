@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server"
 import { getAllSearchData, updateSearchStatus } from "@/lib/supabase"
 
-// Configure this route for static export
 export const dynamic = "force-dynamic"
 export const dynamicParams = true
 export const revalidate = 0
