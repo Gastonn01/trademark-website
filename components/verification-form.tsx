@@ -59,6 +59,8 @@ interface RegionData {
 interface VerificationFormProps {
   initialData?: any
   isLoading?: boolean
+  searchId?: string
+  verificationToken?: string
 }
 
 const topCountries: CountryData[] = [
@@ -251,9 +253,10 @@ const trademarkClasses = Array.from({ length: 45 }, (_, i) => i + 1)
 
 interface VerificationFormContentProps {
   isLoading: boolean
+  initialData: any // Add initialData prop
 }
 
-const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoading }) => {
+const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoading, initialData }) => {
   const [step, setStep] = useState(1)
   const totalSteps = 5
   const [formData, setFormData] = useState<FormData>({
@@ -474,6 +477,94 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
             <p className="text-center">Loading your previous search data...</p>
           </div>
         )}
+        {initialData && initialData.status && (
+          <div className="mb-6 p-4 rounded-lg border border-gray-200">
+            <h3 className="text-lg font-medium mb-2">Search Status</h3>
+            <div className="flex items-center">
+              <span className="mr-2">Status:</span>
+              <span
+                className={`px-2 py-1 rounded text-sm ${
+                  initialData.status === "completed"
+                    ? "bg-green-100 text-green-800"
+                    : initialData.status === "processing"
+                      ? "bg-blue-100 text-blue-800"
+                      : initialData.status === "rejected"
+                        ? "bg-red-100 text-red-800"
+                        : "bg-yellow-100 text-yellow-800"
+                }`}
+              >
+                {initialData.status.charAt(0).toUpperCase() + initialData.status.slice(1)}
+              </span>
+            </div>
+            {initialData.status === "completed" && (
+              <p className="mt-2 text-sm text-gray-600">
+                Your trademark search has been completed. Please review the results below.
+              </p>
+            )}
+            {initialData.status === "processing" && (
+              <p className="mt-2 text-sm text-gray-600">
+                Your trademark search is currently being processed. We'll notify you once it's complete.
+              </p>
+            )}
+            {initialData.status === "pending" && (
+              <p className="mt-2 text-sm text-gray-600">
+                Your trademark search is pending review. We'll begin processing it shortly.
+              </p>
+            )}
+          </div>
+        )}
+
+        {/* Display search results if available */}
+        {initialData && initialData.searchResults && (
+          <div className="mb-8 p-6 bg-white rounded-lg border border-gray-200 shadow-sm">
+            <h2 className="text-2xl font-bold mb-4 text-indigo-700">Search Results</h2>
+
+            {initialData.searchResults.similarTrademarks && initialData.searchResults.similarTrademarks.length > 0 && (
+              <div className="mb-6">
+                <h3 className="text-lg font-semibold mb-3">Similar Trademarks Found</h3>
+                <ul className="list-disc pl-5 space-y-2">
+                  {initialData.searchResults.similarTrademarks.map((trademark: string, index: number) => (
+                    <li key={index} className="text-gray-700">
+                      {trademark}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {initialData.searchResults.comments && (
+              <div className="mb-6">
+                <h3 className="text-lg font-semibold mb-2">Expert Comments</h3>
+                <div className="p-4 bg-gray-50 rounded-md text-gray-700">{initialData.searchResults.comments}</div>
+              </div>
+            )}
+
+            {initialData.searchResults.recommendation !== undefined && (
+              <div className="mb-6">
+                <h3 className="text-lg font-semibold mb-2">Recommendation</h3>
+                <div
+                  className={`p-4 rounded-md ${initialData.searchResults.recommendation ? "bg-green-50 text-green-700" : "bg-yellow-50 text-yellow-700"}`}
+                >
+                  <p className="font-medium">
+                    {initialData.searchResults.recommendation
+                      ? "We recommend proceeding with your trademark registration."
+                      : "We recommend caution with your trademark registration."}
+                  </p>
+                  {initialData.searchResults.recommendationDetails && (
+                    <p className="mt-2">{initialData.searchResults.recommendationDetails}</p>
+                  )}
+                </div>
+              </div>
+            )}
+
+            <div className="mt-6">
+              <Button className="bg-indigo-600 hover:bg-indigo-700 text-white" onClick={() => setStep(1)}>
+                Continue with Registration
+              </Button>
+            </div>
+          </div>
+        )}
+
         <div className="grid lg:grid-cols-7 gap-12">
           <div className="lg:col-span-5">
             <div className="mb-8">
@@ -860,7 +951,12 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
   )
 }
 
-export function VerificationForm({ initialData, isLoading = false }: VerificationFormProps) {
+export function VerificationForm({
+  initialData,
+  isLoading = false,
+  searchId,
+  verificationToken,
+}: VerificationFormProps) {
   const [trademarkName, setTrademarkName] = useState("")
   const [trademarkType, setTrademarkType] = useState("")
   const [email, setEmail] = useState("")
@@ -895,7 +991,7 @@ export function VerificationForm({ initialData, isLoading = false }: Verificatio
 
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <VerificationFormContent isLoading={isLoading} />
+      <VerificationFormContent isLoading={isLoading} initialData={initialData} />
     </Suspense>
   )
 }
