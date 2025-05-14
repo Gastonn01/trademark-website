@@ -1,10 +1,12 @@
 import { NextResponse } from "next/server"
 import { getAllSearchData, updateSearchStatus } from "@/lib/supabase"
 
+// Configure this route for dynamic rendering
 export const dynamic = "force-dynamic"
 export const dynamicParams = true
 export const revalidate = 0
-export const fetchCache = "default"
+// Fix: Change 'default' to 'auto' which is a valid value
+export const fetchCache = "auto"
 export const runtime = "nodejs"
 export const preferredRegion = "auto"
 
