@@ -8,12 +8,13 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge"
 import { format } from "date-fns"
 import { useToast } from "@/components/ui/use-toast"
-import { Loader2, Edit, Send, Eye, Copy } from "lucide-react"
+import { Loader2, Edit, Send, Eye, Copy, AlertCircle } from "lucide-react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 
 interface SearchData {
   id: string
@@ -42,6 +43,7 @@ export function AdminPanel() {
   const [recommendation, setRecommendation] = useState<string>("")
   const [isRecommended, setIsRecommended] = useState<boolean>(false)
   const [verificationToken, setVerificationToken] = useState<string>("")
+  const [emailError, setEmailError] = useState<string | null>(null)
 
   const { toast } = useToast()
 
@@ -184,37 +186,56 @@ export function AdminPanel() {
 
   const sendResultsToCustomer = async (id: string) => {
     setSendingResults(id)
-    try {
-      // Try to send via API
-      try {
-        const response = await fetch("/api/admin/send-results", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ searchId: id }),
-        })
+    setEmailError(null)
 
-        if (!response.ok) {
-          throw new Error("API call failed")
-        }
-      } catch (apiError) {
-        console.error("API send failed, simulating success:", apiError)
-        // Simulate API delay
-        await new Promise((resolve) => setTimeout(resolve, 1000))
+    try {
+      // Get the search data
+      const search = searches.find((s) => s.id === id)
+      if (!search) {
+        throw new Error("Search not found")
+      }
+
+      // Check if search has results
+      if (!search.results) {
+        throw new Error("No results available to send. Please edit the search to add results first.")
+      }
+
+      // Check if search has email
+      const email = search.search_data?.email
+      if (!email) {
+        throw new Error("No email address found for this search")
+      }
+
+      // Try to send via API
+      const response = await fetch("/api/admin/send-results", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ searchId: id }),
+      })
+
+      const responseData = await response.json()
+
+      if (!response.ok) {
+        throw new Error(responseData.error || responseData.details || "Failed to send results")
       }
 
       toast({
         title: "Results sent successfully",
-        description: "The customer has been notified with the search results.",
+        description: `The results have been sent to ${email}`,
       })
 
       // Update status to completed if it was in processing
-      if (searches.find((s) => s.id === id)?.status === "processing") {
+      if (search.status === "processing") {
         updateStatus(id, "completed")
       }
     } catch (err) {
       console.error("Error sending results:", err)
+
+      // Set email error for display
+      setEmailError(err instanceof Error ? err.message : "An unknown error occurred")
+
       toast({
         title: "Error sending results",
         description: err instanceof Error ? err.message : "An unknown error occurred",
@@ -388,6 +409,14 @@ export function AdminPanel() {
           <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 px-4 py-3 rounded mb-4">{error}</div>
         )}
 
+        {emailError && (
+          <Alert variant="destructive" className="mb-4">
+            <AlertCircle className="h-4 w-4" />
+            <AlertTitle>Error al enviar email</AlertTitle>
+            <AlertDescription>{emailError}</AlertDescription>
+          </Alert>
+        )}
+
         {loading ? (
           <div className="text-center py-8 flex items-center justify-center">
             <Loader2 className="mr-2 h-5 w-5 animate-spin" />
@@ -456,7 +485,7 @@ export function AdminPanel() {
                           variant="default"
                           size="sm"
                           onClick={() => sendResultsToCustomer(search.id)}
-                          disabled={sendingResults === search.id || !search.search_data?.email || !search.results}
+                          disabled={sendingResults === search.id || !search.search_data?.email}
                         >
                           {sendingResults === search.id ? (
                             <>
