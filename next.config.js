@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ["images.unsplash.com", "flagcdn.com"],
+    domains: ["images.unsplash.com", "example.com"],
     unoptimized: true,
   },
   eslint: {
@@ -11,8 +11,9 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  // Configuración para asegurar que las rutas de API y el panel de administración funcionen
-  output: "standalone", // Cambiado de 'export' a 'standalone'
+  // Change output to standalone for API routes to work
+  output: "standalone",
+  // Add trailingSlash for better compatibility with static hosting
   trailingSlash: true,
 }
 
