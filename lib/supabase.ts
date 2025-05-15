@@ -280,18 +280,34 @@ export async function updateSearchStatus(searchId: string, status: string) {
 
 // Function to update search results
 export async function updateSearchResults(searchId: string, results: any) {
+  console.log("Updating search results for ID:", searchId, "Results:", results)
+
   // Update in memory first
   if (inMemoryStorage[searchId]) {
+    // Keep a copy of the original item for debugging
+    const originalItem = { ...inMemoryStorage[searchId] }
+    console.log("Original item in memory:", originalItem)
+
+    // Update the results
     inMemoryStorage[searchId].results = results
+
     // If status is pending, update to processing
     if (inMemoryStorage[searchId].status === "pending") {
       inMemoryStorage[searchId].status = "processing"
     }
+
+    console.log("Updated item in memory:", inMemoryStorage[searchId])
+  } else {
+    console.warn("Search ID not found in memory storage:", searchId)
   }
 
   // If in preview mode, only use in-memory storage
   if (isPreviewEnvironment() || !supabase) {
-    return { data: inMemoryStorage[searchId], error: null, source: "memory" }
+    return {
+      data: inMemoryStorage[searchId] || null,
+      error: inMemoryStorage[searchId] ? null : "Search not found",
+      source: "memory",
+    }
   }
 
   try {
@@ -307,19 +323,28 @@ export async function updateSearchResults(searchId: string, results: any) {
 
     if (error) {
       console.error("Error updating search results in Supabase:", error)
-      return { data: null, error: error.message, source: "memory" }
+      return {
+        data: inMemoryStorage[searchId] || null,
+        error: error.message,
+        source: "memory",
+      }
     }
 
     return { data, error: null, source: "supabase" }
   } catch (supabaseError) {
     console.error("Supabase update operation failed:", supabaseError)
-    return { data: inMemoryStorage[searchId], error: null, source: "memory" }
+    return {
+      data: inMemoryStorage[searchId] || null,
+      error: null,
+      source: "memory",
+    }
   }
 }
 
 // Function to get all search data with fallback to in-memory
 export async function getAllSearchData(limit = 100, offset = 0, status?: string) {
   console.log("getAllSearchData called with limit:", limit, "offset:", offset, "status:", status)
+  console.log("Current in-memory storage size:", Object.keys(inMemoryStorage).length)
 
   // Create sample data for preview/development if none exists
   if (Object.keys(inMemoryStorage).length === 0) {
@@ -353,14 +378,27 @@ export async function getAllSearchData(limit = 100, offset = 0, status?: string)
     }
   }
 
+  // Log all items in memory for debugging
+  console.log(
+    "All items in memory:",
+    Object.keys(inMemoryStorage).map((key) => ({
+      id: inMemoryStorage[key].id,
+      status: inMemoryStorage[key].status,
+      hasResults: !!inMemoryStorage[key].results,
+    })),
+  )
+
   // IMPORTANT: We're forcing the use of in-memory storage to avoid Supabase issues
   console.log("Using in-memory storage for getAllSearchData")
 
   let filteredData = Object.values(inMemoryStorage)
+  console.log("Total items before filtering:", filteredData.length)
 
   // Apply status filter if provided
   if (status && status !== "all") {
+    console.log("Filtering by status:", status)
     filteredData = filteredData.filter((item: any) => item.status === status)
+    console.log("Items after status filtering:", filteredData.length)
   }
 
   // Sort by created_at (newest first)
@@ -370,6 +408,7 @@ export async function getAllSearchData(limit = 100, offset = 0, status?: string)
 
   // Apply pagination
   const paginatedData = sortedData.slice(offset, offset + limit)
+  console.log("Items after pagination:", paginatedData.length)
 
   // Transform to expected format
   const transformedData = paginatedData.map((item: any) => ({

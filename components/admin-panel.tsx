@@ -71,6 +71,8 @@ export function AdminPanel() {
       }
 
       const data = await response.json()
+      console.log("Fetched searches:", data.data?.length || 0)
+
       setSearches(data.data || [])
 
       if (data.error) {
@@ -86,6 +88,8 @@ export function AdminPanel() {
 
   const updateStatus = async (id: string, status: string) => {
     try {
+      console.log(`Updating status for search ${id} to ${status}`)
+
       // Try to update via API
       try {
         const response = await fetch("/api/admin/searches", {
@@ -105,12 +109,18 @@ export function AdminPanel() {
       }
 
       // Update the local state regardless of API success
-      setSearches(searches.map((search) => (search.id === id ? { ...search, status } : search)))
+      setSearches((prevSearches) => prevSearches.map((search) => (search.id === id ? { ...search, status } : search)))
 
       toast({
         title: "Status updated",
         description: `Search status has been updated to ${status}`,
       })
+
+      // If we're filtering by status and the status changed, refresh the list
+      if (statusFilter !== "all" && statusFilter !== status) {
+        console.log("Status changed and we're filtering - refreshing list")
+        setTimeout(() => fetchSearches(), 500)
+      }
     } catch (err) {
       console.error("Error updating status:", err)
       toast({
@@ -211,6 +221,8 @@ export function AdminPanel() {
     if (!editingSearch) return
 
     try {
+      console.log(`Saving results for search ${editingSearch.id}`)
+
       // Prepare the results data
       const resultsData = {
         similarTrademarks: similarTrademarks.split("\n").filter((t) => t.trim()),
@@ -235,20 +247,27 @@ export function AdminPanel() {
         if (!response.ok) {
           throw new Error("API call failed")
         }
+
+        console.log("API update successful")
       } catch (apiError) {
         console.error("API update failed, using client-side update:", apiError)
         // Continue with client-side update
       }
 
       // Update the local state regardless of API success
-      setSearches(
-        searches.map((search) =>
-          search.id === editingSearch.id ? { ...search, results: resultsData, status: "processing" } : search,
-        ),
-      )
+      const updatedStatus = editingSearch.status === "pending" ? "processing" : editingSearch.status
+
+      setSearches((prevSearches) => {
+        const updatedSearches = prevSearches.map((search) =>
+          search.id === editingSearch.id ? { ...search, results: resultsData, status: updatedStatus } : search,
+        )
+        console.log("Updated searches in state:", updatedSearches.length)
+        return updatedSearches
+      })
 
       // If the search was pending, update it to processing
       if (editingSearch.status === "pending") {
+        console.log("Updating status from pending to processing")
         updateStatus(editingSearch.id, "processing")
       }
 
@@ -259,6 +278,9 @@ export function AdminPanel() {
 
       // Close the dialog
       setIsEditDialogOpen(false)
+
+      // Refresh the list to ensure we see the updated data
+      setTimeout(() => fetchSearches(), 500)
     } catch (err) {
       console.error("Error saving search results:", err)
       toast({
