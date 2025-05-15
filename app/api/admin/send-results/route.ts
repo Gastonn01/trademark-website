@@ -84,6 +84,7 @@ export async function POST(req: Request) {
     console.log(`Sending email to ${email} for search ID ${searchId}`)
     console.log(`Verification link: ${verificationLink}`)
 
+    // Update the emailHtml template to include results and the registration button
     // Prepare email content in English
     const emailHtml = `
       <html>
@@ -95,9 +96,10 @@ export async function POST(req: Request) {
             .content { padding: 20px; background-color: #f9f9f9; }
             .footer { text-align: center; margin-top: 20px; font-size: 12px; color: #666; }
             .button { display: inline-block; background-color: #4a6cf7; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; margin: 10px; }
-            .results { margin: 20px 0; }
+            .results { margin: 20px 0; padding: 15px; background-color: #f0f4ff; border-radius: 5px; border-left: 4px solid #4a6cf7; }
             .trademark-list { margin: 10px 0; padding-left: 20px; }
             .button-container { text-align: center; margin: 20px 0; }
+            .recommendation { font-weight: bold; color: #4a6cf7; }
           </style>
         </head>
         <body>
@@ -110,13 +112,44 @@ export async function POST(req: Request) {
               
               <p>We have completed the search for your trademark <strong>${trademarkName}</strong> and have the results ready for you.</p>
               
-              <p>To view your complete search results with all details, please click the button below:</p>
-              
-              <div class="button-container">
-                <a href="${verificationLink}" class="button">View Your Search Results</a>
+              <div class="results">
+                <h3>Search Results Summary:</h3>
+                ${
+                  similarTrademarks.length > 0
+                    ? `
+                  <p><strong>Similar trademarks found:</strong></p>
+                  <ul class="trademark-list">
+                    ${similarTrademarks.map((tm) => `<li>${tm}</li>`).join("")}
+                  </ul>
+                `
+                    : "<p><strong>No similar trademarks were found.</strong></p>"
+                }
+                
+                ${
+                  comments
+                    ? `
+                  <p><strong>Analysis:</strong></p>
+                  <p>${comments}</p>
+                `
+                    : ""
+                }
+                
+                ${
+                  recommendation
+                    ? `
+                  <p class="recommendation">${recommendation}</p>
+                `
+                    : ""
+                }
               </div>
               
-              <p>This link will take you directly to your personalized verification page where you can review all the information about your trademark search.</p>
+              <p>Ready to proceed with your trademark registration? Click the button below to start the process:</p>
+              
+              <div class="button-container">
+                <a href="${verificationLink}" class="button">Start Registration Now</a>
+              </div>
+              
+              <p>This link will take you directly to your personalized registration page where all your information is already pre-filled.</p>
               
               <p>If you have any questions or need additional assistance, please don't hesitate to contact us.</p>
               

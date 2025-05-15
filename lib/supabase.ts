@@ -416,12 +416,32 @@ export async function getAllSearchData(limit = 100, offset = 0, status?: string)
 export async function getSearchDataByToken(token: string) {
   console.log("Getting search data by token:", token)
 
+  // If in preview mode, check in-memory storage
+  if (isPreviewEnvironment()) {
+    console.log("Preview environment, checking in-memory storage")
+    const matchingSearch = Object.values(inMemoryStorage).find((item: any) => item.results?.verificationToken === token)
+    return matchingSearch || null
+  }
+
   try {
-    // Initialize Supabase client
-    const supabase = createClient()
+    // Make sure we have the required environment variables
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+      throw new Error("Supabase environment variables are missing")
+    }
+
+    // Initialize Supabase client with explicit URL and key
+    const supabaseClient = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
+      {
+        auth: {
+          persistSession: false,
+        },
+      },
+    )
 
     // Query the database for the search with this token
-    const { data, error } = await supabase
+    const { data, error } = await supabaseClient
       .from("trademark_searches")
       .select("*")
       .eq("results->verificationToken", token)
