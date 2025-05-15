@@ -8,7 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge"
 import { format } from "date-fns"
 import { useToast } from "@/components/ui/use-toast"
-import { Loader2, Edit, Send, Eye, Copy, AlertCircle, RefreshCw, Bug, Database } from "lucide-react"
+import { Loader2, Edit, Send, Eye, Copy, RefreshCw } from "lucide-react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
@@ -44,10 +44,6 @@ export function AdminPanel() {
   const [isRecommended, setIsRecommended] = useState<boolean>(false)
   const [verificationToken, setVerificationToken] = useState<string>("")
   const [emailError, setEmailError] = useState<string | null>(null)
-  const [debugInfo, setDebugInfo] = useState<string | null>(null)
-  const [showDebugPanel, setShowDebugPanel] = useState<boolean>(false)
-  const [responseDetails, setResponseDetails] = useState<any>(null)
-  const [dataSource, setDataSource] = useState<string>("loading")
 
   const { toast } = useToast()
 
@@ -58,130 +54,34 @@ export function AdminPanel() {
   const fetchSearches = async () => {
     setLoading(true)
     setError(null)
-    setDebugInfo(null)
-    setResponseDetails(null)
-    setDataSource("loading")
 
     try {
-      console.log("Fetching searches with status filter:", statusFilter)
+      // Add a timestamp to prevent caching
+      const timestamp = new Date().getTime()
+      const response = await fetch(`/api/admin/searches?status=${statusFilter}&_t=${timestamp}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        cache: "no-store",
+      })
 
-      // First try to fetch from the API
-      let response
-      let data
-
-      try {
-        // Use fetch with cache: 'no-store' to prevent caching issues
-        response = await fetch(`/api/admin/searches?status=${statusFilter}`, {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-          },
-          cache: "no-store",
-        })
-
-        // Check for non-OK response
-        if (!response.ok) {
-          throw new Error(`Server error: ${response.status} ${response.statusText}`)
-        }
-
-        // Get the response text first to validate if it's JSON
-        const responseText = await response.text()
-        setDebugInfo(`Raw API response: ${responseText.substring(0, 100)}...`)
-
-        try {
-          // Try to parse the response as JSON
-          data = JSON.parse(responseText)
-          console.log("API response:", data)
-          setResponseDetails(data)
-          setDataSource(data.source || "unknown")
-        } catch (jsonError) {
-          throw new Error(
-            `Invalid JSON response: ${jsonError.message}. Raw response: ${responseText.substring(0, 100)}...`,
-          )
-        }
-      } catch (apiError) {
-        console.error("API fetch failed:", apiError)
-        setDebugInfo(`API fetch failed: ${apiError.message}`)
-
-        // Fall back to sample data
-        data = {
-          data: generateFallbackData(),
-          source: "fallback",
-          error: apiError.message,
-        }
-        setResponseDetails({ error: apiError.message, fallback: true })
-        setDataSource("fallback")
+      if (!response.ok) {
+        throw new Error(`Server error: ${response.status} ${response.statusText}`)
       }
 
-      // Set the searches data
+      const data = await response.json()
       setSearches(data.data || [])
 
-      // If there was an error in the response but we still got data
       if (data.error) {
-        console.warn("API returned an error but provided data:", data.error)
-        setError(`Warning: ${data.error}`)
-      } else {
-        setError(null)
+        setError(`Error: ${data.error}`)
       }
     } catch (err) {
-      console.error("Error in fetchSearches:", err)
+      console.error("Error loading search data:", err)
       setError(`Error loading search data: ${err instanceof Error ? err.message : String(err)}`)
-
-      // Use fallback data to avoid completely breaking the UI
-      setSearches(generateFallbackData())
-      setDebugInfo(`Exception in fetchSearches: ${err instanceof Error ? err.message : String(err)}`)
-      setResponseDetails({ error: String(err), fallback: true })
-      setDataSource("error-fallback")
     } finally {
       setLoading(false)
     }
-  }
-
-  // Generate fallback data for static export environments
-  const generateFallbackData = (): SearchData[] => {
-    const fallbackData: SearchData[] = []
-
-    // Add the real data we saw in the screenshot
-    fallbackData.push({
-      id: "real-1",
-      form_type: "free-search",
-      search_data: {
-        name: "d",
-        surname: "d",
-        email: "gflacort@gmail.com",
-        trademarkName: "Example Trademark",
-      },
-      created_at: "2025-05-12T11:08:00Z",
-      status: "pending",
-    })
-
-    // Add some sample data
-    for (let i = 1; i <= 3; i++) {
-      fallbackData.push({
-        id: `sample-${i}`,
-        form_type: i % 2 === 0 ? "Free Search" : "Registration",
-        search_data: {
-          name: `John`,
-          surname: `Doe ${i}`,
-          email: `sample${i}@example.com`,
-          trademarkName: `Sample Trademark ${i}`,
-        },
-        created_at: new Date(Date.now() - i * 86400000).toISOString(),
-        status: i % 3 === 0 ? "completed" : i % 3 === 1 ? "pending" : "processing",
-        results:
-          i % 2 === 0
-            ? {
-                similarTrademarks: [`Similar Trademark ${i}.1`, `Similar Trademark ${i}.2`],
-                comments: `Sample comments for trademark ${i}`,
-                recommendation: i % 4 === 0 ? `We recommend registering this trademark in classes X, Y, Z` : "",
-                verificationToken: `token${Math.random().toString(36).substring(2, 10)}`,
-              }
-            : undefined,
-      })
-    }
-
-    return fallbackData
   }
 
   const updateStatus = async (id: string, status: string) => {
@@ -440,27 +340,11 @@ export function AdminPanel() {
               <RefreshCw className="h-4 w-4 mr-2" />
               Actualizar
             </Button>
-            <Button onClick={() => setShowDebugPanel(!showDebugPanel)} variant="outline">
-              <Bug className="h-4 w-4 mr-2" />
-              {showDebugPanel ? "Ocultar Debug" : "Mostrar Debug"}
-            </Button>
           </div>
         </div>
 
-        {/* Data Source Indicator */}
-        <Alert variant="default" className="mb-4 bg-blue-50 border-blue-200">
-          <Database className="h-4 w-4 mr-2" />
-          <AlertTitle>Modo de datos: {dataSource === "memory" ? "Local" : "Fallback"}</AlertTitle>
-          <AlertDescription>
-            {dataSource === "memory"
-              ? "Usando datos almacenados localmente. Los cambios no se guardarán en la base de datos."
-              : "Usando datos de respaldo. Los cambios no se guardarán en la base de datos."}
-          </AlertDescription>
-        </Alert>
-
         {error && (
           <Alert variant="destructive" className="mb-4">
-            <AlertCircle className="h-4 w-4" />
             <AlertTitle>Error</AlertTitle>
             <AlertDescription>{error}</AlertDescription>
           </Alert>
@@ -468,41 +352,9 @@ export function AdminPanel() {
 
         {emailError && (
           <Alert variant="destructive" className="mb-4">
-            <AlertCircle className="h-4 w-4" />
             <AlertTitle>Error al enviar email</AlertTitle>
             <AlertDescription>{emailError}</AlertDescription>
           </Alert>
-        )}
-
-        {showDebugPanel && (
-          <div className="mb-4 space-y-2">
-            <Alert variant="default" className="bg-blue-50 border-blue-200">
-              <AlertTitle>Información de depuración</AlertTitle>
-              <AlertDescription className="font-mono text-xs whitespace-pre-wrap">
-                {debugInfo || "No hay información de depuración disponible"}
-              </AlertDescription>
-            </Alert>
-
-            {responseDetails && (
-              <Alert variant="default" className="bg-blue-50 border-blue-200">
-                <AlertTitle>Detalles de la respuesta API</AlertTitle>
-                <AlertDescription className="font-mono text-xs whitespace-pre-wrap">
-                  {JSON.stringify(responseDetails, null, 2)}
-                </AlertDescription>
-              </Alert>
-            )}
-
-            <Alert variant="default" className="bg-gray-50 border-gray-200">
-              <AlertTitle>Variables de entorno</AlertTitle>
-              <AlertDescription className="font-mono text-xs">
-                NEXT_PUBLIC_SUPABASE_URL:{" "}
-                {process.env.NEXT_PUBLIC_SUPABASE_URL ? "✅ Configurado" : "❌ No configurado"}
-                <br />
-                NEXT_PUBLIC_SUPABASE_ANON_KEY:{" "}
-                {process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ? "✅ Configurado" : "❌ No configurado"}
-              </AlertDescription>
-            </Alert>
-          </div>
         )}
 
         {loading ? (
