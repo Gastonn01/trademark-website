@@ -1,22 +1,49 @@
-import { getSearchDataByToken } from "@/lib/supabase"
 import { VerificationContent } from "@/components/verification-content"
-import { redirect } from "next/navigation"
+import { getSearchDataByToken } from "@/lib/supabase"
+import type { Metadata } from "next"
 
-export default async function VerificationTokenPage({ params }: { params: { token: string } }) {
-  const { token } = params
+export const metadata: Metadata = {
+  title: "Trademark Search Results | Just Protected",
+  description: "View your trademark search results",
+}
 
-  if (!token) {
-    redirect("/verification")
+export default async function VerificationPage({ params }: { params: { token: string } }) {
+  const token = params.token
+  console.log("Verification token:", token)
+
+  let searchData = null
+  let error = null
+
+  try {
+    // Get search data by token
+    searchData = await getSearchDataByToken(token)
+    console.log("Search data found:", !!searchData)
+  } catch (err) {
+    console.error("Error fetching search data by token:", err)
+    error = err instanceof Error ? err.message : "An error occurred while fetching search data"
   }
 
-  // Get the search data by token
-  const searchData = await getSearchDataByToken(token)
-
-  if (!searchData) {
-    // If no search data is found, redirect to the verification page
-    redirect("/verification")
-  }
-
-  // Pass the search ID to the VerificationContent component
-  return <VerificationContent searchId={searchData.id} verificationToken={token} />
+  return (
+    <div className="container mx-auto py-8 px-4">
+      {error ? (
+        <div className="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded mb-4">
+          <p className="font-bold">Error</p>
+          <p>{error}</p>
+          <p className="mt-2">
+            Please contact support with the following token: <code className="bg-gray-100 p-1">{token}</code>
+          </p>
+        </div>
+      ) : !searchData ? (
+        <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 px-4 py-3 rounded mb-4">
+          <p className="font-bold">Search data not found</p>
+          <p>We couldn't find any search data associated with this verification token.</p>
+          <p className="mt-2">
+            Please contact support with the following token: <code className="bg-gray-100 p-1">{token}</code>
+          </p>
+        </div>
+      ) : (
+        <VerificationContent initialData={searchData} />
+      )}
+    </div>
+  )
 }

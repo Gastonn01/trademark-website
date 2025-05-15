@@ -3,6 +3,7 @@ import { getSearchData, updateSearchStatus } from "@/lib/supabase"
 import { Resend } from "resend"
 
 export const dynamic = "force-dynamic"
+export const fetchCache = "auto"
 
 // Initialize Resend with API key
 const resend = new Resend(process.env.RESEND_API_KEY)
@@ -43,21 +44,45 @@ export async function POST(req: Request) {
     const similarTrademarks = results.similarTrademarks || []
     const comments = results.comments || ""
     const recommendation = results.recommendation || ""
-    const verificationToken = results.verificationToken || ""
+
+    // Generate a verification token if one doesn't exist
+    let verificationToken = results.verificationToken
+    if (!verificationToken) {
+      verificationToken = `token${Math.random().toString(36).substring(2, 15)}${Math.random().toString(36).substring(2, 15)}`
+
+      // Update the search with the new token
+      try {
+        await fetch("/api/admin/update-search-results", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            searchId: searchId,
+            results: {
+              ...results,
+              verificationToken: verificationToken,
+            },
+          }),
+        })
+      } catch (error) {
+        console.error("Failed to update search with verification token:", error)
+      }
+    }
 
     if (!email) {
       return NextResponse.json({ error: "No email found for this search" }, { status: 400 })
     }
 
-    // Create verification links
-    // IMPORTANT: Use the actual production domain, not localhost
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://justprotected.com"
+    // IMPORTANT: Use the actual production domain
+    // Replace this with your actual domain
+    const productionDomain = "https://justprotected.com"
 
-    // Direct search ID link (works without token)
-    const searchResultsLink = `${baseUrl}/verification?search_id=${searchId}`
+    // Token verification link - this is the primary link we want to use
+    const verificationLink = `${productionDomain}/verification/${verificationToken}`
 
-    // Token verification link (if token exists)
-    const tokenVerificationLink = verificationToken ? `${baseUrl}/verification/${verificationToken}` : searchResultsLink
+    console.log(`Sending email to ${email} for search ID ${searchId}`)
+    console.log(`Verification link: ${verificationLink}`)
 
     // Prepare email content in English
     const emailHtml = `
@@ -85,44 +110,13 @@ export async function POST(req: Request) {
               
               <p>We have completed the search for your trademark <strong>${trademarkName}</strong> and have the results ready for you.</p>
               
-              <div class="results">
-                ${
-                  similarTrademarks.length > 0
-                    ? `
-                  <h3>Similar trademarks found:</h3>
-                  <ul class="trademark-list">
-                    ${similarTrademarks.map((tm) => `<li>${tm}</li>`).join("")}
-                  </ul>
-                `
-                    : "<p>No similar trademarks were found.</p>"
-                }
-                
-                ${
-                  comments
-                    ? `
-                  <h3>Comments:</h3>
-                  <p>${comments}</p>
-                `
-                    : ""
-                }
-                
-                ${
-                  recommendation
-                    ? `
-                  <h3>Recommendation:</h3>
-                  <p>${recommendation}</p>
-                `
-                    : ""
-                }
-              </div>
-              
-              <p>To view the complete results and more details, please use one of the following links:</p>
+              <p>To view your complete search results with all details, please click the button below:</p>
               
               <div class="button-container">
-                <a href="${searchResultsLink}" class="button">View Complete Results</a>
-                
-                ${verificationToken ? `<a href="${tokenVerificationLink}" class="button">Token Verification</a>` : ""}
+                <a href="${verificationLink}" class="button">View Your Search Results</a>
               </div>
+              
+              <p>This link will take you directly to your personalized verification page where you can review all the information about your trademark search.</p>
               
               <p>If you have any questions or need additional assistance, please don't hesitate to contact us.</p>
               
@@ -136,10 +130,6 @@ export async function POST(req: Request) {
         </body>
       </html>
     `
-
-    console.log(`Sending email to ${email} for search ID ${searchId}`)
-    console.log(`Search results link: ${searchResultsLink}`)
-    console.log(`Token verification link: ${tokenVerificationLink}`)
 
     try {
       // Send email using Resend
@@ -164,6 +154,7 @@ export async function POST(req: Request) {
         success: true,
         message: `Results sent to ${email}`,
         emailId: data?.id,
+        verificationLink: verificationLink,
       })
     } catch (emailError) {
       console.error("Exception sending email:", emailError)

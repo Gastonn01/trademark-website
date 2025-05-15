@@ -414,33 +414,33 @@ export async function getAllSearchData(limit = 100, offset = 0, status?: string)
 
 // Function to get search data by verification token
 export async function getSearchDataByToken(token: string) {
-  // If in preview mode, search in-memory storage
-  if (isPreviewEnvironment() || !supabase) {
-    // Find the search with the matching verification token
-    const search = Object.values(inMemoryStorage).find((item: any) => item.results?.verificationToken === token)
-    return search || null
-  }
+  console.log("Getting search data by token:", token)
 
   try {
-    // Try to get from Supabase
+    // Initialize Supabase client
+    const supabase = createClient()
+
+    // Query the database for the search with this token
     const { data, error } = await supabase
       .from("trademark_searches")
       .select("*")
-      .filter("results->verificationToken", "eq", token)
+      .eq("results->verificationToken", token)
       .single()
 
     if (error) {
-      console.error("Error getting search by token from Supabase:", error)
-      // Try to find in memory
-      const search = Object.values(inMemoryStorage).find((item: any) => item.results?.verificationToken === token)
-      return search || null
+      console.error("Supabase error:", error)
+      throw new Error(`Database error: ${error.message}`)
     }
 
+    if (!data) {
+      console.log("No data found for token:", token)
+      return null
+    }
+
+    console.log("Found search data for token:", token)
     return data
   } catch (error) {
-    console.error("Error in Supabase operation, checking memory:", error)
-    // Try to find in memory
-    const search = Object.values(inMemoryStorage).find((item: any) => item.results?.verificationToken === token)
-    return search || null
+    console.error("Error in getSearchDataByToken:", error)
+    throw error
   }
 }
