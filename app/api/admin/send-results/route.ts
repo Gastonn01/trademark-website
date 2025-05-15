@@ -29,14 +29,14 @@ export async function POST(req: Request) {
       searchData.search_data?.name ||
       searchData.search_results?.name ||
       searchData.search_results?.firstName ||
-      "Cliente"
+      "Client"
     const surname =
       searchData.search_data?.surname || searchData.search_results?.surname || searchData.search_results?.lastName || ""
     const trademarkName =
       searchData.search_data?.trademarkName ||
       searchData.search_data?.trademark_name ||
       searchData.trademark_name ||
-      "su marca"
+      "your trademark"
 
     // Get results data
     const results = searchData.results || {}
@@ -50,7 +50,8 @@ export async function POST(req: Request) {
     }
 
     // Create verification links
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || req.headers.get("origin") || "https://justprotected.com"
+    // IMPORTANT: Use the actual production domain, not localhost
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://justprotected.com"
 
     // Direct search ID link (works without token)
     const searchResultsLink = `${baseUrl}/verification?search_id=${searchId}`
@@ -58,7 +59,7 @@ export async function POST(req: Request) {
     // Token verification link (if token exists)
     const tokenVerificationLink = verificationToken ? `${baseUrl}/verification/${verificationToken}` : searchResultsLink
 
-    // Prepare email content
+    // Prepare email content in English
     const emailHtml = `
       <html>
         <head>
@@ -77,29 +78,29 @@ export async function POST(req: Request) {
         <body>
           <div class="container">
             <div class="header">
-              <h1>Resultados de su búsqueda de marca</h1>
+              <h1>Your Trademark Search Results</h1>
             </div>
             <div class="content">
-              <p>Estimado/a ${name} ${surname},</p>
+              <p>Dear ${name} ${surname},</p>
               
-              <p>Hemos completado la búsqueda para su marca <strong>${trademarkName}</strong> y tenemos los resultados listos para usted.</p>
+              <p>We have completed the search for your trademark <strong>${trademarkName}</strong> and have the results ready for you.</p>
               
               <div class="results">
                 ${
                   similarTrademarks.length > 0
                     ? `
-                  <h3>Marcas similares encontradas:</h3>
+                  <h3>Similar trademarks found:</h3>
                   <ul class="trademark-list">
                     ${similarTrademarks.map((tm) => `<li>${tm}</li>`).join("")}
                   </ul>
                 `
-                    : "<p>No se encontraron marcas similares.</p>"
+                    : "<p>No similar trademarks were found.</p>"
                 }
                 
                 ${
                   comments
                     ? `
-                  <h3>Comentarios:</h3>
+                  <h3>Comments:</h3>
                   <p>${comments}</p>
                 `
                     : ""
@@ -108,32 +109,28 @@ export async function POST(req: Request) {
                 ${
                   recommendation
                     ? `
-                  <h3>Recomendación:</h3>
+                  <h3>Recommendation:</h3>
                   <p>${recommendation}</p>
                 `
                     : ""
                 }
               </div>
               
-              <p>Para ver los resultados completos y más detalles, utilice uno de los siguientes enlaces:</p>
+              <p>To view the complete results and more details, please use one of the following links:</p>
               
               <div class="button-container">
-                <a href="${searchResultsLink}" class="button">Ver resultados completos</a>
+                <a href="${searchResultsLink}" class="button">View Complete Results</a>
                 
-                ${
-                  verificationToken
-                    ? `<a href="${tokenVerificationLink}" class="button">Verificación por token</a>`
-                    : ""
-                }
+                ${verificationToken ? `<a href="${tokenVerificationLink}" class="button">Token Verification</a>` : ""}
               </div>
               
-              <p>Si tiene alguna pregunta o necesita asistencia adicional, no dude en contactarnos.</p>
+              <p>If you have any questions or need additional assistance, please don't hesitate to contact us.</p>
               
-              <p>Atentamente,<br>El equipo de Just Protected</p>
+              <p>Best regards,<br>The Just Protected Team</p>
             </div>
             <div class="footer">
-              <p>© ${new Date().getFullYear()} Just Protected. Todos los derechos reservados.</p>
-              <p>Este correo electrónico fue enviado a ${email}</p>
+              <p>© ${new Date().getFullYear()} Just Protected. All rights reserved.</p>
+              <p>This email was sent to ${email}</p>
             </div>
           </div>
         </body>
@@ -149,7 +146,7 @@ export async function POST(req: Request) {
       const { data, error } = await resend.emails.send({
         from: "Just Protected <no-reply@justprotected.com>",
         to: [email],
-        subject: `Resultados de búsqueda para ${trademarkName}`,
+        subject: `Trademark Search Results for ${trademarkName}`,
         html: emailHtml,
       })
 
