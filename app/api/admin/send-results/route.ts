@@ -24,10 +24,19 @@ export async function POST(req: Request) {
     }
 
     // Extract email and other necessary data
-    const email = searchData.email || searchData.search_results?.email
-    const name = searchData.search_results?.name || searchData.search_results?.firstName || "Cliente"
-    const surname = searchData.search_results?.surname || searchData.search_results?.lastName || ""
-    const trademarkName = searchData.search_results?.trademarkName || searchData.trademark_name || "su marca"
+    const email = searchData.email || searchData.search_results?.email || searchData.search_data?.email
+    const name =
+      searchData.search_data?.name ||
+      searchData.search_results?.name ||
+      searchData.search_results?.firstName ||
+      "Cliente"
+    const surname =
+      searchData.search_data?.surname || searchData.search_results?.surname || searchData.search_results?.lastName || ""
+    const trademarkName =
+      searchData.search_data?.trademarkName ||
+      searchData.search_data?.trademark_name ||
+      searchData.trademark_name ||
+      "su marca"
 
     // Get results data
     const results = searchData.results || {}
@@ -40,11 +49,14 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "No email found for this search" }, { status: 400 })
     }
 
-    // Create verification link
+    // Create verification links
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || req.headers.get("origin") || "https://justprotected.com"
-    const verificationLink = verificationToken
-      ? `${baseUrl}/verification/${verificationToken}`
-      : `${baseUrl}/verification?search_id=${searchId}`
+
+    // Direct search ID link (works without token)
+    const searchResultsLink = `${baseUrl}/verification?search_id=${searchId}`
+
+    // Token verification link (if token exists)
+    const tokenVerificationLink = verificationToken ? `${baseUrl}/verification/${verificationToken}` : searchResultsLink
 
     // Prepare email content
     const emailHtml = `
@@ -56,9 +68,10 @@ export async function POST(req: Request) {
             .header { background-color: #4a6cf7; color: white; padding: 20px; text-align: center; }
             .content { padding: 20px; background-color: #f9f9f9; }
             .footer { text-align: center; margin-top: 20px; font-size: 12px; color: #666; }
-            .button { display: inline-block; background-color: #4a6cf7; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; }
+            .button { display: inline-block; background-color: #4a6cf7; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; margin: 10px; }
             .results { margin: 20px 0; }
             .trademark-list { margin: 10px 0; padding-left: 20px; }
+            .button-container { text-align: center; margin: 20px 0; }
           </style>
         </head>
         <body>
@@ -102,11 +115,17 @@ export async function POST(req: Request) {
                 }
               </div>
               
-              <p>Para ver los resultados completos y más detalles, haga clic en el siguiente enlace:</p>
+              <p>Para ver los resultados completos y más detalles, utilice uno de los siguientes enlaces:</p>
               
-              <p style="text-align: center;">
-                <a href="${verificationLink}" class="button">Ver resultados completos</a>
-              </p>
+              <div class="button-container">
+                <a href="${searchResultsLink}" class="button">Ver resultados completos</a>
+                
+                ${
+                  verificationToken
+                    ? `<a href="${tokenVerificationLink}" class="button">Verificación por token</a>`
+                    : ""
+                }
+              </div>
               
               <p>Si tiene alguna pregunta o necesita asistencia adicional, no dude en contactarnos.</p>
               
@@ -122,6 +141,8 @@ export async function POST(req: Request) {
     `
 
     console.log(`Sending email to ${email} for search ID ${searchId}`)
+    console.log(`Search results link: ${searchResultsLink}`)
+    console.log(`Token verification link: ${tokenVerificationLink}`)
 
     try {
       // Send email using Resend
