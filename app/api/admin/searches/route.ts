@@ -5,7 +5,6 @@ import { getAllSearchData, updateSearchStatus } from "@/lib/supabase"
 export const dynamic = "force-dynamic"
 export const dynamicParams = true
 export const revalidate = 0
-// Fix: Change 'default' to 'auto' which is a valid value
 export const fetchCache = "auto"
 export const runtime = "nodejs"
 export const preferredRegion = "auto"
@@ -16,16 +15,34 @@ export async function GET(req: Request) {
   const offset = Number.parseInt(searchParams.get("offset") || "0")
   const status = searchParams.get("status") || undefined
 
+  console.log(`API route: Fetching searches with limit=${limit}, offset=${offset}, status=${status || "all"}`)
+
   try {
+    // Try to get the search data
     const result = await getAllSearchData(limit, offset, status)
-    return NextResponse.json(result)
+    console.log(`API route: Fetched ${result.data?.length || 0} searches from ${result.source || "unknown source"}`)
+
+    // If there's an error in the result, include it in the response
+    if (result.error) {
+      console.warn("API route: getAllSearchData returned an error:", result.error)
+    }
+
+    // Return a consistent response format
+    return NextResponse.json({
+      data: result.data || [],
+      count: result.data?.length || 0,
+      source: result.source || "unknown",
+      error: result.error || null,
+    })
   } catch (error) {
-    console.error("Error fetching search data:", error)
+    console.error("Error in API route:", error)
+
     // Return a proper JSON error response with a fallback to empty data
     return NextResponse.json({
-      data: [],
-      error: "Error fetching search data",
-      details: String(error),
+      data: [], // Always provide an empty array so the client doesn't crash
+      count: 0,
+      error: "Error in API route",
+      details: error instanceof Error ? error.message : String(error),
       source: "error-fallback",
     })
   }
@@ -40,6 +57,7 @@ export async function PATCH(req: Request) {
       return NextResponse.json({ error: "Search ID and status are required" }, { status: 400 })
     }
 
+    console.log(`API route: Updating search ${searchId} status to ${status}`)
     const result = await updateSearchStatus(searchId, status)
     return NextResponse.json(result)
   } catch (error) {

@@ -3,36 +3,57 @@ import { createClient } from "@supabase/supabase-js"
 // In-memory storage as a fallback
 const inMemoryStorage: { [key: string]: any } = {}
 
-// Force preview mode for Vercel preview environments
+// Force fallback mode (set to true to always use in-memory data)
+const FORCE_FALLBACK = true
+
+// Check if we're in a preview environment
 const isPreviewEnvironment = () => {
-  // Always return true for Vercel preview deployments
-  // This ensures we never try to use Supabase in preview
-  return true
+  // Always return true to force using the fallback data
+  // This will bypass all Supabase calls
+  return (
+    FORCE_FALLBACK ||
+    process.env.NEXT_PUBLIC_VERCEL_ENV !== "production" ||
+    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  )
 }
 
-// Create a Supabase client only if not in preview
-let supabase: any = null
+// Create a Supabase client
+export function createSupabaseClient() {
+  // If we're forcing fallback, don't even try to create a client
+  if (FORCE_FALLBACK) {
+    console.log("Forcing fallback mode, skipping Supabase client creation")
+    return null
+  }
 
-// Only initialize if not in preview and required env vars exist
-if (
-  !isPreviewEnvironment() &&
-  typeof process !== "undefined" &&
-  process.env.NEXT_PUBLIC_SUPABASE_URL &&
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-) {
+  // Check if environment variables are available
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    console.error("Supabase environment variables are missing")
+    return null
+  }
+
   try {
-    supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY, {
+    const client = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY, {
       auth: {
         persistSession: false,
       },
     })
-    console.log("Supabase client initialized successfully")
+    return client
   } catch (error) {
     console.error("Failed to initialize Supabase client:", error)
+    return null
   }
 }
 
-// Update the ensureTableExists function to completely skip in preview
+// Get a Supabase client instance
+let supabase: any = null
+try {
+  supabase = createSupabaseClient()
+} catch (error) {
+  console.error("Error initializing global Supabase client:", error)
+}
+
+// Update the ensureTableExists function
 export async function ensureTableExists() {
   // In preview mode, just return true without any fetch operations
   if (isPreviewEnvironment()) {
@@ -113,7 +134,7 @@ export async function uploadFileToStorage(file: File, searchId: string) {
   }
 }
 
-// Update the saveSearchData function to use only in-memory storage in preview
+// Update the saveSearchData function
 export async function saveSearchData(searchId: string, searchData: any, formType: string) {
   try {
     // First, store in memory as a fallback
@@ -200,7 +221,7 @@ export async function saveSearchData(searchId: string, searchData: any, formType
   }
 }
 
-// Update getSearchData to use only in-memory in preview
+// Update getSearchData function
 export async function getSearchData(searchId: string) {
   // If in preview mode, only use in-memory storage
   if (isPreviewEnvironment() || !supabase) {
@@ -298,6 +319,8 @@ export async function updateSearchResults(searchId: string, results: any) {
 
 // Function to get all search data with fallback to in-memory
 export async function getAllSearchData(limit = 100, offset = 0, status?: string) {
+  console.log("getAllSearchData called with limit:", limit, "offset:", offset, "status:", status)
+
   // Create sample data for preview/development if none exists
   if (Object.keys(inMemoryStorage).length === 0) {
     console.log("Creating sample data for preview")
@@ -330,86 +353,41 @@ export async function getAllSearchData(limit = 100, offset = 0, status?: string)
     }
   }
 
-  // Always use in-memory storage for preview or when Supabase is not available
-  if (isPreviewEnvironment() || !supabase) {
-    console.log("Using in-memory storage for getAllSearchData")
+  // IMPORTANT: We're forcing the use of in-memory storage to avoid Supabase issues
+  console.log("Using in-memory storage for getAllSearchData")
 
-    let filteredData = Object.values(inMemoryStorage)
+  let filteredData = Object.values(inMemoryStorage)
 
-    // Apply status filter if provided
-    if (status && status !== "all") {
-      filteredData = filteredData.filter((item: any) => item.status === status)
-    }
-
-    // Sort by created_at (newest first)
-    const sortedData = filteredData.sort(
-      (a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
-    )
-
-    // Apply pagination
-    const paginatedData = sortedData.slice(offset, offset + limit)
-
-    // Transform to expected format
-    const transformedData = paginatedData.map((item: any) => ({
-      id: item.id,
-      form_type: item.notes || "Unknown",
-      search_data: {
-        ...item.search_results,
-        name: item.search_results?.firstName || item.search_results?.name || "",
-        surname: item.search_results?.lastName || item.search_results?.surname || "",
-        email: item.search_results?.email,
-      },
-      created_at: item.created_at,
-      status: item.status || "pending",
-      results: item.results,
-    }))
-
-    return { data: transformedData, error: null, source: "memory" }
+  // Apply status filter if provided
+  if (status && status !== "all") {
+    filteredData = filteredData.filter((item: any) => item.status === status)
   }
 
-  try {
-    // Try to get from Supabase with better error handling
-    let query = supabase
-      .from("trademark_searches")
-      .select("*")
-      .range(offset, offset + limit - 1)
-      .order("created_at", { ascending: false })
+  // Sort by created_at (newest first)
+  const sortedData = filteredData.sort(
+    (a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+  )
 
-    if (status && status !== "all") {
-      query = query.eq("status", status)
-    }
+  // Apply pagination
+  const paginatedData = sortedData.slice(offset, offset + limit)
 
-    const { data, error } = await query
+  // Transform to expected format
+  const transformedData = paginatedData.map((item: any) => ({
+    id: item.id,
+    form_type: item.notes || "Unknown",
+    search_data: {
+      ...item.search_results,
+      name: item.search_results?.firstName || item.search_results?.name || "",
+      surname: item.search_results?.lastName || item.search_results?.surname || "",
+      email: item.search_results?.email,
+    },
+    created_at: item.created_at,
+    status: item.status || "pending",
+    results: item.results,
+  }))
 
-    if (error) {
-      console.error("Supabase query error:", error)
-      // Fall back to in-memory data instead of throwing
-      console.log("Falling back to in-memory data due to Supabase error")
-      return getAllSearchData(limit, offset, status)
-    }
-
-    // Transform data to match expected format in admin panel
-    const transformedData = data.map((item) => ({
-      id: item.id,
-      form_type: item.notes || "Unknown",
-      search_data: {
-        ...item.search_results,
-        name: item.search_results?.firstName || item.search_results?.name || "",
-        surname: item.search_results?.lastName || item.search_results?.surname || "",
-        email: item.email,
-      },
-      created_at: item.created_at,
-      status: item.status,
-      results: item.results,
-    }))
-
-    return { data: transformedData, error: null, source: "supabase" }
-  } catch (error) {
-    console.error("Error fetching from Supabase:", error)
-    // Fall back to in-memory data
-    console.log("Falling back to in-memory data due to exception")
-    return getAllSearchData(limit, offset, status)
-  }
+  console.log(`Returning ${transformedData.length} items from in-memory storage`)
+  return { data: transformedData, error: null, source: "memory" }
 }
 
 // Function to get search data by verification token
