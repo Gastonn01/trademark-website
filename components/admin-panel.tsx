@@ -71,7 +71,7 @@ export function AdminPanel() {
       }
 
       const data = await response.json()
-      console.log("Fetched searches:", data.data?.length || 0)
+      console.log("Fetched searches:", data.data?.length || 0, "Source:", data.source)
 
       setSearches(data.data || [])
 
