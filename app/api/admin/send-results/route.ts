@@ -24,7 +24,7 @@ export async function POST(req: Request) {
     }
 
     // Extract email and other necessary data
-    const email = searchData.email || searchData.search_results?.email || searchData.search_data?.email
+    const email = searchData.email || searchData.search_data?.email || searchData.search_results?.email
     const name =
       searchData.search_data?.name ||
       searchData.search_results?.name ||
@@ -47,6 +47,14 @@ export async function POST(req: Request) {
 
     if (!email) {
       return NextResponse.json({ error: "No email found for this search" }, { status: 400 })
+    }
+
+    // Check if there are results to send
+    if (!similarTrademarks || similarTrademarks.length === 0) {
+      return NextResponse.json(
+        { error: "No results available to send. Please edit the search to add results first." },
+        { status: 400 },
+      )
     }
 
     // Create verification links

@@ -77,16 +77,18 @@ export function AdminPanel() {
         data = await response.json()
         console.log("Fetched data:", data)
       } catch (apiError) {
-        console.error("API fetch failed, using fallback data:", apiError)
-        // If API fetch fails, use fallback data
-        data = {
-          data: generateFallbackData(),
-          source: "fallback",
-        }
+        console.error("API fetch failed:", apiError)
+        setError(`Error fetching data: ${apiError instanceof Error ? apiError.message : String(apiError)}`)
+        setLoading(false)
+        setRefreshing(false)
+        return
       }
 
+      // Filter out any sample data (IDs that start with "sample-")
+      const realSearches = data.data.filter((search: SearchData) => !search.id.startsWith("sample-"))
+
       // Set the searches data
-      setSearches(data.data || [])
+      setSearches(realSearches || [])
 
       // If there was an error in the response but we still got data
       if (data.error) {
@@ -98,58 +100,10 @@ export function AdminPanel() {
     } catch (err) {
       console.error("Error in fetchSearches:", err)
       setError(`Error loading search data: ${err instanceof Error ? err.message : String(err)}`)
-      // Use fallback data to avoid completely breaking the UI
-      setSearches(generateFallbackData())
     } finally {
       setLoading(false)
       setRefreshing(false)
     }
-  }
-
-  // Generate fallback data for static export environments
-  const generateFallbackData = (): SearchData[] => {
-    const fallbackData: SearchData[] = []
-
-    // Add the real data we saw in the screenshot
-    fallbackData.push({
-      id: "real-1",
-      form_type: "free-search",
-      search_data: {
-        name: "d",
-        surname: "d",
-        email: "gflacort@gmail.com",
-        trademarkName: "Example Trademark",
-      },
-      created_at: "2025-05-12T11:08:00Z",
-      status: "pending",
-    })
-
-    // Add some sample data
-    for (let i = 1; i <= 3; i++) {
-      fallbackData.push({
-        id: `sample-${i}`,
-        form_type: i % 2 === 0 ? "Free Search" : "Registration",
-        search_data: {
-          name: `John`,
-          surname: `Doe ${i}`,
-          email: `sample${i}@example.com`,
-          trademarkName: `Sample Trademark ${i}`,
-        },
-        created_at: new Date(Date.now() - i * 86400000).toISOString(),
-        status: i % 3 === 0 ? "completed" : i % 3 === 1 ? "pending" : "processing",
-        results:
-          i % 2 === 0
-            ? {
-                similarTrademarks: [`Similar Trademark ${i}.1`, `Similar Trademark ${i}.2`],
-                comments: `Sample comments for trademark ${i}`,
-                recommendation: i % 4 === 0 ? `We recommend registering this trademark in classes X, Y, Z` : "",
-                verificationToken: `token${Math.random().toString(36).substring(2, 10)}`,
-              }
-            : undefined,
-      })
-    }
-
-    return fallbackData
   }
 
   const updateStatus = async (id: string, status: string) => {
@@ -201,7 +155,7 @@ export function AdminPanel() {
       }
 
       // Check if search has results
-      if (!search.results) {
+      if (!search.results || !search.results.similarTrademarks || search.results.similarTrademarks.length === 0) {
         throw new Error("No results available to send. Please edit the search to add results first.")
       }
 
@@ -500,8 +454,16 @@ export function AdminPanel() {
                           variant="default"
                           size="sm"
                           onClick={() => sendResultsToCustomer(search.id)}
-                          disabled={sendingResults === search.id || !search.search_data?.email}
-                          title="Send results email in English"
+                          disabled={
+                            sendingResults === search.id ||
+                            !search.search_data?.email ||
+                            !search.results?.similarTrademarks?.length
+                          }
+                          title={
+                            !search.results?.similarTrademarks?.length
+                              ? "No results available to send. Please edit the search to add results first."
+                              : "Send results email in English"
+                          }
                         >
                           {sendingResults === search.id ? (
                             <>

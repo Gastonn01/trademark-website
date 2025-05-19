@@ -126,6 +126,13 @@ export async function saveSearchData(searchId: string, searchData: any, formType
       form_type: formType,
       created_at: new Date().toISOString(),
       status: "pending",
+      // Initialize empty results to avoid the "No results available" error
+      results: {
+        similarTrademarks: [],
+        comments: "",
+        recommendation: "",
+        verificationToken: `token${Math.random().toString(36).substring(2, 15)}${Math.random().toString(36).substring(2, 15)}`,
+      },
     }
 
     console.log("Data saved to in-memory storage:", inMemoryStorage[searchId])
@@ -159,7 +166,14 @@ export async function saveSearchData(searchId: string, searchData: any, formType
         description: searchData.goodsAndServices || searchData.description || searchData.details || "",
         status: "pending",
         search_data: searchData, // Store all form data in the JSONB field
-        form_type: formType, // Store form type in notes for reference
+        form_type: formType, // Store form type in form_type field
+        // Initialize empty results to avoid the "No results available" error
+        results: {
+          similarTrademarks: [],
+          comments: "",
+          recommendation: "",
+          verificationToken: `token${Math.random().toString(36).substring(2, 15)}${Math.random().toString(36).substring(2, 15)}`,
+        },
       }
 
       if (existingData) {
@@ -308,38 +322,7 @@ export async function getAllSearchData(limit = 100, offset = 0, status?: string)
   if (isPreviewEnvironment() || !supabase) {
     console.log("Using in-memory storage for getAllSearchData")
 
-    // If memory storage is empty, create some sample data
-    if (Object.keys(inMemoryStorage).length === 0) {
-      console.log("Creating sample data for preview")
-      // Add some sample data for testing
-      for (let i = 1; i <= 5; i++) {
-        const id = `sample-${i}`
-        inMemoryStorage[id] = {
-          id,
-          search_data: {
-            trademarkName: `Sample Trademark ${i}`,
-            firstName: `John`,
-            lastName: `Doe ${i}`,
-            email: `sample${i}@example.com`,
-            goodsAndServices: `Sample goods and services ${i}`,
-          },
-          form_type: i % 2 === 0 ? "Free Search" : "Registration",
-          created_at: new Date(Date.now() - i * 86400000).toISOString(), // Different dates
-          status: i % 3 === 0 ? "completed" : i % 3 === 1 ? "pending" : "processing",
-          // Add sample results for some entries
-          results:
-            i % 2 === 0
-              ? {
-                  similarTrademarks: [`Similar Trademark ${i}.1`, `Similar Trademark ${i}.2`],
-                  comments: `Sample comments for trademark ${i}`,
-                  recommendation: i % 4 === 0 ? `We recommend registering this trademark in classes X, Y, Z` : "",
-                  verificationToken: `token${Math.random().toString(36).substring(2, 10)}`,
-                }
-              : undefined,
-        }
-      }
-    }
-
+    // Don't create sample data anymore, just use what's in memory
     let filteredData = Object.values(inMemoryStorage)
     console.log("Memory storage has", filteredData.length, "items")
 
