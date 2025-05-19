@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { getSearchData, updateSearchStatus } from "@/lib/supabase"
+import { getSearchData } from "@/lib/supabase"
 import { Resend } from "resend"
 
 export const dynamic = "force-dynamic"
@@ -40,9 +40,6 @@ export async function POST(req: Request) {
 
     // Get results data
     const results = searchData.results || {}
-    const similarTrademarks = results.similarTrademarks || []
-    const comments = results.comments || ""
-    const recommendation = results.recommendation || ""
     const verificationToken = results.verificationToken || ""
 
     if (!email) {
@@ -64,14 +61,14 @@ export async function POST(req: Request) {
     // Current year for copyright
     const currentYear = new Date().getFullYear()
 
-    // Prepare email content
+    // Prepare reminder email content
     const emailHtml = `
       <!DOCTYPE html>
       <html lang="en">
         <head>
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>Your Trademark Search Results</title>
+          <title>Reminder: Your Trademark Search Results</title>
           <style>
             /* Base styles */
             body { 
@@ -91,7 +88,7 @@ export async function POST(req: Request) {
               box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
             }
             .header { 
-              background-color: #4a6cf7; 
+              background-color: #f7a74a; /* Different color for reminder */
               padding: 20px; 
               text-align: center; 
             }
@@ -124,7 +121,7 @@ export async function POST(req: Request) {
             }
             .button { 
               display: inline-block; 
-              background-color: #4a6cf7; 
+              background-color: #f7a74a; /* Different color for reminder */
               color: white !important; 
               padding: 12px 24px; 
               text-decoration: none; 
@@ -135,32 +132,21 @@ export async function POST(req: Request) {
               transition: background-color 0.3s;
             }
             .button:hover {
-              background-color: #3a5bd7;
+              background-color: #e69539;
             }
-            .results { 
+            .reminder-box { 
               margin: 25px 0;
-              background-color: #f9f9ff;
+              background-color: #fff9f2;
               padding: 20px;
               border-radius: 6px;
-              border-left: 4px solid #4a6cf7;
-            }
-            .results h3 {
-              margin-top: 0;
-              color: #4a6cf7;
-            }
-            .trademark-list { 
-              margin: 10px 0; 
-              padding-left: 20px; 
-            }
-            .trademark-list li {
-              margin-bottom: 8px;
+              border-left: 4px solid #f7a74a;
             }
             .button-container { 
               text-align: center; 
               margin: 25px 0; 
             }
             .section-title {
-              color: #4a6cf7;
+              color: #f7a74a;
               border-bottom: 1px solid #eaeaea;
               padding-bottom: 8px;
               margin-top: 25px;
@@ -172,7 +158,7 @@ export async function POST(req: Request) {
             .social-link {
               display: inline-block;
               margin: 0 10px;
-              color: #4a6cf7;
+              color: #f7a74a;
               text-decoration: none;
             }
             .contact-info {
@@ -196,54 +182,28 @@ export async function POST(req: Request) {
           <div class="container">
             <div class="header">
               <img src="${logoUrl}" alt="Just Protected Logo" class="logo">
-              <h1>Your Trademark Search Results</h1>
+              <h1>Reminder: Your Trademark Search Results</h1>
             </div>
             <div class="content">
               <p class="greeting">Dear ${name} ${surname},</p>
               
-              <p>We have completed the search for your trademark <strong>${trademarkName}</strong> and have the results ready for you.</p>
+              <p>We noticed that you haven't viewed your trademark search results for <strong>${trademarkName}</strong> yet.</p>
               
-              <div class="results">
-                ${
-                  similarTrademarks.length > 0
-                    ? `
-                  <h3>Similar Trademarks Found:</h3>
-                  <ul class="trademark-list">
-                    ${similarTrademarks.map((tm) => `<li>${tm}</li>`).join("")}
-                  </ul>
-                `
-                    : "<p>No similar trademarks were found.</p>"
-                }
-                
-                ${
-                  comments
-                    ? `
-                  <h3>Comments:</h3>
-                  <p>${comments}</p>
-                `
-                    : ""
-                }
-                
-                ${
-                  recommendation
-                    ? `
-                  <h3>Recommendation:</h3>
-                  <p>${recommendation}</p>
-                `
-                    : ""
-                }
+              <div class="reminder-box">
+                <h3>Why This Is Important</h3>
+                <p>Your trademark search results contain valuable information about potential conflicts and next steps for protecting your brand. Reviewing these results is an essential step in your trademark journey.</p>
               </div>
               
-              <h3 class="section-title">Next Steps</h3>
-              <p>To view the complete results and additional details, please use one of the following links:</p>
+              <h3 class="section-title">Access Your Results</h3>
+              <p>To view your complete results, please click on one of the following links:</p>
               
               <div class="button-container">
-                <a href="${searchResultsLink}" class="button">View Complete Results</a>
+                <a href="${searchResultsLink}" class="button">View Your Results</a>
                 
                 ${verificationToken ? `<a href="${tokenVerificationLink}" class="button">Token Verification</a>` : ""}
               </div>
               
-              <p>If you have any questions or need additional assistance, please don't hesitate to contact us.</p>
+              <p>If you have any questions or need assistance understanding your results, our team is here to help.</p>
               
               <p>Best regards,<br>The Just Protected Team</p>
             </div>
@@ -264,49 +224,49 @@ export async function POST(req: Request) {
       </html>
     `
 
-    console.log(`Sending email to ${email} for search ID ${searchId}`)
-    console.log(`Search results link: ${searchResultsLink}`)
-    console.log(`Token verification link: ${tokenVerificationLink}`)
+    console.log(`Sending reminder email to ${email} for search ID ${searchId}`)
 
     try {
       // Send email using Resend
       const { data, error } = await resend.emails.send({
         from: "Just Protected <no-reply@justprotected.com>",
         to: [email],
-        subject: `Trademark Search Results for ${trademarkName}`,
+        subject: `Reminder: Trademark Search Results for ${trademarkName}`,
         html: emailHtml,
       })
 
       if (error) {
-        console.error("Error sending email with Resend:", error)
-        return NextResponse.json({ error: "Failed to send email", details: error }, { status: 500 })
+        console.error("Error sending reminder email with Resend:", error)
+        return NextResponse.json({ error: "Failed to send reminder email", details: error }, { status: 500 })
       }
 
-      console.log("Email sent successfully:", data)
+      console.log("Reminder email sent successfully:", data)
 
-      // Update the search status to completed
-      await updateSearchStatus(searchId, "completed")
+      // Update the search with reminder sent timestamp
+      // In a real implementation, you would update a 'reminder_sent_at' field
+      // For now, we'll just log it
+      console.log(`Reminder sent for search ${searchId} at ${new Date().toISOString()}`)
 
       return NextResponse.json({
         success: true,
-        message: `Results sent to ${email}`,
+        message: `Reminder sent to ${email}`,
         emailId: data?.id,
       })
     } catch (emailError) {
-      console.error("Exception sending email:", emailError)
+      console.error("Exception sending reminder email:", emailError)
       return NextResponse.json(
         {
-          error: "Exception sending email",
+          error: "Exception sending reminder email",
           details: emailError instanceof Error ? emailError.message : String(emailError),
         },
         { status: 500 },
       )
     }
   } catch (error) {
-    console.error("Error in send-results API:", error)
+    console.error("Error in send-reminder API:", error)
     return NextResponse.json(
       {
-        error: "Error sending search results",
+        error: "Error sending reminder",
         details: error instanceof Error ? error.message : String(error),
       },
       { status: 500 },

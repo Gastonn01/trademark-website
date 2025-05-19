@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { VerificationForm } from "./verification-form"
+import { ViewRecorder } from "./view-recorder"
 import Link from "next/link"
 import { Facebook, Linkedin, Instagram, Twitter } from "lucide-react"
 
@@ -40,6 +41,9 @@ export function VerificationContent({ searchId, verificationToken }: Verificatio
 
   return (
     <div className="min-h-screen flex flex-col">
+      {/* Record view when the page loads */}
+      <ViewRecorder searchId={searchId} />
+
       <div className="flex-grow">
         <VerificationForm
           initialData={searchData}

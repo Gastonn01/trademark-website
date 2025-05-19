@@ -4,7 +4,7 @@ import { updateSearchResults } from "@/lib/supabase"
 export const dynamic = "force-dynamic"
 export const dynamicParams = true
 export const revalidate = 0
-export const fetchCache = "auto"
+export const fetchCache = "auto" // Cambiado de "default" a "auto"
 export const runtime = "nodejs"
 export const preferredRegion = "auto"
 
@@ -17,10 +17,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Search ID and results are required" }, { status: 400 })
     }
 
-    console.log("API route: Updating search results for ID:", searchId)
     const result = await updateSearchResults(searchId, results)
-    console.log("API route: Update result:", result.source)
-
     return NextResponse.json(result)
   } catch (error) {
     console.error("Error updating search results:", error)

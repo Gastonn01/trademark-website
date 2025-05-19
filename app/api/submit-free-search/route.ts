@@ -3,6 +3,8 @@ import { Resend } from "resend"
 import { v4 as uuidv4 } from "uuid"
 import { saveSearchData, getSearchData, ensureTableExists, uploadFileToStorage } from "@/lib/supabase"
 
+// Remove the dynamic directive that's causing the conflict with static export
+// export const dynamic = "force-dynamic"
 export const runtime = "nodejs"
 
 // Check if we're in a preview environment - more comprehensive check
@@ -175,9 +177,6 @@ export async function POST(req: Request) {
           } else {
             console.log("Attempting to send confirmation email to:", searchData.email)
 
-            // IMPORTANT: Hardcode the production domain
-            const baseUrl = "https://justprotected.com"
-
             // Send confirmation email to user
             const userEmailResult = await resend.emails.send({
               from: "Just Protected <noreply@justprotected.com>",
@@ -191,7 +190,7 @@ export async function POST(req: Request) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Request Confirmation - Just Protected</title>
 </head>
-<body style="margin: 0; padding: 0; font-family: Arial, sans-serif; background-color: #f9fafb; color: #1f2937;">
+<body style="margin: 0; padding: 0; font-family: Arial, Helvetica, sans-serif; background-color: #f9fafb; color: #1f2937;">
   <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); margin-top: 20px; margin-bottom: 20px;">
     <tr>
       <td style="padding: 0;">
