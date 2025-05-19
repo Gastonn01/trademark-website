@@ -360,7 +360,12 @@ export async function getAllSearchData(limit = 100, offset = 0, status?: string)
   }
 
   try {
-    // Try to get from Supabase with better error handling
+    // Set a timeout for the Supabase query
+    const timeoutPromise = new Promise((_, reject) => {
+      setTimeout(() => reject(new Error("Supabase query timed out")), 10000)
+    })
+
+    // Create the query
     let query = supabase
       .from("trademark_searches")
       .select("*")
@@ -371,17 +376,22 @@ export async function getAllSearchData(limit = 100, offset = 0, status?: string)
       query = query.eq("status", status)
     }
 
-    const { data, error } = await query
+    // Execute the query with a timeout
+    const queryPromise = query
+    const result = await Promise.race([queryPromise, timeoutPromise]).catch((error) => {
+      console.error("Supabase query error or timeout:", error)
+      // Fall back to in-memory data
+      return { data: [], error: error.message }
+    })
 
-    if (error) {
-      console.error("Supabase query error:", error)
-      // Fall back to in-memory data instead of throwing
-      console.log("Falling back to in-memory data due to Supabase error")
+    if (result.error) {
+      console.error("Supabase query returned error:", result.error)
+      // Fall back to in-memory data
       return getAllSearchData(limit, offset, status)
     }
 
     // Transform data to match expected format in admin panel
-    const transformedData = data.map((item) => ({
+    const transformedData = result.data.map((item) => ({
       id: item.id,
       form_type: item.form_type || item.notes || "Unknown",
       search_data: {

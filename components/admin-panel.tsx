@@ -8,7 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge"
 import { format } from "date-fns"
 import { useToast } from "@/components/ui/use-toast"
-import { Loader2, Edit, Send, Eye, Copy, AlertCircle, RefreshCw } from "lucide-react"
+import { Loader2, Edit, Send, Eye, Copy, AlertCircle, RefreshCw, AlertTriangle } from "lucide-react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
@@ -45,12 +45,13 @@ export function AdminPanel() {
   const [verificationToken, setVerificationToken] = useState<string>("")
   const [emailError, setEmailError] = useState<string | null>(null)
   const [refreshing, setRefreshing] = useState(false)
+  const [retryCount, setRetryCount] = useState(0)
 
   const { toast } = useToast()
 
   useEffect(() => {
     fetchSearches()
-  }, [statusFilter])
+  }, [statusFilter, retryCount])
 
   const fetchSearches = async () => {
     setLoading(true)
@@ -58,8 +59,10 @@ export function AdminPanel() {
     setRefreshing(true)
 
     try {
-      // First try to fetch from the API
-      let data
+      // First try to fetch from the API with a timeout
+      const controller = new AbortController()
+      const timeoutId = setTimeout(() => controller.abort(), 20000) // 20 second timeout
+
       try {
         const response = await fetch(`/api/admin/searches?status=${statusFilter}&t=${Date.now()}`, {
           method: "GET",
@@ -67,35 +70,48 @@ export function AdminPanel() {
             Accept: "application/json",
             "Content-Type": "application/json",
           },
+          signal: controller.signal,
           cache: "no-store",
         })
+
+        clearTimeout(timeoutId)
 
         if (!response.ok) {
           throw new Error(`Server error: ${response.status} ${response.statusText}`)
         }
 
-        data = await response.json()
+        const data = await response.json()
         console.log("Fetched data:", data)
-      } catch (apiError) {
+
+        // Filter out any sample data (IDs that start with "sample-")
+        const realSearches = data.data.filter((search: SearchData) => !search.id.startsWith("sample-"))
+
+        // Set the searches data
+        setSearches(realSearches || [])
+
+        // If there was an error in the response but we still got data
+        if (data.error) {
+          console.warn("API returned an error but provided data:", data.error)
+          setError(`Warning: ${data.error}`)
+        } else {
+          setError(null)
+        }
+      } catch (apiError: any) {
         console.error("API fetch failed:", apiError)
-        setError(`Error fetching data: ${apiError instanceof Error ? apiError.message : String(apiError)}`)
-        setLoading(false)
-        setRefreshing(false)
-        return
-      }
 
-      // Filter out any sample data (IDs that start with "sample-")
-      const realSearches = data.data.filter((search: SearchData) => !search.id.startsWith("sample-"))
+        // Handle abort error specifically
+        if (apiError.name === "AbortError") {
+          setError("La solicitud tardó demasiado tiempo. Por favor, inténtelo de nuevo.")
+        } else if (apiError.message.includes("504")) {
+          setError("Error 504: El servidor tardó demasiado en responder. Por favor, inténtelo de nuevo más tarde.")
+        } else {
+          setError(`Error fetching data: ${apiError instanceof Error ? apiError.message : String(apiError)}`)
+        }
 
-      // Set the searches data
-      setSearches(realSearches || [])
-
-      // If there was an error in the response but we still got data
-      if (data.error) {
-        console.warn("API returned an error but provided data:", data.error)
-        setError(`Warning: ${data.error}`)
-      } else {
-        setError(null)
+        // Keep previous data if we had any
+        if (searches.length === 0) {
+          setSearches([])
+        }
       }
     } catch (err) {
       console.error("Error in fetchSearches:", err)
@@ -104,6 +120,10 @@ export function AdminPanel() {
       setLoading(false)
       setRefreshing(false)
     }
+  }
+
+  const retryFetch = () => {
+    setRetryCount((prev) => prev + 1)
   }
 
   const updateStatus = async (id: string, status: string) => {
@@ -358,7 +378,7 @@ export function AdminPanel() {
                 <SelectItem value="rejected">Rechazados</SelectItem>
               </SelectContent>
             </Select>
-            <Button onClick={fetchSearches} variant="outline" disabled={refreshing}>
+            <Button onClick={retryFetch} variant="outline" disabled={refreshing}>
               {refreshing ? (
                 <>
                   <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
@@ -375,7 +395,17 @@ export function AdminPanel() {
         </div>
 
         {error && (
-          <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 px-4 py-3 rounded mb-4">{error}</div>
+          <Alert variant="warning" className="mb-4">
+            <AlertTriangle className="h-4 w-4" />
+            <AlertTitle>Error al cargar datos</AlertTitle>
+            <AlertDescription className="flex flex-col gap-2">
+              <p>{error}</p>
+              <Button onClick={retryFetch} variant="outline" size="sm" className="w-fit">
+                <RefreshCw className="mr-2 h-4 w-4" />
+                Intentar de nuevo
+              </Button>
+            </AlertDescription>
+          </Alert>
         )}
 
         {emailError && (
