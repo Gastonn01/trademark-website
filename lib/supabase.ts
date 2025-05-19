@@ -5,9 +5,12 @@ const inMemoryStorage: { [key: string]: any } = {}
 
 // Force preview mode for Vercel preview environments
 const isPreviewEnvironment = () => {
-  // Always return true for Vercel preview deployments
-  // This ensures we never try to use Supabase in preview
-  return true
+  // Check if we're in a preview environment
+  return (
+    process.env.NEXT_PUBLIC_VERCEL_ENV !== "production" ||
+    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+    !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  )
 }
 
 // Create a Supabase client only if not in preview
@@ -119,12 +122,13 @@ export async function saveSearchData(searchId: string, searchData: any, formType
     // First, store in memory as a fallback
     inMemoryStorage[searchId] = {
       id: searchId,
-      search_results: searchData,
-      notes: formType,
+      search_data: searchData,
+      form_type: formType,
       created_at: new Date().toISOString(),
+      status: "pending",
     }
 
-    console.log("Data saved to in-memory storage")
+    console.log("Data saved to in-memory storage:", inMemoryStorage[searchId])
 
     // If in preview mode, don't try to use Supabase
     if (isPreviewEnvironment() || !supabase) {
@@ -154,8 +158,8 @@ export async function saveSearchData(searchId: string, searchData: any, formType
         phone: searchData.phone || searchData.phoneNumber || "",
         description: searchData.goodsAndServices || searchData.description || searchData.details || "",
         status: "pending",
-        search_results: searchData, // Store all form data in the JSONB field
-        notes: formType, // Store form type in notes for reference
+        search_data: searchData, // Store all form data in the JSONB field
+        form_type: formType, // Store form type in notes for reference
       }
 
       if (existingData) {
@@ -298,47 +302,51 @@ export async function updateSearchResults(searchId: string, results: any) {
 
 // Function to get all search data with fallback to in-memory
 export async function getAllSearchData(limit = 100, offset = 0, status?: string) {
-  // Create sample data for preview/development if none exists
-  if (Object.keys(inMemoryStorage).length === 0) {
-    console.log("Creating sample data for preview")
-    // Add some sample data for testing
-    for (let i = 1; i <= 5; i++) {
-      const id = `sample-${i}`
-      inMemoryStorage[id] = {
-        id,
-        search_results: {
-          trademarkName: `Sample Trademark ${i}`,
-          firstName: `John`,
-          lastName: `Doe ${i}`,
-          email: `sample${i}@example.com`,
-          goodsAndServices: `Sample goods and services ${i}`,
-        },
-        notes: i % 2 === 0 ? "Free Search" : "Registration",
-        created_at: new Date(Date.now() - i * 86400000).toISOString(), // Different dates
-        status: i % 3 === 0 ? "completed" : i % 3 === 1 ? "pending" : "processing",
-        // Add sample results for some entries
-        results:
-          i % 2 === 0
-            ? {
-                similarTrademarks: [`Similar Trademark ${i}.1`, `Similar Trademark ${i}.2`],
-                comments: `Sample comments for trademark ${i}`,
-                recommendation: i % 4 === 0 ? `We recommend registering this trademark in classes X, Y, Z` : "",
-                verificationToken: `token${Math.random().toString(36).substring(2, 10)}`,
-              }
-            : undefined,
-      }
-    }
-  }
+  console.log("Getting all search data, memory storage has:", Object.keys(inMemoryStorage).length, "items")
 
   // Always use in-memory storage for preview or when Supabase is not available
   if (isPreviewEnvironment() || !supabase) {
     console.log("Using in-memory storage for getAllSearchData")
 
+    // If memory storage is empty, create some sample data
+    if (Object.keys(inMemoryStorage).length === 0) {
+      console.log("Creating sample data for preview")
+      // Add some sample data for testing
+      for (let i = 1; i <= 5; i++) {
+        const id = `sample-${i}`
+        inMemoryStorage[id] = {
+          id,
+          search_data: {
+            trademarkName: `Sample Trademark ${i}`,
+            firstName: `John`,
+            lastName: `Doe ${i}`,
+            email: `sample${i}@example.com`,
+            goodsAndServices: `Sample goods and services ${i}`,
+          },
+          form_type: i % 2 === 0 ? "Free Search" : "Registration",
+          created_at: new Date(Date.now() - i * 86400000).toISOString(), // Different dates
+          status: i % 3 === 0 ? "completed" : i % 3 === 1 ? "pending" : "processing",
+          // Add sample results for some entries
+          results:
+            i % 2 === 0
+              ? {
+                  similarTrademarks: [`Similar Trademark ${i}.1`, `Similar Trademark ${i}.2`],
+                  comments: `Sample comments for trademark ${i}`,
+                  recommendation: i % 4 === 0 ? `We recommend registering this trademark in classes X, Y, Z` : "",
+                  verificationToken: `token${Math.random().toString(36).substring(2, 10)}`,
+                }
+              : undefined,
+        }
+      }
+    }
+
     let filteredData = Object.values(inMemoryStorage)
+    console.log("Memory storage has", filteredData.length, "items")
 
     // Apply status filter if provided
     if (status && status !== "all") {
       filteredData = filteredData.filter((item: any) => item.status === status)
+      console.log("After status filter, memory storage has", filteredData.length, "items")
     }
 
     // Sort by created_at (newest first)
@@ -352,18 +360,19 @@ export async function getAllSearchData(limit = 100, offset = 0, status?: string)
     // Transform to expected format
     const transformedData = paginatedData.map((item: any) => ({
       id: item.id,
-      form_type: item.notes || "Unknown",
+      form_type: item.form_type || "Unknown",
       search_data: {
-        ...item.search_results,
-        name: item.search_results?.firstName || item.search_results?.name || "",
-        surname: item.search_results?.lastName || item.search_results?.surname || "",
-        email: item.search_results?.email,
+        ...item.search_data,
+        name: item.search_data?.firstName || item.search_data?.name || "",
+        surname: item.search_data?.lastName || item.search_data?.surname || "",
+        email: item.search_data?.email,
       },
       created_at: item.created_at,
       status: item.status || "pending",
       results: item.results,
     }))
 
+    console.log("Returning", transformedData.length, "items from memory")
     return { data: transformedData, error: null, source: "memory" }
   }
 
@@ -391,12 +400,12 @@ export async function getAllSearchData(limit = 100, offset = 0, status?: string)
     // Transform data to match expected format in admin panel
     const transformedData = data.map((item) => ({
       id: item.id,
-      form_type: item.notes || "Unknown",
+      form_type: item.form_type || item.notes || "Unknown",
       search_data: {
-        ...item.search_results,
-        name: item.search_results?.firstName || item.search_results?.name || "",
-        surname: item.search_results?.lastName || item.search_results?.surname || "",
-        email: item.email,
+        ...item.search_data,
+        name: item.search_data?.firstName || item.search_data?.name || "",
+        surname: item.search_data?.lastName || item.search_data?.surname || "",
+        email: item.email || item.search_data?.email,
       },
       created_at: item.created_at,
       status: item.status,

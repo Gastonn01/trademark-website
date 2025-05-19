@@ -8,7 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge"
 import { format } from "date-fns"
 import { useToast } from "@/components/ui/use-toast"
-import { Loader2, Edit, Send, Eye, Copy, AlertCircle } from "lucide-react"
+import { Loader2, Edit, Send, Eye, Copy, AlertCircle, RefreshCw } from "lucide-react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
@@ -44,6 +44,7 @@ export function AdminPanel() {
   const [isRecommended, setIsRecommended] = useState<boolean>(false)
   const [verificationToken, setVerificationToken] = useState<string>("")
   const [emailError, setEmailError] = useState<string | null>(null)
+  const [refreshing, setRefreshing] = useState(false)
 
   const { toast } = useToast()
 
@@ -54,17 +55,19 @@ export function AdminPanel() {
   const fetchSearches = async () => {
     setLoading(true)
     setError(null)
+    setRefreshing(true)
 
     try {
       // First try to fetch from the API
       let data
       try {
-        const response = await fetch(`/api/admin/searches?status=${statusFilter}`, {
+        const response = await fetch(`/api/admin/searches?status=${statusFilter}&t=${Date.now()}`, {
           method: "GET",
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
           },
+          cache: "no-store",
         })
 
         if (!response.ok) {
@@ -72,6 +75,7 @@ export function AdminPanel() {
         }
 
         data = await response.json()
+        console.log("Fetched data:", data)
       } catch (apiError) {
         console.error("API fetch failed, using fallback data:", apiError)
         // If API fetch fails, use fallback data
@@ -98,6 +102,7 @@ export function AdminPanel() {
       setSearches(generateFallbackData())
     } finally {
       setLoading(false)
+      setRefreshing(false)
     }
   }
 
@@ -399,8 +404,18 @@ export function AdminPanel() {
                 <SelectItem value="rejected">Rechazados</SelectItem>
               </SelectContent>
             </Select>
-            <Button onClick={fetchSearches} variant="outline">
-              Actualizar
+            <Button onClick={fetchSearches} variant="outline" disabled={refreshing}>
+              {refreshing ? (
+                <>
+                  <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                  Actualizando...
+                </>
+              ) : (
+                <>
+                  <RefreshCw className="mr-2 h-4 w-4" />
+                  Actualizar
+                </>
+              )}
             </Button>
           </div>
         </div>
