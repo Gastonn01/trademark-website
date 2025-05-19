@@ -8,7 +8,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Badge } from "@/components/ui/badge"
 import { format } from "date-fns"
 import { useToast } from "@/components/ui/use-toast"
-import { Loader2, Edit, Send, Eye, Copy, RefreshCw } from "lucide-react"
+import { Loader2, Edit, Send, Eye, Copy, RefreshCw, AlertTriangle } from "lucide-react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
@@ -44,6 +44,8 @@ export function AdminPanel() {
   const [isRecommended, setIsRecommended] = useState<boolean>(false)
   const [verificationToken, setVerificationToken] = useState<string>("")
   const [emailError, setEmailError] = useState<string | null>(null)
+  const [dataSource, setDataSource] = useState<string | null>(null)
+  const [message, setMessage] = useState<string | null>(null)
 
   const { toast } = useToast()
 
@@ -54,6 +56,7 @@ export function AdminPanel() {
   const fetchSearches = async () => {
     setLoading(true)
     setError(null)
+    setMessage(null)
 
     try {
       // Add a timestamp to prevent caching
@@ -67,16 +70,23 @@ export function AdminPanel() {
       })
 
       if (!response.ok) {
-        throw new Error(`Server error: ${response.status} ${response.statusText}`)
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(
+          `Server error: ${response.status} ${response.statusText}${
+            errorData.details ? ` - ${errorData.details}` : ""
+          }`,
+        )
       }
 
       const data = await response.json()
       console.log("Fetched searches:", data.data?.length || 0, "Source:", data.source)
 
       setSearches(data.data || [])
+      setDataSource(data.source || null)
+      setMessage(data.message || null)
 
       if (data.error) {
-        setError(`Error: ${data.error}`)
+        setError(`Error: ${data.error}${data.details ? ` - ${data.details}` : ""}`)
       }
     } catch (err) {
       console.error("Error loading search data:", err)
@@ -90,25 +100,22 @@ export function AdminPanel() {
     try {
       console.log(`Updating status for search ${id} to ${status}`)
 
-      // Try to update via API
-      try {
-        const response = await fetch("/api/admin/searches", {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ searchId: id, status }),
-        })
+      const response = await fetch("/api/admin/searches", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ searchId: id, status }),
+      })
 
-        if (!response.ok) {
-          throw new Error("API call failed")
-        }
-      } catch (apiError) {
-        console.error("API update failed, using client-side update:", apiError)
-        // Continue with client-side update
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(
+          `API error: ${response.status} ${response.statusText}${errorData.details ? ` - ${errorData.details}` : ""}`,
+        )
       }
 
-      // Update the local state regardless of API success
+      // Update the local state
       setSearches((prevSearches) => prevSearches.map((search) => (search.id === id ? { ...search, status } : search)))
 
       toast({
@@ -162,11 +169,14 @@ export function AdminPanel() {
         body: JSON.stringify({ searchId: id }),
       })
 
-      const responseData = await response.json()
-
       if (!response.ok) {
-        throw new Error(responseData.error || responseData.details || "Failed to send results")
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(
+          errorData.error || errorData.details || `Failed to send results: ${response.status} ${response.statusText}`,
+        )
       }
+
+      const responseData = await response.json()
 
       toast({
         title: "Results sent successfully",
@@ -232,29 +242,25 @@ export function AdminPanel() {
       }
 
       // Try to update via API
-      try {
-        const response = await fetch("/api/admin/update-search-results", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            searchId: editingSearch.id,
-            results: resultsData,
-          }),
-        })
+      const response = await fetch("/api/admin/update-search-results", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          searchId: editingSearch.id,
+          results: resultsData,
+        }),
+      })
 
-        if (!response.ok) {
-          throw new Error("API call failed")
-        }
-
-        console.log("API update successful")
-      } catch (apiError) {
-        console.error("API update failed, using client-side update:", apiError)
-        // Continue with client-side update
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(
+          `API error: ${response.status} ${response.statusText}${errorData.details ? ` - ${errorData.details}` : ""}`,
+        )
       }
 
-      // Update the local state regardless of API success
+      // Update the local state
       const updatedStatus = editingSearch.status === "pending" ? "processing" : editingSearch.status
 
       setSearches((prevSearches) => {
@@ -365,10 +371,34 @@ export function AdminPanel() {
           </div>
         </div>
 
+        {dataSource && dataSource !== "supabase" && (
+          <Alert className="mb-4">
+            <AlertTriangle className="h-4 w-4" />
+            <AlertTitle>Datos de muestra</AlertTitle>
+            <AlertDescription>
+              {message ||
+                "Estás viendo datos de muestra porque estás en un entorno de vista previa o hay problemas de conexión con la base de datos."}
+            </AlertDescription>
+          </Alert>
+        )}
+
         {error && (
           <Alert variant="destructive" className="mb-4">
             <AlertTitle>Error</AlertTitle>
-            <AlertDescription>{error}</AlertDescription>
+            <AlertDescription>
+              {error}
+              {error.includes("504") && (
+                <div className="mt-2">
+                  <p>
+                    Este error indica un problema de tiempo de espera con la base de datos. Por favor, intenta de nuevo
+                    más tarde o contacta al administrador del sistema.
+                  </p>
+                  <Button variant="outline" className="mt-2" onClick={fetchSearches}>
+                    Intentar de nuevo
+                  </Button>
+                </div>
+              )}
+            </AlertDescription>
           </Alert>
         )}
 
@@ -385,7 +415,9 @@ export function AdminPanel() {
             <span>Cargando solicitudes...</span>
           </div>
         ) : searches.length === 0 ? (
-          <div className="text-center py-8 text-gray-500">No hay solicitudes disponibles</div>
+          <div className="text-center py-8 text-gray-500">
+            {error ? "No se pudieron cargar las solicitudes debido a un error." : "No hay solicitudes disponibles"}
+          </div>
         ) : (
           <div className="overflow-x-auto">
             <Table>
