@@ -3,9 +3,9 @@ import { getAllSearchData, updateSearchStatus } from "@/lib/supabase"
 
 // Configure this route for static export
 export const dynamic = "force-dynamic"
-export const dynamicParams = true // Changed from false to true
-export const revalidate = 0 // Changed from false to 0
-export const fetchCache = "default" // Changed from "only-no-store" to "default"
+export const dynamicParams = true
+export const revalidate = 0
+export const fetchCache = "force-no-store" // Changed from "default" to "force-no-store"
 export const runtime = "nodejs"
 export const preferredRegion = "auto"
 
