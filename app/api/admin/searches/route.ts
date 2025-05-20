@@ -5,12 +5,9 @@ import { getAllSearchData, updateSearchStatus } from "@/lib/supabase"
 export const dynamic = "force-dynamic"
 export const dynamicParams = true
 export const revalidate = 0
-export const fetchCache = "force-no-store" // Changed from "default" to "force-no-store"
+export const fetchCache = "force-no-store"
 export const runtime = "nodejs"
 export const preferredRegion = "auto"
-
-// En un entorno de producción, deberías implementar autenticación y autorización aquí
-// Esta es una implementación básica sin seguridad
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url)
@@ -19,10 +16,12 @@ export async function GET(req: Request) {
   const status = searchParams.get("status") || undefined
 
   try {
+    console.log("API route: Fetching search data with params:", { limit, offset, status })
     const result = await getAllSearchData(limit, offset, status)
+    console.log(`API route: Fetched ${result.data?.length || 0} records from ${result.source}`)
     return NextResponse.json(result)
   } catch (error) {
-    console.error("Error fetching search data:", error)
+    console.error("API route: Error fetching search data:", error)
     // Return a proper JSON error response
     return NextResponse.json({ error: "Error fetching search data", details: String(error) }, { status: 500 })
   }
@@ -37,10 +36,12 @@ export async function PATCH(req: Request) {
       return NextResponse.json({ error: "Search ID and status are required" }, { status: 400 })
     }
 
+    console.log("API route: Updating search status:", { searchId, status })
     const result = await updateSearchStatus(searchId, status)
+    console.log("API route: Update result:", result)
     return NextResponse.json(result)
   } catch (error) {
-    console.error("Error updating search status:", error)
+    console.error("API route: Error updating search status:", error)
     return NextResponse.json({ error: "Error updating search status", details: String(error) }, { status: 500 })
   }
 }

@@ -36,6 +36,11 @@ export async function POST(req: Request) {
     const customerSurname = searchData.search_results?.surname || searchData.search_results?.lastName || ""
     const fullName = `${customerName} ${customerSurname}`.trim()
 
+    // Get search results
+    const searchResults = searchData.search_results?.results || ""
+    const recommendations = searchData.search_results?.recommendations || ""
+    const nextSteps = searchData.search_results?.nextSteps || ""
+
     // Create HTML email content
     const htmlContent = `
 <!DOCTYPE html>
@@ -98,6 +103,39 @@ export async function POST(req: Request) {
                   <td style="padding: 10px; border-bottom: 1px solid #e5e7eb; color: #1f2937;">${Array.isArray(searchData.search_results?.countries) ? searchData.search_results.countries.join(", ") : "Not specified"}</td>
                 </tr>
               </table>
+              
+              ${
+                searchResults
+                  ? `
+              <h3 style="color: #1e40af; margin-top: 30px; margin-bottom: 15px; font-size: 18px;">Search Results</h3>
+              <div style="background-color: #f9fafb; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
+                <p style="color: #4b5563; line-height: 1.6; margin: 0;">${searchResults.replace(/\n/g, "<br>")}</p>
+              </div>
+              `
+                  : ""
+              }
+              
+              ${
+                recommendations
+                  ? `
+              <h3 style="color: #1e40af; margin-top: 30px; margin-bottom: 15px; font-size: 18px;">Recommendations</h3>
+              <div style="background-color: #f9fafb; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
+                <p style="color: #4b5563; line-height: 1.6; margin: 0;">${recommendations.replace(/\n/g, "<br>")}</p>
+              </div>
+              `
+                  : ""
+              }
+              
+              ${
+                nextSteps
+                  ? `
+              <h3 style="color: #1e40af; margin-top: 30px; margin-bottom: 15px; font-size: 18px;">Next Steps</h3>
+              <div style="background-color: #f9fafb; padding: 15px; border-radius: 6px; margin-bottom: 20px;">
+                <p style="color: #4b5563; line-height: 1.6; margin: 0;">${nextSteps.replace(/\n/g, "<br>")}</p>
+              </div>
+              `
+                  : ""
+              }
               
               <p style="color: #4b5563; line-height: 1.6; margin-bottom: 20px;">If you have any questions or need additional information, please don't hesitate to contact our customer service team by replying to this email.</p>
               

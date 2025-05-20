@@ -19,7 +19,8 @@ import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useToast } from "@/components/ui/use-toast"
-import { Mail, RefreshCw, Eye, AlertCircle } from "lucide-react"
+import { Mail, RefreshCw, Eye, AlertCircle, Edit, Loader2 } from "lucide-react"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 interface SearchData {
   id: string
@@ -36,10 +37,13 @@ export function AdminPanel() {
   const [statusFilter, setStatusFilter] = useState("all")
   const [selectedSearch, setSelectedSearch] = useState<SearchData | null>(null)
   const [emailDialogOpen, setEmailDialogOpen] = useState(false)
+  const [editDialogOpen, setEditDialogOpen] = useState(false)
   const [recipientEmail, setRecipientEmail] = useState("")
   const [customMessage, setCustomMessage] = useState("")
   const [sendingEmail, setSendingEmail] = useState(false)
   const [dataSource, setDataSource] = useState<string>("loading")
+  const [editedResults, setEditedResults] = useState<any>({})
+  const [savingResults, setSavingResults] = useState(false)
   const { toast } = useToast()
 
   useEffect(() => {
@@ -152,11 +156,79 @@ export function AdminPanel() {
     }
   }
 
+  const handleSaveResults = async () => {
+    if (!selectedSearch || Object.keys(editedResults).length === 0) return
+
+    setSavingResults(true)
+    try {
+      const response = await fetch("/api/admin/update-search", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          searchId: selectedSearch.id,
+          updatedResults: editedResults,
+        }),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || "Failed to update search results")
+      }
+
+      toast({
+        title: "Resultados actualizados",
+        description: "Los resultados de la búsqueda han sido actualizados correctamente",
+      })
+
+      // Update the search in the list
+      setSearches(
+        searches.map((search) => {
+          if (search.id === selectedSearch.id) {
+            return {
+              ...search,
+              search_data: {
+                ...search.search_data,
+                ...editedResults,
+              },
+            }
+          }
+          return search
+        }),
+      )
+
+      setEditDialogOpen(false)
+      setEditedResults({})
+    } catch (err) {
+      console.error("Error updating search results:", err)
+      toast({
+        title: "Error",
+        description: `No se pudieron actualizar los resultados: ${err instanceof Error ? err.message : String(err)}`,
+      })
+    } finally {
+      setSavingResults(false)
+    }
+  }
+
   const openEmailDialog = (search: SearchData) => {
     setSelectedSearch(search)
     // Pre-fill the recipient email with the customer's email if available
     setRecipientEmail(search.search_data.email || "")
     setEmailDialogOpen(true)
+  }
+
+  const openEditDialog = (search: SearchData) => {
+    setSelectedSearch(search)
+    setEditedResults({})
+    setEditDialogOpen(true)
+  }
+
+  const handleEditChange = (field: string, value: string) => {
+    setEditedResults({
+      ...editedResults,
+      [field]: value,
+    })
   }
 
   const getStatusBadge = (status: string) => {
@@ -281,6 +353,14 @@ export function AdminPanel() {
                         <Button
                           variant="outline"
                           size="icon"
+                          onClick={() => openEditDialog(search)}
+                          title="Editar resultados"
+                        >
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="icon"
                           onClick={() => openEmailDialog(search)}
                           title="Enviar resultados por email"
                         >
@@ -336,7 +416,158 @@ export function AdminPanel() {
               Cancelar
             </Button>
             <Button onClick={handleSendEmail} disabled={!recipientEmail || sendingEmail}>
-              {sendingEmail ? "Enviando..." : "Enviar resultados"}
+              {sendingEmail ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Enviando...
+                </>
+              ) : (
+                "Enviar resultados"
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Dialog */}
+      <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle>Editar resultados de búsqueda</DialogTitle>
+            <DialogDescription>Edita los resultados de la búsqueda antes de enviarlos al cliente.</DialogDescription>
+          </DialogHeader>
+
+          {selectedSearch && (
+            <Tabs defaultValue="details" className="w-full">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="details">Detalles</TabsTrigger>
+                <TabsTrigger value="results">Resultados</TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="details" className="space-y-4 mt-4">
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="trademark-name" className="text-right">
+                    Nombre de marca
+                  </Label>
+                  <Input
+                    id="trademark-name"
+                    defaultValue={
+                      selectedSearch.search_data.trademarkName || selectedSearch.search_data.trademark_name || ""
+                    }
+                    onChange={(e) => handleEditChange("trademarkName", e.target.value)}
+                    className="col-span-3"
+                  />
+                </div>
+
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="goods-services" className="text-right">
+                    Bienes y servicios
+                  </Label>
+                  <Textarea
+                    id="goods-services"
+                    defaultValue={
+                      selectedSearch.search_data.goodsAndServices || selectedSearch.search_data.description || ""
+                    }
+                    onChange={(e) => handleEditChange("goodsAndServices", e.target.value)}
+                    className="col-span-3"
+                    rows={3}
+                  />
+                </div>
+
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="applicant-name" className="text-right">
+                    Nombre
+                  </Label>
+                  <Input
+                    id="applicant-name"
+                    defaultValue={selectedSearch.search_data.name || selectedSearch.search_data.firstName || ""}
+                    onChange={(e) => handleEditChange("name", e.target.value)}
+                    className="col-span-3"
+                  />
+                </div>
+
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="applicant-surname" className="text-right">
+                    Apellido
+                  </Label>
+                  <Input
+                    id="applicant-surname"
+                    defaultValue={selectedSearch.search_data.surname || selectedSearch.search_data.lastName || ""}
+                    onChange={(e) => handleEditChange("surname", e.target.value)}
+                    className="col-span-3"
+                  />
+                </div>
+
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="applicant-email" className="text-right">
+                    Email
+                  </Label>
+                  <Input
+                    id="applicant-email"
+                    defaultValue={selectedSearch.search_data.email || ""}
+                    onChange={(e) => handleEditChange("email", e.target.value)}
+                    className="col-span-3"
+                  />
+                </div>
+              </TabsContent>
+
+              <TabsContent value="results" className="space-y-4 mt-4">
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="search-results" className="text-right">
+                    Resultados
+                  </Label>
+                  <Textarea
+                    id="search-results"
+                    defaultValue={selectedSearch.search_data.results || ""}
+                    onChange={(e) => handleEditChange("results", e.target.value)}
+                    className="col-span-3"
+                    rows={5}
+                    placeholder="Añade aquí los resultados de la búsqueda"
+                  />
+                </div>
+
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="recommendations" className="text-right">
+                    Recomendaciones
+                  </Label>
+                  <Textarea
+                    id="recommendations"
+                    defaultValue={selectedSearch.search_data.recommendations || ""}
+                    onChange={(e) => handleEditChange("recommendations", e.target.value)}
+                    className="col-span-3"
+                    rows={5}
+                    placeholder="Añade aquí recomendaciones para el cliente"
+                  />
+                </div>
+
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="next-steps" className="text-right">
+                    Próximos pasos
+                  </Label>
+                  <Textarea
+                    id="next-steps"
+                    defaultValue={selectedSearch.search_data.nextSteps || ""}
+                    onChange={(e) => handleEditChange("nextSteps", e.target.value)}
+                    className="col-span-3"
+                    rows={3}
+                    placeholder="Indica los próximos pasos a seguir"
+                  />
+                </div>
+              </TabsContent>
+            </Tabs>
+          )}
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditDialogOpen(false)}>
+              Cancelar
+            </Button>
+            <Button onClick={handleSaveResults} disabled={Object.keys(editedResults).length === 0 || savingResults}>
+              {savingResults ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Guardando...
+                </>
+              ) : (
+                "Guardar cambios"
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>
