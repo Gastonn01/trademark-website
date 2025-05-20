@@ -19,7 +19,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useToast } from "@/components/ui/use-toast"
-import { Mail, RefreshCw, Eye } from "lucide-react"
+import { Mail, RefreshCw, Eye, AlertCircle } from "lucide-react"
 
 interface SearchData {
   id: string
@@ -39,6 +39,7 @@ export function AdminPanel() {
   const [recipientEmail, setRecipientEmail] = useState("")
   const [customMessage, setCustomMessage] = useState("")
   const [sendingEmail, setSendingEmail] = useState(false)
+  const [dataSource, setDataSource] = useState<string>("loading")
   const { toast } = useToast()
 
   useEffect(() => {
@@ -49,6 +50,7 @@ export function AdminPanel() {
   const fetchSearches = async () => {
     setLoading(true)
     try {
+      console.log("Fetching searches with status filter:", statusFilter)
       const response = await fetch(`/api/admin/searches?status=${statusFilter}`)
 
       if (!response.ok) {
@@ -58,12 +60,15 @@ export function AdminPanel() {
       }
 
       const data = await response.json()
+      console.log("API response:", data)
 
       if (!data || !data.data) {
         console.warn("API returned unexpected data structure:", data)
         setSearches([])
+        setDataSource("none")
       } else {
         setSearches(data.data || [])
+        setDataSource(data.source || "unknown")
       }
 
       setError(null)
@@ -71,6 +76,7 @@ export function AdminPanel() {
       console.error("Error in fetchSearches:", err)
       setError(`Error loading search data: ${err instanceof Error ? err.message : String(err)}`)
       setSearches([])
+      setDataSource("error")
     } finally {
       setLoading(false)
     }
@@ -208,6 +214,18 @@ export function AdminPanel() {
           </div>
         </div>
 
+        {dataSource === "mock" && (
+          <div className="mb-4 p-4 bg-amber-50 border border-amber-200 rounded-lg flex items-start gap-3">
+            <AlertCircle className="h-5 w-5 text-amber-500 mt-0.5 flex-shrink-0" />
+            <div>
+              <h3 className="font-medium text-amber-800">Datos de muestra</h3>
+              <p className="text-amber-700 text-sm">
+                Estás viendo datos de muestra porque no se pudieron cargar los datos reales de la base de datos.
+              </p>
+            </div>
+          </div>
+        )}
+
         {loading ? (
           <div className="text-center py-8">Cargando solicitudes...</div>
         ) : error ? (
@@ -230,12 +248,14 @@ export function AdminPanel() {
               <TableBody>
                 {searches.map((search) => (
                   <TableRow key={search.id}>
-                    <TableCell>{format(new Date(search.created_at), "dd/MM/yyyy HH:mm")}</TableCell>
+                    <TableCell>
+                      {search.created_at ? format(new Date(search.created_at), "dd/MM/yyyy HH:mm") : "N/A"}
+                    </TableCell>
                     <TableCell>{search.form_type}</TableCell>
                     <TableCell>
-                      {search.search_data.name} {search.search_data.surname}
+                      {search.search_data?.name || "N/A"} {search.search_data?.surname || ""}
                     </TableCell>
-                    <TableCell>{search.search_data.email}</TableCell>
+                    <TableCell>{search.search_data?.email || "N/A"}</TableCell>
                     <TableCell>{getStatusBadge(search.status)}</TableCell>
                     <TableCell>
                       <div className="flex gap-2">
