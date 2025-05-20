@@ -2,16 +2,14 @@
 
 import { useState, useEffect } from "react"
 import { VerificationForm } from "./verification-form"
-import { ViewRecorder } from "./view-recorder"
 import Link from "next/link"
 import { Facebook, Linkedin, Instagram, Twitter } from "lucide-react"
 
 interface VerificationContentProps {
   searchId?: string
-  verificationToken?: string
 }
 
-export function VerificationContent({ searchId, verificationToken }: VerificationContentProps) {
+export function VerificationContent({ searchId }: VerificationContentProps) {
   const [searchData, setSearchData] = useState<any>(null)
   const [isLoading, setIsLoading] = useState<boolean>(false)
 
@@ -41,16 +39,8 @@ export function VerificationContent({ searchId, verificationToken }: Verificatio
 
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Record view when the page loads */}
-      <ViewRecorder searchId={searchId} />
-
       <div className="flex-grow">
-        <VerificationForm
-          initialData={searchData}
-          isLoading={isLoading}
-          searchId={searchId}
-          verificationToken={verificationToken}
-        />
+        <VerificationForm initialData={searchData} isLoading={isLoading} />
       </div>
 
       <footer className="bg-gray-800 text-white py-16">

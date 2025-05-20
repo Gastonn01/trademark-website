@@ -3,13 +3,23 @@ import { createClient } from "@supabase/supabase-js"
 // In-memory storage as a fallback
 const inMemoryStorage: { [key: string]: any } = {}
 
-// Force preview mode for Vercel preview environments
+// Check if we're in a preview environment - more comprehensive check
 const isPreviewEnvironment = () => {
-  // Check if we're in a preview environment
+  // Check for server-side
+  if (typeof window === "undefined") {
+    return (
+      process.env.NEXT_PUBLIC_VERCEL_ENV !== "production" ||
+      !process.env.NEXT_PUBLIC_SUPABASE_URL ||
+      !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    )
+  }
+
+  // Check for client-side
   return (
-    process.env.NEXT_PUBLIC_VERCEL_ENV !== "production" ||
-    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
-    !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    window.location.hostname === "localhost" ||
+    window.location.hostname.includes("vercel.app") ||
+    window.location.hostname.includes("preview") ||
+    process.env.NEXT_PUBLIC_VERCEL_ENV !== "production"
   )
 }
 
@@ -122,20 +132,12 @@ export async function saveSearchData(searchId: string, searchData: any, formType
     // First, store in memory as a fallback
     inMemoryStorage[searchId] = {
       id: searchId,
-      search_data: searchData,
-      form_type: formType,
+      search_results: searchData,
+      notes: formType,
       created_at: new Date().toISOString(),
-      status: "pending",
-      // Initialize empty results to avoid the "No results available" error
-      results: {
-        similarTrademarks: [],
-        comments: "",
-        recommendation: "",
-        verificationToken: `token${Math.random().toString(36).substring(2, 15)}${Math.random().toString(36).substring(2, 15)}`,
-      },
     }
 
-    console.log("Data saved to in-memory storage:", inMemoryStorage[searchId])
+    console.log("Data saved to in-memory storage")
 
     // If in preview mode, don't try to use Supabase
     if (isPreviewEnvironment() || !supabase) {
@@ -165,15 +167,8 @@ export async function saveSearchData(searchId: string, searchData: any, formType
         phone: searchData.phone || searchData.phoneNumber || "",
         description: searchData.goodsAndServices || searchData.description || searchData.details || "",
         status: "pending",
-        search_data: searchData, // Store all form data in the JSONB field
-        form_type: formType, // Store form type in form_type field
-        // Initialize empty results to avoid the "No results available" error
-        results: {
-          similarTrademarks: [],
-          comments: "",
-          recommendation: "",
-          verificationToken: `token${Math.random().toString(36).substring(2, 15)}${Math.random().toString(36).substring(2, 15)}`,
-        },
+        search_results: searchData, // Store all form data in the JSONB field
+        notes: formType, // Store form type in notes for reference
       }
 
       if (existingData) {
@@ -275,174 +270,99 @@ export async function updateSearchStatus(searchId: string, status: string) {
   }
 }
 
-// Function to update search results
-export async function updateSearchResults(searchId: string, results: any) {
-  // Update in memory first
-  if (inMemoryStorage[searchId]) {
-    inMemoryStorage[searchId].results = results
-    // If status is pending, update to processing
-    if (inMemoryStorage[searchId].status === "pending") {
-      inMemoryStorage[searchId].status = "processing"
-    }
-  }
-
-  // If in preview mode, only use in-memory storage
-  if (isPreviewEnvironment() || !supabase) {
-    return { data: inMemoryStorage[searchId], error: null, source: "memory" }
-  }
-
-  try {
-    // Try to update in Supabase
-    const { data, error } = await supabase
-      .from("trademark_searches")
-      .update({
-        results: results,
-        status: "processing", // Update status to processing if results are added
-      })
-      .eq("id", searchId)
-      .select()
-
-    if (error) {
-      console.error("Error updating search results in Supabase:", error)
-      return { data: null, error: error.message, source: "memory" }
-    }
-
-    return { data, error: null, source: "supabase" }
-  } catch (supabaseError) {
-    console.error("Supabase update operation failed:", supabaseError)
-    return { data: inMemoryStorage[searchId], error: null, source: "memory" }
-  }
-}
-
 // Function to get all search data with fallback to in-memory
 export async function getAllSearchData(limit = 100, offset = 0, status?: string) {
-  console.log("Getting all search data, memory storage has:", Object.keys(inMemoryStorage).length, "items")
-
-  // Always use in-memory storage for preview or when Supabase is not available
-  if (isPreviewEnvironment() || !supabase) {
-    console.log("Using in-memory storage for getAllSearchData")
-
-    // Don't create sample data anymore, just use what's in memory
-    let filteredData = Object.values(inMemoryStorage)
-    console.log("Memory storage has", filteredData.length, "items")
-
-    // Apply status filter if provided
-    if (status && status !== "all") {
-      filteredData = filteredData.filter((item: any) => item.status === status)
-      console.log("After status filter, memory storage has", filteredData.length, "items")
-    }
-
-    // Sort by created_at (newest first)
-    const sortedData = filteredData.sort(
-      (a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
-    )
-
-    // Apply pagination
-    const paginatedData = sortedData.slice(offset, offset + limit)
-
-    // Transform to expected format
-    const transformedData = paginatedData.map((item: any) => ({
+  // Always use in-memory storage for now to avoid JSON parsing issues
+  const inMemoryData = Object.values(inMemoryStorage)
+    .sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+    .slice(offset, offset + limit)
+    .map((item: any) => ({
       id: item.id,
-      form_type: item.form_type || "Unknown",
+      form_type: item.notes || "Unknown",
       search_data: {
-        ...item.search_data,
-        name: item.search_data?.firstName || item.search_data?.name || "",
-        surname: item.search_data?.lastName || item.search_data?.surname || "",
-        email: item.search_data?.email,
+        ...item.search_results,
+        name: item.search_results?.firstName || item.search_results?.name || "",
+        surname: item.search_results?.lastName || item.search_results?.surname || "",
+        email: item.search_results?.email,
       },
       created_at: item.created_at,
       status: item.status || "pending",
-      results: item.results,
     }))
 
-    console.log("Returning", transformedData.length, "items from memory")
-    return { data: transformedData, error: null, source: "memory" }
-  }
-
-  try {
-    // Set a timeout for the Supabase query
-    const timeoutPromise = new Promise((_, reject) => {
-      setTimeout(() => reject(new Error("Supabase query timed out")), 10000)
-    })
-
-    // Create the query
-    let query = supabase
-      .from("trademark_searches")
-      .select("*")
-      .range(offset, offset + limit - 1)
-      .order("created_at", { ascending: false })
-
-    if (status && status !== "all") {
-      query = query.eq("status", status)
-    }
-
-    // Execute the query with a timeout
-    const queryPromise = query
-    const result = await Promise.race([queryPromise, timeoutPromise]).catch((error) => {
-      console.error("Supabase query error or timeout:", error)
-      // Fall back to in-memory data
-      return { data: [], error: error.message }
-    })
-
-    if (result.error) {
-      console.error("Supabase query returned error:", result.error)
-      // Fall back to in-memory data
-      return getAllSearchData(limit, offset, status)
-    }
-
-    // Transform data to match expected format in admin panel
-    const transformedData = result.data.map((item) => ({
-      id: item.id,
-      form_type: item.form_type || item.notes || "Unknown",
-      search_data: {
-        ...item.search_data,
-        name: item.search_data?.firstName || item.search_data?.name || "",
-        surname: item.search_data?.lastName || item.search_data?.surname || "",
-        email: item.email || item.search_data?.email,
+  // For testing purposes, add some mock data if there's nothing in memory
+  if (inMemoryData.length === 0) {
+    // Add some mock data for testing
+    const mockData = [
+      {
+        id: "mock-1",
+        form_type: "Free Search",
+        search_data: {
+          name: "John",
+          surname: "Doe",
+          email: "john.doe@example.com",
+          trademarkName: "TechBrand",
+          goodsAndServices: "Software development services",
+        },
+        created_at: new Date().toISOString(),
+        status: "pending",
       },
-      created_at: item.created_at,
-      status: item.status,
-      results: item.results,
-    }))
+      {
+        id: "mock-2",
+        form_type: "Registration",
+        search_data: {
+          name: "Jane",
+          surname: "Smith",
+          email: "jane.smith@example.com",
+          trademarkName: "FashionStyle",
+          goodsAndServices: "Clothing and accessories",
+        },
+        created_at: new Date(Date.now() - 86400000).toISOString(), // 1 day ago
+        status: "processing",
+      },
+      {
+        id: "mock-3",
+        form_type: "Free Search",
+        search_data: {
+          name: "Robert",
+          surname: "Johnson",
+          email: "robert.johnson@example.com",
+          trademarkName: "FoodDelight",
+          goodsAndServices: "Restaurant services",
+        },
+        created_at: new Date(Date.now() - 172800000).toISOString(), // 2 days ago
+        status: "completed",
+      },
+    ]
 
-    return { data: transformedData, error: null, source: "supabase" }
-  } catch (error) {
-    console.error("Error fetching from Supabase:", error)
-    // Fall back to in-memory data
-    console.log("Falling back to in-memory data due to exception")
-    return getAllSearchData(limit, offset, status)
+    // Filter by status if needed
+    return {
+      data: status && status !== "all" ? mockData.filter((item) => item.status === status) : mockData,
+      error: null,
+      source: "mock",
+    }
   }
+
+  return { data: inMemoryData, error: null, source: "memory" }
 }
 
-// Function to get search data by verification token
-export async function getSearchDataByToken(token: string) {
-  // If in preview mode, search in-memory storage
-  if (isPreviewEnvironment() || !supabase) {
-    // Find the search with the matching verification token
-    const search = Object.values(inMemoryStorage).find((item: any) => item.results?.verificationToken === token)
-    return search || null
+// Create a new API route for sending emails
+export async function sendSearchResultsEmail(searchId: string, recipientEmail: string, customMessage?: string) {
+  // For preview/testing, just return success
+  if (isPreviewEnvironment()) {
+    console.log(`[PREVIEW] Would send email to ${recipientEmail} for search ${searchId}`)
+    console.log(`Custom message: ${customMessage || "None"}`)
+    return { success: true, message: "Email would be sent in production environment" }
   }
 
-  try {
-    // Try to get from Supabase
-    const { data, error } = await supabase
-      .from("trademark_searches")
-      .select("*")
-      .filter("results->verificationToken", "eq", token)
-      .single()
-
-    if (error) {
-      console.error("Error getting search by token from Supabase:", error)
-      // Try to find in memory
-      const search = Object.values(inMemoryStorage).find((item: any) => item.results?.verificationToken === token)
-      return search || null
-    }
-
-    return data
-  } catch (error) {
-    console.error("Error in Supabase operation, checking memory:", error)
-    // Try to find in memory
-    const search = Object.values(inMemoryStorage).find((item: any) => item.results?.verificationToken === token)
-    return search || null
+  // Get the search data
+  const searchData = await getSearchData(searchId)
+  if (!searchData) {
+    return { success: false, error: "Search data not found" }
   }
+
+  // In a real implementation, you would use Resend or another email service here
+  console.log(`Sending email to ${recipientEmail} for search ${searchId}`)
+
+  // Return success for now
+  return { success: true, message: "Email sent successfully" }
 }

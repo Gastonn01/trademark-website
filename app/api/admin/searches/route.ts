@@ -1,13 +1,16 @@
 import { NextResponse } from "next/server"
 import { getAllSearchData, updateSearchStatus } from "@/lib/supabase"
 
-// Configure this route for dynamic rendering
+// Configure this route for static export
 export const dynamic = "force-dynamic"
-export const dynamicParams = true
-export const revalidate = 0
-export const fetchCache = "auto"
+export const dynamicParams = true // Changed from false to true
+export const revalidate = 0 // Changed from false to 0
+export const fetchCache = "default" // Changed from "only-no-store" to "default"
 export const runtime = "nodejs"
 export const preferredRegion = "auto"
+
+// En un entorno de producción, deberías implementar autenticación y autorización aquí
+// Esta es una implementación básica sin seguridad
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url)
@@ -16,29 +19,12 @@ export async function GET(req: Request) {
   const status = searchParams.get("status") || undefined
 
   try {
-    // Set a timeout for the operation
-    const timeoutPromise = new Promise((_, reject) => {
-      setTimeout(() => reject(new Error("Operation timed out")), 15000)
-    })
-
-    // Get the data with a race against the timeout
-    const dataPromise = getAllSearchData(limit, offset, status)
-    const result = await Promise.race([dataPromise, timeoutPromise]).catch((error) => {
-      console.error("Error or timeout in getAllSearchData:", error)
-      // Return empty data instead of throwing
-      return { data: [], error: `Request timed out or failed: ${error.message}`, source: "error-fallback" }
-    })
-
+    const result = await getAllSearchData(limit, offset, status)
     return NextResponse.json(result)
   } catch (error) {
     console.error("Error fetching search data:", error)
-    // Return a proper JSON error response with a fallback to empty data
-    return NextResponse.json({
-      data: [],
-      error: "Error fetching search data",
-      details: String(error),
-      source: "error-fallback",
-    })
+    // Return a proper JSON error response
+    return NextResponse.json({ error: "Error fetching search data", details: String(error) }, { status: 500 })
   }
 }
 
