@@ -23,7 +23,15 @@ export async function GET(req: Request) {
   } catch (error) {
     console.error("API route: Error fetching search data:", error)
     // Return a proper JSON error response
-    return NextResponse.json({ error: "Error fetching search data", details: String(error) }, { status: 500 })
+    return NextResponse.json(
+      {
+        error: "Error fetching search data",
+        details: String(error),
+        data: [],
+        source: "error",
+      },
+      { status: 500 },
+    )
   }
 }
 

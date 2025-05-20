@@ -1,188 +1,122 @@
 import { NextResponse } from "next/server"
 import { Resend } from "resend"
 import { v4 as uuidv4 } from "uuid"
-import { saveSearchData, getSearchData, ensureTableExists, uploadFileToStorage } from "@/lib/supabase"
+import { saveSearchData } from "@/lib/supabase"
 
-// Remove the dynamic directive that's causing the conflict with static export
-// export const dynamic = "force-dynamic"
 export const runtime = "nodejs"
 
-// Check if we're in a preview environment - more comprehensive check
-const isPreviewEnvironment = () => {
-  return (
-    process.env.NEXT_PUBLIC_VERCEL_ENV !== "production" ||
-    !process.env.NEXT_PUBLIC_SUPABASE_URL ||
-    !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-  )
-}
-
-// Initialize Resend with error handling
-let resend: Resend | null = null
-try {
-  if (process.env.RESEND_API_KEY) {
-    resend = new Resend(process.env.RESEND_API_KEY)
-  } else {
-    console.log("Resend API key not found, email functionality will be disabled")
-  }
-} catch (error) {
-  console.error("Failed to initialize Resend:", error)
-}
-
-// Helper function to handle errors
-const handleError = (error: any) => {
-  console.error("Error details:", error)
-  const message = error instanceof Error ? error.message : "Unknown error"
-  const stack = error instanceof Error ? error.stack : ""
-  const name = error instanceof Error ? error.name : ""
-  return { message, stack, name, originalError: error }
-}
+// Initialize Resend
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null
 
 export async function POST(req: Request) {
-  // Check for preview mode immediately
-  if (isPreviewEnvironment()) {
-    console.log("Preview environment detected in API route, returning mock response")
-    return NextResponse.json({
-      message: "Form submitted successfully (preview mode)",
-      searchId: uuidv4(),
-      previewMode: true,
-    })
+  const formData = await req.formData()
+  const searchId = (formData.get("searchId") as string) || uuidv4()
+  const formType = formData.get("formType")
+  const files = formData.getAll("files") as File[]
+  const logo = formData.get("logo") as File | null
+
+  let emailBody = `New free search request received: ${formType}\n\n`
+  const searchData: { [key: string]: any } = {}
+
+  for (const [key, value] of formData.entries()) {
+    if (key !== "files" && key !== "formType" && key !== "searchId" && key !== "logo") {
+      emailBody += `${key}: ${value}\n`
+      searchData[key] = value
+    }
   }
 
-  if (req.method === "POST") {
-    const formData = await req.formData()
-    const searchId = (formData.get("searchId") as string) || uuidv4()
-    const formType = formData.get("formType")
-    const files = formData.getAll("files") as File[]
-    const logo = formData.get("logo") as File | null
+  // Log to verify user email is captured correctly
+  console.log("User email:", searchData.email)
+  console.log("Trademark name:", searchData.trademarkName)
 
-    let emailBody = `New free search request received: ${formType}\n\n`
-    const searchData: { [key: string]: any } = {}
+  try {
+    console.log("Saving search data to Supabase...")
+    // Save data to Supabase
+    const saveResult = await saveSearchData(searchId, searchData, formType as string)
+    console.log("Search data saved successfully:", saveResult)
 
-    for (const [key, value] of formData.entries()) {
-      if (key !== "files" && key !== "formType" && key !== "searchId" && key !== "logo") {
-        emailBody += `${key}: ${value}\n`
-        searchData[key] = value
+    // Process files for email attachments
+    const attachments = []
+
+    // Process logo if it exists
+    if (logo && logo.size > 0) {
+      try {
+        console.log(`Processing logo: ${logo.name}, size: ${logo.size} bytes, type: ${logo.type}`)
+
+        // Attach logo to email
+        try {
+          const content = await logo.arrayBuffer()
+          attachments.push({
+            filename: `logo-${logo.name}`,
+            content: Buffer.from(content),
+          })
+          console.log(`Logo processed successfully for email`)
+        } catch (logoError) {
+          console.error("Error processing logo for email:", logoError)
+        }
+      } catch (fileError) {
+        console.error(`Error processing logo:`, fileError)
       }
     }
 
-    // Log to verify user email is captured correctly
-    console.log("User email:", searchData.email)
-    console.log("Trademark name:", searchData.trademarkName)
-
-    try {
-      // Try to ensure table exists, but continue even if it fails
-      try {
-        await ensureTableExists()
-      } catch (tableError) {
-        console.error("Error ensuring table exists, continuing with in-memory storage:", tableError)
-      }
-
-      console.log("Saving search data...")
-      // Save data to Supabase or memory
-      const saveResult = await saveSearchData(searchId, searchData, formType as string)
-      console.log("Search data saved successfully to:", saveResult.source || "storage")
-
-      // Process files for email attachments
-      const attachments = []
-
-      // Process logo if it exists
-      if (logo && logo.size > 0) {
-        try {
-          console.log(`Processing logo: ${logo.name}, size: ${logo.size} bytes, type: ${logo.type}`)
-
-          // Process logo metadata
-          const uploadResult = await uploadFileToStorage(logo, searchId)
-
-          if (!uploadResult.success) {
-            console.error("Error processing logo:", uploadResult.error)
-          } else {
-            console.log(`Logo metadata processed successfully`)
-
-            // Add logo information to search data
-            const logoData = {
-              ...uploadResult.logoData,
-              hasLogo: true,
-            }
-
-            // Update search data with logo information
-            await saveSearchData(searchId, { ...searchData, ...logoData }, formType as string)
-            console.log("Logo metadata saved")
-          }
-
-          // Attach logo to email
+    // Process additional files
+    if (files.length > 0) {
+      console.log(`Processing ${files.length} additional files`)
+      for (const file of files) {
+        if (file.size > 0) {
           try {
-            const content = await logo.arrayBuffer()
+            const content = await file.arrayBuffer()
             attachments.push({
-              filename: `logo-${logo.name}`,
+              filename: file.name,
               content: Buffer.from(content),
             })
-            console.log(`Logo processed successfully for email`)
-          } catch (logoError) {
-            console.error("Error processing logo for email:", logoError)
-          }
-        } catch (fileError) {
-          console.error(`Error processing logo:`, fileError)
-        }
-      }
-
-      // Process additional files
-      if (files.length > 0) {
-        console.log(`Processing ${files.length} additional files`)
-        for (const file of files) {
-          if (file.size > 0) {
-            try {
-              const content = await file.arrayBuffer()
-              attachments.push({
-                filename: file.name,
-                content: Buffer.from(content),
-              })
-              console.log(`File ${file.name} processed successfully`)
-            } catch (fileError) {
-              console.error(`Error processing file ${file.name}:`, fileError)
-              // Continue with next file
-            }
+            console.log(`File ${file.name} processed successfully`)
+          } catch (fileError) {
+            console.error(`Error processing file ${file.name}:`, fileError)
+            // Continue with next file
           }
         }
       }
+    }
 
-      // Send notification email if Resend is available
-      if (resend) {
-        console.log("Sending notification email...")
-        try {
-          // Customize subject with trademark name
-          const trademarkName = searchData.trademarkName || "Unnamed Trademark"
-          const customSubject = `New free search request received: ${trademarkName}`
+    // Send notification email if Resend is available
+    if (resend) {
+      console.log("Sending notification email...")
+      try {
+        // Customize subject with trademark name
+        const trademarkName = searchData.trademarkName || "Unnamed Trademark"
+        const customSubject = `New free search request received: ${trademarkName}`
 
-          // Send notification email
-          const result = await resend.emails.send({
+        // Send notification email
+        const result = await resend.emails.send({
+          from: "Just Protected <noreply@justprotected.com>",
+          to: ["lacortgaston@gmail.com", "gflacort@gmail.com"],
+          subject: customSubject,
+          text: emailBody,
+          attachments: attachments,
+        })
+        console.log("Notification email sent successfully")
+      } catch (emailError) {
+        console.error("Error sending notification email:", emailError)
+        // Continue with process even if email fails
+      }
+
+      // Send confirmation email to user if email exists
+      console.log("Sending confirmation email to user...")
+      try {
+        // Verify user email exists before sending
+        if (!searchData.email) {
+          console.error("No user email found in form data")
+          // Continue with process even if no email
+        } else {
+          console.log("Attempting to send confirmation email to:", searchData.email)
+
+          // Send confirmation email to user
+          const userEmailResult = await resend.emails.send({
             from: "Just Protected <noreply@justprotected.com>",
-            to: ["lacortgaston@gmail.com", "gflacort@gmail.com"],
-            subject: customSubject,
-            text: emailBody,
-            attachments: attachments,
-          })
-          console.log("Notification email sent successfully")
-        } catch (emailError) {
-          console.error("Error sending notification email:", emailError)
-          // Continue with process even if email fails
-        }
-
-        // Send confirmation email to user if email exists
-        console.log("Sending confirmation email to user...")
-        try {
-          // Verify user email exists before sending
-          if (!searchData.email) {
-            console.error("No user email found in form data")
-            // Continue with process even if no email
-          } else {
-            console.log("Attempting to send confirmation email to:", searchData.email)
-
-            // Send confirmation email to user
-            const userEmailResult = await resend.emails.send({
-              from: "Just Protected <noreply@justprotected.com>",
-              to: searchData.email,
-              subject: "Thank you for your trademark search request",
-              html: `
+            to: searchData.email,
+            subject: "Thank you for your trademark search request",
+            html: `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -232,7 +166,7 @@ export async function POST(req: Request) {
         <table border="0" cellpadding="0" cellspacing="0" width="100%">
           <tr>
             <td style="background-color: #f3f4f6; padding: 20px; text-align: center;">
-              <p style="color: #6b7280; font-size: 14px; margin: 0;">© 2025 Just Protected. All rights reserved.</p>
+              <p style="color: #6b7280; font-size: 14px; margin: 0;">© ${new Date().getFullYear()} Just Protected. All rights reserved.</p>
               <p style="color: #6b7280; font-size: 12px; margin-top: 10px;">This email is confidential and intended solely for the addressee.</p>
             </td>
           </tr>
@@ -243,84 +177,27 @@ export async function POST(req: Request) {
 </body>
 </html>
 `,
-            })
-            console.log("Confirmation email sent successfully to user:", userEmailResult)
-          }
-        } catch (emailError) {
-          console.error("Error sending confirmation email:", emailError)
-          console.error("Error details:", JSON.stringify(emailError))
-          // Continue with process even if email fails
+          })
+          console.log("Confirmation email sent successfully to user:", userEmailResult)
         }
-      } else {
-        console.log("Email functionality disabled or Resend not available")
+      } catch (emailError) {
+        console.error("Error sending confirmation email:", emailError)
+        // Continue with process even if email fails
       }
-
-      return NextResponse.json({
-        message: "Form submitted successfully",
-        searchId,
-        previewMode: false,
-      })
-    } catch (error) {
-      const errorDetails = handleError(error)
-      console.error("Error processing form:", errorDetails)
-      return NextResponse.json(
-        {
-          error: "Error processing the form",
-          details: errorDetails,
-          previewMode: false,
-        },
-        { status: 500 },
-      )
-    }
-  } else {
-    return NextResponse.json({ error: "Method not allowed" }, { status: 405 })
-  }
-}
-
-export async function GET(req: Request) {
-  // Check for preview mode immediately
-  if (isPreviewEnvironment()) {
-    console.log("Preview environment detected in API route GET, returning mock response")
-    return NextResponse.json({
-      message: "Mock search data (preview mode)",
-      previewMode: true,
-    })
-  }
-
-  const { searchParams } = new URL(req.url)
-  const searchId = searchParams.get("search_id")
-
-  if (!searchId) {
-    return NextResponse.json({ error: "Search ID is required" }, { status: 400 })
-  }
-
-  try {
-    // Try to ensure table exists, but continue even if it fails
-    try {
-      await ensureTableExists()
-    } catch (tableError) {
-      console.error("Error ensuring table exists, continuing with in-memory storage:", tableError)
-    }
-
-    // Get data from Supabase or memory
-    const searchData = await getSearchData(searchId)
-
-    if (!searchData) {
-      return NextResponse.json({ error: "Search results not found" }, { status: 404 })
+    } else {
+      console.log("Email functionality disabled or Resend not available")
     }
 
     return NextResponse.json({
-      ...(searchData.search_data || searchData.search_results),
-      previewMode: false,
+      message: "Form submitted successfully",
+      searchId,
     })
   } catch (error) {
-    const errorDetails = handleError(error)
-    console.error("Error fetching search data:", errorDetails)
+    console.error("Error processing form:", error)
     return NextResponse.json(
       {
-        error: "Error fetching search data",
-        details: errorDetails,
-        previewMode: false,
+        error: "Error processing the form",
+        details: String(error),
       },
       { status: 500 },
     )

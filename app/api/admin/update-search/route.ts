@@ -2,7 +2,6 @@ import { NextResponse } from "next/server"
 import { updateSearchResults } from "@/lib/supabase"
 
 export const dynamic = "force-dynamic"
-export const fetchCache = "force-no-store"
 export const runtime = "nodejs"
 
 export async function POST(req: Request) {
@@ -14,7 +13,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Search ID and updated results are required" }, { status: 400 })
     }
 
-    console.log("API route: Updating search results:", { searchId })
+    console.log("API route: Updating search results:", { searchId, fields: Object.keys(updatedResults) })
     const result = await updateSearchResults(searchId, updatedResults)
     console.log("API route: Update result:", result)
     return NextResponse.json(result)

@@ -6,7 +6,7 @@ const inMemoryStorage: { [key: string]: any } = {}
 // Create a singleton Supabase client
 let supabaseInstance: any = null
 
-export function createSupabaseClient() {
+export function getSupabaseClient() {
   // If we already have an instance, return it
   if (supabaseInstance) {
     return supabaseInstance
@@ -33,9 +33,12 @@ export function createSupabaseClient() {
   }
 }
 
+// Add the ensureTableExists function that was missing
+// Add this function after the getSupabaseClient function and before getAllSearchData
+
 // Update the ensureTableExists function
 export async function ensureTableExists() {
-  const supabase = createSupabaseClient()
+  const supabase = getSupabaseClient()
   if (!supabase) {
     console.log("Supabase client not available, skipping table check")
     return true
@@ -75,9 +78,12 @@ export async function ensureTableExists() {
   }
 }
 
+// Also add the uploadFileToStorage function that might be used elsewhere
+// Add this function after the ensureTableExists function
+
 // Function to upload a file to Supabase Storage
 export async function uploadFileToStorage(file: File, searchId: string) {
-  const supabase = createSupabaseClient()
+  const supabase = getSupabaseClient()
   if (!supabase) {
     console.log("Supabase client not available, skipping file upload")
     return {
@@ -121,168 +127,15 @@ export async function uploadFileToStorage(file: File, searchId: string) {
   }
 }
 
-// Update the saveSearchData function
-export async function saveSearchData(searchId: string, searchData: any, formType: string) {
-  try {
-    // First, store in memory as a fallback
-    inMemoryStorage[searchId] = {
-      id: searchId,
-      search_results: searchData,
-      notes: formType,
-      created_at: new Date().toISOString(),
-    }
-
-    console.log("Data saved to in-memory storage")
-
-    // Get Supabase client
-    const supabase = createSupabaseClient()
-    if (!supabase) {
-      console.log("Supabase client not available, using in-memory storage")
-      return { success: true, source: "memory" }
-    }
-
-    // Try to save to Supabase
-    try {
-      // Check if record exists
-      const { data: existingData, error: fetchError } = await supabase
-        .from("trademark_searches")
-        .select("*")
-        .eq("id", searchId)
-        .single()
-
-      if (fetchError && !fetchError.message.includes("No rows found")) {
-        console.error("Error checking existing record:", fetchError)
-        // Continue with in-memory storage
-        return { success: true, source: "memory" }
-      }
-
-      // Prepare data object with schema-compatible fields
-      const dataToSave = {
-        id: searchId,
-        trademark_name: searchData.trademarkName || searchData.trademark_name || "Unnamed",
-        email: searchData.email || "",
-        phone: searchData.phone || searchData.phoneNumber || "",
-        description: searchData.goodsAndServices || searchData.description || searchData.details || "",
-        status: "pending",
-        search_results: searchData, // Store all form data in the JSONB field
-        notes: formType, // Store form type in notes for reference
-      }
-
-      if (existingData) {
-        // Update existing record
-        const { error } = await supabase
-          .from("trademark_searches")
-          .update({
-            ...dataToSave,
-            updated_at: new Date().toISOString(),
-          })
-          .eq("id", searchId)
-
-        if (error) {
-          console.error("Error updating record:", error)
-          return { success: true, source: "memory" }
-        }
-      } else {
-        // Insert new record
-        const { error } = await supabase.from("trademark_searches").insert([
-          {
-            ...dataToSave,
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString(),
-          },
-        ])
-
-        if (error) {
-          console.error("Error inserting record:", error)
-          return { success: true, source: "memory" }
-        }
-      }
-
-      return { success: true, source: "supabase" }
-    } catch (supabaseError) {
-      console.error("Supabase operation failed:", supabaseError)
-      // Continue with in-memory storage
-      return { success: true, source: "memory" }
-    }
-  } catch (error) {
-    console.error("Error in saveSearchData:", error)
-    return { success: false, error: error instanceof Error ? error.message : "Unknown error" }
-  }
-}
-
-// Update getSearchData
-export async function getSearchData(searchId: string) {
-  // Try to get from in-memory storage first
-  const memoryData = inMemoryStorage[searchId]
-
-  // Get Supabase client
-  const supabase = createSupabaseClient()
-  if (!supabase) {
-    console.log("Supabase client not available, using in-memory storage")
-    return memoryData || null
-  }
-
-  try {
-    // Try to get from Supabase
-    const { data, error } = await supabase.from("trademark_searches").select("*").eq("id", searchId).single()
-
-    if (error) {
-      // If there's an error, try to get from memory
-      console.error("Error getting from Supabase, checking memory:", error)
-      return memoryData || null
-    }
-
-    return data
-  } catch (error) {
-    // In case of error, try to get from memory
-    console.error("Error in Supabase operation, checking memory:", error)
-    return memoryData || null
-  }
-}
-
-// Function to update search status
-export async function updateSearchStatus(searchId: string, status: string) {
-  // Update in memory first
-  if (inMemoryStorage[searchId]) {
-    inMemoryStorage[searchId].status = status
-  }
-
-  // Get Supabase client
-  const supabase = createSupabaseClient()
-  if (!supabase) {
-    console.log("Supabase client not available, using in-memory storage")
-    return { data: inMemoryStorage[searchId], error: null, source: "memory" }
-  }
-
-  try {
-    // Try to update in Supabase
-    const { data, error } = await supabase
-      .from("trademark_searches")
-      .update({ status: status })
-      .eq("id", searchId)
-      .select()
-
-    if (error) {
-      console.error("Error updating search status in Supabase:", error)
-      return { data: null, error: error.message, source: "memory" }
-    }
-
-    return { data, error: null, source: "supabase" }
-  } catch (supabaseError) {
-    console.error("Supabase update operation failed:", supabaseError)
-    return { data: inMemoryStorage[searchId], error: null, source: "memory" }
-  }
-}
-
 // Function to get all search data
 export async function getAllSearchData(limit = 100, offset = 0, status?: string) {
   console.log("getAllSearchData called with:", { limit, offset, status })
 
   // Get Supabase client
-  const supabase = createSupabaseClient()
+  const supabase = getSupabaseClient()
   if (!supabase) {
-    console.log("Supabase client not available, using mock data")
-    return { data: getMockData(status), error: null, source: "mock" }
+    console.error("Supabase client not available")
+    return { data: [], error: "Supabase client not available", source: "error" }
   }
 
   try {
@@ -309,19 +162,13 @@ export async function getAllSearchData(limit = 100, offset = 0, status?: string)
     // Handle errors
     if (error) {
       console.error("Supabase query error:", error)
-      return { data: getMockData(status), error: error.message, source: "mock" }
+      throw error
     }
 
     console.log(`Successfully fetched ${data?.length || 0} records from Supabase`)
 
-    // If no data was found, return mock data
-    if (!data || data.length === 0) {
-      console.log("No data found in Supabase, using mock data")
-      return { data: getMockData(status), error: null, source: "mock" }
-    }
-
     // Transform data to match expected format
-    const transformedData = data.map((item) => ({
+    const transformedData = (data || []).map((item) => ({
       id: item.id,
       form_type: item.notes || "Unknown",
       search_data: {
@@ -329,6 +176,8 @@ export async function getAllSearchData(limit = 100, offset = 0, status?: string)
         name: item.search_results?.firstName || item.search_results?.name || "",
         surname: item.search_results?.lastName || item.search_results?.surname || "",
         email: item.email || item.search_results?.email || "",
+        trademarkName: item.trademark_name || item.search_results?.trademarkName || "",
+        goodsAndServices: item.description || item.search_results?.goodsAndServices || "",
       },
       created_at: item.created_at,
       status: item.status || "pending",
@@ -337,113 +186,71 @@ export async function getAllSearchData(limit = 100, offset = 0, status?: string)
     return { data: transformedData, error: null, source: "supabase" }
   } catch (error) {
     console.error("Error fetching from Supabase:", error)
-    return { data: getMockData(status), error: String(error), source: "mock" }
+    throw error
   }
 }
 
-// Function to get mock data
-function getMockData(status?: string) {
-  // Use in-memory data if available
-  const inMemoryData = Object.values(inMemoryStorage)
-    .sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
-    .map((item: any) => ({
-      id: item.id,
-      form_type: item.notes || "Unknown",
-      search_data: {
-        ...item.search_results,
-        name: item.search_results?.firstName || item.search_results?.name || "",
-        surname: item.search_results?.lastName || item.search_results?.surname || "",
-        email: item.search_results?.email,
-      },
-      created_at: item.created_at,
-      status: item.status || "pending",
-    }))
-
-  // If we have in-memory data, use it
-  if (inMemoryData.length > 0) {
-    console.log(`Using ${inMemoryData.length} records from in-memory storage`)
-    return inMemoryData
+// Update getSearchData to use the new client
+export async function getSearchData(searchId: string) {
+  // Get Supabase client
+  const supabase = getSupabaseClient()
+  if (!supabase) {
+    console.error("Supabase client not available")
+    return null
   }
 
-  // Otherwise, provide mock data
-  console.log("No data available, providing mock data")
-  const mockData = [
-    {
-      id: "mock-1",
-      form_type: "Free Search",
-      search_data: {
-        name: "John",
-        surname: "Doe",
-        email: "john.doe@example.com",
-        trademarkName: "TechBrand",
-        goodsAndServices: "Software development services",
-      },
-      created_at: new Date().toISOString(),
-      status: "pending",
-    },
-    {
-      id: "mock-2",
-      form_type: "Registration",
-      search_data: {
-        name: "Jane",
-        surname: "Smith",
-        email: "jane.smith@example.com",
-        trademarkName: "FashionStyle",
-        goodsAndServices: "Clothing and accessories",
-      },
-      created_at: new Date(Date.now() - 86400000).toISOString(), // 1 day ago
-      status: "processing",
-    },
-    {
-      id: "mock-3",
-      form_type: "Free Search",
-      search_data: {
-        name: "Robert",
-        surname: "Johnson",
-        email: "robert.johnson@example.com",
-        trademarkName: "FoodDelight",
-        goodsAndServices: "Restaurant services",
-      },
-      created_at: new Date(Date.now() - 172800000).toISOString(), // 2 days ago
-      status: "completed",
-    },
-  ]
+  try {
+    // Try to get from Supabase
+    const { data, error } = await supabase.from("trademark_searches").select("*").eq("id", searchId).single()
 
-  // Filter by status if needed
-  return status && status !== "all" ? mockData.filter((item) => item.status === status) : mockData
+    if (error) {
+      console.error("Error getting from Supabase:", error)
+      return null
+    }
+
+    return data
+  } catch (error) {
+    console.error("Error in Supabase operation:", error)
+    return null
+  }
 }
 
-// Create a new API route for sending emails
-export async function sendSearchResultsEmail(searchId: string, recipientEmail: string, customMessage?: string) {
-  // Get the search data
-  const searchData = await getSearchData(searchId)
-  if (!searchData) {
-    return { success: false, error: "Search data not found" }
+// Function to update search status
+export async function updateSearchStatus(searchId: string, status: string) {
+  // Get Supabase client
+  const supabase = getSupabaseClient()
+  if (!supabase) {
+    console.error("Supabase client not available")
+    return { data: null, error: "Supabase client not available", source: "error" }
   }
 
-  // In a real implementation, you would use Resend or another email service here
-  console.log(`Sending email to ${recipientEmail} for search ${searchId}`)
-  console.log(`Custom message: ${customMessage || "None"}`)
+  try {
+    // Try to update in Supabase
+    const { data, error } = await supabase
+      .from("trademark_searches")
+      .update({ status: status })
+      .eq("id", searchId)
+      .select()
 
-  // Return success for now
-  return { success: true, message: "Email sent successfully" }
+    if (error) {
+      console.error("Error updating search status in Supabase:", error)
+      return { data: null, error: error.message, source: "error" }
+    }
+
+    return { data, error: null, source: "supabase" }
+  } catch (supabaseError) {
+    console.error("Supabase operation failed:", supabaseError)
+    throw supabaseError
+  }
 }
 
 // Function to update search results
 export async function updateSearchResults(searchId: string, updatedResults: any) {
-  // Update in memory first
-  if (inMemoryStorage[searchId]) {
-    inMemoryStorage[searchId].search_results = {
-      ...inMemoryStorage[searchId].search_results,
-      ...updatedResults,
-    }
-  }
-
   // Get Supabase client
-  const supabase = createSupabaseClient()
+  const supabase = getSupabaseClient()
   if (!supabase) {
-    console.log("Supabase client not available, using in-memory storage")
-    return { data: inMemoryStorage[searchId], error: null, source: "memory" }
+    console.error("Supabase client not available")
+    return { data: null, error: "Supabase client not available", source: "error" }
   }
 
   try {
@@ -456,7 +263,7 @@ export async function updateSearchResults(searchId: string, updatedResults: any)
 
     if (fetchError) {
       console.error("Error fetching current record:", fetchError)
-      return { data: null, error: fetchError.message, source: "memory" }
+      return { data: null, error: fetchError.message, source: "error" }
     }
 
     // Update the search_results field
@@ -477,12 +284,99 @@ export async function updateSearchResults(searchId: string, updatedResults: any)
 
     if (error) {
       console.error("Error updating search results in Supabase:", error)
-      return { data: null, error: error.message, source: "memory" }
+      return { data: null, error: error.message, source: "error" }
     }
 
     return { data, error: null, source: "supabase" }
   } catch (supabaseError) {
     console.error("Supabase operation failed:", supabaseError)
-    return { data: inMemoryStorage[searchId], error: null, source: "memory" }
+    throw supabaseError
   }
+}
+
+// Function to save search data
+export async function saveSearchData(searchId: string, searchData: any, formType: string) {
+  // Get Supabase client
+  const supabase = getSupabaseClient()
+  if (!supabase) {
+    console.error("Supabase client not available")
+    return { success: false, error: "Supabase client not available" }
+  }
+
+  try {
+    // Prepare data object with schema-compatible fields
+    const dataToSave = {
+      id: searchId,
+      trademark_name: searchData.trademarkName || searchData.trademark_name || "Unnamed",
+      email: searchData.email || "",
+      phone: searchData.phone || searchData.phoneNumber || "",
+      description: searchData.goodsAndServices || searchData.description || searchData.details || "",
+      status: "pending",
+      search_results: searchData, // Store all form data in the JSONB field
+      notes: formType, // Store form type in notes for reference
+    }
+
+    // Check if record exists
+    const { data: existingData, error: fetchError } = await supabase
+      .from("trademark_searches")
+      .select("*")
+      .eq("id", searchId)
+      .single()
+
+    if (fetchError && !fetchError.message.includes("No rows found")) {
+      console.error("Error checking existing record:", fetchError)
+      throw fetchError
+    }
+
+    if (existingData) {
+      // Update existing record
+      const { error } = await supabase
+        .from("trademark_searches")
+        .update({
+          ...dataToSave,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", searchId)
+
+      if (error) {
+        console.error("Error updating record:", error)
+        throw error
+      }
+    } else {
+      // Insert new record
+      const { error } = await supabase.from("trademark_searches").insert([
+        {
+          ...dataToSave,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        },
+      ])
+
+      if (error) {
+        console.error("Error inserting record:", error)
+        throw error
+      }
+    }
+
+    return { success: true, source: "supabase" }
+  } catch (error) {
+    console.error("Error in saveSearchData:", error)
+    throw error
+  }
+}
+
+// Create a new API route for sending emails
+export async function sendSearchResultsEmail(searchId: string, recipientEmail: string, customMessage?: string) {
+  // Get the search data
+  const searchData = await getSearchData(searchId)
+  if (!searchData) {
+    return { success: false, error: "Search data not found" }
+  }
+
+  // In a real implementation, you would use Resend or another email service here
+  console.log(`Sending email to ${recipientEmail} for search ${searchId}`)
+  console.log(`Custom message: ${customMessage || "None"}`)
+
+  // Return success for now
+  return { success: true, message: "Email sent successfully" }
 }
