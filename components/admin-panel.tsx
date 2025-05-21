@@ -67,7 +67,7 @@ export function AdminPanel() {
     fetchSearches()
   }, [statusFilter])
 
-  // COMPLETELY REWRITTEN fetchSearches function to avoid any Supabase interaction
+  // COMPLETELY REWRITTEN fetchSearches function with better error handling
   const fetchSearches = async () => {
     setLoading(true)
     setError(null)
@@ -77,7 +77,7 @@ export function AdminPanel() {
 
       // Use a simple fetch with a timeout
       const controller = new AbortController()
-      const timeoutId = setTimeout(() => controller.abort(), 10000) // 10 second timeout
+      const timeoutId = setTimeout(() => controller.abort(), 15000) // 15 second timeout
 
       try {
         const response = await fetch(`/api/admin/searches?status=${statusFilter}`, {
@@ -91,23 +91,33 @@ export function AdminPanel() {
 
         clearTimeout(timeoutId)
 
-        // Try to parse the response as text first
+        // Check if the response is ok
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`)
+        }
+
+        // Get the response as text first
         const responseText = await response.text()
 
-        // Then try to parse the text as JSON
+        // Try to parse as JSON
         let data
         try {
           data = JSON.parse(responseText)
           console.log("API response parsed successfully:", data)
         } catch (parseError) {
           console.error("Error parsing API response:", parseError, "Response text:", responseText)
-          throw new Error("Failed to parse API response")
+          throw new Error(`Failed to parse API response: ${responseText.substring(0, 100)}...`)
         }
 
         // If we have data, use it
         if (data && Array.isArray(data.data)) {
           setSearches(data.data)
           setDataSource(data.source || "api")
+
+          // Show a message if using mock data
+          if (data.source && data.source.includes("mock")) {
+            setError(`Using mock data (${data.source}): ${data.error || "No real data available"}`)
+          }
         } else {
           // If no data array, use fallback
           console.warn("API returned invalid data structure:", data)
@@ -372,26 +382,14 @@ export function AdminPanel() {
           </div>
         </div>
 
-        {dataSource === "mock-data" && (
+        {dataSource && dataSource.includes("mock") && (
           <div className="mb-4 p-4 bg-amber-50 border border-amber-200 rounded-lg flex items-start gap-3">
             <Info className="h-5 w-5 text-amber-500 mt-0.5 flex-shrink-0" />
             <div>
               <h3 className="font-medium text-amber-800">Datos de muestra</h3>
               <p className="text-amber-700 text-sm">
-                Estás viendo datos de muestra generados por el sistema. En producción, estos datos vendrán de la base de
-                datos.
-              </p>
-            </div>
-          </div>
-        )}
-
-        {dataSource === "fallback" && (
-          <div className="mb-4 p-4 bg-amber-50 border border-amber-200 rounded-lg flex items-start gap-3">
-            <Info className="h-5 w-5 text-amber-500 mt-0.5 flex-shrink-0" />
-            <div>
-              <h3 className="font-medium text-amber-800">Datos de respaldo</h3>
-              <p className="text-amber-700 text-sm">
-                {error || "La API devolvió una estructura de datos inválida. Se muestran datos de respaldo."}
+                {error ||
+                  "Estás viendo datos de muestra generados por el sistema. En producción, estos datos vendrán de la base de datos."}
               </p>
             </div>
           </div>
