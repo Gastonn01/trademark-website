@@ -35,19 +35,11 @@ export function getSupabaseClient() {
   }
 }
 
-// COMPLETELY REWRITTEN getAllSearchData function to avoid JSON parsing errors
+// Update the getAllSearchData function to prioritize real data and avoid using mock data when not needed
+
+// Replace the entire getAllSearchData function with this implementation:
 export async function getAllSearchData(limit = 100, offset = 0, status?: string) {
   console.log("getAllSearchData called with:", { limit, offset, status })
-
-  // Always use mock data in development or when explicitly requested
-  if (process.env.USE_MOCK_DATA === "true") {
-    console.log("Mock data flag detected, using mock data")
-    return {
-      data: getMockSearchData(status),
-      error: null,
-      source: "mock-requested",
-    }
-  }
 
   // Get Supabase client
   const supabase = getSupabaseClient()
@@ -91,11 +83,20 @@ export async function getAllSearchData(limit = 100, offset = 0, status?: string)
 
       // Check if we have data
       if (!data || data.length === 0) {
-        console.log("No data found in Supabase, returning mock data")
+        console.log("No data found in Supabase")
+        // Only return mock data if explicitly requested
+        if (process.env.USE_MOCK_DATA === "true") {
+          return {
+            data: getMockSearchData(status),
+            error: null,
+            source: "mock-no-data",
+          }
+        }
+        // Otherwise return empty array
         return {
-          data: getMockSearchData(status),
+          data: [],
           error: null,
-          source: "mock-no-data",
+          source: "supabase-empty",
         }
       }
 

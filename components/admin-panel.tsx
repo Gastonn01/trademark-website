@@ -117,6 +117,9 @@ export function AdminPanel() {
           // Show a message if using mock data
           if (data.source && data.source.includes("mock")) {
             setError(`Using mock data (${data.source}): ${data.error || "No real data available"}`)
+          } else if (data.data.length === 0) {
+            // If we have no data but it's from Supabase, show a message
+            setError("No hay datos disponibles en la base de datos")
           }
         } else {
           // If no data array, use fallback
