@@ -1,4 +1,6 @@
 import { createClient } from "@supabase/supabase-js"
+// Add this import at the top of the file
+import { getMockSearchData } from "./mock-data"
 
 // In-memory storage as a fallback
 const inMemoryStorage: { [key: string]: any } = {}
@@ -33,88 +35,17 @@ export function getSupabaseClient() {
   }
 }
 
-// Helper function to get mock search data
-function getMockSearchData(status?: string) {
-  const mockData = [
-    {
-      id: "mock-1",
-      form_type: "free-search",
-      search_data: {
-        name: "John",
-        surname: "Doe",
-        email: "john.doe@example.com",
-        trademarkName: "MockBrand",
-        goodsAndServices: "Software services",
-      },
-      created_at: new Date().toISOString(),
-      status: "pending",
-    },
-    {
-      id: "mock-2",
-      form_type: "free-search",
-      search_data: {
-        name: "Jane",
-        surname: "Smith",
-        email: "jane.smith@example.com",
-        trademarkName: "TechSolutions",
-        goodsAndServices: "IT consulting",
-      },
-      created_at: new Date(Date.now() - 86400000).toISOString(), // 1 day ago
-      status: "completed",
-    },
-    {
-      id: "mock-3",
-      form_type: "free-search",
-      search_data: {
-        name: "Carlos",
-        surname: "Rodriguez",
-        email: "carlos@example.com",
-        trademarkName: "InnovaTech",
-        goodsAndServices: "Technology services",
-      },
-      created_at: new Date(Date.now() - 172800000).toISOString(), // 2 days ago
-      status: "processing",
-    },
-    {
-      id: "mock-4",
-      form_type: "free-search",
-      search_data: {
-        name: "Maria",
-        surname: "Garcia",
-        email: "maria@example.com",
-        trademarkName: "FashionStyle",
-        goodsAndServices: "Clothing and accessories",
-      },
-      created_at: new Date(Date.now() - 259200000).toISOString(), // 3 days ago
-      status: "rejected",
-    },
-  ]
-
-  // Filter by status if provided
-  if (status && status !== "all") {
-    return mockData.filter((item) => item.status === status)
-  }
-
-  return mockData
-}
-
 // COMPLETELY REWRITTEN getAllSearchData function to avoid JSON parsing errors
 export async function getAllSearchData(limit = 100, offset = 0, status?: string) {
   console.log("getAllSearchData called with:", { limit, offset, status })
 
-  // IMPORTANT: In preview mode or development, just use mock data
-  // This completely bypasses any Supabase operations in development/preview
-  if (
-    typeof window !== "undefined" &&
-    (window.location.hostname === "localhost" ||
-      window.location.hostname.includes("vercel.app") ||
-      process.env.NEXT_PUBLIC_VERCEL_ENV !== "production")
-  ) {
-    console.log("Preview/development mode detected, using mock data only")
+  // Always use mock data in development or when explicitly requested
+  if (process.env.USE_MOCK_DATA === "true") {
+    console.log("Mock data flag detected, using mock data")
     return {
       data: getMockSearchData(status),
       error: null,
-      source: "mock-dev",
+      source: "mock-requested",
     }
   }
 
@@ -125,100 +56,101 @@ export async function getAllSearchData(limit = 100, offset = 0, status?: string)
     return {
       data: getMockSearchData(status),
       error: "Supabase client not available",
-      source: "mock",
+      source: "mock-no-client",
     }
   }
 
   try {
     console.log("Attempting to fetch data from Supabase")
 
-    // ULTRA SIMPLIFIED APPROACH: Just try a simple query and handle any errors
-    let data = []
+    // Create the query but don't execute it yet
+    let query = supabase
+      .from("trademark_searches")
+      .select("id, notes, email, trademark_name, status, created_at, search_results")
+      .order("created_at", { ascending: false })
+      .limit(limit)
 
+    // Add status filter if provided
+    if (status && status !== "all") {
+      query = query.eq("status", status)
+    }
+
+    // Execute the query with proper error handling
     try {
-      // Use a simple approach with minimal operations
-      const response = await supabase
-        .from("trademark_searches")
-        .select("id, notes, email, trademark_name, status, created_at, search_results")
-        .order("created_at", { ascending: false })
-        .limit(limit)
+      const { data, error } = await query
 
-      // If we have data, use it
-      if (response && !response.error && response.data) {
-        data = response.data
-        console.log(`Successfully fetched ${data.length} records from Supabase`)
-      } else {
-        // If there's an error or no data, log it and use mock data
-        console.error("Supabase query error or no data:", response?.error || "No data")
+      // Check for errors
+      if (error) {
+        console.error("Supabase query error:", error)
         return {
           data: getMockSearchData(status),
-          error: response?.error ? String(response.error) : "No data",
-          source: "mock",
+          error: typeof error === "object" ? JSON.stringify(error) : String(error),
+          source: "mock-query-error",
         }
       }
+
+      // Check if we have data
+      if (!data || data.length === 0) {
+        console.log("No data found in Supabase, returning mock data")
+        return {
+          data: getMockSearchData(status),
+          error: null,
+          source: "mock-no-data",
+        }
+      }
+
+      console.log(`Successfully fetched ${data.length} records from Supabase`)
+
+      // Transform data to match expected format with robust error handling
+      const transformedData = data.map((item: any) => {
+        try {
+          return {
+            id: item.id || `mock-${Math.random().toString(36).substring(2, 9)}`,
+            form_type: item.notes || "Unknown",
+            search_data: {
+              ...(typeof item.search_results === "object" ? item.search_results || {} : {}),
+              name: item.search_results?.firstName || item.search_results?.name || "",
+              surname: item.search_results?.lastName || item.search_results?.surname || "",
+              email: item.email || item.search_results?.email || "",
+              trademarkName: item.trademark_name || item.search_results?.trademarkName || "",
+              goodsAndServices: item.description || item.search_results?.goodsAndServices || "",
+            },
+            created_at: item.created_at || new Date().toISOString(),
+            status: item.status || "pending",
+          }
+        } catch (transformError) {
+          // If there's an error transforming an item, return a simple object
+          console.error("Error transforming item:", transformError)
+          return {
+            id: item.id || `mock-${Math.random().toString(36).substring(2, 9)}`,
+            form_type: "Unknown",
+            search_data: {
+              name: "Error",
+              surname: "Processing",
+              email: "error@example.com",
+            },
+            created_at: new Date().toISOString(),
+            status: "pending",
+          }
+        }
+      })
+
+      return { data: transformedData, error: null, source: "supabase" }
     } catch (queryError) {
-      // If there's an exception, log it and use mock data
+      // Handle any exceptions during query execution
       console.error("Exception during Supabase query:", queryError)
       return {
         data: getMockSearchData(status),
-        error: String(queryError),
-        source: "mock",
+        error: queryError instanceof Error ? queryError.message : String(queryError),
+        source: "mock-exception",
       }
     }
-
-    // If we have no data, use mock data
-    if (!data || data.length === 0) {
-      console.log("No data found in Supabase, returning mock data")
-      return {
-        data: getMockSearchData(status),
-        error: null,
-        source: "mock-empty",
-      }
-    }
-
-    // Transform data to match expected format
-    const transformedData = data.map((item: any) => {
-      try {
-        return {
-          id: item.id || `mock-${Math.random().toString(36).substring(2, 9)}`,
-          form_type: item.notes || "Unknown",
-          search_data: {
-            ...(item.search_results || {}),
-            name: item.search_results?.firstName || item.search_results?.name || "",
-            surname: item.search_results?.lastName || item.search_results?.surname || "",
-            email: item.email || item.search_results?.email || "",
-            trademarkName: item.trademark_name || item.search_results?.trademarkName || "",
-            goodsAndServices: item.description || item.search_results?.goodsAndServices || "",
-          },
-          created_at: item.created_at || new Date().toISOString(),
-          status: item.status || "pending",
-        }
-      } catch (transformError) {
-        // If there's an error transforming an item, return a simple object
-        console.error("Error transforming item:", transformError)
-        return {
-          id: item.id || `mock-${Math.random().toString(36).substring(2, 9)}`,
-          form_type: "Unknown",
-          search_data: {
-            name: "Error",
-            surname: "Processing",
-            email: "error@example.com",
-          },
-          created_at: new Date().toISOString(),
-          status: "pending",
-        }
-      }
-    })
-
-    return { data: transformedData, error: null, source: "supabase" }
   } catch (error) {
-    console.error("Error fetching from Supabase:", error)
-
-    // Return mock data on error
+    console.error("Top-level error in getAllSearchData:", error)
     return {
       data: getMockSearchData(status),
-      error: String(error),
-      source: "mock-error",
+      error: error instanceof Error ? error.message : String(error),
+      source: "mock-top-error",
     }
   }
 }
@@ -434,16 +366,10 @@ export async function saveSearchData(searchId: string, searchData: any, formType
     return { success: true, source: "memory" }
   }
 
-  // IMPORTANT: In preview mode or development, just use in-memory storage
-  // This completely bypasses any Supabase operations in development/preview
-  if (
-    typeof window !== "undefined" &&
-    (window.location.hostname === "localhost" ||
-      window.location.hostname.includes("vercel.app") ||
-      process.env.NEXT_PUBLIC_VERCEL_ENV !== "production")
-  ) {
-    console.log("Preview/development mode detected, using in-memory storage only")
-    return { success: true, source: "memory" }
+  // Check if we should use mock data
+  if (process.env.USE_MOCK_DATA === "true") {
+    console.log("Mock data flag detected, using in-memory storage only")
+    return { success: true, source: "memory-mock" }
   }
 
   try {
