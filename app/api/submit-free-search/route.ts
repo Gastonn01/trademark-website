@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import { Resend } from "resend"
 import { v4 as uuidv4 } from "uuid"
-import { saveSearchData } from "@/lib/supabase"
+import { saveSearchData, ensureTrademarkSearchesTableExists } from "@/lib/supabase"
 
 export const runtime = "nodejs"
 
@@ -17,32 +17,22 @@ try {
   console.error("Failed to initialize Resend:", error)
 }
 
-// Helper function to handle errors
-const handleError = (error: any) => {
-  console.error("Error details:", error)
-  return {
-    message: error instanceof Error ? error.message : "Unknown error",
-    stack: error instanceof Error ? error.stack : "",
-    name: error instanceof Error ? error.name : "",
-  }
-}
-
 export async function POST(req: Request) {
   // Always return a success response to the client
   // This ensures the user experience is not disrupted
-  const successResponse = () => {
+  const successResponse = (searchId: string) => {
     return NextResponse.json({
       message: "Form submitted successfully",
-      searchId: "generated-id", // Will be overwritten if we get a real ID
+      searchId,
     })
   }
 
   try {
     const formData = await req.formData()
     const searchId = (formData.get("searchId") as string) || uuidv4()
-    const formType = formData.get("formType")
+    const formType = formData.get("formType") || "free-search"
 
-    // Create a simplified searchData object with only primitive values
+    // Create a searchData object with all form values
     const searchData: { [key: string]: any } = {}
 
     for (const [key, value] of formData.entries()) {
@@ -52,14 +42,21 @@ export async function POST(req: Request) {
     }
 
     // Log key information
-    console.log("User email:", searchData.email)
-    console.log("Trademark name:", searchData.trademarkName)
+    console.log("Processing search submission:", {
+      searchId,
+      formType,
+      email: searchData.email,
+      trademarkName: searchData.trademarkName,
+    })
+
+    // Ensure the trademark_searches table exists
+    await ensureTrademarkSearchesTableExists()
 
     try {
-      console.log("Saving search data...")
-      // Save data to Supabase or memory
-      await saveSearchData(searchId, searchData, formType as string)
-      console.log("Search data saved successfully")
+      console.log("Saving search data to Supabase...")
+      // Save data to Supabase
+      const saveResult = await saveSearchData(searchId, searchData, formType as string)
+      console.log("Save result:", saveResult)
     } catch (error) {
       console.error("Error saving search data:", error)
       // Continue with the process even if saving fails
@@ -165,13 +162,10 @@ export async function POST(req: Request) {
       }
     }
 
-    return NextResponse.json({
-      message: "Form submitted successfully",
-      searchId,
-    })
+    return successResponse(searchId)
   } catch (error) {
     // Log the error but still return a success response
     console.error("Error processing form submission:", error)
-    return successResponse()
+    return successResponse(uuidv4())
   }
 }

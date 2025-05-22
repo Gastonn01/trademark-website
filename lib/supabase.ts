@@ -15,19 +15,19 @@ export function getSupabaseClient() {
   }
 
   // Check if we have the required environment variables
-  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
     console.error("Missing Supabase environment variables")
     return null
   }
 
   try {
-    // Create a new Supabase client
-    supabaseInstance = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY, {
+    // Create a new Supabase client with the service role key for admin operations
+    supabaseInstance = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY, {
       auth: {
         persistSession: false,
       },
     })
-    console.log("Supabase client initialized successfully")
+    console.log("Supabase client initialized successfully with service role key")
     return supabaseInstance
   } catch (error) {
     console.error("Failed to initialize Supabase client:", error)
@@ -35,9 +35,67 @@ export function getSupabaseClient() {
   }
 }
 
-// Update the getAllSearchData function to prioritize real data and avoid using mock data when not needed
+// Function to create the trademark_searches table if it doesn't exist
+export async function ensureTrademarkSearchesTableExists() {
+  const supabase = getSupabaseClient()
+  if (!supabase) {
+    console.error("Supabase client not available")
+    return false
+  }
 
-// Replace the entire getAllSearchData function with this implementation:
+  try {
+    // Check if the table exists by trying to select from it
+    const { error } = await supabase.from("trademark_searches").select("id").limit(1)
+
+    if (error && error.message.includes("does not exist")) {
+      console.log("trademark_searches table does not exist, creating it...")
+
+      // Create the table using SQL
+      const { error: createError } = await supabase.rpc("create_trademark_searches_table")
+
+      if (createError) {
+        console.error("Error creating trademark_searches table:", createError)
+
+        // Try direct SQL as a fallback
+        const { error: sqlError } = await supabase.rpc("execute_sql", {
+          sql: `
+            CREATE TABLE IF NOT EXISTS trademark_searches (
+              id UUID PRIMARY KEY,
+              email TEXT,
+              trademark_name TEXT,
+              status TEXT DEFAULT 'pending',
+              notes TEXT,
+              search_results JSONB,
+              created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+              updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+            );
+          `,
+        })
+
+        if (sqlError) {
+          console.error("Error creating table with direct SQL:", sqlError)
+          return false
+        }
+      }
+
+      console.log("trademark_searches table created successfully")
+      return true
+    }
+
+    console.log("trademark_searches table already exists")
+    return true
+  } catch (error) {
+    console.error("Error checking/creating trademark_searches table:", error)
+    return false
+  }
+}
+
+// Add back the original ensureTableExists function for backward compatibility
+export async function ensureTableExists() {
+  return ensureTrademarkSearchesTableExists()
+}
+
+// COMPLETELY REVISED getAllSearchData function
 export async function getAllSearchData(limit = 100, offset = 0, status?: string) {
   console.log("getAllSearchData called with:", { limit, offset, status })
 
@@ -53,12 +111,25 @@ export async function getAllSearchData(limit = 100, offset = 0, status?: string)
   }
 
   try {
+    // Ensure the table exists
+    await ensureTrademarkSearchesTableExists()
+
     console.log("Attempting to fetch data from Supabase")
 
-    // Create the query but don't execute it yet
+    // Log the actual query we're about to execute
+    const queryParams = {
+      table: "trademark_searches",
+      select: "id, notes, email, trademark_name, status, created_at, search_results",
+      order: "created_at.desc",
+      limit,
+      status: status !== "all" ? status : undefined,
+    }
+    console.log("Query parameters:", queryParams)
+
+    // Create the query
     let query = supabase
       .from("trademark_searches")
-      .select("id, notes, email, trademark_name, status, created_at, search_results")
+      .select("*") // Select all columns for debugging
       .order("created_at", { ascending: false })
       .limit(limit)
 
@@ -67,32 +138,43 @@ export async function getAllSearchData(limit = 100, offset = 0, status?: string)
       query = query.eq("status", status)
     }
 
-    // Execute the query with proper error handling
-    try {
-      const { data, error } = await query
+    // Execute the query
+    const { data, error } = await query
 
-      // Check for errors
-      if (error) {
-        console.error("Supabase query error:", error)
+    // Log the raw response
+    console.log("Raw Supabase response:", { data: data?.length || 0, error: error?.message || null })
+
+    if (error) {
+      console.error("Supabase query error:", error)
+      return {
+        data: getMockSearchData(status),
+        error: error.message,
+        source: "mock-query-error",
+      }
+    }
+
+    // If no data, try to check if the table is empty or doesn't exist
+    if (!data || data.length === 0) {
+      console.log("No data found in Supabase, checking table")
+
+      // Check if the table has any records at all
+      const { count, error: countError } = await supabase
+        .from("trademark_searches")
+        .select("*", { count: "exact", head: true })
+
+      console.log("Table count check:", { count, error: countError?.message || null })
+
+      if (countError) {
         return {
           data: getMockSearchData(status),
-          error: typeof error === "object" ? JSON.stringify(error) : String(error),
-          source: "mock-query-error",
+          error: "Error checking table: " + countError.message,
+          source: "mock-table-error",
         }
       }
 
-      // Check if we have data
-      if (!data || data.length === 0) {
-        console.log("No data found in Supabase")
-        // Only return mock data if explicitly requested
-        if (process.env.USE_MOCK_DATA === "true") {
-          return {
-            data: getMockSearchData(status),
-            error: null,
-            source: "mock-no-data",
-          }
-        }
-        // Otherwise return empty array
+      // If count is 0, table exists but is empty
+      if (count === 0) {
+        console.log("Table exists but is empty")
         return {
           data: [],
           error: null,
@@ -100,52 +182,54 @@ export async function getAllSearchData(limit = 100, offset = 0, status?: string)
         }
       }
 
-      console.log(`Successfully fetched ${data.length} records from Supabase`)
-
-      // Transform data to match expected format with robust error handling
-      const transformedData = data.map((item: any) => {
-        try {
-          return {
-            id: item.id || `mock-${Math.random().toString(36).substring(2, 9)}`,
-            form_type: item.notes || "Unknown",
-            search_data: {
-              ...(typeof item.search_results === "object" ? item.search_results || {} : {}),
-              name: item.search_results?.firstName || item.search_results?.name || "",
-              surname: item.search_results?.lastName || item.search_results?.surname || "",
-              email: item.email || item.search_results?.email || "",
-              trademarkName: item.trademark_name || item.search_results?.trademarkName || "",
-              goodsAndServices: item.description || item.search_results?.goodsAndServices || "",
-            },
-            created_at: item.created_at || new Date().toISOString(),
-            status: item.status || "pending",
-          }
-        } catch (transformError) {
-          // If there's an error transforming an item, return a simple object
-          console.error("Error transforming item:", transformError)
-          return {
-            id: item.id || `mock-${Math.random().toString(36).substring(2, 9)}`,
-            form_type: "Unknown",
-            search_data: {
-              name: "Error",
-              surname: "Processing",
-              email: "error@example.com",
-            },
-            created_at: new Date().toISOString(),
-            status: "pending",
-          }
-        }
-      })
-
-      return { data: transformedData, error: null, source: "supabase" }
-    } catch (queryError) {
-      // Handle any exceptions during query execution
-      console.error("Exception during Supabase query:", queryError)
+      // If we get here, something else is wrong
       return {
         data: getMockSearchData(status),
-        error: queryError instanceof Error ? queryError.message : String(queryError),
-        source: "mock-exception",
+        error: "Table has data but query returned none",
+        source: "mock-query-issue",
       }
     }
+
+    console.log(`Successfully fetched ${data.length} records from Supabase`)
+
+    // Transform data to match expected format
+    const transformedData = data.map((item: any) => {
+      try {
+        // For debugging, log the raw item
+        console.log("Processing item:", item.id)
+
+        return {
+          id: item.id,
+          form_type: item.notes || "free-search",
+          search_data: {
+            ...(typeof item.search_results === "object" ? item.search_results || {} : {}),
+            name: item.search_results?.firstName || item.search_results?.name || "",
+            surname: item.search_results?.lastName || item.search_results?.surname || "",
+            email: item.email || item.search_results?.email || "",
+            trademarkName: item.trademark_name || item.search_results?.trademarkName || "",
+            goodsAndServices: item.search_results?.goodsAndServices || item.search_results?.description || "",
+          },
+          created_at: item.created_at || new Date().toISOString(),
+          status: item.status || "pending",
+        }
+      } catch (transformError) {
+        console.error("Error transforming item:", transformError, "Item:", item)
+        return {
+          id: item.id || `error-${Math.random().toString(36).substring(2, 9)}`,
+          form_type: "Error",
+          search_data: {
+            name: "Error Processing",
+            surname: "",
+            email: "error@example.com",
+            trademarkName: "Error processing record",
+          },
+          created_at: new Date().toISOString(),
+          status: "error",
+        }
+      }
+    })
+
+    return { data: transformedData, error: null, source: "supabase" }
   } catch (error) {
     console.error("Top-level error in getAllSearchData:", error)
     return {
@@ -156,95 +240,62 @@ export async function getAllSearchData(limit = 100, offset = 0, status?: string)
   }
 }
 
-// Update the ensureTableExists function
-export async function ensureTableExists() {
+// REVISED saveSearchData function to ensure data is properly saved
+export async function saveSearchData(searchId: string, searchData: any, formType: string) {
+  console.log("saveSearchData called with:", { searchId, formType })
+
+  // Always save to in-memory storage first as a fallback
+  inMemoryStorage[searchId] = {
+    id: searchId,
+    search_results: searchData,
+    notes: formType,
+    created_at: new Date().toISOString(),
+  }
+
+  console.log("Data saved to in-memory storage as fallback")
+
+  // Get Supabase client
   const supabase = getSupabaseClient()
   if (!supabase) {
-    console.log("Supabase client not available, skipping table check")
-    return true
+    console.error("Supabase client not available, using in-memory storage only")
+    return { success: true, source: "memory" }
   }
 
   try {
-    // First, check if the table exists
-    const { error: checkError } = await supabase.from("trademark_searches").select("id").limit(1)
+    // Ensure the table exists
+    await ensureTrademarkSearchesTableExists()
 
-    if (checkError) {
-      console.error("Error checking table:", checkError)
-
-      // If the table doesn't exist, try to create it
-      if (checkError.message && checkError.message.includes("does not exist")) {
-        console.log("Table does not exist, attempting to create it")
-
-        // Create the table
-        const { error: createError } = await supabase.rpc("create_trademark_searches_table")
-
-        if (createError) {
-          console.error("Error creating table:", createError)
-          return false
-        }
-
-        console.log("Table created successfully")
-        return true
-      }
-
-      return false
+    // Prepare data for insertion
+    const insertData = {
+      id: searchId,
+      trademark_name: String(searchData.trademarkName || searchData.trademark_name || "Unnamed").substring(0, 255),
+      email: String(searchData.email || "").substring(0, 255),
+      status: "pending",
+      notes: String(formType || "free-search").substring(0, 255),
+      search_results: searchData,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
     }
 
-    console.log("Table exists")
-    return true
+    console.log("Attempting to insert data to Supabase:", insertData.id)
+
+    // Insert the data
+    const { data, error } = await supabase.from("trademark_searches").insert([insertData]).select()
+
+    if (error) {
+      console.error("Error inserting data into Supabase:", error)
+      return { success: false, error: error.message, source: "memory" }
+    }
+
+    console.log("Successfully inserted data into Supabase:", data)
+    return { success: true, data, source: "supabase" }
   } catch (error) {
-    console.error("Error checking table:", error)
-    return false
+    console.error("Error in saveSearchData:", error)
+    return { success: true, error, source: "memory" }
   }
 }
 
-// Function to upload a file to Supabase Storage
-export async function uploadFileToStorage(file: File, searchId: string) {
-  const supabase = getSupabaseClient()
-  if (!supabase) {
-    console.log("Supabase client not available, skipping file upload")
-    return {
-      success: false,
-      error: "Supabase client not available",
-    }
-  }
-
-  try {
-    // Convert file to ArrayBuffer
-    const fileArrayBuffer = await file.arrayBuffer()
-    const fileBuffer = Buffer.from(fileArrayBuffer)
-
-    // Generate a unique filename
-    const fileExt = file.name.split(".").pop()
-    const fileName = `${searchId}-${Date.now()}.${fileExt}`
-
-    console.log(`Attempting to upload file: ${fileName}, size: ${fileBuffer.length} bytes`)
-
-    // Instead of using Storage, we'll save file metadata
-    const logoData = {
-      logoName: file.name,
-      logoType: file.type,
-      logoSize: file.size,
-      // We don't save the binary content in the table, it's too large
-    }
-
-    console.log("Saving logo metadata")
-
-    return {
-      success: true,
-      logoData: logoData,
-      error: null,
-    }
-  } catch (error) {
-    console.error("Error in uploadFileToStorage:", error)
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : "Unknown error",
-    }
-  }
-}
-
-// Update getSearchData to use the new client
+// Rest of the functions remain the same...
 export async function getSearchData(searchId: string) {
   // Get Supabase client
   const supabase = getSupabaseClient()
@@ -269,7 +320,6 @@ export async function getSearchData(searchId: string) {
   }
 }
 
-// Function to update search status
 export async function updateSearchStatus(searchId: string, status: string) {
   // Get Supabase client
   const supabase = getSupabaseClient()
@@ -298,7 +348,6 @@ export async function updateSearchStatus(searchId: string, status: string) {
   }
 }
 
-// Function to update search results
 export async function updateSearchResults(searchId: string, updatedResults: any) {
   // Get Supabase client
   const supabase = getSupabaseClient()
@@ -348,101 +397,6 @@ export async function updateSearchResults(searchId: string, updatedResults: any)
   }
 }
 
-// COMPLETELY REVISED saveSearchData function to avoid JSON parsing errors
-export async function saveSearchData(searchId: string, searchData: any, formType: string) {
-  // Always save to in-memory storage first as a fallback
-  inMemoryStorage[searchId] = {
-    id: searchId,
-    search_results: searchData,
-    notes: formType,
-    created_at: new Date().toISOString(),
-  }
-
-  console.log("Data saved to in-memory storage as fallback")
-
-  // Get Supabase client
-  const supabase = getSupabaseClient()
-  if (!supabase) {
-    console.error("Supabase client not available, using in-memory storage only")
-    return { success: true, source: "memory" }
-  }
-
-  // Check if we should use mock data
-  if (process.env.USE_MOCK_DATA === "true") {
-    console.log("Mock data flag detected, using in-memory storage only")
-    return { success: true, source: "memory-mock" }
-  }
-
-  try {
-    // ULTRA SIMPLIFIED APPROACH: Skip all checks and just try to insert directly
-    // This bypasses any potential JSON parsing issues with error responses
-
-    // Prepare a minimal data object with only primitive values
-    const minimalData = {
-      id: searchId,
-      trademark_name: String(searchData.trademarkName || searchData.trademark_name || "Unnamed").substring(0, 255),
-      email: String(searchData.email || "").substring(0, 255),
-      status: "pending",
-      notes: String(formType || "free-search").substring(0, 255),
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    }
-
-    console.log("Attempting to insert minimal data to Supabase")
-
-    // Use a direct insert with minimal data
-    try {
-      // Wrap the entire operation in a try/catch and ignore any errors
-      // This ensures we don't crash if there's an issue with Supabase
-      await supabase.from("trademark_searches").insert([minimalData])
-      console.log("Successfully inserted minimal record (or silently failed)")
-
-      // Now try to update with just the search_results field
-      try {
-        // Sanitize the search_results object to ensure it's JSON-compatible
-        // Use a simple approach that avoids any complex operations
-        const sanitizedSearchResults = {}
-
-        // Only include primitive values to avoid any serialization issues
-        for (const key in searchData) {
-          if (
-            typeof searchData[key] === "string" ||
-            typeof searchData[key] === "number" ||
-            typeof searchData[key] === "boolean"
-          ) {
-            sanitizedSearchResults[key] = searchData[key]
-          } else if (Array.isArray(searchData[key])) {
-            // For arrays, only include if they contain primitive values
-            sanitizedSearchResults[key] = searchData[key].filter(
-              (item) => typeof item === "string" || typeof item === "number" || typeof item === "boolean",
-            )
-          }
-        }
-
-        await supabase
-          .from("trademark_searches")
-          .update({
-            search_results: sanitizedSearchResults,
-          })
-          .eq("id", searchId)
-
-        console.log("Successfully updated with search results (or silently failed)")
-        return { success: true, source: "supabase" }
-      } catch (updateError) {
-        console.error("Exception during search_results update:", updateError)
-        return { success: true, source: "supabase-partial" }
-      }
-    } catch (insertError) {
-      console.error("Exception during initial insert:", insertError)
-      return { success: true, source: "memory" }
-    }
-  } catch (error) {
-    console.error("Top-level error in saveSearchData:", error)
-    return { success: true, source: "memory" }
-  }
-}
-
-// Create a new API route for sending emails
 export async function sendSearchResultsEmail(searchId: string, recipientEmail: string, customMessage?: string) {
   // Get the search data
   const searchData = await getSearchData(searchId)
