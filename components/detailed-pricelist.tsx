@@ -9,7 +9,7 @@ import Image from "next/image"
 
 const primaryCountries = [
   { name: "United States", flag: "https://flagcdn.com/w40/us.png", price: 499 },
-  { name: "European Union", flag: "https://flagcdn.com/w40/eu.png", price: 299 },
+  { name: "European Union", flag: "https://flagcdn.com/w40/eu.png", price: 1900 },
   { name: "United Kingdom", flag: "https://flagcdn.com/w40/gb.png", price: 300 },
   { name: "Canada", flag: "https://flagcdn.com/w40/ca.png", price: 149 },
   { name: "China", flag: "https://flagcdn.com/w40/cn.png", price: 450 },
@@ -111,6 +111,7 @@ const secondaryCountries = [
   { name: "Uzbekistan", flag: "https://flagcdn.com/w40/uz.png", price: 590 },
   { name: "Vietnam", flag: "https://flagcdn.com/w40/vn.png", price: 500 },
   { name: "Yemen", flag: "https://flagcdn.com/w40/ye.png", price: 1600 },
+  { name: "European Union", flag: "https://flagcdn.com/w40/eu.png", price: 1900 },
 ]
 
 export function DetailedPricelist() {

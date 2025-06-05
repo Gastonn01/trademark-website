@@ -18,7 +18,7 @@ interface Country {
 }
 
 const mostRequestedCountries: Country[] = [
-  { name: "European Union", flag: "https://flagcdn.com/w40/eu.png", price: 1310 },
+  { name: "European Union", flag: "https://flagcdn.com/w40/eu.png", price: 1900 },
   { name: "United States", flag: "https://flagcdn.com/w40/us.png", price: 749 },
   { name: "Germany", flag: "https://flagcdn.com/w40/de.png", price: 750 },
   { name: "Spain", flag: "https://flagcdn.com/w40/es.png", price: 490 },

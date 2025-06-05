@@ -26,7 +26,7 @@ interface RegionData {
 }
 
 const topCountries: CountryData[] = [
-  { name: "European Union", flag: "eu", price: 1310, additionalClassPrice: 425 },
+  { name: "European Union", flag: "eu", price: 1900, additionalClassPrice: 425 },
   { name: "United States", flag: "us", price: 749, additionalClassPrice: 499 },
   { name: "Germany", flag: "de", price: 750, additionalClassPrice: 500 },
   { name: "Spain", flag: "es", price: 490, additionalClassPrice: 385 },
@@ -46,7 +46,7 @@ const regions: RegionData[] = [
   {
     name: "Europe",
     countries: [
-      { name: "European Union", flag: "eu", price: 1310, additionalClassPrice: 425 },
+      { name: "European Union", flag: "eu", price: 1900, additionalClassPrice: 425 },
       { name: "Spain", flag: "es", price: 490, additionalClassPrice: 385 },
       { name: "France", flag: "fr", price: 580, additionalClassPrice: 190 },
       { name: "United Kingdom", flag: "gb", price: 790, additionalClassPrice: 300 },
