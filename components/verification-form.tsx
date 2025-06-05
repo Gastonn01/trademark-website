@@ -251,9 +251,10 @@ const trademarkClasses = Array.from({ length: 45 }, (_, i) => i + 1)
 
 interface VerificationFormContentProps {
   isLoading: boolean
+  initialData?: any
 }
 
-const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoading }) => {
+const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoading, initialData }) => {
   const [step, setStep] = useState(1)
   const totalSteps = 5
   const [formData, setFormData] = useState<FormData>({
@@ -279,6 +280,40 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const searchId = searchParams.get("search_id")
 
+  // Pre-fill form with initial data
+  useEffect(() => {
+    if (initialData && !isLoading) {
+      console.log("Pre-filling form with initial data:", initialData)
+
+      setFormData((prev) => ({
+        ...prev,
+        trademarkName: initialData.trademarkName || prev.trademarkName,
+        goodsAndServices: initialData.goodsAndServices || prev.goodsAndServices,
+        name: initialData.name || initialData.firstName || prev.name,
+        surname: initialData.surname || initialData.lastName || prev.surname,
+        email: initialData.email || prev.email,
+        phone: initialData.phone || prev.phone,
+        trademarkType: initialData.trademarkType || "word", // Default to word mark
+        selectedClasses: initialData.selectedClasses || [1], // Default to class 1
+      }))
+
+      // Pre-select countries if available
+      if (initialData.countries && Array.isArray(initialData.countries)) {
+        const countrySelections = initialData.countries.map((country: any) => ({
+          name: typeof country === "string" ? country : country.name,
+          classes: 1,
+        }))
+        setSelectedCountries(countrySelections)
+      } else {
+        // Default to EU and US
+        setSelectedCountries([
+          { name: "European Union", classes: 1 },
+          { name: "United States", classes: 1 },
+        ])
+      }
+    }
+  }, [initialData, isLoading])
+
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [step])
@@ -298,23 +333,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
         console.error("Error parsing countries from URL:", error)
       }
     }
-    if (searchId) {
-      fetch(`/api/submit-free-search?search_id=${searchId}`)
-        .then((response) => response.json())
-        .then((data) => {
-          setFormData((prevData) => ({
-            ...prevData,
-            ...data,
-            countries: data.countries ? JSON.parse(data.countries) : [],
-            selectedClasses: data.selectedClasses ? JSON.parse(data.selectedClasses) : [],
-          }))
-          setSelectedCountries(
-            data.countries ? JSON.parse(data.countries).map((country: string) => ({ name: country, classes: 1 })) : [],
-          )
-        })
-        .catch((error) => console.error("Error fetching search results:", error))
-    }
-  }, [searchId, searchParams])
+  }, [searchParams])
 
   const toggleCountry = (country: string) => {
     setSelectedCountries((prev) => {
@@ -389,7 +408,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
   }, [searchTerm])
 
   const toggleRegion = (regionName: string, event: React.MouseEvent) => {
-    event.preventDefault() // Previene la propagación del evento
+    event.preventDefault()
     setExpandedRegions((prev) =>
       prev.includes(regionName) ? prev.filter((r) => r !== regionName) : [...prev, regionName],
     )
@@ -419,7 +438,6 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
     const formDataToSend = new FormData()
     formDataToSend.append("formType", "verification")
 
-    // Añadir todos los campos del formulario a formData
     Object.entries(formData).forEach(([key, value]) => {
       if (typeof value === "string" || value instanceof Blob) {
         formDataToSend.append(key, value)
@@ -432,7 +450,6 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
       }
     })
 
-    // Añadir archivos no vacíos
     files.forEach((file) => {
       if (file.size > 0) {
         formDataToSend.append("files", file)
@@ -474,13 +491,20 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
             <p className="text-center">Loading your previous search data...</p>
           </div>
         )}
+
+        {initialData && (
+          <div className="w-full p-4 mb-4 bg-green-50 text-green-700 rounded-md">
+            <p className="text-center">✓ Your information has been pre-filled based on your analysis</p>
+          </div>
+        )}
+
         <div className="grid lg:grid-cols-7 gap-12">
           <div className="lg:col-span-5">
             <div className="mb-8">
-              <h1 className="text-4xl font-bold mb-4 text-indigo-700">Protect Your Brand</h1>
-              <p className="text-lg text-gray-600">Start your trademark journey in just a few steps.</p>
+              <h1 className="text-4xl font-bold mb-4 text-indigo-700">Complete Your Registration</h1>
+              <p className="text-lg text-gray-600">Your trademark information is ready for registration.</p>
               <p className="text-lg text-gray-600 mb-8">
-                Fill out this simple form to get your free trademark search and expert assessment within 24 hours.
+                Review and complete the details below to proceed with your trademark application.
               </p>
             </div>
 
@@ -599,7 +623,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
                     Describe your goods and services
                   </Label>
                   <Textarea
-                    id="goodssservices"
+                    id="goodsAndServices"
                     value={formData.goodsAndServices}
                     onChange={(e) => setFormData((prev) => ({ ...prev, goodsAndServices: e.target.value }))}
                     placeholder="e.g., Clothing, namely shirts, pants, and hats"
@@ -780,7 +804,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
                 <p className="text-gray-600 mb-4">Total: {totalPrice.toFixed(2)} EUR</p>
                 {clientSecret && (
                   <Elements stripe={stripePromise} options={{ clientSecret }}>
-                    <PaymentForm amount={totalPrice} formData={formData} setFormData={setFormData} />
+                    <PaymentForm amount={totalPrice} formData={formData} />
                   </Elements>
                 )}
                 {errorMessage && (
@@ -803,7 +827,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
                   <CardTitle>Your Selection</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-2xl font-bold mb-4">Estimated price: ${totalPrice}</p>
+                  <p className="text-2xl font-bold mb-4">Estimated price: €{totalPrice}</p>
                   <div className="mb-6 max-h-[calc(100vh-300px)] overflow-y-auto">
                     <ul>
                       {selectedCountries.map((country) => {
@@ -829,7 +853,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
                             </div>
                             <div className="flex items-center gap-2">
                               <span>{Math.max(1, formData.selectedClasses.length)} classes</span>
-                              <span className="min-w-[80px] text-right">${totalCountryPrice}</span>
+                              <span className="min-w-[80px] text-right">€{totalCountryPrice}</span>
                             </div>
                           </li>
                         )
@@ -861,41 +885,9 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
 }
 
 export function VerificationForm({ initialData, isLoading = false }: VerificationFormProps) {
-  const [trademarkName, setTrademarkName] = useState("")
-  const [trademarkType, setTrademarkType] = useState("")
-  const [email, setEmail] = useState("")
-  const [firstName, setFirstName] = useState("")
-  const [lastName, setLastName] = useState("")
-  const [selectedCountries, setSelectedCountries] = useState<CountrySelection[]>([])
-
-  useEffect(() => {
-    if (initialData && !isLoading) {
-      // Pre-fill form fields with initialData
-      if (initialData.trademarkName) {
-        setTrademarkName(initialData.trademarkName)
-      }
-      if (initialData.trademarkType) {
-        setTrademarkType(initialData.trademarkType)
-      }
-      if (initialData.email) {
-        setEmail(initialData.email)
-      }
-      if (initialData.firstName) {
-        setFirstName(initialData.firstName)
-      }
-      if (initialData.lastName) {
-        setLastName(initialData.lastName)
-      }
-      if (initialData.selectedCountries && Array.isArray(initialData.selectedCountries)) {
-        setSelectedCountries(initialData.selectedCountries)
-      }
-      // Add any other fields you want to pre-fill
-    }
-  }, [initialData, isLoading])
-
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      <VerificationFormContent isLoading={isLoading} />
+      <VerificationFormContent isLoading={isLoading} initialData={initialData} />
     </Suspense>
   )
 }
