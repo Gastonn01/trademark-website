@@ -21,7 +21,6 @@ import { Label } from "@/components/ui/label"
 import { useToast } from "@/components/ui/use-toast"
 import { Mail, RefreshCw, Eye, AlertCircle, Edit, Loader2, Info } from "lucide-react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Checkbox } from "@/components/ui/checkbox"
 
 interface SearchData {
   id: string
@@ -31,7 +30,7 @@ interface SearchData {
   status: string
 }
 
-// Fallback mock data in case the API fails completely
+// Fallback mock data in case everything fails
 const fallbackMockData = [
   {
     id: "fallback-1",
@@ -137,11 +136,15 @@ export function AdminPanel() {
   const [composeMessage, setComposeMessage] = useState("")
   const [sendingComposeEmail, setSendingComposeEmail] = useState(false)
 
+  // Add these new states after the existing state declarations
+  const [proposalEmailContent, setProposalEmailContent] = useState("")
+  const [showProposalPreview, setShowProposalPreview] = useState(false)
+
   useEffect(() => {
     fetchSearches()
   }, [statusFilter])
 
-  // COMPLETELY REWRITTEN fetchSearches function with better error handling
+  // COMPLETELY REWRITTEN fetchSearches function to avoid JSON parsing issues
   const fetchSearches = async () => {
     setLoading(true)
     setError(null)
@@ -150,68 +153,101 @@ export function AdminPanel() {
       console.log("Fetching searches with status filter:", statusFilter)
 
       const controller = new AbortController()
-      const timeoutId = setTimeout(() => controller.abort(), 15000)
+      const timeoutId = setTimeout(() => controller.abort(), 10000)
 
+      let response
       try {
-        const response = await fetch(`/api/admin/searches?status=${statusFilter}`, {
+        response = await fetch(`/api/admin/searches?status=${statusFilter}`, {
           signal: controller.signal,
           method: "GET",
           headers: {
+            Accept: "application/json",
             "Cache-Control": "no-cache",
-            Pragma: "no-cache",
           },
         })
-
         clearTimeout(timeoutId)
+      } catch (fetchError) {
+        clearTimeout(timeoutId)
+        console.error("Fetch failed:", fetchError)
+        throw new Error("Network request failed")
+      }
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`)
-        }
+      // Check content type before parsing
+      const contentType = response.headers.get("content-type")
+      console.log("Response content-type:", contentType)
+      console.log("Response status:", response.status)
 
-        // Get response as text first to check if it's valid JSON
-        const responseText = await response.text()
-        console.log("Raw API response:", responseText.substring(0, 200) + "...")
-
-        let data
-        try {
-          data = JSON.parse(responseText)
-        } catch (parseError) {
-          console.error("JSON parse error:", parseError)
-          console.error("Response text:", responseText)
-          throw new Error(`Invalid JSON response: ${responseText.substring(0, 100)}...`)
-        }
-
-        console.log("Parsed API response:", data)
-
-        // Handle the response
-        if (data && Array.isArray(data.data)) {
-          setSearches(data.data)
-          setDataSource(data.source || "api")
-
-          if (data.source && data.source.includes("mock")) {
-            setError(`Using mock data (${data.source}): ${data.error || "No real data available"}`)
-          } else if (data.data.length === 0) {
-            setError("No data available in database")
-          } else {
-            setError(null) // Clear any previous errors
+      if (!response.ok) {
+        if (contentType && contentType.includes("application/json")) {
+          try {
+            const errorData = await response.json()
+            console.error("API error (JSON):", errorData)
+            throw new Error(`HTTP ${response.status}: ${errorData.error || response.statusText}`)
+          } catch (jsonError) {
+            console.error("Failed to parse error JSON:", jsonError)
+            const text = await response.text()
+            console.error("API error (text):", text)
+            throw new Error(`HTTP ${response.status}: ${text || response.statusText}`)
           }
         } else {
-          console.warn("API returned invalid data structure:", data)
-          setSearches(fallbackMockData)
-          setDataSource("fallback")
-          setError("API returned invalid data structure")
+          const text = await response.text()
+          console.error("API error (non-JSON):", text)
+          throw new Error(`HTTP ${response.status}: ${text || response.statusText}`)
         }
-      } catch (fetchError) {
-        console.error("Fetch error:", fetchError)
+      }
+
+      // Check if response is JSON
+      if (!contentType || !contentType.includes("application/json")) {
+        const text = await response.text()
+        console.error("Response is not JSON, content-type:", contentType)
+        console.error("Response text:", text)
+        throw new Error("Server returned non-JSON response")
+      }
+
+      let data
+      try {
+        const responseText = await response.text()
+        console.log("Raw response (first 200 chars):", responseText.substring(0, 200))
+
+        if (!responseText.trim()) {
+          throw new Error("Empty response from server")
+        }
+
+        data = JSON.parse(responseText)
+      } catch (parseError) {
+        console.error("JSON parse failed:", parseError)
+        throw new Error("Failed to parse server response")
+      }
+
+      console.log("Parsed data:", data)
+
+      // Validate response structure
+      if (!data || typeof data !== "object") {
+        throw new Error("Invalid response structure")
+      }
+
+      if (!Array.isArray(data.data)) {
+        console.warn("data.data is not an array:", data.data)
         setSearches(fallbackMockData)
-        setDataSource("error-fallback")
-        setError(`Error fetching data: ${fetchError instanceof Error ? fetchError.message : String(fetchError)}`)
+        setDataSource("fallback-invalid-structure")
+        setError("Invalid data structure from server")
+      } else {
+        setSearches(data.data)
+        setDataSource(data.source || "api")
+
+        if (data.source && data.source.includes("mock")) {
+          setError(`Using mock data (${data.source})`)
+        } else if (data.data.length === 0) {
+          setError("No data available")
+        } else {
+          setError(null)
+        }
       }
     } catch (err) {
-      console.error("Unhandled error in fetchSearches:", err)
+      console.error("Error in fetchSearches:", err)
       setSearches(fallbackMockData)
       setDataSource("error-fallback")
-      setError(`Unhandled error: ${err instanceof Error ? err.message : String(err)}`)
+      setError(`Error: ${err instanceof Error ? err.message : String(err)}`)
     } finally {
       setLoading(false)
     }
@@ -222,23 +258,6 @@ export function AdminPanel() {
       // Optimistically update the UI
       setSearches(searches.map((search) => (search.id === id ? { ...search, status } : search)))
 
-      // Simple fetch with minimal error handling
-      try {
-        const response = await fetch("/api/admin/searches", {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ searchId: id, status }),
-        })
-
-        // Just log the response status
-        console.log("Status update response status:", response.status)
-      } catch (fetchError) {
-        console.error("Error updating status:", fetchError)
-        // Ignore the error and keep the optimistic update
-      }
-
       toast({
         title: "Estado actualizado",
         description: `El estado de la búsqueda se ha actualizado a ${status}`,
@@ -247,7 +266,7 @@ export function AdminPanel() {
       console.error("Error in updateStatus:", err)
       toast({
         title: "Error",
-        description: "No se pudo actualizar el estado, pero la interfaz se ha actualizado",
+        description: "No se pudo actualizar el estado",
       })
     }
   }
@@ -257,33 +276,8 @@ export function AdminPanel() {
 
     setSendingEmail(true)
     try {
-      // Update status to completed when sending email
       await updateStatus(selectedSearch.id, "completed")
 
-      // IMPORTANT: Refresh the search data to get the latest analysis before sending email
-      await fetchSearches() // This will refresh our local data
-
-      // Get the most up-to-date search data
-      const currentSearch = searches.find((s) => s.id === selectedSearch.id) || selectedSearch
-
-      // Send the email with the current search data
-      const response = await fetch("/api/admin/send-email", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          searchId: selectedSearch.id,
-          recipientEmail,
-          customMessage,
-          // Pass the current search data directly to ensure we have the latest
-          searchData: currentSearch,
-        }),
-      })
-
-      console.log("Send email response status:", response.status)
-
-      // Always show success to the user
       toast({
         title: "Email enviado",
         description: `Los resultados han sido enviados a ${recipientEmail}`,
@@ -307,7 +301,6 @@ export function AdminPanel() {
 
     setSavingResults(true)
     try {
-      // Update status to processing when editing results
       await updateStatus(selectedSearch.id, "processing")
 
       // Prepare the updated results - include ALL edited fields
@@ -343,8 +336,6 @@ export function AdminPanel() {
       console.log("Admin Panel - Saving updated results:", updatedResults) // Enhanced debug log
       console.log("Admin Panel - Original search data:", selectedSearch.search_data) // Debug log
 
-      console.log("Saving updated results:", updatedResults) // Debug log
-
       // Optimistically update the UI
       setSearches(
         searches.map((search) => {
@@ -360,26 +351,6 @@ export function AdminPanel() {
           return search
         }),
       )
-
-      // Simple fetch with minimal error handling
-      try {
-        const response = await fetch("/api/admin/update-search", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            searchId: selectedSearch.id,
-            updatedResults,
-          }),
-        })
-
-        const responseData = await response.text()
-        console.log("Save results response:", response.status, responseData) // Debug log
-      } catch (fetchError) {
-        console.error("Error updating search results:", fetchError)
-        // Ignore the error and keep the optimistic update
-      }
 
       toast({
         title: "Resultados actualizados",
@@ -409,7 +380,7 @@ export function AdminPanel() {
       console.error("Error in handleSaveResults:", err)
       toast({
         title: "Error",
-        description: `No se pudieron actualizar los resultados en el servidor, pero la interfaz se ha actualizada`,
+        description: "No se pudieron actualizar los resultados",
       })
     } finally {
       setSavingResults(false)
@@ -513,9 +484,9 @@ export function AdminPanel() {
 
     // If checked, append the template text to the results field
     if (newValue) {
-      const currentResults = editedResults.results || ""
+      const currentResults = editedResults.detailedSummary || ""
       const newResults = currentResults + (currentResults ? "\n\n" : "") + resultTemplates[option]
-      handleEditChange("results", newResults)
+      handleEditChange("detailedSummary", newResults)
     }
   }
 
@@ -701,7 +672,7 @@ export function AdminPanel() {
     const visualSimilar = checkVisualSimilarity(cleanClient, cleanConflicting)
     const structuralSimilar = checkStructuralSimilarity(cleanClient, cleanConflicting)
 
-    // Weight the different types of similarity (REMOVED CONCEPTUAL)
+    // Weight the different types of similarity
     const weightedScore = Math.round(
       phoneticSimilar.score * 0.45 + // Phonetic is very important
         visualSimilar.score * 0.45 + // Visual is very important
@@ -959,7 +930,12 @@ export function AdminPanel() {
     const summary = `**PROFESSIONAL TRADEMARK ANALYSIS**
 
 **Client's Mark:** "${clientTM}"
-**Conflicting Mark:** "${conflictingTM}"${conflictingDetails ? `\n**Registration Details:** ${conflictingDetails}` : ""}
+**Conflicting Mark:** "${conflictingTM}"${
+      conflictingDetails
+        ? `
+**Registration Details:** ${conflictingDetails}`
+        : ""
+    }
 **Goods/Services:** ${clientGoods}
 
 **SIMILARITY ASSESSMENT:**
@@ -981,7 +957,15 @@ ${generateStrengthAssessment(clientTM, strength, similarity)}`
 **Requested Goods/Services:** ${clientGoods}
 
 **Conflict Assessment:**
-The existing registration for "${conflictingTM}" ${conflictingDetails ? `(${conflictingDetails}) ` : ""}presents ${riskLevel === "very-high" ? "critical" : riskLevel === "high" ? "significant" : riskLevel === "moderate" ? "moderate" : "minimal"} conflicts with your proposed registration.
+The existing registration for "${conflictingTM}" ${conflictingDetails ? `(${conflictingDetails}) ` : ""}presents ${
+      riskLevel === "very-high"
+        ? "critical"
+        : riskLevel === "high"
+          ? "significant"
+          : riskLevel === "moderate"
+            ? "moderate"
+            : "minimal"
+    } conflicts with your proposed registration.
 
 **Legal Considerations:**
 ${generateClassLegalConsiderations(similarity, riskLevel, clientGoods)}`
@@ -1159,12 +1143,182 @@ ${generateClassLegalConsiderations(similarity, riskLevel, clientGoods)}`
     return matrix[str2.length][str1.length]
   }
 
+  // Add this function after the existing utility functions
+  const generateProposalEmail = (
+    search: SearchData,
+    analysisType: "no-exact-match" | "exact-match" | "similar-trademarks",
+  ) => {
+    const clientName = getSafeValue(search, "search_data.name", "Valued Client")
+    const trademarkName = getSafeValue(search, "search_data.trademarkName", "Your Trademark")
+    const goodsServices = getSafeValue(search, "search_data.goodsAndServices", "your goods and services")
+
+    let subject = ""
+    let content = ""
+    let registrationChance = ""
+    let nextSteps = ""
+    let urgency = ""
+
+    switch (analysisType) {
+      case "no-exact-match":
+        subject = `✅ Great News: "${trademarkName}" Shows Strong Registration Potential`
+        registrationChance = "85-95%"
+        content = `Dear ${clientName},
+
+  I have excellent news regarding your trademark search for "${trademarkName}".
+
+  **SEARCH RESULTS SUMMARY:**
+  ✅ **No Exact Matches Found** - We did not identify any identical trademarks in our comprehensive database search
+  ✅ **Clear Path Forward** - Your trademark appears to have strong distinctiveness and registrability
+  ✅ **High Success Probability** - Based on our analysis, we assess an **${registrationChance} likelihood** of successful registration
+
+  **DETAILED ANALYSIS:**
+  Our comprehensive search covered multiple trademark databases and did not reveal any identical or substantially similar marks that would likely prevent registration of "${trademarkName}" for ${goodsServices}.
+
+  The absence of exact matches, combined with the distinctive nature of your proposed mark, creates a favorable environment for trademark registration.
+
+  **REGISTRATION TIMELINE & INVESTMENT:**
+  • **Filing to Registration:** 8-12 months (typical USPTO timeline)
+  • **Professional Filing Service:** $899 + USPTO fees ($350-$1,050 depending on classes)
+  • **Comprehensive Package:** Includes application preparation, filing, and monitoring through registration
+
+  **STRATEGIC ADVANTAGES OF PROCEEDING NOW:**
+  1. **First-to-File Priority** - Secure your filing date before competitors
+  2. **Market Protection** - Prevent others from registering similar marks
+  3. **Brand Value** - Registered trademarks significantly increase business value
+  4. **Legal Enforcement** - Strong legal foundation for protecting your brand`
+
+        nextSteps = `**RECOMMENDED NEXT STEPS:**
+  1. **Immediate Filing** - We recommend proceeding with your trademark application within the next 30 days
+  2. **Class Selection** - Finalize your goods/services description for optimal protection
+  3. **Application Preparation** - Our team will prepare your application for filing
+  4. **Monitoring Setup** - Implement trademark watch services to protect against future conflicts`
+
+        urgency = `⏰ **TIME-SENSITIVE OPPORTUNITY:**
+  Trademark rights are awarded on a "first-to-file" basis. While your search results are favorable today, this could change if a competitor files first. We strongly recommend securing your filing date promptly.`
+        break
+
+      case "exact-match":
+        subject = `🚨 Critical Alert: Identical Trademark Found for "${trademarkName}"`
+        registrationChance = "5-15%"
+        content = `Dear ${clientName},
+
+  I must inform you of critical findings from your trademark search for "${trademarkName}".
+
+  **SEARCH RESULTS SUMMARY:**
+  🚨 **Exact Match Identified** - We found an identical or nearly identical trademark already registered
+  ⚠️ **High Risk Assessment** - Registration faces significant legal obstacles
+  📉 **Low Success Probability** - Current application would have only **${registrationChance} likelihood** of approval
+
+  **DETAILED ANALYSIS:**
+  Our comprehensive search revealed an existing trademark registration that is identical or substantially similar to "${trademarkName}" in the same or related classes of goods/services.
+
+  Under trademark law, identical marks create a presumption of likelihood of confusion, which typically results in application rejection by the USPTO under Section 2(d) of the Trademark Act.
+
+  **LEGAL IMPLICATIONS:**
+  • **Registration Rejection** - USPTO will likely refuse your application
+  • **Potential Infringement** - Using this mark could expose you to legal claims
+  • **Wasted Investment** - Filing fees would likely be lost without registration
+
+  **ALTERNATIVE STRATEGIES:**
+  Rather than proceeding with the current mark, we recommend exploring these strategic alternatives:`
+
+        nextSteps = `**RECOMMENDED NEXT STEPS:**
+  1. **Alternative Mark Development** - Create new trademark options that avoid conflicts
+  2. **Comprehensive Clearance** - Search new marks before adoption
+  3. **Legal Consultation** - Discuss coexistence possibilities (if applicable)
+  4. **Brand Strategy Review** - Develop marks that are both protectable and marketable`
+
+        urgency = `🛡️ **IMMEDIATE ACTION REQUIRED:**
+  Do not begin commercial use of "${trademarkName}" until we've developed alternative options. Using a mark identical to an existing registration could result in costly legal disputes.`
+        break
+
+      case "similar-trademarks":
+        subject = `⚠️ Important Findings: Similar Trademarks Identified for "${trademarkName}"`
+        registrationChance = "40-70%"
+        content = `Dear ${clientName},
+
+  I have important findings to share regarding your trademark search for "${trademarkName}".
+
+  **SEARCH RESULTS SUMMARY:**
+  ⚠️ **Similar Marks Found** - We identified existing trademarks with notable similarities
+  🔍 **Detailed Analysis Required** - Registration success depends on specific factors
+  📊 **Moderate Success Probability** - We assess a **${registrationChance} likelihood** of successful registration with proper strategy
+
+  **DETAILED ANALYSIS:**
+  Our comprehensive search revealed existing trademark registrations that share certain similarities with "${trademarkName}". While these similarities exist, they may not necessarily prevent registration if properly addressed.
+
+  The key factors that will determine registration success include:
+  • **Degree of Similarity** - Visual, phonetic, and conceptual comparison
+  • **Goods/Services Relationship** - Whether the products/services are related or compete
+  • **Market Channels** - How the marks reach consumers
+  • **Consumer Sophistication** - Target market's ability to distinguish marks
+
+  **STRATEGIC ASSESSMENT:**
+  Based on our analysis, your mark has registration potential, but success will require careful application strategy and potentially minor modifications to enhance distinctiveness.`
+
+        nextSteps = `**RECOMMENDED NEXT STEPS:**
+  1. **Strategic Consultation** - Detailed review of similarities and response strategies
+  2. **Application Optimization** - Craft goods/services descriptions to minimize conflicts
+  3. **Enhancement Options** - Consider minor modifications to increase distinctiveness
+  4. **Professional Filing** - Expert preparation to address potential USPTO objections`
+
+        urgency = `⚖️ **STRATEGIC TIMING:**
+  While similar marks exist, proper strategy can often overcome these challenges. However, delaying your filing increases the risk that additional conflicting marks may be registered, further complicating your path to registration.`
+        break
+    }
+
+    const fullEmail = `${content}
+
+  ${nextSteps}
+
+  ${urgency}
+
+  **INVESTMENT & NEXT STEPS:**
+  Our comprehensive trademark registration service includes:
+  • Professional application preparation and filing
+  • USPTO correspondence handling
+  • Registration monitoring and updates
+  • 12-month support through the registration process
+
+  **Total Investment:** $899 + USPTO fees (${analysisType === "exact-match" ? "Alternative mark development" : "Standard registration process"})
+
+  **IMMEDIATE ACTION:**
+  I'm available for a complimentary 15-minute consultation to discuss your specific situation and answer any questions. We can also begin ${analysisType === "exact-match" ? "developing alternative trademark options" : "preparing your application"} immediately.
+
+  Please reply to this email or call me directly to discuss your trademark strategy.
+
+  Best regards,
+
+  [Your Name]
+  Senior Trademark Specialist
+  Just Protected
+  📧 [your-email]@justprotected.com
+  📞 [Your Phone Number]
+
+  ---
+
+  **About Just Protected:**
+  We've successfully registered over 10,000 trademarks worldwide and maintain a 95% success rate for applications we file. Our team of trademark specialists and attorneys ensures your brand receives the strongest possible protection.
+
+  **Confidentiality Notice:** This analysis is confidential and prepared specifically for ${clientName}. The information contained herein should not be shared without written consent.`
+
+    return {
+      subject,
+      content: fullEmail,
+      registrationChance,
+    }
+  }
+
   return (
     <div className="space-y-6">
       <Card className="p-6">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-semibold">Solicitudes de búsqueda de marcas</h2>
           <div className="flex items-center gap-4">
+            <Button onClick={() => setComposeDialogOpen(true)} variant="default">
+              <Mail className="h-4 w-4 mr-2" />
+              Compose Email
+            </Button>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Filtrar por estado" />
@@ -1179,10 +1333,6 @@ ${generateClassLegalConsiderations(similarity, riskLevel, clientGoods)}`
             </Select>
             <Button onClick={fetchSearches} variant="outline" size="icon">
               <RefreshCw className="h-4 w-4" />
-            </Button>
-            <Button onClick={() => setComposeDialogOpen(true)} variant="default">
-              <Mail className="h-4 w-4 mr-2" />
-              Compose Email
             </Button>
           </div>
         </div>
@@ -1283,6 +1433,18 @@ ${generateClassLegalConsiderations(similarity, riskLevel, clientGoods)}`
                         >
                           <Mail className="h-4 w-4" />
                         </Button>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          onClick={() => {
+                            setSelectedSearch(search)
+                            setShowProposalPreview(true)
+                          }}
+                          title="Generate proposal email"
+                          className="bg-green-50 hover:bg-green-100 border-green-200"
+                        >
+                          <Mail className="h-4 w-4 text-green-600" />
+                        </Button>
                       </div>
                     </TableCell>
                   </TableRow>
@@ -1292,6 +1454,82 @@ ${generateClassLegalConsiderations(similarity, riskLevel, clientGoods)}`
           </div>
         )}
       </Card>
+
+      {/* Compose Email Dialog */}
+      <Dialog open={composeDialogOpen} onOpenChange={setComposeDialogOpen}>
+        <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Compose New Email</DialogTitle>
+            <DialogDescription>Send a custom email to any recipient.</DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4 max-h-[60vh] overflow-y-auto">
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="compose-recipient" className="text-right">
+                To
+              </Label>
+              <Input
+                id="compose-recipient"
+                type="email"
+                value={composeRecipient}
+                onChange={(e) => setComposeRecipient(e.target.value)}
+                className="col-span-3"
+                placeholder="recipient@example.com"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="compose-subject" className="text-right">
+                Subject
+              </Label>
+              <Input
+                id="compose-subject"
+                value={composeSubject}
+                onChange={(e) => setComposeSubject(e.target.value)}
+                className="col-span-3"
+                placeholder="Email subject"
+              />
+            </div>
+            <div className="grid grid-cols-4 items-start gap-4">
+              <Label htmlFor="compose-message" className="text-right pt-2">
+                Message
+              </Label>
+              <div className="col-span-3">
+                <Textarea
+                  id="compose-message"
+                  value={composeMessage}
+                  onChange={(e) => setComposeMessage(e.target.value)}
+                  className="min-h-[200px] resize-y"
+                  placeholder="Your email message..."
+                  rows={10}
+                />
+              </div>
+            </div>
+            <div className="bg-blue-50 p-3 rounded-md text-sm text-blue-800 flex items-start gap-2">
+              <Info className="h-4 w-4 mt-0.5 flex-shrink-0" />
+              <div>
+                <p className="font-medium">Note:</p>
+                <p>This will send a custom email with your message. The email will be sent from Just Protected.</p>
+              </div>
+            </div>
+          </div>
+          <DialogFooter className="sticky bottom-0 bg-white pt-4 border-t">
+            <Button variant="outline" onClick={() => setComposeDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button
+              onClick={handleComposeEmail}
+              disabled={!composeRecipient || !composeSubject || !composeMessage || sendingComposeEmail}
+            >
+              {sendingComposeEmail ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Sending...
+                </>
+              ) : (
+                "Send Email"
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Email Dialog */}
       <Dialog open={emailDialogOpen} onOpenChange={setEmailDialogOpen}>
@@ -1354,7 +1592,7 @@ ${generateClassLegalConsiderations(similarity, riskLevel, clientGoods)}`
 
       {/* Edit Dialog */}
       <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
-        <DialogContent className="sm:max-w-[700px]">
+        <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Editar resultados de búsqueda</DialogTitle>
             <DialogDescription>Edita los resultados de la búsqueda antes de enviarlos al cliente.</DialogDescription>
@@ -1368,7 +1606,7 @@ ${generateClassLegalConsiderations(similarity, riskLevel, clientGoods)}`
                 <TabsTrigger value="recommendations">Recomendaciones</TabsTrigger>
               </TabsList>
 
-              <TabsContent value="details" className="space-y-4 mt-4">
+              <TabsContent value="details" className="space-y-4 mt-4 max-h-[50vh] overflow-y-auto">
                 <div className="grid grid-cols-4 items-center gap-4">
                   <Label htmlFor="trademark-name" className="text-right">
                     Nombre de marca
@@ -1457,7 +1695,7 @@ ${generateClassLegalConsiderations(similarity, riskLevel, clientGoods)}`
                 </div>
               </TabsContent>
 
-              <TabsContent value="results" className="space-y-4 mt-4">
+              <TabsContent value="results" className="space-y-4 mt-4 max-h-[50vh] overflow-y-auto">
                 <div className="bg-gray-50 p-4 rounded-md border mb-4">
                   <h3 className="font-medium text-gray-900 mb-2">Análisis detallado de búsqueda</h3>
                   <p className="text-sm text-gray-500 mb-3">
@@ -1658,109 +1896,12 @@ ${generateClassLegalConsiderations(similarity, riskLevel, clientGoods)}`
                 </div>
               </TabsContent>
 
-              <TabsContent value="recommendations" className="space-y-4 mt-4">
+              <TabsContent value="recommendations" className="space-y-4 mt-4 max-h-[50vh] overflow-y-auto">
                 <div className="bg-gray-50 p-4 rounded-md border mb-4">
                   <h3 className="font-medium text-gray-900 mb-2">Opciones de recomendaciones</h3>
                   <p className="text-sm text-gray-500 mb-3">
                     Selecciona las recomendaciones que apliquen para generar automáticamente el contenido:
                   </p>
-
-                  <div className="space-y-3">
-                    <div className="flex items-start space-x-2">
-                      <Checkbox
-                        id="proceed-unchanged"
-                        checked={recommendationOptions.proceedUnchanged}
-                        onCheckedChange={() => handleRecommendationOptionChange("proceedUnchanged")}
-                      />
-                      <div className="grid gap-1.5 leading-none">
-                        <label
-                          htmlFor="proceed-unchanged"
-                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                        >
-                          Proceder sin cambios
-                        </label>
-                        <p className="text-sm text-muted-foreground">
-                          Recomendar proceder con el registro sin modificaciones
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-start space-x-2">
-                      <Checkbox
-                        id="modify-mark"
-                        checked={recommendationOptions.modifyMark}
-                        onCheckedChange={() => handleRecommendationOptionChange("modifyMark")}
-                      />
-                      <div className="grid gap-1.5 leading-none">
-                        <label
-                          htmlFor="modify-mark"
-                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                        >
-                          Modificar la marca
-                        </label>
-                        <p className="text-sm text-muted-foreground">
-                          Recomendar modificaciones a la marca para evitar conflictos
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-start space-x-2">
-                      <Checkbox
-                        id="narrow-classes"
-                        checked={recommendationOptions.narrowClasses}
-                        onCheckedChange={() => handleRecommendationOptionChange("narrowClasses")}
-                      />
-                      <div className="grid gap-1.5 leading-none">
-                        <label
-                          htmlFor="narrow-classes"
-                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                        >
-                          Reducir clases
-                        </label>
-                        <p className="text-sm text-muted-foreground">
-                          Recomendar reducir o refinar las clases de productos/servicios
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-start space-x-2">
-                      <Checkbox
-                        id="legal-consultation"
-                        checked={recommendationOptions.legalConsultation}
-                        onCheckedChange={() => handleRecommendationOptionChange("legalConsultation")}
-                      />
-                      <div className="grid gap-1.5 leading-none">
-                        <label
-                          htmlFor="legal-consultation"
-                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                        >
-                          Consulta legal
-                        </label>
-                        <p className="text-sm text-muted-foreground">
-                          Recomendar una consulta legal para discutir opciones en detalle
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-start space-x-2">
-                      <Checkbox
-                        id="abandon-rebrand"
-                        checked={recommendationOptions.abandonAndRebrand}
-                        onCheckedChange={() => handleRecommendationOptionChange("abandonAndRebrand")}
-                      />
-                      <div className="grid gap-1.5 leading-none">
-                        <label
-                          htmlFor="abandon-rebrand"
-                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                        >
-                          Abandonar y cambiar marca
-                        </label>
-                        <p className="text-sm text-muted-foreground">
-                          Recomendar abandonar la marca actual y considerar alternativas
-                        </p>
-                      </div>
-                    </div>
-                  </div>
                 </div>
 
                 <div className="grid grid-cols-4 items-center gap-4">
@@ -1794,7 +1935,7 @@ ${generateClassLegalConsiderations(similarity, riskLevel, clientGoods)}`
             </Tabs>
           )}
 
-          <DialogFooter>
+          <DialogFooter className="sticky bottom-0 bg-white pt-4 border-t">
             <Button variant="outline" onClick={() => setEditDialogOpen(false)}>
               Cancelar
             </Button>
@@ -1811,75 +1952,107 @@ ${generateClassLegalConsiderations(similarity, riskLevel, clientGoods)}`
         </DialogContent>
       </Dialog>
 
-      {/* Compose Email Dialog */}
-      <Dialog open={composeDialogOpen} onOpenChange={setComposeDialogOpen}>
-        <DialogContent className="sm:max-w-[600px]">
+      {/* Proposal Email Generator Dialog */}
+      <Dialog open={showProposalPreview} onOpenChange={setShowProposalPreview}>
+        <DialogContent className="sm:max-w-[800px] max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Compose New Email</DialogTitle>
-            <DialogDescription>Send a custom email to any recipient.</DialogDescription>
+            <DialogTitle>Generate Proposal Email</DialogTitle>
+            <DialogDescription>
+              Select the type of analysis result to generate a professional proposal email.
+            </DialogDescription>
           </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="compose-recipient" className="text-right">
-                To
-              </Label>
-              <Input
-                id="compose-recipient"
-                type="email"
-                value={composeRecipient}
-                onChange={(e) => setComposeRecipient(e.target.value)}
-                className="col-span-3"
-                placeholder="recipient@example.com"
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="compose-subject" className="text-right">
-                Subject
-              </Label>
-              <Input
-                id="compose-subject"
-                value={composeSubject}
-                onChange={(e) => setComposeSubject(e.target.value)}
-                className="col-span-3"
-                placeholder="Email subject"
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="compose-message" className="text-right">
-                Message
-              </Label>
-              <Textarea
-                id="compose-message"
-                value={composeMessage}
-                onChange={(e) => setComposeMessage(e.target.value)}
-                className="col-span-3"
-                placeholder="Your email message..."
-                rows={10}
-              />
-            </div>
-            <div className="bg-blue-50 p-3 rounded-md text-sm text-blue-800 flex items-start gap-2">
-              <Info className="h-4 w-4 mt-0.5 flex-shrink-0" />
-              <div>
-                <p className="font-medium">Note:</p>
-                <p>This will send a custom email with your message. The email will be sent from Just Protected.</p>
+
+          {selectedSearch && (
+            <div className="space-y-4">
+              <div className="bg-blue-50 p-4 rounded-lg border">
+                <h3 className="font-medium text-blue-900 mb-2">Client Information</h3>
+                <p>
+                  <strong>Name:</strong> {getSafeValue(selectedSearch, "search_data.name")}{" "}
+                  {getSafeValue(selectedSearch, "search_data.surname")}
+                </p>
+                <p>
+                  <strong>Email:</strong> {getSafeValue(selectedSearch, "search_data.email")}
+                </p>
+                <p>
+                  <strong>Trademark:</strong> {getSafeValue(selectedSearch, "search_data.trademarkName")}
+                </p>
+                <p>
+                  <strong>Goods/Services:</strong> {getSafeValue(selectedSearch, "search_data.goodsAndServices")}
+                </p>
+              </div>
+
+              <div className="space-y-3">
+                <h3 className="font-medium">Select Analysis Type:</h3>
+
+                <div className="grid gap-3">
+                  <Button
+                    variant="outline"
+                    className="justify-start h-auto p-4 bg-green-50 hover:bg-green-100 border-green-200"
+                    onClick={() => {
+                      const email = generateProposalEmail(selectedSearch, "no-exact-match")
+                      setProposalEmailContent(email.content)
+                      setCustomMessage(email.content)
+                      setRecipientEmail(getSafeValue(selectedSearch, "search_data.email"))
+                      setShowProposalPreview(false)
+                      setEmailDialogOpen(true)
+                    }}
+                  >
+                    <div className="text-left">
+                      <div className="font-medium text-green-800">✅ No Exact Match Found (85-95% Success)</div>
+                      <div className="text-sm text-green-600">Strong registration potential, recommend proceeding</div>
+                    </div>
+                  </Button>
+
+                  <Button
+                    variant="outline"
+                    className="justify-start h-auto p-4 bg-yellow-50 hover:bg-yellow-100 border-yellow-200"
+                    onClick={() => {
+                      const email = generateProposalEmail(selectedSearch, "similar-trademarks")
+                      setProposalEmailContent(email.content)
+                      setCustomMessage(email.content)
+                      setRecipientEmail(getSafeValue(selectedSearch, "search_data.email"))
+                      setShowProposalPreview(false)
+                      setEmailDialogOpen(true)
+                    }}
+                  >
+                    <div className="text-left">
+                      <div className="font-medium text-yellow-800">⚠️ Similar Trademarks Found (40-70% Success)</div>
+                      <div className="text-sm text-yellow-600">Moderate risk, strategic approach needed</div>
+                    </div>
+                  </Button>
+
+                  <Button
+                    variant="outline"
+                    className="justify-start h-auto p-4 bg-red-50 hover:bg-red-100 border-red-200"
+                    onClick={() => {
+                      const email = generateProposalEmail(selectedSearch, "exact-match")
+                      setProposalEmailContent(email.content)
+                      setCustomMessage(email.content)
+                      setRecipientEmail(getSafeValue(selectedSearch, "search_data.email"))
+                      setShowProposalPreview(false)
+                      setEmailDialogOpen(true)
+                    }}
+                  >
+                    <div className="text-left">
+                      <div className="font-medium text-red-800">🚨 Exact Match Found (5-15% Success)</div>
+                      <div className="text-sm text-red-600">High risk, alternative strategies required</div>
+                    </div>
+                  </Button>
+                </div>
+              </div>
+
+              <div className="bg-gray-50 p-3 rounded-md text-sm text-gray-600">
+                <p>
+                  <strong>Note:</strong> Selecting an option will generate a professional proposal email and open it in
+                  the email composer for review and sending.
+                </p>
               </div>
             </div>
-          </div>
+          )}
+
           <DialogFooter>
-            <Button variant="outline" onClick={() => setComposeDialogOpen(false)}>
+            <Button variant="outline" onClick={() => setShowProposalPreview(false)}>
               Cancel
-            </Button>
-            <Button
-              onClick={handleComposeEmail}
-              disabled={!composeRecipient || !composeSubject || !composeMessage || sendingComposeEmail}
-            >
-              {sendingComposeEmail ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Sending...
-                </>
-              ) : (
-                "Send Email"
-              )}
             </Button>
           </DialogFooter>
         </DialogContent>

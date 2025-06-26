@@ -19,7 +19,7 @@ interface Country {
 
 const mostRequestedCountries: Country[] = [
   { name: "European Union", flag: "https://flagcdn.com/w40/eu.png", price: 1900 },
-  { name: "United States", flag: "https://flagcdn.com/w40/us.png", price: 749 },
+  { name: "United States", flag: "https://flagcdn.com/w40/us.png", price: 1050 },
   { name: "Germany", flag: "https://flagcdn.com/w40/de.png", price: 750 },
   { name: "Spain", flag: "https://flagcdn.com/w40/es.png", price: 490 },
   { name: "United Kingdom", flag: "https://flagcdn.com/w40/gb.png", price: 790 },
@@ -27,33 +27,58 @@ const mostRequestedCountries: Country[] = [
 ]
 
 const northAmericaCountries: Country[] = [
-  { name: "Canada", flag: "https://flagcdn.com/w40/ca.png", price: 490 },
-  { name: "Mexico", flag: "https://flagcdn.com/w40/mx.png", price: 590 },
-]
-
-const europeCountries: Country[] = [
-  { name: "France", flag: "https://flagcdn.com/w40/fr.png", price: 590 },
-  { name: "Italy", flag: "https://flagcdn.com/w40/it.png", price: 690 },
-  { name: "Portugal", flag: "https://flagcdn.com/w40/pt.png", price: 490 },
-  { name: "Greece", flag: "https://flagcdn.com/w40/gr.png", price: 590 },
-]
-
-const southAmericaCountries: Country[] = [
-  { name: "Argentina", flag: "https://flagcdn.com/w40/ar.png", price: 490 },
-  { name: "Brazil", flag: "https://flagcdn.com/w40/br.png", price: 590 },
-  { name: "Chile", flag: "https://flagcdn.com/w40/cl.png", price: 690 },
-  { name: "Colombia", flag: "https://flagcdn.com/w40/co.png", price: 490 },
-  { name: "Peru", flag: "https://flagcdn.com/w40/pe.png", price: 590 },
-  { name: "Venezuela", flag: "https://flagcdn.com/w40/ve.png", price: 490 },
+  { name: "Canada", flag: "https://flagcdn.com/w40/ca.png", price: 1400 },
+  { name: "Mexico", flag: "https://flagcdn.com/w40/mx.png", price: 750 },
 ]
 
 const centralAmericaCountries: Country[] = [
-  { name: "Costa Rica", flag: "https://flagcdn.com/w40/cr.png", price: 490 },
-  { name: "Panama", flag: "https://flagcdn.com/w40/pa.png", price: 590 },
-  { name: "Guatemala", flag: "https://flagcdn.com/w40/gt.png", price: 690 },
-  { name: "Honduras", flag: "https://flagcdn.com/w40/hn.png", price: 490 },
-  { name: "El Salvador", flag: "https://flagcdn.com/w40/sv.png", price: 590 },
-  { name: "Nicaragua", flag: "https://flagcdn.com/w40/ni.png", price: 490 },
+  { name: "Costa Rica", flag: "https://flagcdn.com/w40/cr.png", price: 620 },
+  { name: "El Salvador", flag: "https://flagcdn.com/w40/sv.png", price: 650 },
+  { name: "Guatemala", flag: "https://flagcdn.com/w40/gt.png", price: 680 },
+  { name: "Nicaragua", flag: "https://flagcdn.com/w40/ni.png", price: 700 },
+  { name: "Panama", flag: "https://flagcdn.com/w40/pa.png", price: 700 },
+  { name: "Honduras", flag: "https://flagcdn.com/w40/hn.png", price: 750 },
+  { name: "Belize", flag: "https://flagcdn.com/w40/bz.png", price: 980 },
+]
+
+const southAmericaCountries: Country[] = [
+  { name: "Argentina", flag: "https://flagcdn.com/w40/ar.png", price: 520 },
+  { name: "Paraguay", flag: "https://flagcdn.com/w40/py.png", price: 580 },
+  { name: "Venezuela", flag: "https://flagcdn.com/w40/ve.png", price: 680 },
+  { name: "Uruguay", flag: "https://flagcdn.com/w40/uy.png", price: 680 },
+  { name: "Ecuador", flag: "https://flagcdn.com/w40/ec.png", price: 700 },
+  { name: "Brazil", flag: "https://flagcdn.com/w40/br.png", price: 720 },
+  { name: "Peru", flag: "https://flagcdn.com/w40/pe.png", price: 750 },
+  { name: "Chile", flag: "https://flagcdn.com/w40/cl.png", price: 780 },
+  { name: "Bolivia", flag: "https://flagcdn.com/w40/bo.png", price: 850 },
+  { name: "Colombia", flag: "https://flagcdn.com/w40/co.png", price: 880 },
+]
+
+const caribbeanCountries: Country[] = [
+  { name: "Anguilla", flag: "https://flagcdn.com/w40/ai.png", price: 1100 },
+  { name: "Antigua and Barbuda", flag: "https://flagcdn.com/w40/ag.png", price: 850 },
+  { name: "Aruba", flag: "https://flagcdn.com/w40/aw.png", price: 1050 },
+  { name: "Bahamas", flag: "https://flagcdn.com/w40/bs.png", price: 1150 },
+  { name: "Barbados", flag: "https://flagcdn.com/w40/bb.png", price: 1400 },
+  { name: "Bermuda", flag: "https://flagcdn.com/w40/bm.png", price: 1850 },
+  { name: "British Virgin Islands", flag: "https://flagcdn.com/w40/vg.png", price: 1100 },
+  { name: "Cayman Islands", flag: "https://flagcdn.com/w40/ky.png", price: 1350 },
+  { name: "Cuba", flag: "https://flagcdn.com/w40/cu.png", price: 1450 },
+  { name: "Curacao", flag: "https://flagcdn.com/w40/cw.png", price: 1300 },
+  { name: "Dominica", flag: "https://flagcdn.com/w40/dm.png", price: 1150 },
+  { name: "Grenada", flag: "https://flagcdn.com/w40/gd.png", price: 1250 },
+  { name: "Guyana", flag: "https://flagcdn.com/w40/gy.png", price: 650 },
+  { name: "Haiti", flag: "https://flagcdn.com/w40/ht.png", price: 800 },
+  { name: "Jamaica", flag: "https://flagcdn.com/w40/jm.png", price: 1350 },
+  { name: "Montserrat", flag: "https://flagcdn.com/w40/ms.png", price: 800 },
+  { name: "Puerto Rico", flag: "https://flagcdn.com/w40/pr.png", price: 900 },
+  { name: "Dominican Republic", flag: "https://flagcdn.com/w40/do.png", price: 700 },
+  { name: "Saint Kitts and Nevis", flag: "https://flagcdn.com/w40/kn.png", price: 1200 },
+  { name: "Saint Lucia", flag: "https://flagcdn.com/w40/lc.png", price: 1150 },
+  { name: "Saint Vincent and the Grenadines", flag: "https://flagcdn.com/w40/vc.png", price: 750 },
+  { name: "Sint Maarten", flag: "https://flagcdn.com/w40/sx.png", price: 1350 },
+  { name: "Suriname", flag: "https://flagcdn.com/w40/sr.png", price: 950 },
+  { name: "Trinidad and Tobago", flag: "https://flagcdn.com/w40/tt.png", price: 900 },
 ]
 
 export function PricingPlans() {
@@ -63,9 +88,9 @@ export function PricingPlans() {
   const allCountries = [
     ...mostRequestedCountries,
     ...northAmericaCountries,
-    ...europeCountries,
-    ...southAmericaCountries,
     ...centralAmericaCountries,
+    ...southAmericaCountries,
+    ...caribbeanCountries,
   ]
 
   const toggleCountry = (countryName: string) => {
@@ -173,9 +198,9 @@ export function PricingPlans() {
                 <AccordionItem value="europe">
                   <AccordionTrigger className="text-xl font-semibold">Europe</AccordionTrigger>
                   <AccordionContent className="grid gap-4 pt-4">
-                    {europeCountries.map((country) => (
+                    {/*europeCountries.map((country) => (
                       <CountryCard key={country.name} country={country} />
-                    ))}
+                    ))*/}
                   </AccordionContent>
                 </AccordionItem>
 
@@ -189,9 +214,18 @@ export function PricingPlans() {
                 </AccordionItem>
 
                 <AccordionItem value="central-america">
-                  <AccordionTrigger className="text-xl font-semibold">Central America and Caribbean</AccordionTrigger>
+                  <AccordionTrigger className="text-xl font-semibold">Central America</AccordionTrigger>
                   <AccordionContent className="grid gap-4 pt-4">
                     {centralAmericaCountries.map((country) => (
+                      <CountryCard key={country.name} country={country} />
+                    ))}
+                  </AccordionContent>
+                </AccordionItem>
+
+                <AccordionItem value="caribbean">
+                  <AccordionTrigger className="text-xl font-semibold">Caribbean</AccordionTrigger>
+                  <AccordionContent className="grid gap-4 pt-4">
+                    {caribbeanCountries.map((country) => (
                       <CountryCard key={country.name} country={country} />
                     ))}
                   </AccordionContent>
