@@ -484,7 +484,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <div>
       <div id="verification-form" className="max-w-6xl mx-auto px-4 pt-24 pb-12 scroll-mt-16">
         {isLoading && (
           <div className="w-full p-4 mb-4 bg-blue-50 text-blue-700 rounded-md">
@@ -804,19 +804,12 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
                 <p className="text-gray-600 mb-4">Total: {totalPrice.toFixed(2)} EUR</p>
                 {clientSecret && (
                   <Elements stripe={stripePromise} options={{ clientSecret }}>
-                    <PaymentForm amount={totalPrice} formData={formData} />
+                    <PaymentForm amount={totalPrice} formData={formData} handleSubmit={handleSubmit} />
                   </Elements>
                 )}
                 {errorMessage && (
                   <div className="mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">{errorMessage}</div>
                 )}
-                <Button
-                  type="submit"
-                  onClick={handleSubmit}
-                  className="mt-4 w-full bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2"
-                >
-                  Submit
-                </Button>
               </div>
             )}
           </div>
@@ -880,7 +873,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
           </div>
         </div>
       </div>
-    </form>
+    </div>
   )
 }
 
