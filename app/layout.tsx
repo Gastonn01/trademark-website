@@ -46,7 +46,7 @@ export const metadata = {
     ],
     apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
   },
-    generator: 'v0.dev'
+  generator: "v0.dev",
 }
 
 export default function RootLayout({
@@ -66,6 +66,15 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/site.webmanifest" />
         <link rel="shortcut icon" href="https://justprotected.com/favicon.ico" type="image/x-icon" />
+        <Script src="https://www.googletagmanager.com/gtag/js?id=AW-17302849833" strategy="afterInteractive" />
+        <Script id="google-ads" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'AW-17302849833');
+          `}
+        </Script>
       </head>
       <body>
         <Suspense fallback={<div>Loading...</div>}>{children}</Suspense>
