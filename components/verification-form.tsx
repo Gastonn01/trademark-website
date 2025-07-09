@@ -16,14 +16,9 @@ import { Badge } from "@/components/ui/badge"
 import { CountrySelectCard } from "@/components/country-select-card"
 import Image from "next/image"
 import { Upload, ChevronDown, ChevronUp } from "lucide-react"
-import { loadStripe } from "@stripe/stripe-js"
-import { Elements } from "@stripe/react-stripe-js"
-import { PaymentForm } from "@/components/payment-form"
 import { TrademarkClassesDialog } from "@/components/trademark-classes-dialog"
 import { useRouter } from "next/navigation"
 import { useMemo } from "react"
-
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
 
 interface FormData {
   trademarkType: string
@@ -62,8 +57,8 @@ interface VerificationFormProps {
 }
 
 const topCountries: CountryData[] = [
-  { name: "European Union", flag: "eu", price: 1310, additionalClassPrice: 425 },
-  { name: "United States", flag: "us", price: 749, additionalClassPrice: 499 },
+  { name: "European Union", flag: "eu", price: 1900, additionalClassPrice: 425 },
+  { name: "United States", flag: "us", price: 1050, additionalClassPrice: 499 },
   { name: "Germany", flag: "de", price: 750, additionalClassPrice: 500 },
   { name: "Spain", flag: "es", price: 490, additionalClassPrice: 385 },
   { name: "United Kingdom", flag: "gb", price: 790, additionalClassPrice: 300 },
@@ -74,15 +69,15 @@ const regions: RegionData[] = [
   {
     name: "North America",
     countries: [
-      { name: "United States", flag: "us", price: 749, additionalClassPrice: 499 },
-      { name: "Canada", flag: "ca", price: 199, additionalClassPrice: 100 },
-      { name: "Mexico", flag: "mx", price: 540, additionalClassPrice: 270 },
+      { name: "United States", flag: "us", price: 1050, additionalClassPrice: 499 },
+      { name: "Canada", flag: "ca", price: 1400, additionalClassPrice: 150 },
+      { name: "Mexico", flag: "mx", price: 750, additionalClassPrice: 540 },
     ],
   },
   {
     name: "Europe",
     countries: [
-      { name: "European Union", flag: "eu", price: 1310, additionalClassPrice: 425 },
+      { name: "European Union", flag: "eu", price: 1900, additionalClassPrice: 425 },
       { name: "Spain", flag: "es", price: 490, additionalClassPrice: 385 },
       { name: "France", flag: "fr", price: 580, additionalClassPrice: 190 },
       { name: "United Kingdom", flag: "gb", price: 790, additionalClassPrice: 300 },
@@ -98,54 +93,66 @@ const regions: RegionData[] = [
   {
     name: "South America",
     countries: [
-      { name: "Argentina", flag: "ar", price: 400, additionalClassPrice: 350 },
-      { name: "Bolivia", flag: "bo", price: 675, additionalClassPrice: 585 },
-      { name: "Brazil", flag: "br", price: 499, additionalClassPrice: 418 },
-      { name: "Chile", flag: "cl", price: 599, additionalClassPrice: 499 },
-      { name: "Colombia", flag: "co", price: 690, additionalClassPrice: 490 },
-      { name: "Ecuador", flag: "ec", price: 549, additionalClassPrice: 549 },
-      { name: "Paraguay", flag: "py", price: 399, additionalClassPrice: 399 },
-      { name: "Peru", flag: "pe", price: 580, additionalClassPrice: 570 },
-      { name: "Uruguay", flag: "uy", price: 479, additionalClassPrice: 299 },
-      { name: "Venezuela", flag: "ve", price: 510, additionalClassPrice: 510 },
+      { name: "Argentina", flag: "ar", price: 520, additionalClassPrice: 350 },
+      { name: "Bolivia", flag: "bo", price: 850, additionalClassPrice: 585 },
+      { name: "Brazil", flag: "br", price: 720, additionalClassPrice: 418 },
+      { name: "Chile", flag: "cl", price: 780, additionalClassPrice: 499 },
+      { name: "Colombia", flag: "co", price: 880, additionalClassPrice: 490 },
+      { name: "Ecuador", flag: "ec", price: 700, additionalClassPrice: 549 },
+      { name: "Paraguay", flag: "py", price: 580, additionalClassPrice: 399 },
+      { name: "Peru", flag: "pe", price: 750, additionalClassPrice: 570 },
+      { name: "Uruguay", flag: "uy", price: 680, additionalClassPrice: 299 },
+      { name: "Venezuela", flag: "ve", price: 680, additionalClassPrice: 510 },
+    ],
+  },
+  {
+    name: "Central America",
+    countries: [
+      { name: "Belize", flag: "bz", price: 980, additionalClassPrice: 795 },
+      { name: "Costa Rica", flag: "cr", price: 620, additionalClassPrice: 299 },
+      { name: "El Salvador", flag: "sv", price: 650, additionalClassPrice: 495 },
+      { name: "Guatemala", flag: "gt", price: 680, additionalClassPrice: 520 },
+      { name: "Honduras", flag: "hn", price: 750, additionalClassPrice: 595 },
+      { name: "Nicaragua", flag: "ni", price: 700, additionalClassPrice: 299 },
+      { name: "Panama", flag: "pa", price: 700, additionalClassPrice: 440 },
     ],
   },
   {
     name: "Central America and Caribbean",
     countries: [
-      { name: "Anguilla", flag: "ai", price: 880, additionalClassPrice: 430 },
-      { name: "Antigua and Barbuda", flag: "ag", price: 660, additionalClassPrice: 330 },
-      { name: "Aruba", flag: "aw", price: 820, additionalClassPrice: 170 },
-      { name: "Bahamas", flag: "bs", price: 935, additionalClassPrice: 935 },
-      { name: "Barbados", flag: "bb", price: 1150, additionalClassPrice: 1150 },
-      { name: "Belize", flag: "bz", price: 795, additionalClassPrice: 795 },
-      { name: "Bermuda", flag: "bm", price: 1539, additionalClassPrice: 1539 },
-      { name: "BES Islands", flag: "bq", price: 760, additionalClassPrice: 199 },
-      { name: "British Virgin Islands", flag: "vg", price: 870, additionalClassPrice: 480 },
-      { name: "Cayman Islands", flag: "ky", price: 1080, additionalClassPrice: 350 },
-      { name: "Costa Rica", flag: "cr", price: 460, additionalClassPrice: 299 },
-      { name: "Cuba", flag: "cu", price: 1100, additionalClassPrice: 730 },
-      { name: "Curacao", flag: "cw", price: 1050, additionalClassPrice: 200 },
-      { name: "Dominica", flag: "dm", price: 890, additionalClassPrice: 530 },
-      { name: "Dominican Republic", flag: "do", price: 540, additionalClassPrice: 420 },
-      { name: "El Salvador", flag: "sv", price: 495, additionalClassPrice: 495 },
-      { name: "Grenada", flag: "gd", price: 995, additionalClassPrice: 280 },
-      { name: "Guatemala", flag: "gt", price: 520, additionalClassPrice: 520 },
-      { name: "Guyana", flag: "gy", price: 490, additionalClassPrice: 210 },
-      { name: "Haiti", flag: "ht", price: 640, additionalClassPrice: 430 },
-      { name: "Honduras", flag: "hn", price: 595, additionalClassPrice: 595 },
-      { name: "Jamaica", flag: "jm", price: 1070, additionalClassPrice: 355 },
-      { name: "Montserrat", flag: "ms", price: 645, additionalClassPrice: 315 },
-      { name: "Nicaragua", flag: "ni", price: 540, additionalClassPrice: 299 },
-      { name: "Panama", flag: "pa", price: 540, additionalClassPrice: 440 },
-      { name: "Puerto Rico", flag: "pr", price: 710, additionalClassPrice: 680 },
-      { name: "Saint Kitts and Nevis", flag: "kn", price: 930, additionalClassPrice: 390 },
-      { name: "Saint Lucia", flag: "lc", price: 890, additionalClassPrice: 390 },
-      { name: "Saint Vincent and the Grenadines", flag: "vc", price: 570, additionalClassPrice: 570 },
-      { name: "Sint Maarten", flag: "sx", price: 1090, additionalClassPrice: 200 },
-      { name: "Suriname", flag: "sr", price: 760, additionalClassPrice: 160 },
-      { name: "Trinidad and Tobago", flag: "tt", price: 720, additionalClassPrice: 250 },
-      { name: "Turks and Caicos Islands", flag: "tc", price: 1850, additionalClassPrice: 1850 },
+      { name: "Anguilla", flag: "ai", price: 1100, additionalClassPrice: 430 },
+      { name: "Antigua and Barbuda", flag: "ag", price: 850, additionalClassPrice: 330 },
+      { name: "Aruba", flag: "aw", price: 1050, additionalClassPrice: 170 },
+      { name: "Bahamas", flag: "bs", price: 1150, additionalClassPrice: 935 },
+      { name: "Barbados", flag: "bb", price: 1400, additionalClassPrice: 1150 },
+      { name: "Belize", flag: "bz", price: 980, additionalClassPrice: 795 },
+      { name: "Bermuda", flag: "bm", price: 1850, additionalClassPrice: 1539 },
+      { name: "BES Islands", flag: "bq", price: 880, additionalClassPrice: 199 },
+      { name: "British Virgin Islands", flag: "vg", price: 1100, additionalClassPrice: 480 },
+      { name: "Cayman Islands", flag: "ky", price: 1350, additionalClassPrice: 350 },
+      { name: "Costa Rica", flag: "cr", price: 620, additionalClassPrice: 299 },
+      { name: "Cuba", flag: "cu", price: 1450, additionalClassPrice: 730 },
+      { name: "Curacao", flag: "cw", price: 1300, additionalClassPrice: 200 },
+      { name: "Dominica", flag: "dm", price: 1150, additionalClassPrice: 530 },
+      { name: "Dominican Republic", flag: "do", price: 700, additionalClassPrice: 420 },
+      { name: "El Salvador", flag: "sv", price: 650, additionalClassPrice: 495 },
+      { name: "Grenada", flag: "gd", price: 1250, additionalClassPrice: 280 },
+      { name: "Guatemala", flag: "gt", price: 680, additionalClassPrice: 520 },
+      { name: "Guyana", flag: "gy", price: 650, additionalClassPrice: 210 },
+      { name: "Haiti", flag: "ht", price: 800, additionalClassPrice: 430 },
+      { name: "Honduras", flag: "hn", price: 750, additionalClassPrice: 595 },
+      { name: "Jamaica", flag: "jm", price: 1350, additionalClassPrice: 355 },
+      { name: "Montserrat", flag: "ms", price: 800, additionalClassPrice: 315 },
+      { name: "Nicaragua", flag: "ni", price: 700, additionalClassPrice: 299 },
+      { name: "Panama", flag: "pa", price: 700, additionalClassPrice: 440 },
+      { name: "Puerto Rico", flag: "pr", price: 900, additionalClassPrice: 680 },
+      { name: "Saint Kitts and Nevis", flag: "kn", price: 1200, additionalClassPrice: 390 },
+      { name: "Saint Lucia", flag: "lc", price: 1150, additionalClassPrice: 390 },
+      { name: "Saint Vincent and the Grenadines", flag: "vc", price: 750, additionalClassPrice: 570 },
+      { name: "Sint Maarten", flag: "sx", price: 1350, additionalClassPrice: 200 },
+      { name: "Suriname", flag: "sr", price: 950, additionalClassPrice: 160 },
+      { name: "Trinidad and Tobago", flag: "tt", price: 900, additionalClassPrice: 250 },
+      { name: "Turks and Caicos Islands", flag: "tc", price: 1950, additionalClassPrice: 1850 },
     ],
   },
   {
@@ -256,7 +263,7 @@ interface VerificationFormContentProps {
 
 const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoading, initialData }) => {
   const [step, setStep] = useState(1)
-  const totalSteps = 5
+  const totalSteps = 4 // Reduced from 5 to 4 (removed payment step)
   const [formData, setFormData] = useState<FormData>({
     trademarkType: "",
     trademarkName: "",
@@ -274,10 +281,9 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
   const [selectedCountries, setSelectedCountries] = useState<CountrySelection[]>([])
   const [searchTerm, setSearchTerm] = useState("")
   const [expandedRegions, setExpandedRegions] = useState<string[]>([])
-  const [clientSecret, setClientSecret] = useState<string | null>(null)
   const router = useRouter()
   const [files, setFiles] = useState<File[]>([])
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const searchId = searchParams.get("search_id")
 
   // Pre-fill form with initial data
@@ -360,33 +366,6 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
     }, 0)
   }, [selectedCountries, formData.selectedClasses])
 
-  useEffect(() => {
-    if (step === 5 && totalPrice > 0) {
-      fetch("/api/create-payment-intent", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount: totalPrice }),
-      })
-        .then((res) => {
-          if (!res.ok) {
-            throw new Error("Network response was not ok")
-          }
-          return res.json()
-        })
-        .then((data) => {
-          if (data.clientSecret) {
-            setClientSecret(data.clientSecret)
-          } else {
-            throw new Error("No client secret received")
-          }
-        })
-        .catch((error) => {
-          console.error("Error:", error)
-          setErrorMessage("Failed to initialize payment. Please try again.")
-        })
-    }
-  }, [step, totalPrice])
-
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const nonEmptyFiles = Array.from(e.target.files).filter((file) => file.size > 0)
@@ -434,6 +413,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setIsSubmitting(true)
 
     const formDataToSend = new FormData()
     formDataToSend.append("formType", "verification")
@@ -469,6 +449,8 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
       }
     } catch (error) {
       console.error("Error:", error)
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -511,7 +493,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
             {/* Progress bar */}
             <div className="mb-12">
               <div className="flex justify-between mb-2">
-                {["Trademark Details", "Countries", "Classes", "Contact Info", "Payment"].map((label, index) => (
+                {["Trademark Details", "Countries", "Classes", "Contact Info"].map((label, index) => (
                   <span
                     key={label}
                     className={`text-sm font-medium ${step > index ? "text-indigo-600" : "text-gray-500"}`}
@@ -794,22 +776,21 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
                   <Label htmlFor="files">Adjuntar archivos (JPG, PNG, PDF)</Label>
                   <Input id="files" type="file" onChange={handleFileUpload} accept=".jpg,.jpeg,.png,.pdf" multiple />
                 </div>
-                {renderNavigationButtons(5, !formData.name || !formData.surname || !formData.email || !formData.phone)}
-              </div>
-            )}
 
-            {step === 5 && (
-              <div>
-                <h2 className="text-2xl font-semibold mb-4 text-indigo-700">Payment</h2>
-                <p className="text-gray-600 mb-4">Total: {totalPrice.toFixed(2)} EUR</p>
-                {clientSecret && (
-                  <Elements stripe={stripePromise} options={{ clientSecret }}>
-                    <PaymentForm amount={totalPrice} formData={formData} handleSubmit={handleSubmit} />
-                  </Elements>
-                )}
-                {errorMessage && (
-                  <div className="mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">{errorMessage}</div>
-                )}
+                {/* Submit Button */}
+                <div className="flex justify-between mt-8">
+                  <Button variant="outline" onClick={() => setStep(step - 1)} className="px-4 py-2">
+                    Back
+                  </Button>
+                  <div className="flex-grow"></div>
+                  <Button
+                    onClick={handleSubmit}
+                    disabled={!formData.name || !formData.surname || !formData.email || !formData.phone || isSubmitting}
+                    className="px-8 py-3 bg-green-600 hover:bg-green-700 text-white text-lg font-semibold"
+                  >
+                    {isSubmitting ? "Sending..." : "SEND"}
+                  </Button>
+                </div>
               </div>
             )}
           </div>
