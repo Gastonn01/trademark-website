@@ -3,25 +3,42 @@ import { createClient } from "@supabase/supabase-js"
 
 export async function GET(request: NextRequest) {
   try {
-    console.log("=== Admin API Debug ===")
+    console.log("=== Admin Searches API Debug ===")
+    console.log("Request URL:", request.url)
+    console.log("Request headers:", Object.fromEntries(request.headers.entries()))
 
     const status = request.nextUrl.searchParams.get("status") || "all"
-    console.log("Status filter:", status)
+    const timestamp = request.nextUrl.searchParams.get("t") || "none"
+    const refresh = request.nextUrl.searchParams.get("refresh") || "false"
 
-    // Create Supabase client with restored database
+    console.log("Query params:", { status, timestamp, refresh })
+
+    // Log environment variables (without exposing sensitive data)
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
+    console.log("Environment check:")
+    console.log("- NEXT_PUBLIC_SUPABASE_URL:", supabaseUrl ? `${supabaseUrl.substring(0, 20)}...` : "MISSING")
+    console.log("- SUPABASE_SERVICE_ROLE_KEY:", process.env.SUPABASE_SERVICE_ROLE_KEY ? "Present" : "Missing")
+    console.log("- NEXT_PUBLIC_SUPABASE_ANON_KEY:", process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ? "Present" : "Missing")
+
     if (!supabaseUrl || !supabaseKey) {
+      console.error("Missing Supabase environment variables")
       return NextResponse.json({
         data: [],
-        error: "Missing Supabase environment variables",
+        error: "Missing Supabase environment variables - check Vercel deployment settings",
         source: "env-error",
         success: false,
         timestamp: new Date().toISOString(),
+        debug: {
+          supabaseUrl: !!supabaseUrl,
+          supabaseKey: !!supabaseKey,
+          nodeEnv: process.env.NODE_ENV,
+        },
       })
     }
 
+    // Create Supabase client
     const supabase = createClient(supabaseUrl, supabaseKey, {
       auth: {
         autoRefreshToken: false,
@@ -29,9 +46,10 @@ export async function GET(request: NextRequest) {
       },
     })
 
-    console.log("Testing database connection...")
+    console.log("Supabase client created successfully")
 
-    // Test connection first
+    // Test connection with a simple query first
+    console.log("Testing database connection...")
     const { data: testData, error: testError } = await supabase.from("trademark_searches").select("id").limit(1)
 
     if (testError) {
@@ -41,11 +59,31 @@ export async function GET(request: NextRequest) {
       if (testError.message?.includes("relation") && testError.message?.includes("does not exist")) {
         return NextResponse.json({
           data: [],
-          error: "Table 'trademark_searches' does not exist - please run the database setup script",
+          error: "Table 'trademark_searches' does not exist in Supabase database",
           source: "table-missing",
           success: false,
           timestamp: new Date().toISOString(),
           setup_required: true,
+          debug: {
+            errorCode: testError.code,
+            errorMessage: testError.message,
+            errorDetails: testError.details,
+          },
+        })
+      }
+
+      if (testError.message?.includes("permission") || testError.message?.includes("policy")) {
+        return NextResponse.json({
+          data: [],
+          error: "Database permission denied - check RLS policies and API keys",
+          source: "permission-error",
+          success: false,
+          timestamp: new Date().toISOString(),
+          debug: {
+            errorCode: testError.code,
+            errorMessage: testError.message,
+            suggestion: "Check if RLS is enabled and policies allow read access",
+          },
         })
       }
 
@@ -55,32 +93,44 @@ export async function GET(request: NextRequest) {
         source: "database-error",
         success: false,
         timestamp: new Date().toISOString(),
+        debug: {
+          errorCode: testError.code,
+          errorMessage: testError.message,
+          errorDetails: testError.details,
+        },
       })
     }
 
-    console.log("Connection successful, fetching data...")
+    console.log("Database connection successful")
 
-    // Build the query
+    // Build the main query
     let query = supabase.from("trademark_searches").select("*").order("created_at", { ascending: false })
 
     if (status && status !== "all") {
       query = query.eq("status", status)
+      console.log(`Filtering by status: ${status}`)
     }
 
+    console.log("Executing main query...")
     const { data, error } = await query
 
     if (error) {
-      console.error("Data fetch error:", error)
+      console.error("Main query error:", error)
       return NextResponse.json({
         data: [],
         error: `Data fetch failed: ${error.message}`,
         source: "fetch-error",
         success: false,
         timestamp: new Date().toISOString(),
+        debug: {
+          errorCode: error.code,
+          errorMessage: error.message,
+          errorDetails: error.details,
+        },
       })
     }
 
-    console.log(`Successfully fetched ${data?.length || 0} records`)
+    console.log(`Successfully fetched ${data?.length || 0} records from trademark_searches table`)
 
     // Handle empty data
     if (!data || data.length === 0) {
@@ -91,10 +141,15 @@ export async function GET(request: NextRequest) {
         success: true,
         timestamp: new Date().toISOString(),
         message: "Database connected successfully but no records found",
+        debug: {
+          tableExists: true,
+          queryStatus: "success",
+          recordCount: 0,
+        },
       })
     }
 
-    // Transform the data
+    // Transform the data to match expected format
     const transformedData = data.map((search, index) => {
       let searchResults = {}
 
@@ -104,7 +159,7 @@ export async function GET(request: NextRequest) {
           try {
             searchResults = JSON.parse(search.search_results)
           } catch (parseError) {
-            console.warn(`Failed to parse search_results for record ${search.id}`)
+            console.warn(`Failed to parse search_results for record ${search.id}:`, parseError)
             searchResults = { raw: search.search_results }
           }
         } else if (typeof search.search_results === "object") {
@@ -116,8 +171,8 @@ export async function GET(request: NextRequest) {
         id: search.id || `record-${index}`,
         form_type: search.form_type || search.notes || "free-search",
         search_data: {
-          name: searchResults.firstName || searchResults.name || "",
-          surname: searchResults.lastName || searchResults.surname || "",
+          name: searchResults.name || searchResults.firstName || "",
+          surname: searchResults.surname || searchResults.lastName || "",
           email: search.email || searchResults.email || "",
           trademarkName: search.trademark_name || searchResults.trademarkName || "",
           goodsAndServices: searchResults.goodsAndServices || searchResults.description || "",
@@ -128,6 +183,8 @@ export async function GET(request: NextRequest) {
       }
     })
 
+    console.log("Data transformation completed successfully")
+
     return NextResponse.json({
       data: transformedData,
       error: null,
@@ -135,9 +192,16 @@ export async function GET(request: NextRequest) {
       success: true,
       timestamp: new Date().toISOString(),
       count: transformedData.length,
+      debug: {
+        tableExists: true,
+        queryStatus: "success",
+        recordCount: transformedData.length,
+        statusFilter: status,
+        refreshRequested: refresh === "true",
+      },
     })
   } catch (error) {
-    console.error("Critical error in admin API:", error)
+    console.error("Critical error in admin searches API:", error)
 
     return NextResponse.json(
       {
@@ -146,6 +210,10 @@ export async function GET(request: NextRequest) {
         source: "critical-error",
         success: false,
         timestamp: new Date().toISOString(),
+        debug: {
+          errorType: error instanceof Error ? error.constructor.name : typeof error,
+          stack: error instanceof Error ? error.stack : undefined,
+        },
       },
       { status: 500 },
     )
@@ -154,8 +222,12 @@ export async function GET(request: NextRequest) {
 
 export async function PATCH(request: NextRequest) {
   try {
+    console.log("=== Admin Searches PATCH API ===")
+
     const body = await request.json()
     const { searchId, status } = body
+
+    console.log("PATCH request body:", { searchId, status })
 
     if (!searchId || !status) {
       return NextResponse.json(
@@ -166,8 +238,6 @@ export async function PATCH(request: NextRequest) {
         { status: 400 },
       )
     }
-
-    console.log(`Updating search ${searchId} to status: ${status}`)
 
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
     const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -184,6 +254,8 @@ export async function PATCH(request: NextRequest) {
 
     const supabase = createClient(supabaseUrl, supabaseKey)
 
+    console.log(`Updating search ${searchId} to status: ${status}`)
+
     const { data, error } = await supabase
       .from("trademark_searches")
       .update({
@@ -199,6 +271,12 @@ export async function PATCH(request: NextRequest) {
         {
           error: `Failed to update status: ${error.message}`,
           success: false,
+          debug: {
+            errorCode: error.code,
+            errorMessage: error.message,
+            searchId,
+            status,
+          },
         },
         { status: 500 },
       )
