@@ -1,5 +1,4 @@
 "use client"
-
 import { NavBar } from "@/components/nav-bar"
 import { Footer } from "@/components/footer"
 import { AdminPanel } from "@/components/admin-panel"

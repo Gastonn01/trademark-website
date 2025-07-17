@@ -415,51 +415,40 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
     e.preventDefault()
     setIsSubmitting(true)
 
-    console.log("🚀 Starting form submission...")
-    console.log("Form data to submit:", formData)
-    console.log("Selected countries:", selectedCountries)
-    console.log("Files:", files)
+    const formDataToSend = new FormData()
+    formDataToSend.append("formType", "verification")
+
+    Object.entries(formData).forEach(([key, value]) => {
+      if (typeof value === "string" || value instanceof Blob) {
+        formDataToSend.append(key, value)
+      } else if (Array.isArray(value)) {
+        value.forEach((item, index) => {
+          formDataToSend.append(`${key}[${index}]`, JSON.stringify(item))
+        })
+      } else if (typeof value === "object" && value !== null) {
+        formDataToSend.append(key, JSON.stringify(value))
+      }
+    })
+
+    files.forEach((file) => {
+      if (file.size > 0) {
+        formDataToSend.append("files", file)
+      }
+    })
 
     try {
-      // Prepare the data to send
-      const submissionData = {
-        trademarkType: formData.trademarkType,
-        trademarkName: formData.trademarkName,
-        goodsAndServices: formData.goodsAndServices,
-        countries: selectedCountries,
-        selectedClasses: formData.selectedClasses,
-        name: formData.name,
-        surname: formData.surname,
-        email: formData.email,
-        phone: formData.phone,
-        marketing: formData.marketing,
-      }
-
-      console.log("📤 Sending data to API:", submissionData)
-
       const response = await fetch("/api/submit-form", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json", // 👈 ESTE HEADER ES NECESARIO
-        },
-        body: JSON.stringify(submissionData),
+        body: formDataToSend,
       })
 
-      console.log("📥 Response status:", response.status)
-      console.log("📥 Response ok:", response.ok)
-
       if (response.ok) {
-        const result = await response.json()
-        console.log("✅ Form submitted successfully:", result)
-        router.push("/thank-you-verification")
+        router.push("/thank-you")
       } else {
-        const errorData = await response.json()
-        console.error("❌ Form submission failed:", errorData)
-        alert("Error submitting form. Please try again.")
+        console.error("Error al enviar el formulario")
       }
     } catch (error) {
-      console.error("💥 Form submission error:", error)
-      alert("Error submitting form. Please try again.")
+      console.error("Error:", error)
     } finally {
       setIsSubmitting(false)
     }
@@ -782,6 +771,10 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
                   <Label htmlFor="marketing" className="text-lg text-gray-700">
                     I agree to receive marketing emails.
                   </Label>
+                </div>
+                <div>
+                  <Label htmlFor="files">Adjuntar archivos (JPG, PNG, PDF)</Label>
+                  <Input id="files" type="file" onChange={handleFileUpload} accept=".jpg,.jpeg,.png,.pdf" multiple />
                 </div>
 
                 {/* Submit Button */}
