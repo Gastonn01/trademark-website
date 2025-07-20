@@ -54,7 +54,7 @@ export async function POST(req: Request) {
 
     try {
       console.log("Saving search data to Supabase...")
-      // Save data to Supabase
+      // Save data to Supabase using the corrected format
       const saveResult = await saveSearchData(searchId, searchData, formType as string)
       console.log("Save result:", saveResult)
     } catch (error) {

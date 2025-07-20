@@ -1,193 +1,361 @@
 import { createClient } from "@supabase/supabase-js"
-// Add this import at the top of the file
-// import { getMockSearchData } from "./mock-data"
 
-// In-memory storage as a fallback
-const inMemoryStorage: { [key: string]: any } = {}
+// Client-side configuration (for admin panel)
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-// Create a singleton Supabase client
-let supabaseInstance: any = null
+// Server-side configuration (for API routes) - using the correct environment variable names
+const supabaseUrl_server = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
-export function getSupabaseClient() {
-  // If we already have an instance, return it
-  if (supabaseInstance) {
-    return supabaseInstance
+// Log environment variable status for debugging
+console.log("🔍 Environment variables status:", {
+  NEXT_PUBLIC_SUPABASE_URL: !!supabaseUrl,
+  NEXT_PUBLIC_SUPABASE_ANON_KEY: !!supabaseKey,
+  SUPABASE_SERVICE_ROLE_KEY: !!supabaseServiceKey,
+})
+
+// ✅ 1. Crea el cliente de Supabase (client-side)
+export const getSupabaseClient = () => {
+  if (!supabaseUrl || !supabaseKey) {
+    throw new Error(
+      "Missing Supabase environment variables. Please check NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY",
+    )
   }
+  return createClient(supabaseUrl, supabaseKey)
+}
 
-  // Check if we have the required environment variables
-  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
-    console.error("Missing Supabase environment variables")
+// ✅ 2. Trae todos los registros para el panel admin
+export const getAllSearchData = async () => {
+  try {
+    const supabase = getSupabaseClient()
+    const { data, error } = await supabase
+      .from("trademark_searches")
+      .select("*")
+      .order("created_at", { ascending: false })
+
+    if (error) {
+      console.error("❌ Error fetching all search data:", error)
+      throw new Error(error.message)
+    }
+
+    console.log("✅ Successfully fetched", data?.length || 0, "search records")
+    return data
+  } catch (error) {
+    console.error("❌ Error in getAllSearchData:", error)
+    throw error
+  }
+}
+
+// ✅ 3. Trae un único registro por ID (opcional para vista detalle)
+export const getSearchData = async (id: string) => {
+  try {
+    const supabase = getSupabaseClient()
+    const { data, error } = await supabase.from("trademark_searches").select("*").eq("id", id).single()
+
+    if (error) {
+      console.error("❌ Error fetching search data by ID:", error)
+      throw new Error(error.message)
+    }
+
+    console.log("✅ Successfully fetched search record:", id)
+    return data
+  } catch (error) {
+    console.error("❌ Error in getSearchData:", error)
+    throw error
+  }
+}
+
+// ✅ 4. Verifica si la tabla está operativa (uso interno/test)
+export const ensureTableExists = async () => {
+  try {
+    const supabase = getSupabaseClient()
+    const { error } = await supabase.from("trademark_searches").select("id").limit(1)
+
+    if (error) {
+      console.error("❌ Table check failed:", error)
+      throw new Error("Table check failed: " + error.message)
+    }
+
+    console.log("✅ Table exists and is accessible")
+    return true
+  } catch (error) {
+    console.error("❌ Error in ensureTableExists:", error)
+    throw error
+  }
+}
+
+// Server-side Supabase client (for API routes) - with proper fallback
+export const supabase = (() => {
+  // Only create server client if we have the service role key
+  if (!supabaseUrl_server || !supabaseServiceKey) {
+    console.warn("⚠️ Server-side Supabase client not available - missing environment variables:", {
+      SUPABASE_URL: !!supabaseUrl_server,
+      SUPABASE_SERVICE_ROLE_KEY: !!supabaseServiceKey,
+    })
     return null
   }
 
   try {
-    // Create a new Supabase client with the service role key for admin operations
-    supabaseInstance = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY, {
+    console.log("✅ Creating server-side Supabase client")
+    return createClient(supabaseUrl_server, supabaseServiceKey, {
       auth: {
+        autoRefreshToken: false,
         persistSession: false,
       },
     })
-    console.log("Supabase client initialized successfully")
-    return supabaseInstance
   } catch (error) {
-    console.error("Failed to initialize Supabase client:", error)
+    console.error("❌ Failed to create server-side Supabase client:", error)
     return null
   }
-}
+})()
 
-// Function to create the trademark_searches table if it doesn't exist
+// Ensure the trademark_searches table exists (server-side only)
 export async function ensureTrademarkSearchesTableExists() {
-  const supabase = getSupabaseClient()
   if (!supabase) {
-    console.error("Supabase client not available")
+    console.warn("⚠️ Skipping table check - server-side Supabase client not available")
     return false
   }
 
   try {
-    // Check if the table exists by trying to select from it
-    const { error } = await supabase.from("trademark_searches").select("id").limit(1)
+    console.log("🔍 Checking if trademark_searches table exists...")
 
-    if (error && error.message.includes("does not exist")) {
-      console.log("trademark_searches table does not exist, creating it...")
+    const { data, error } = await supabase.from("trademark_searches").select("id").limit(1)
 
-      // Create the table using SQL
-      const { error: createError } = await supabase.rpc("create_trademark_searches_table")
+    if (error) {
+      console.log("❌ Table does not exist or is not accessible:", error.message)
 
-      if (createError) {
-        console.error("Error creating trademark_searches table:", createError)
+      // Try to create the table if we have the RPC function
+      try {
+        const { error: createError } = await supabase.rpc("create_trademark_searches_table_if_not_exists")
 
-        // Try direct SQL as a fallback
-        const { error: sqlError } = await supabase.rpc("execute_sql", {
-          sql: `
-            CREATE TABLE IF NOT EXISTS trademark_searches (
-              id UUID PRIMARY KEY,
-              email TEXT,
-              trademark_name TEXT,
-              status TEXT DEFAULT 'pending',
-              notes TEXT,
-              search_results JSONB,
-              created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-              updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-            );
-          `,
-        })
-
-        if (sqlError) {
-          console.error("Error creating table with direct SQL:", sqlError)
+        if (createError) {
+          console.error("❌ Error creating table:", createError)
           return false
         }
-      }
 
-      console.log("trademark_searches table created successfully")
+        console.log("✅ Table created successfully")
+        return true
+      } catch (rpcError) {
+        console.warn("⚠️ Could not create table - RPC function may not exist")
+        return false
+      }
+    } else {
+      console.log("✅ Table already exists")
       return true
     }
-
-    console.log("trademark_searches table already exists")
-    return true
   } catch (error) {
-    console.error("Error checking/creating trademark_searches table:", error)
+    console.error("❌ Error in ensureTrademarkSearchesTableExists:", error)
     return false
   }
 }
 
-// Add back the original ensureTableExists function for backward compatibility
-export async function ensureTableExists() {
-  return ensureTrademarkSearchesTableExists()
-}
-
-// Mock data function
-export function getMockSearchData(status?: string) {
-  const mockData = [
-    {
-      id: "mock-1",
-      form_type: "free-search",
-      search_data: {
-        name: "John",
-        surname: "Doe",
-        email: "john.doe@example.com",
-        trademarkName: "MockBrand",
-        goodsAndServices: "Software services",
-      },
-      created_at: new Date().toISOString(),
-      status: "pending",
-    },
-    {
-      id: "mock-2",
-      form_type: "comprehensive-search",
-      search_data: {
-        name: "Jane",
-        surname: "Smith",
-        email: "jane.smith@example.com",
-        trademarkName: "TestMark",
-        goodsAndServices: "Consulting services",
-      },
-      created_at: new Date().toISOString(),
-      status: "processing",
-    },
-    {
-      id: "mock-3",
-      form_type: "registration",
-      search_data: {
-        name: "Bob",
-        surname: "Johnson",
-        email: "bob.johnson@example.com",
-        trademarkName: "BobCorp",
-        goodsAndServices: "Manufacturing",
-      },
-      created_at: new Date().toISOString(),
-      status: "completed",
-    },
-  ]
-
-  if (status && status !== "all") {
-    return mockData.filter((item) => item.status === status)
+// Save search data with corrected format (server-side only)
+export async function saveSearchData(searchData: any) {
+  if (!supabase) {
+    console.error("❌ Cannot save search data - server-side Supabase client not available")
+    throw new Error("Server-side Supabase client not available")
   }
-  return mockData
-}
 
-// SIMPLIFIED getAllSearchData function that doesn't cause JSON parsing issues
-export async function getAllSearchData(limit = 100, offset = 0, status?: string) {
-  console.log("getAllSearchData called with:", { limit, offset, status })
+  try {
+    console.log("💾 Attempting to save search data:", {
+      id: searchData.id,
+      formType: searchData.form_type,
+      trademarkName: searchData.trademark_name,
+      email: searchData.email,
+    })
 
-  // For now, always return mock data to avoid JSON parsing issues
-  // This can be re-enabled once the database is properly set up
-  return {
-    data: getMockSearchData(status),
-    error: null,
-    source: "mock-safe",
+    // Prepare the insert object with only valid Supabase columns
+    const insertData = {
+      id: searchData.id,
+      trademark_name: searchData.trademark_name || "Unknown",
+      email: searchData.email || "no-email@example.com",
+      status: searchData.status || "submitted",
+      search_results: {
+        // Store all the original data in the JSONB field
+        trademark_name: searchData.trademark_name,
+        trademark_type: searchData.trademark_type,
+        goods_and_services: searchData.goods_and_services,
+        countries: searchData.countries,
+        classes: searchData.classes,
+        name: searchData.name,
+        surname: searchData.surname,
+        email: searchData.email,
+        phone: searchData.phone,
+        marketing_consent: searchData.marketing_consent,
+        formType: searchData.form_type,
+        searchId: searchData.id,
+        submittedAt: searchData.created_at,
+        updatedAt: searchData.updated_at,
+      },
+      created_at: searchData.created_at,
+      updated_at: searchData.updated_at,
+    }
+
+    console.log("📝 Insert data prepared:", insertData)
+
+    const { data, error } = await supabase.from("trademark_searches").insert(insertData).select()
+
+    if (error) {
+      console.error("❌ SUPABASE INSERT FAILED:", error)
+      throw error
+    }
+
+    console.log("✅ SUPABASE INSERT SUCCESSFUL!", data)
+    return { success: true, data }
+  } catch (error) {
+    console.error("❌ Error in saveSearchData:", error)
+    throw error
   }
 }
 
-// Simplified saveSearchData function
-export async function saveSearchData(searchId: string, searchData: any, formType: string) {
-  console.log("saveSearchData called with:", { searchId, formType })
-
-  // Always save to in-memory storage first
-  inMemoryStorage[searchId] = {
-    id: searchId,
-    search_results: searchData,
-    notes: formType,
-    created_at: new Date().toISOString(),
+// Get all searches for admin panel (server-side)
+export async function getAllSearches() {
+  if (!supabase) {
+    console.warn("⚠️ Cannot fetch searches - server-side Supabase client not available")
+    return []
   }
 
-  return { success: true, source: "memory" }
+  try {
+    const { data, error } = await supabase
+      .from("trademark_searches")
+      .select("*")
+      .order("created_at", { ascending: false })
+
+    if (error) {
+      console.error("Error fetching searches:", error)
+      throw error
+    }
+
+    return data || []
+  } catch (error) {
+    console.error("Error in getAllSearches:", error)
+    throw error
+  }
 }
 
-export async function getSearchData(searchId: string) {
-  return inMemoryStorage[searchId] || null
+// Update search status (server-side)
+export async function updateSearchStatus(id: string, status: string, notes?: string) {
+  if (!supabase) {
+    console.warn("⚠️ Cannot update search - server-side Supabase client not available")
+    throw new Error("Server-side Supabase client not available")
+  }
+
+  try {
+    const updateData: any = { status }
+    if (notes) {
+      updateData.search_results = { notes }
+    }
+
+    const { data, error } = await supabase.from("trademark_searches").update(updateData).eq("id", id).select()
+
+    if (error) {
+      console.error("Error updating search:", error)
+      throw error
+    }
+
+    return data
+  } catch (error) {
+    console.error("Error in updateSearchStatus:", error)
+    throw error
+  }
 }
 
-export async function updateSearchStatus(searchId: string, status: string) {
-  console.log("Mock: Updating search status", { searchId, status })
-  return { data: { id: searchId, status }, error: null, source: "mock" }
+// Get search by ID (server-side)
+export async function getSearchById(id: string) {
+  if (!supabase) {
+    console.warn("⚠️ Cannot fetch search by ID - server-side Supabase client not available")
+    throw new Error("Server-side Supabase client not available")
+  }
+
+  try {
+    const { data, error } = await supabase.from("trademark_searches").select("*").eq("id", id).single()
+
+    if (error) {
+      console.error("Error fetching search by ID:", error)
+      throw error
+    }
+
+    return data
+  } catch (error) {
+    console.error("Error in getSearchById:", error)
+    throw error
+  }
 }
 
-export async function updateSearchResults(searchId: string, updatedResults: any) {
-  console.log("Mock: Updating search results", { searchId, updatedResults })
-  return { data: { id: searchId, results: updatedResults }, error: null, source: "mock" }
+// Delete search (server-side)
+export async function deleteSearch(id: string) {
+  if (!supabase) {
+    console.warn("⚠️ Cannot delete search - server-side Supabase client not available")
+    throw new Error("Server-side Supabase client not available")
+  }
+
+  try {
+    const { error } = await supabase.from("trademark_searches").delete().eq("id", id)
+
+    if (error) {
+      console.error("Error deleting search:", error)
+      throw error
+    }
+
+    return { success: true }
+  } catch (error) {
+    console.error("Error in deleteSearch:", error)
+    throw error
+  }
 }
 
-export async function sendSearchResultsEmail(searchId: string, recipientEmail: string, customMessage?: string) {
-  console.log(`Mock: Sending email to ${recipientEmail} for search ${searchId}`)
-  return { success: true, message: "Email sent successfully" }
+// Client-side update function for admin panel
+export const updateSearchRecord = async (id: string, status: string, notes?: string) => {
+  try {
+    const supabase = getSupabaseClient()
+
+    // Get current search data
+    const { data: currentData, error: fetchError } = await supabase
+      .from("trademark_searches")
+      .select("*")
+      .eq("id", id)
+      .single()
+
+    if (fetchError) {
+      throw fetchError
+    }
+
+    // Update with new status and notes
+    const updateData = {
+      status,
+      search_results: {
+        ...currentData.search_results,
+        notes: notes || currentData.search_results?.notes,
+      },
+    }
+
+    const { data, error } = await supabase.from("trademark_searches").update(updateData).eq("id", id).select()
+
+    if (error) {
+      throw error
+    }
+
+    return data
+  } catch (error) {
+    console.error("Error in updateSearchRecord:", error)
+    throw error
+  }
+}
+
+// Client-side delete function for admin panel
+export const deleteSearchRecord = async (id: string) => {
+  try {
+    const supabase = getSupabaseClient()
+    const { error } = await supabase.from("trademark_searches").delete().eq("id", id)
+
+    if (error) {
+      throw error
+    }
+
+    return { success: true }
+  } catch (error) {
+    console.error("Error in deleteSearchRecord:", error)
+    throw error
+  }
 }

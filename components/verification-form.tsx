@@ -284,6 +284,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
   const router = useRouter()
   const [files, setFiles] = useState<File[]>([])
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitError, setSubmitError] = useState<string | null>(null)
   const searchId = searchParams.get("search_id")
 
   // Pre-fill form with initial data
@@ -414,41 +415,61 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
-
-    const formDataToSend = new FormData()
-    formDataToSend.append("formType", "verification")
-
-    Object.entries(formData).forEach(([key, value]) => {
-      if (typeof value === "string" || value instanceof Blob) {
-        formDataToSend.append(key, value)
-      } else if (Array.isArray(value)) {
-        value.forEach((item, index) => {
-          formDataToSend.append(`${key}[${index}]`, JSON.stringify(item))
-        })
-      } else if (typeof value === "object" && value !== null) {
-        formDataToSend.append(key, JSON.stringify(value))
-      }
-    })
-
-    files.forEach((file) => {
-      if (file.size > 0) {
-        formDataToSend.append("files", file)
-      }
-    })
+    setSubmitError(null)
 
     try {
-      const response = await fetch("/api/submit-form", {
+      const formDataToSend = new FormData()
+
+      // Add form type
+      formDataToSend.append("formType", "verification")
+
+      // Add all form data
+      Object.entries(formData).forEach(([key, value]) => {
+        if (typeof value === "string") {
+          formDataToSend.append(key, value)
+        } else if (typeof value === "boolean") {
+          formDataToSend.append(key, value.toString())
+        } else if (Array.isArray(value)) {
+          value.forEach((item, index) => {
+            if (typeof item === "object") {
+              formDataToSend.append(`${key}[${index}]`, JSON.stringify(item))
+            } else {
+              formDataToSend.append(`${key}[${index}]`, item.toString())
+            }
+          })
+        }
+      })
+
+      // Add selected countries
+      selectedCountries.forEach((country, index) => {
+        formDataToSend.append(`countries[${index}]`, JSON.stringify(country))
+      })
+
+      // Add files
+      files.forEach((file) => {
+        if (file.size > 0) {
+          formDataToSend.append("files", file)
+        }
+      })
+
+      console.log("Submitting verification form...")
+      const response = await fetch("/api/submit-verification", {
         method: "POST",
         body: formDataToSend,
       })
 
-      if (response.ok) {
+      const result = await response.json()
+
+      if (response.ok && result.success) {
+        console.log("Form submitted successfully:", result)
         router.push("/thank-you")
       } else {
-        console.error("Error al enviar el formulario")
+        console.error("Form submission failed:", result)
+        setSubmitError(result.message || "There was an error submitting your form. Please try again.")
       }
     } catch (error) {
-      console.error("Error:", error)
+      console.error("Error submitting form:", error)
+      setSubmitError("There was an error submitting your form. Please try again.")
     } finally {
       setIsSubmitting(false)
     }
@@ -477,6 +498,12 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
         {initialData && (
           <div className="w-full p-4 mb-4 bg-green-50 text-green-700 rounded-md">
             <p className="text-center">✓ Your information has been pre-filled based on your analysis</p>
+          </div>
+        )}
+
+        {submitError && (
+          <div className="w-full p-4 mb-4 bg-red-50 text-red-700 rounded-md">
+            <p className="text-center">{submitError}</p>
           </div>
         )}
 
@@ -858,6 +885,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
   )
 }
 
+// Named export for VerificationForm
 export function VerificationForm({ initialData, isLoading = false }: VerificationFormProps) {
   return (
     <Suspense fallback={<div>Loading...</div>}>
@@ -865,3 +893,6 @@ export function VerificationForm({ initialData, isLoading = false }: Verificatio
     </Suspense>
   )
 }
+
+// Default export
+export default VerificationForm
