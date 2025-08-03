@@ -354,7 +354,7 @@ export async function deleteSearch(id: string, tableType: "trademark_searches" |
   }
 }
 
-// Legacy function for backward compatibility
+// Legacy function for backward compatibility - THIS IS THE MISSING EXPORT
 export async function ensureTrademarkSearchesTableExists() {
   return ensureTablesExist()
 }
