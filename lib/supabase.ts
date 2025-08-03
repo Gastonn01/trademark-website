@@ -13,12 +13,12 @@ export async function ensureTablesExist() {
   try {
     const { error } = await supabase.rpc("create_trademark_searches_table_if_not_exists")
     if (error) {
-      console.error("Error ensuring tables exist:", error)
+      console.error("Error creating table:", error)
       throw error
     }
     return true
   } catch (error) {
-    console.error("Failed to ensure tables exist:", error)
+    console.error("Error ensuring tables exist:", error)
     throw error
   }
 }
@@ -40,7 +40,7 @@ export async function saveSearchData(searchData: any) {
 
     return data[0]
   } catch (error) {
-    console.error("Failed to save search data:", error)
+    console.error("Error in saveSearchData:", error)
     throw error
   }
 }
@@ -56,7 +56,7 @@ export async function updateSearchStatus(searchId: string, status: string) {
 
     return data[0]
   } catch (error) {
-    console.error("Failed to update search status:", error)
+    console.error("Error in updateSearchStatus:", error)
     throw error
   }
 }
@@ -72,9 +72,13 @@ export async function getSearchById(searchId: string) {
 
     return data
   } catch (error) {
-    console.error("Failed to get search by ID:", error)
+    console.error("Error in getSearchById:", error)
     throw error
   }
+}
+
+export async function getSearchData(searchId: string) {
+  return getSearchById(searchId)
 }
 
 export async function deleteSearch(searchId: string) {
@@ -88,7 +92,7 @@ export async function deleteSearch(searchId: string) {
 
     return true
   } catch (error) {
-    console.error("Failed to delete search:", error)
+    console.error("Error in deleteSearch:", error)
     throw error
   }
 }
@@ -105,14 +109,17 @@ export async function getAllSearches() {
       throw error
     }
 
-    return data || []
+    return data
   } catch (error) {
-    console.error("Failed to get all searches:", error)
+    console.error("Error in getAllSearches:", error)
     throw error
   }
 }
 
-// Alias exports for compatibility
-export const getSearchData = getSearchById
-export const ensureTableExists = ensureTablesExist
-export const getAllSearchData = getAllSearches
+export async function getAllSearchData() {
+  return getAllSearches()
+}
+
+export function ensureTableExists() {
+  return ensureTablesExist()
+}
