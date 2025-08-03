@@ -13,8 +13,8 @@ export async function POST(request: NextRequest) {
     // Extract form data
     const trademarkName = formData.get("trademarkName") as string
     const trademarkType = formData.get("trademarkType") as string
-    const countriesString = formData.get("countries") as string
-    const classesString = formData.get("classes") as string
+    const countriesData = formData.get("countries") as string
+    const classesData = formData.get("classes") as string
     const firstName = formData.get("firstName") as string
     const lastName = formData.get("lastName") as string
     const email = formData.get("email") as string
@@ -26,24 +26,34 @@ export async function POST(request: NextRequest) {
     const country = formData.get("country") as string
 
     // Parse countries and classes
-    const countries = countriesString ? JSON.parse(countriesString) : []
-    const classes = classesString ? JSON.parse(classesString) : []
+    let countries = []
+    let classes = []
+
+    try {
+      countries = countriesData ? JSON.parse(countriesData) : []
+      classes = classesData ? JSON.parse(classesData) : []
+    } catch (e) {
+      console.error("Error parsing countries or classes:", e)
+    }
 
     // Handle file uploads
-    const files = formData.getAll("files") as File[]
     const uploadedFiles = []
+    const files = formData.getAll("files") as File[]
 
     for (const file of files) {
-      if (file.size > 0) {
-        const filename = `${uuidv4()}-${file.name}`
-        const blob = await put(filename, file, {
-          access: "public",
-        })
-        uploadedFiles.push({
-          name: file.name,
-          url: blob.url,
-          size: file.size,
-        })
+      if (file && file.size > 0) {
+        try {
+          const blob = await put(file.name, file, {
+            access: "public",
+          })
+          uploadedFiles.push({
+            name: file.name,
+            url: blob.url,
+            size: file.size,
+          })
+        } catch (error) {
+          console.error("Error uploading file:", error)
+        }
       }
     }
 
@@ -68,84 +78,97 @@ export async function POST(request: NextRequest) {
       postal_code: postalCode,
       country: country,
       files: uploadedFiles,
-      status: "pending",
+      status: "submitted",
       created_at: new Date().toISOString(),
     }
 
-    await saveSearchData(searchData)
+    try {
+      await saveSearchData(searchData)
+    } catch (error) {
+      console.error("Error saving to database:", error)
+    }
 
     // Send confirmation email to user
-    await resend.emails.send({
-      from: "Trademark Registration <noreply@trademarkregistration.com>",
-      to: [email],
-      subject: "Trademark Verification Request Received",
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #333;">Thank you for your trademark verification request</h2>
-          
-          <p>Dear ${firstName} ${lastName},</p>
-          
-          <p>We have successfully received your trademark verification request. Here are the details:</p>
-          
-          <div style="background-color: #f5f5f5; padding: 20px; border-radius: 8px; margin: 20px 0;">
-            <h3 style="margin-top: 0; color: #333;">Submission Details</h3>
-            <p><strong>Reference ID:</strong> ${referenceId}</p>
-            <p><strong>Trademark Name:</strong> ${trademarkName}</p>
-            <p><strong>Trademark Type:</strong> ${trademarkType}</p>
-            <p><strong>Countries:</strong> ${countries.map((c: any) => c.name).join(", ")}</p>
-            <p><strong>Classes:</strong> ${classes.map((c: any) => `Class ${c.number}: ${c.description}`).join(", ")}</p>
-            <p><strong>Files Uploaded:</strong> ${uploadedFiles.length} file(s)</p>
-          </div>
-          
-          <p>Your request is now being processed by our trademark experts. You can expect to receive a detailed report within 24-48 hours.</p>
-          
-          <p>If you have any questions, please don't hesitate to contact us.</p>
-          
-          <p>Best regards,<br>
-          The Trademark Registration Team</p>
+    const userEmailHtml = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2 style="color: #333;">Thank you for your trademark verification request</h2>
+        
+        <p>Dear ${firstName} ${lastName},</p>
+        
+        <p>We have received your trademark verification request and our team will begin processing it immediately.</p>
+        
+        <div style="background-color: #f5f5f5; padding: 20px; border-radius: 8px; margin: 20px 0;">
+          <h3 style="margin-top: 0; color: #333;">Submission Details:</h3>
+          <p><strong>Reference ID:</strong> ${referenceId}</p>
+          <p><strong>Trademark Name:</strong> ${trademarkName}</p>
+          <p><strong>Type:</strong> ${trademarkType}</p>
+          <p><strong>Countries:</strong> ${countries.map((c: any) => c.name).join(", ")}</p>
+          <p><strong>Classes:</strong> ${classes.map((c: any) => `Class ${c.number}: ${c.description}`).join(", ")}</p>
+          ${uploadedFiles.length > 0 ? `<p><strong>Files:</strong> ${uploadedFiles.map((f) => f.name).join(", ")}</p>` : ""}
         </div>
-      `,
+        
+        <p>Our trademark experts will review your request and you can expect to hear from us within 24-48 hours.</p>
+        
+        <p>If you have any questions, please don't hesitate to contact us.</p>
+        
+        <p>Best regards,<br>The Trademark Team</p>
+      </div>
+    `
+
+    await resend.emails.send({
+      from: "noreply@trademarkregistration.com",
+      to: email,
+      subject: "Trademark Verification Request Received",
+      html: userEmailHtml,
     })
 
     // Send notification email to admin
-    await resend.emails.send({
-      from: "Trademark Registration <noreply@trademarkregistration.com>",
-      to: ["admin@trademarkregistration.com"],
-      subject: `New Trademark Verification Request - ${referenceId}`,
-      html: `
-        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #333;">New Trademark Verification Request</h2>
-          
-          <div style="background-color: #f5f5f5; padding: 20px; border-radius: 8px; margin: 20px 0;">
-            <h3 style="margin-top: 0; color: #333;">Request Details</h3>
-            <p><strong>Reference ID:</strong> ${referenceId}</p>
-            <p><strong>Trademark Name:</strong> ${trademarkName}</p>
-            <p><strong>Trademark Type:</strong> ${trademarkType}</p>
-            <p><strong>Countries:</strong> ${countries.map((c: any) => c.name).join(", ")}</p>
-            <p><strong>Classes:</strong> ${classes.map((c: any) => `Class ${c.number}: ${c.description}`).join(", ")}</p>
-          </div>
-          
-          <div style="background-color: #f5f5f5; padding: 20px; border-radius: 8px; margin: 20px 0;">
-            <h3 style="margin-top: 0; color: #333;">Contact Information</h3>
-            <p><strong>Name:</strong> ${firstName} ${lastName}</p>
-            <p><strong>Email:</strong> ${email}</p>
-            <p><strong>Phone:</strong> ${phone}</p>
-            <p><strong>Company:</strong> ${company}</p>
-            <p><strong>Address:</strong> ${address}, ${city}, ${postalCode}, ${country}</p>
-          </div>
-          
-          <div style="background-color: #f5f5f5; padding: 20px; border-radius: 8px; margin: 20px 0;">
-            <h3 style="margin-top: 0; color: #333;">Files Uploaded</h3>
-            ${uploadedFiles
-              .map(
-                (file) => `
-              <p><a href="${file.url}" target="_blank">${file.name}</a> (${Math.round(file.size / 1024)} KB)</p>
-            `,
-              )
-              .join("")}
-          </div>
+    const adminEmailHtml = `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+        <h2 style="color: #333;">New Trademark Verification Request</h2>
+        
+        <div style="background-color: #f5f5f5; padding: 20px; border-radius: 8px; margin: 20px 0;">
+          <h3 style="margin-top: 0; color: #333;">Request Details:</h3>
+          <p><strong>Reference ID:</strong> ${referenceId}</p>
+          <p><strong>Trademark Name:</strong> ${trademarkName}</p>
+          <p><strong>Type:</strong> ${trademarkType}</p>
+          <p><strong>Countries:</strong> ${countries.map((c: any) => c.name).join(", ")}</p>
+          <p><strong>Classes:</strong> ${classes.map((c: any) => `Class ${c.number}: ${c.description}`).join(", ")}</p>
         </div>
-      `,
+        
+        <div style="background-color: #f0f8ff; padding: 20px; border-radius: 8px; margin: 20px 0;">
+          <h3 style="margin-top: 0; color: #333;">Contact Information:</h3>
+          <p><strong>Name:</strong> ${firstName} ${lastName}</p>
+          <p><strong>Email:</strong> ${email}</p>
+          <p><strong>Phone:</strong> ${phone}</p>
+          <p><strong>Company:</strong> ${company}</p>
+          <p><strong>Address:</strong> ${address}, ${city}, ${postalCode}, ${country}</p>
+        </div>
+        
+        ${
+          uploadedFiles.length > 0
+            ? `
+        <div style="background-color: #fff5f5; padding: 20px; border-radius: 8px; margin: 20px 0;">
+          <h3 style="margin-top: 0; color: #333;">Uploaded Files:</h3>
+          ${uploadedFiles
+            .map(
+              (file) => `
+            <p><a href="${file.url}" target="_blank">${file.name}</a> (${Math.round(file.size / 1024)} KB)</p>
+          `,
+            )
+            .join("")}
+        </div>
+        `
+            : ""
+        }
+      </div>
+    `
+
+    await resend.emails.send({
+      from: "noreply@trademarkregistration.com",
+      to: "admin@trademarkregistration.com",
+      subject: `New Trademark Verification Request - ${referenceId}`,
+      html: adminEmailHtml,
     })
 
     return NextResponse.json({
@@ -154,7 +177,7 @@ export async function POST(request: NextRequest) {
       referenceId,
     })
   } catch (error) {
-    console.error("Error submitting verification:", error)
-    return NextResponse.json({ success: false, message: "Failed to submit verification request" }, { status: 500 })
+    console.error("Error processing verification request:", error)
+    return NextResponse.json({ success: false, message: "Failed to process verification request" }, { status: 500 })
   }
 }

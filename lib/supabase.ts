@@ -1,9 +1,9 @@
 import { createClient } from "@supabase/supabase-js"
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+export const supabase = createClient(supabaseUrl, supabaseKey)
 
 export function getSupabaseClient() {
   return supabase
@@ -11,23 +11,20 @@ export function getSupabaseClient() {
 
 export async function ensureTablesExist() {
   try {
-    // Check if trademark_searches table exists
-    const { data, error } = await supabase.from("trademark_searches").select("id").limit(1)
-
-    if (error && error.code === "PGRST116") {
-      // Table doesn't exist, create it
-      const { error: createError } = await supabase.rpc("create_trademark_searches_table_if_not_exists")
-      if (createError) {
-        console.error("Error creating table:", createError)
-        throw createError
-      }
+    const { error } = await supabase.rpc("create_trademark_searches_table_if_not_exists")
+    if (error) {
+      console.error("Error ensuring tables exist:", error)
+      throw error
     }
-
     return true
   } catch (error) {
-    console.error("Error ensuring tables exist:", error)
+    console.error("Failed to ensure tables exist:", error)
     throw error
   }
+}
+
+export async function ensureTrademarkSearchesTableExists() {
+  return ensureTablesExist()
 }
 
 export async function saveSearchData(searchData: any) {
@@ -43,7 +40,7 @@ export async function saveSearchData(searchData: any) {
 
     return data[0]
   } catch (error) {
-    console.error("Error in saveSearchData:", error)
+    console.error("Failed to save search data:", error)
     throw error
   }
 }
@@ -59,7 +56,7 @@ export async function updateSearchStatus(searchId: string, status: string) {
 
     return data[0]
   } catch (error) {
-    console.error("Error in updateSearchStatus:", error)
+    console.error("Failed to update search status:", error)
     throw error
   }
 }
@@ -75,7 +72,7 @@ export async function getSearchById(searchId: string) {
 
     return data
   } catch (error) {
-    console.error("Error in getSearchById:", error)
+    console.error("Failed to get search by ID:", error)
     throw error
   }
 }
@@ -91,7 +88,7 @@ export async function deleteSearch(searchId: string) {
 
     return true
   } catch (error) {
-    console.error("Error in deleteSearch:", error)
+    console.error("Failed to delete search:", error)
     throw error
   }
 }
@@ -108,9 +105,9 @@ export async function getAllSearches() {
       throw error
     }
 
-    return data
+    return data || []
   } catch (error) {
-    console.error("Error in getAllSearches:", error)
+    console.error("Failed to get all searches:", error)
     throw error
   }
 }
@@ -119,4 +116,3 @@ export async function getAllSearches() {
 export const getSearchData = getSearchById
 export const ensureTableExists = ensureTablesExist
 export const getAllSearchData = getAllSearches
-export const ensureTrademarkSearchesTableExists = ensureTablesExist
