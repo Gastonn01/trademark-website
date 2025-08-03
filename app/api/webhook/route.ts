@@ -8,7 +8,16 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
 })
 
 // Initialize Resend
-const resend = new Resend(process.env.RESEND_API_KEY)
+let resend: Resend | null = null
+try {
+  if (process.env.RESEND_API_KEY) {
+    resend = new Resend(process.env.RESEND_API_KEY)
+  } else {
+    console.log("Resend API key not found, email functionality will be disabled")
+  }
+} catch (error) {
+  console.error("Failed to initialize Resend:", error)
+}
 
 export async function POST(req: Request) {
   console.log("🔔 Webhook POST request received at:", new Date().toISOString())
@@ -165,7 +174,7 @@ async function handlePaymentSuccess(paymentIntent: Stripe.PaymentIntent) {
         console.log("📧 Sending confirmation email to customer...")
 
         await resend.emails.send({
-          from: "JustProtected <noreply@justprotected.com>",
+          from: "Just Protected <noreply@justprotected.com>",
           to: [customerEmail],
           subject: "Payment Confirmation - Trademark Registration Service",
           html: `

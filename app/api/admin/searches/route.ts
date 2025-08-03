@@ -1,7 +1,4 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { createClient } from "@supabase/supabase-js"
-
-const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!)
 
 export async function GET(request: NextRequest) {
   try {
@@ -10,80 +7,76 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const statusFilter = searchParams.get("status") || "all"
     const formTypeFilter = searchParams.get("formType") || "all"
+    const tableType = (searchParams.get("tableType") as "trademark_searches" | "verification_requests" | "all") || "all"
 
-    console.log("📊 Filters:", { statusFilter, formTypeFilter })
+    console.log("📊 Filters:", { statusFilter, formTypeFilter, tableType })
 
-    // Query all rows from trademark_searches table (no filtering on Supabase side)
-    const { data, error } = await supabase
-      .from("trademark_searches")
-      .select("*")
-      .order("created_at", { ascending: false })
+    // Import dynamically to avoid module loading issues
+    const { getAllSearches } = await import("@/lib/supabase")
 
-    if (error) {
-      console.error("❌ Supabase query error:", error)
-      return NextResponse.json(
-        {
-          error: "Database query failed",
-          details: error.message,
-          data: [],
-          source: "supabase-error",
-        },
-        { status: 500 },
-      )
-    }
+    // Get data from both tables
+    const allData = await getAllSearches(tableType)
 
-    console.log(`✅ Retrieved ${data?.length || 0} total records from trademark_searches`)
+    console.log(`✅ Retrieved ${allData?.length || 0} total records from both tables`)
 
-    // Transform the data to match the expected format
-    const transformedData = (data || []).map((item) => ({
-      id: item.id,
-      trademark_name: item.trademark_name,
-      email: item.email,
-      status: item.status || "pending",
-      created_at: item.created_at,
-      search_results: item.search_results || {},
-    }))
-
-    // Apply frontend filtering based on the formType inside search_results
-    let filteredData = transformedData
+    // Apply frontend filtering
+    let filteredData = allData || []
 
     // Filter by status
     if (statusFilter !== "all") {
       filteredData = filteredData.filter((item) => item.status === statusFilter)
     }
 
-    // Filter by form type (from search_results.formType)
+    // Filter by form type
     if (formTypeFilter !== "all") {
-      filteredData = filteredData.filter((item) => item.search_results?.formType === formTypeFilter)
+      filteredData = filteredData.filter((item) => {
+        const formType = item.form_type || item.search_results?.formType
+        return formType === formTypeFilter
+      })
     }
 
     console.log(`📋 After filtering: ${filteredData.length} records`)
-    console.log(
-      "🔍 Sample data structure:",
-      filteredData[0]
-        ? {
-            id: filteredData[0].id,
-            trademark_name: filteredData[0].trademark_name,
-            email: filteredData[0].email,
-            status: filteredData[0].status,
-            formType: filteredData[0].search_results?.formType,
-          }
-        : "No data",
-    )
+
+    // Transform the data to ensure consistent structure
+    const transformedData = filteredData.map((item) => ({
+      id: item.id,
+      trademark_name: item.trademark_name,
+      email: item.email,
+      status: item.status || "pending",
+      created_at: item.created_at,
+      updated_at: item.updated_at,
+      search_results: item.search_results || {},
+      table_type: item.table_type,
+      form_type: item.form_type,
+      // Verification-specific fields (will be null for trademark_searches)
+      estimated_price: item.estimated_price || null,
+      files_count: item.files_count || null,
+      selected_countries: item.selected_countries || null,
+      selected_classes: item.selected_classes || null,
+      trademark_type: item.trademark_type || null,
+      contact_phone: item.contact_phone || null,
+      marketing_consent: item.marketing_consent || null,
+    }))
 
     return NextResponse.json({
-      data: filteredData,
-      source: "trademark-searches-table",
-      total: transformedData.length,
+      data: transformedData,
+      source: "both-tables",
+      total: allData.length,
       filtered: filteredData.length,
-      filters: { statusFilter, formTypeFilter },
+      filters: { statusFilter, formTypeFilter, tableType },
     })
   } catch (err) {
     console.error("💥 Critical error in admin searches API:", err)
+
+    // Return more detailed error information for debugging
+    const errorMessage = err instanceof Error ? err.message : String(err)
+    const errorStack = err instanceof Error ? err.stack : undefined
+
     return NextResponse.json(
       {
         error: "Internal server error",
-        details: err instanceof Error ? err.message : String(err),
+        details: errorMessage,
+        stack: process.env.NODE_ENV === "development" ? errorStack : undefined,
         data: [],
         source: "critical-error",
       },

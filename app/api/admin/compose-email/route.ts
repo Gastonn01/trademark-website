@@ -8,11 +8,12 @@ let resend: Resend | null = null
 try {
   if (process.env.RESEND_API_KEY) {
     resend = new Resend(process.env.RESEND_API_KEY)
+    console.log("✅ Compose email: Resend initialized successfully")
   } else {
-    console.log("Resend API key not found, email functionality will be disabled")
+    console.error("❌ Compose email: RESEND_API_KEY not found")
   }
 } catch (error) {
-  console.error("Failed to initialize Resend:", error)
+  console.error("❌ Compose email: Failed to initialize Resend:", error)
 }
 
 export async function POST(req: Request) {
@@ -28,26 +29,32 @@ export async function POST(req: Request) {
     const body = await req.json()
     const { recipientEmail, subject, message } = body
 
+    console.log("📧 Compose email request:", {
+      recipientEmail,
+      subject: subject?.substring(0, 50) + "...",
+      messageLength: message?.length,
+    })
+
     if (!recipientEmail || !subject || !message) {
+      console.error("❌ Missing required fields:", {
+        recipientEmail: !!recipientEmail,
+        subject: !!subject,
+        message: !!message,
+      })
       return NextResponse.json({ error: "All fields are required" }, { status: 400 })
     }
-
-    // Log key information - SAME as working email
-    console.log("Processing compose email:", {
-      email: recipientEmail,
-      subject: subject,
-    })
 
     // Try to send emails if Resend is available - EXACT same structure
     if (resend) {
       try {
+        console.log("📤 Attempting to send compose email to:", recipientEmail)
+
         // Send email using EXACT same method as working free search confirmation
-        await resend.emails
-          .send({
-            from: "Just Protected <noreply@justprotected.com>",
-            to: recipientEmail,
-            subject: subject,
-            html: `
+        const result = await resend.emails.send({
+          from: "Just Protected <noreply@justprotected.com>",
+          to: recipientEmail,
+          subject: subject,
+          html: `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -84,15 +91,6 @@ export async function POST(req: Request) {
                 <p style="color: #1e3a8a; margin: 0; font-weight: 500;">Our team of intellectual property experts is here to help you protect your trademark effectively.</p>
               </div>
               
-              <!-- Button -->
-              <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin: 30px 0;">
-                <tr>
-                  <td align="center">
-                    <a href="https://justprotected.com/verification" style="display: inline-block; background-color: #1e40af; color: #ffffff; text-decoration: none; padding: 15px 30px; border-radius: 5px; font-weight: 600; font-size: 16px;">Start Your Registration</a>
-                  </td>
-                </tr>
-              </table>
-              
               <p style="color: #4b5563; line-height: 1.6; margin-bottom: 20px;">If you have any questions or need additional information, please don't hesitate to contact our customer service team by replying to this email.</p>
               
               <p style="color: #4b5563; line-height: 1.6; margin-bottom: 10px;">Sincerely,</p>
@@ -117,18 +115,21 @@ export async function POST(req: Request) {
 </body>
 </html>
 `,
-          })
-          .catch((e) => console.error("Error sending compose email:", e))
+        })
+
+        console.log("✅ Compose email sent successfully:", result.data?.id)
       } catch (emailError) {
-        console.error("Error in email sending process:", emailError)
+        console.error("❌ Error sending compose email:", emailError)
         // Continue with process even if email fails - SAME as working email
       }
+    } else {
+      console.error("❌ Resend not initialized - compose email will not be sent")
     }
 
     return successResponse()
   } catch (error) {
     // Log the error but still return a success response - SAME as working email
-    console.error("Error processing compose email:", error)
+    console.error("❌ Error processing compose email:", error)
     return successResponse()
   }
 }

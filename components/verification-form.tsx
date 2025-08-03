@@ -1,9 +1,8 @@
 "use client"
 
 import type React from "react"
-
 import { Suspense } from "react"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -18,7 +17,6 @@ import Image from "next/image"
 import { Upload, ChevronDown, ChevronUp } from "lucide-react"
 import { TrademarkClassesDialog } from "@/components/trademark-classes-dialog"
 import { useRouter } from "next/navigation"
-import { useMemo } from "react"
 
 interface FormData {
   trademarkType: string
@@ -120,38 +118,38 @@ const regions: RegionData[] = [
   {
     name: "Central America and Caribbean",
     countries: [
-      { name: "Anguilla", flag: "ai", price: 1100, additionalClassPrice: 430 },
-      { name: "Antigua and Barbuda", flag: "ag", price: 850, additionalClassPrice: 330 },
-      { name: "Aruba", flag: "aw", price: 1050, additionalClassPrice: 170 },
-      { name: "Bahamas", flag: "bs", price: 1150, additionalClassPrice: 935 },
-      { name: "Barbados", flag: "bb", price: 1400, additionalClassPrice: 1150 },
+      { name: "Anguilla", flag: "ai", price: 1020, additionalClassPrice: 880 },
+      { name: "Antigua and Barbuda", flag: "ag", price: 780, additionalClassPrice: 660 },
+      { name: "Aruba", flag: "aw", price: 950, additionalClassPrice: 820 },
+      { name: "Bahamas", flag: "bs", price: 1100, additionalClassPrice: 935 },
+      { name: "Barbados", flag: "bb", price: 1320, additionalClassPrice: 1150 },
       { name: "Belize", flag: "bz", price: 980, additionalClassPrice: 795 },
-      { name: "Bermuda", flag: "bm", price: 1850, additionalClassPrice: 1539 },
-      { name: "BES Islands", flag: "bq", price: 880, additionalClassPrice: 199 },
-      { name: "British Virgin Islands", flag: "vg", price: 1100, additionalClassPrice: 480 },
-      { name: "Cayman Islands", flag: "ky", price: 1350, additionalClassPrice: 350 },
-      { name: "Costa Rica", flag: "cr", price: 620, additionalClassPrice: 299 },
-      { name: "Cuba", flag: "cu", price: 1450, additionalClassPrice: 730 },
-      { name: "Curacao", flag: "cw", price: 1300, additionalClassPrice: 200 },
-      { name: "Dominica", flag: "dm", price: 1150, additionalClassPrice: 530 },
-      { name: "Dominican Republic", flag: "do", price: 700, additionalClassPrice: 420 },
+      { name: "Bermuda", flag: "bm", price: 1650, additionalClassPrice: 1539 },
+      { name: "BES Islands", flag: "bq", price: 880, additionalClassPrice: 760 },
+      { name: "British Virgin Islands", flag: "vg", price: 1020, additionalClassPrice: 870 },
+      { name: "Cayman Islands", flag: "ky", price: 1230, additionalClassPrice: 1080 },
+      { name: "Costa Rica", flag: "cr", price: 620, additionalClassPrice: 460 },
+      { name: "Cuba", flag: "cu", price: 1350, additionalClassPrice: 1195 },
+      { name: "Curacao", flag: "cw", price: 1200, additionalClassPrice: 1050 },
+      { name: "Dominica", flag: "dm", price: 1050, additionalClassPrice: 890 },
+      { name: "Dominican Republic", flag: "do", price: 680, additionalClassPrice: 540 },
       { name: "El Salvador", flag: "sv", price: 650, additionalClassPrice: 495 },
-      { name: "Grenada", flag: "gd", price: 1250, additionalClassPrice: 280 },
+      { name: "Grenada", flag: "gd", price: 1150, additionalClassPrice: 995 },
       { name: "Guatemala", flag: "gt", price: 680, additionalClassPrice: 520 },
-      { name: "Guyana", flag: "gy", price: 650, additionalClassPrice: 210 },
-      { name: "Haiti", flag: "ht", price: 800, additionalClassPrice: 430 },
+      { name: "Guyana", flag: "gy", price: 640, additionalClassPrice: 490 },
+      { name: "Haiti", flag: "ht", price: 820, additionalClassPrice: 640 },
       { name: "Honduras", flag: "hn", price: 750, additionalClassPrice: 595 },
-      { name: "Jamaica", flag: "jm", price: 1350, additionalClassPrice: 355 },
-      { name: "Montserrat", flag: "ms", price: 800, additionalClassPrice: 315 },
-      { name: "Nicaragua", flag: "ni", price: 700, additionalClassPrice: 299 },
-      { name: "Panama", flag: "pa", price: 700, additionalClassPrice: 440 },
-      { name: "Puerto Rico", flag: "pr", price: 900, additionalClassPrice: 680 },
-      { name: "Saint Kitts and Nevis", flag: "kn", price: 1200, additionalClassPrice: 390 },
-      { name: "Saint Lucia", flag: "lc", price: 1150, additionalClassPrice: 390 },
-      { name: "Saint Vincent and the Grenadines", flag: "vc", price: 750, additionalClassPrice: 570 },
-      { name: "Sint Maarten", flag: "sx", price: 1350, additionalClassPrice: 200 },
-      { name: "Suriname", flag: "sr", price: 950, additionalClassPrice: 160 },
-      { name: "Trinidad and Tobago", flag: "tt", price: 900, additionalClassPrice: 250 },
+      { name: "Jamaica", flag: "jm", price: 1220, additionalClassPrice: 1070 },
+      { name: "Montserrat", flag: "ms", price: 820, additionalClassPrice: 645 },
+      { name: "Nicaragua", flag: "ni", price: 700, additionalClassPrice: 540 },
+      { name: "Panama", flag: "pa", price: 700, additionalClassPrice: 540 },
+      { name: "Puerto Rico", flag: "pr", price: 890, additionalClassPrice: 710 },
+      { name: "Saint Kitts and Nevis", flag: "kn", price: 1100, additionalClassPrice: 930 },
+      { name: "Saint Lucia", flag: "lc", price: 1050, additionalClassPrice: 890 },
+      { name: "Saint Vincent and the Grenadines", flag: "vc", price: 720, additionalClassPrice: 570 },
+      { name: "Sint Maarten", flag: "sx", price: 1240, additionalClassPrice: 1090 },
+      { name: "Suriname", flag: "sr", price: 950, additionalClassPrice: 760 },
+      { name: "Trinidad and Tobago", flag: "tt", price: 900, additionalClassPrice: 720 },
       { name: "Turks and Caicos Islands", flag: "tc", price: 1950, additionalClassPrice: 1850 },
     ],
   },
@@ -202,7 +200,7 @@ const regions: RegionData[] = [
       { name: "Bhutan", flag: "bt", price: 600, additionalClassPrice: 380 },
       { name: "Brunei", flag: "bn", price: 750, additionalClassPrice: 750 },
       { name: "Cambodia", flag: "kh", price: 629, additionalClassPrice: 629 },
-      { name: "China", flag: "cn", price: 450, additionalClassPrice: 450 },
+      { name: "China", flag: "cn", price: 590, additionalClassPrice: 550 },
       { name: "Hong Kong", flag: "hk", price: 850, additionalClassPrice: 490 },
       { name: "India", flag: "in", price: 575, additionalClassPrice: 450 },
       { name: "Indonesia", flag: "id", price: 990, additionalClassPrice: 950 },
@@ -247,6 +245,8 @@ const regions: RegionData[] = [
   {
     name: "Oceania",
     countries: [
+      { name: "Australia", flag: "au", price: 1200, additionalClassPrice: 800 },
+      { name: "New Zealand", flag: "nz", price: 950, additionalClassPrice: 650 },
       { name: "Papua New Guinea", flag: "pg", price: 930, additionalClassPrice: 780 },
       { name: "Tonga", flag: "to", price: 1700, additionalClassPrice: 1550 },
       { name: "Fiji", flag: "fj", price: 1850, additionalClassPrice: 1750 },
@@ -263,7 +263,7 @@ interface VerificationFormContentProps {
 
 const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoading, initialData }) => {
   const [step, setStep] = useState(1)
-  const totalSteps = 4 // Reduced from 5 to 4 (removed payment step)
+  const totalSteps = 4
   const [formData, setFormData] = useState<FormData>({
     trademarkType: "",
     trademarkName: "",
@@ -300,11 +300,10 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
         surname: initialData.surname || initialData.lastName || prev.surname,
         email: initialData.email || prev.email,
         phone: initialData.phone || prev.phone,
-        trademarkType: initialData.trademarkType || "word", // Default to word mark
-        selectedClasses: initialData.selectedClasses || [1], // Default to class 1
+        trademarkType: initialData.trademarkType || "word",
+        selectedClasses: initialData.selectedClasses || [1],
       }))
 
-      // Pre-select countries if available
       if (initialData.countries && Array.isArray(initialData.countries)) {
         const countrySelections = initialData.countries.map((country: any) => ({
           name: typeof country === "string" ? country : country.name,
@@ -312,7 +311,6 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
         }))
         setSelectedCountries(countrySelections)
       } else {
-        // Default to EU and US
         setSelectedCountries([
           { name: "European Union", classes: 1 },
           { name: "United States", classes: 1 },
@@ -419,11 +417,8 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
 
     try {
       const formDataToSend = new FormData()
-
-      // Add form type
       formDataToSend.append("formType", "verification")
 
-      // Add all form data
       Object.entries(formData).forEach(([key, value]) => {
         if (typeof value === "string") {
           formDataToSend.append(key, value)
@@ -440,12 +435,10 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
         }
       })
 
-      // Add selected countries
       selectedCountries.forEach((country, index) => {
         formDataToSend.append(`countries[${index}]`, JSON.stringify(country))
       })
 
-      // Add files
       files.forEach((file) => {
         if (file.size > 0) {
           formDataToSend.append("files", file)
@@ -517,7 +510,6 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
               </p>
             </div>
 
-            {/* Progress bar */}
             <div className="mb-12">
               <div className="flex justify-between mb-2">
                 {["Trademark Details", "Countries", "Classes", "Contact Info"].map((label, index) => (
@@ -668,7 +660,6 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
                 />
 
                 <div className="space-y-6">
-                  {/* Top Countries Section */}
                   <div>
                     <h3 className="text-xl font-semibold mb-4 text-indigo-700">Most Requested Countries</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -686,7 +677,6 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
                     </div>
                   </div>
 
-                  {/* Other Regions */}
                   {filteredRegions.map((region) => (
                     <div key={region.name}>
                       <button
@@ -804,7 +794,6 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
                   <Input id="files" type="file" onChange={handleFileUpload} accept=".jpg,.jpeg,.png,.pdf" multiple />
                 </div>
 
-                {/* Submit Button */}
                 <div className="flex justify-between mt-8">
                   <Button variant="outline" onClick={() => setStep(step - 1)} className="px-4 py-2">
                     Back
@@ -828,7 +817,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
                   <CardTitle>Your Selection</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-2xl font-bold mb-4">Estimated price: €{totalPrice}</p>
+                  <p className="text-2xl font-bold mb-4">Estimated price: ${totalPrice}</p>
                   <div className="mb-6 max-h-[calc(100vh-300px)] overflow-y-auto">
                     <ul>
                       {selectedCountries.map((country) => {
@@ -854,7 +843,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
                             </div>
                             <div className="flex items-center gap-2">
                               <span>{Math.max(1, formData.selectedClasses.length)} classes</span>
-                              <span className="min-w-[80px] text-right">€{totalCountryPrice}</span>
+                              <span className="min-w-[80px] text-right">${totalCountryPrice}</span>
                             </div>
                           </li>
                         )

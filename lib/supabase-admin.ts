@@ -2,15 +2,15 @@ import { createClient } from "@supabase/supabase-js"
 
 // Create admin client for server-side operations
 export function createSupabaseAdmin() {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL
   const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
   if (!supabaseUrl || !supabaseServiceKey) {
+    console.error("Missing Supabase environment variables:", {
+      supabaseUrl: !!supabaseUrl,
+      supabaseServiceKey: !!supabaseServiceKey,
+    })
     throw new Error("Missing Supabase environment variables")
-  }
-
-  if (!supabaseUrl.includes("supabase.co")) {
-    throw new Error("Invalid Supabase URL - must be a public supabase.co URL")
   }
 
   return createClient(supabaseUrl, supabaseServiceKey, {
@@ -24,10 +24,6 @@ export function createSupabaseAdmin() {
 // Simplified function to get trademark searches
 export async function getTrademarkSearches(status?: string) {
   const supabase = createSupabaseAdmin()
-
-  if (!supabase) {
-    throw new Error("Failed to create Supabase client - check environment variables")
-  }
 
   try {
     console.log("Attempting to query trademark_searches table...")
@@ -57,10 +53,6 @@ export async function getTrademarkSearches(status?: string) {
 export async function updateSearchStatus(searchId: string, status: string) {
   const supabase = createSupabaseAdmin()
 
-  if (!supabase) {
-    throw new Error("Failed to create Supabase client")
-  }
-
   try {
     const { data, error } = await supabase
       .from("trademark_searches")
@@ -85,10 +77,6 @@ export async function updateSearchStatus(searchId: string, status: string) {
 // Function to update search results and analysis
 export async function updateSearchResults(searchId: string, results: string, analysis?: string) {
   const supabase = createSupabaseAdmin()
-
-  if (!supabase) {
-    throw new Error("Failed to create Supabase client")
-  }
 
   try {
     const updateData: any = {

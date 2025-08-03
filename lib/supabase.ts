@@ -1,361 +1,377 @@
 import { createClient } from "@supabase/supabase-js"
 
-// Client-side configuration (for admin panel)
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-
-// Server-side configuration (for API routes) - using the correct environment variable names
-const supabaseUrl_server = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL
+// Validate environment variables
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
 
-// Log environment variable status for debugging
-console.log("🔍 Environment variables status:", {
-  NEXT_PUBLIC_SUPABASE_URL: !!supabaseUrl,
-  NEXT_PUBLIC_SUPABASE_ANON_KEY: !!supabaseKey,
-  SUPABASE_SERVICE_ROLE_KEY: !!supabaseServiceKey,
+if (!supabaseUrl) {
+  throw new Error("Missing SUPABASE_URL or NEXT_PUBLIC_SUPABASE_URL environment variable")
+}
+
+if (!supabaseServiceKey) {
+  throw new Error("Missing SUPABASE_SERVICE_ROLE_KEY environment variable")
+}
+
+export const supabase = createClient(supabaseUrl, supabaseServiceKey, {
+  auth: {
+    autoRefreshToken: false,
+    persistSession: false,
+  },
 })
 
-// ✅ 1. Crea el cliente de Supabase (client-side)
-export const getSupabaseClient = () => {
-  if (!supabaseUrl || !supabaseKey) {
-    throw new Error(
-      "Missing Supabase environment variables. Please check NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY",
-    )
-  }
-  return createClient(supabaseUrl, supabaseKey)
-}
-
-// ✅ 2. Trae todos los registros para el panel admin
-export const getAllSearchData = async () => {
+// Ensure both tables exist
+export async function ensureTablesExist() {
   try {
-    const supabase = getSupabaseClient()
-    const { data, error } = await supabase
-      .from("trademark_searches")
-      .select("*")
-      .order("created_at", { ascending: false })
+    console.log("🔍 Checking if tables exist...")
 
-    if (error) {
-      console.error("❌ Error fetching all search data:", error)
-      throw new Error(error.message)
-    }
-
-    console.log("✅ Successfully fetched", data?.length || 0, "search records")
-    return data
-  } catch (error) {
-    console.error("❌ Error in getAllSearchData:", error)
-    throw error
-  }
-}
-
-// ✅ 3. Trae un único registro por ID (opcional para vista detalle)
-export const getSearchData = async (id: string) => {
-  try {
-    const supabase = getSupabaseClient()
-    const { data, error } = await supabase.from("trademark_searches").select("*").eq("id", id).single()
-
-    if (error) {
-      console.error("❌ Error fetching search data by ID:", error)
-      throw new Error(error.message)
-    }
-
-    console.log("✅ Successfully fetched search record:", id)
-    return data
-  } catch (error) {
-    console.error("❌ Error in getSearchData:", error)
-    throw error
-  }
-}
-
-// ✅ 4. Verifica si la tabla está operativa (uso interno/test)
-export const ensureTableExists = async () => {
-  try {
-    const supabase = getSupabaseClient()
-    const { error } = await supabase.from("trademark_searches").select("id").limit(1)
-
-    if (error) {
-      console.error("❌ Table check failed:", error)
-      throw new Error("Table check failed: " + error.message)
-    }
-
-    console.log("✅ Table exists and is accessible")
-    return true
-  } catch (error) {
-    console.error("❌ Error in ensureTableExists:", error)
-    throw error
-  }
-}
-
-// Server-side Supabase client (for API routes) - with proper fallback
-export const supabase = (() => {
-  // Only create server client if we have the service role key
-  if (!supabaseUrl_server || !supabaseServiceKey) {
-    console.warn("⚠️ Server-side Supabase client not available - missing environment variables:", {
-      SUPABASE_URL: !!supabaseUrl_server,
-      SUPABASE_SERVICE_ROLE_KEY: !!supabaseServiceKey,
-    })
-    return null
-  }
-
-  try {
-    console.log("✅ Creating server-side Supabase client")
-    return createClient(supabaseUrl_server, supabaseServiceKey, {
-      auth: {
-        autoRefreshToken: false,
-        persistSession: false,
-      },
-    })
-  } catch (error) {
-    console.error("❌ Failed to create server-side Supabase client:", error)
-    return null
-  }
-})()
-
-// Ensure the trademark_searches table exists (server-side only)
-export async function ensureTrademarkSearchesTableExists() {
-  if (!supabase) {
-    console.warn("⚠️ Skipping table check - server-side Supabase client not available")
-    return false
-  }
-
-  try {
-    console.log("🔍 Checking if trademark_searches table exists...")
-
-    const { data, error } = await supabase.from("trademark_searches").select("id").limit(1)
-
-    if (error) {
-      console.log("❌ Table does not exist or is not accessible:", error.message)
-
-      // Try to create the table if we have the RPC function
-      try {
+    // Check trademark_searches table
+    try {
+      const { error: tsError } = await supabase.from("trademark_searches").select("id").limit(1)
+      if (tsError) {
+        console.log("❌ trademark_searches table does not exist, creating it...")
         const { error: createError } = await supabase.rpc("create_trademark_searches_table_if_not_exists")
-
         if (createError) {
-          console.error("❌ Error creating table:", createError)
-          return false
+          console.error("❌ Error creating trademark_searches table:", createError)
+          throw createError
         }
-
-        console.log("✅ Table created successfully")
-        return true
-      } catch (rpcError) {
-        console.warn("⚠️ Could not create table - RPC function may not exist")
-        return false
+        console.log("✅ trademark_searches table created successfully")
+      } else {
+        console.log("✅ trademark_searches table already exists")
       }
-    } else {
-      console.log("✅ Table already exists")
-      return true
-    }
-  } catch (error) {
-    console.error("❌ Error in ensureTrademarkSearchesTableExists:", error)
-    return false
-  }
-}
-
-// Save search data with corrected format (server-side only)
-export async function saveSearchData(searchData: any) {
-  if (!supabase) {
-    console.error("❌ Cannot save search data - server-side Supabase client not available")
-    throw new Error("Server-side Supabase client not available")
-  }
-
-  try {
-    console.log("💾 Attempting to save search data:", {
-      id: searchData.id,
-      formType: searchData.form_type,
-      trademarkName: searchData.trademark_name,
-      email: searchData.email,
-    })
-
-    // Prepare the insert object with only valid Supabase columns
-    const insertData = {
-      id: searchData.id,
-      trademark_name: searchData.trademark_name || "Unknown",
-      email: searchData.email || "no-email@example.com",
-      status: searchData.status || "submitted",
-      search_results: {
-        // Store all the original data in the JSONB field
-        trademark_name: searchData.trademark_name,
-        trademark_type: searchData.trademark_type,
-        goods_and_services: searchData.goods_and_services,
-        countries: searchData.countries,
-        classes: searchData.classes,
-        name: searchData.name,
-        surname: searchData.surname,
-        email: searchData.email,
-        phone: searchData.phone,
-        marketing_consent: searchData.marketing_consent,
-        formType: searchData.form_type,
-        searchId: searchData.id,
-        submittedAt: searchData.created_at,
-        updatedAt: searchData.updated_at,
-      },
-      created_at: searchData.created_at,
-      updated_at: searchData.updated_at,
-    }
-
-    console.log("📝 Insert data prepared:", insertData)
-
-    const { data, error } = await supabase.from("trademark_searches").insert(insertData).select()
-
-    if (error) {
-      console.error("❌ SUPABASE INSERT FAILED:", error)
+    } catch (error) {
+      console.error("❌ Error checking/creating trademark_searches table:", error)
       throw error
     }
 
-    console.log("✅ SUPABASE INSERT SUCCESSFUL!", data)
-    return { success: true, data }
+    // Check verification_requests table
+    try {
+      const { error: vrError } = await supabase.from("verification_requests").select("id").limit(1)
+      if (vrError) {
+        console.log("❌ verification_requests table does not exist, creating it...")
+        // We'll need to create this table via SQL script
+        console.log("⚠️ Please run the create-verification-requests-table.sql script")
+      } else {
+        console.log("✅ verification_requests table already exists")
+      }
+    } catch (error) {
+      console.error("❌ Error checking verification_requests table:", error)
+      throw error
+    }
+  } catch (error) {
+    console.error("❌ Error in ensureTablesExist:", error)
+    throw error
+  }
+}
+
+// Save search data to trademark_searches table
+export async function saveSearchData(searchId: string, formData: any, formType: string) {
+  try {
+    console.log("💾 Saving to trademark_searches:", {
+      searchId,
+      formType,
+      trademarkName: formData.trademarkName,
+      email: formData.email,
+    })
+
+    // Generate a unique ID if not provided
+    const finalSearchId = searchId || generateUniqueId()
+
+    const insertData = {
+      id: finalSearchId,
+      trademark_name: formData.trademarkName || formData.trademark_name || "Unknown",
+      email: formData.email || "no-email@example.com",
+      status: "pending",
+      search_results: {
+        ...formData,
+        formType: formType,
+        searchId: finalSearchId,
+        submittedAt: new Date().toISOString(),
+      },
+    }
+
+    try {
+      const { data, error } = await supabase.from("trademark_searches").insert(insertData).select()
+
+      if (error) {
+        console.error("❌ SUPABASE INSERT FAILED:", error)
+        throw error
+      }
+
+      console.log("✅ SUPABASE INSERT SUCCESSFUL!", data)
+      return { success: true, data }
+    } catch (error) {
+      console.error("❌ Error during Supabase insert:", error)
+      throw error
+    }
   } catch (error) {
     console.error("❌ Error in saveSearchData:", error)
     throw error
   }
 }
 
-// Get all searches for admin panel (server-side)
-export async function getAllSearches() {
-  if (!supabase) {
-    console.warn("⚠️ Cannot fetch searches - server-side Supabase client not available")
-    return []
-  }
-
+// Save verification data to verification_requests table
+export async function saveVerificationData(verificationData: any) {
   try {
-    const { data, error } = await supabase
-      .from("trademark_searches")
-      .select("*")
-      .order("created_at", { ascending: false })
+    console.log("💾 Saving to verification_requests:", {
+      trademarkName: verificationData.trademarkName,
+      email: verificationData.email,
+      searchId: verificationData.searchId,
+    })
 
-    if (error) {
-      console.error("Error fetching searches:", error)
-      throw error
+    // Generate a unique ID if not provided
+    const finalSearchId = verificationData.searchId || generateUniqueId()
+
+    // Calculate estimated price based on countries and classes
+    const estimatedPrice = calculateEstimatedPrice(
+      verificationData.countries || [],
+      verificationData.selectedClasses || [1],
+    )
+
+    // Store uploaded files in the search_results JSON field instead of a separate column
+    const searchResults = {
+      ...verificationData,
+      formType: "verification",
+      searchId: finalSearchId,
+      submittedAt: new Date().toISOString(),
+      uploadedFiles: verificationData.uploadedFiles || [], // Store files in JSON
     }
 
-    return data || []
+    const insertData = {
+      id: finalSearchId,
+      trademark_name: verificationData.trademarkName || "Unknown",
+      email: verificationData.email || "no-email@example.com",
+      status: "pending",
+      search_results: searchResults,
+      estimated_price: estimatedPrice,
+      files_count: verificationData.filesCount || 0,
+      selected_countries: verificationData.countries || [],
+      selected_classes: verificationData.selectedClasses || [1],
+      trademark_type: verificationData.trademarkType || "word",
+      contact_phone: verificationData.phone || null,
+      marketing_consent: verificationData.marketing || false,
+    }
+
+    console.log("📝 Attempting to insert verification data:", {
+      id: insertData.id,
+      trademark_name: insertData.trademark_name,
+      email: insertData.email,
+      files_count: insertData.files_count,
+      uploadedFilesCount: verificationData.uploadedFiles?.length || 0,
+    })
+
+    try {
+      const { data, error } = await supabase.from("verification_requests").insert(insertData).select()
+
+      if (error) {
+        console.error("❌ VERIFICATION INSERT FAILED:", error)
+        console.error("❌ Error details:", JSON.stringify(error, null, 2))
+        throw error
+      }
+
+      console.log("✅ VERIFICATION INSERT SUCCESSFUL!", data)
+      return { success: true, data }
+    } catch (error) {
+      console.error("❌ Error during Supabase insert:", error)
+      throw error
+    }
+  } catch (error) {
+    console.error("❌ Error in saveVerificationData:", error)
+    throw error
+  }
+}
+
+// Helper function to generate unique ID
+function generateUniqueId(): string {
+  const timestamp = Date.now()
+  const random = Math.random().toString(36).substr(2, 9)
+  return `${timestamp}-${random}`
+}
+
+// Helper function to calculate estimated price
+function calculateEstimatedPrice(countries: any[], classes: number[]): number {
+  // This is a simplified calculation - you can make it more sophisticated
+  const basePrice = 500 // Base price per country
+  const classPrice = 100 // Additional price per class
+
+  const countryCount = Array.isArray(countries) ? countries.length : 1
+  const classCount = Array.isArray(classes) ? Math.max(classes.length, 1) : 1
+
+  return countryCount * basePrice + (classCount - 1) * classPrice
+}
+
+// Get all searches from both tables
+export async function getAllSearches(tableType: "trademark_searches" | "verification_requests" | "all" = "all") {
+  try {
+    let allData: any[] = []
+
+    if (tableType === "trademark_searches" || tableType === "all") {
+      try {
+        const { data: tsData, error: tsError } = await supabase
+          .from("trademark_searches")
+          .select("*")
+          .order("created_at", { ascending: false })
+
+        if (tsError) {
+          console.error("Error fetching trademark_searches:", tsError)
+        } else {
+          // Add table_type to each record
+          const tsDataWithType = (tsData || []).map((item) => ({
+            ...item,
+            table_type: "trademark_searches",
+            form_type: item.search_results?.formType || "free-search",
+          }))
+          allData = [...allData, ...tsDataWithType]
+        }
+      } catch (error) {
+        console.error("Error fetching trademark_searches:", error)
+      }
+    }
+
+    if (tableType === "verification_requests" || tableType === "all") {
+      try {
+        const { data: vrData, error: vrError } = await supabase
+          .from("verification_requests")
+          .select("*")
+          .order("created_at", { ascending: false })
+
+        if (vrError) {
+          console.error("Error fetching verification_requests:", vrError)
+        } else {
+          // Add table_type to each record
+          const vrDataWithType = (vrData || []).map((item) => ({
+            ...item,
+            table_type: "verification_requests",
+            form_type: "verification",
+          }))
+          allData = [...allData, ...vrDataWithType]
+        }
+      } catch (error) {
+        console.error("Error fetching verification_requests:", error)
+      }
+    }
+
+    // Sort by created_at descending
+    allData.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+
+    return allData
   } catch (error) {
     console.error("Error in getAllSearches:", error)
     throw error
   }
 }
 
-// Update search status (server-side)
-export async function updateSearchStatus(id: string, status: string, notes?: string) {
-  if (!supabase) {
-    console.warn("⚠️ Cannot update search - server-side Supabase client not available")
-    throw new Error("Server-side Supabase client not available")
-  }
-
+// Update search status (works for both tables)
+export async function updateSearchStatus(
+  id: string,
+  status: string,
+  tableType: "trademark_searches" | "verification_requests",
+  notes?: string,
+) {
   try {
     const updateData: any = { status }
     if (notes) {
       updateData.search_results = { notes }
     }
 
-    const { data, error } = await supabase.from("trademark_searches").update(updateData).eq("id", id).select()
+    try {
+      const { data, error } = await supabase.from(tableType).update(updateData).eq("id", id).select()
 
-    if (error) {
-      console.error("Error updating search:", error)
+      if (error) {
+        console.error("Error updating search:", error)
+        throw error
+      }
+
+      return data
+    } catch (error) {
+      console.error("Error during Supabase update:", error)
       throw error
     }
-
-    return data
   } catch (error) {
     console.error("Error in updateSearchStatus:", error)
     throw error
   }
 }
 
-// Get search by ID (server-side)
+// Get search by ID (checks both tables)
 export async function getSearchById(id: string) {
-  if (!supabase) {
-    console.warn("⚠️ Cannot fetch search by ID - server-side Supabase client not available")
-    throw new Error("Server-side Supabase client not available")
-  }
-
   try {
-    const { data, error } = await supabase.from("trademark_searches").select("*").eq("id", id).single()
+    // Try trademark_searches first
+    try {
+      const { data: tsData, error: tsError } = await supabase
+        .from("trademark_searches")
+        .select("*")
+        .eq("id", id)
+        .single()
 
-    if (error) {
-      console.error("Error fetching search by ID:", error)
-      throw error
+      if (!tsError && tsData) {
+        return { ...tsData, table_type: "trademark_searches" }
+      }
+    } catch (error) {
+      console.error("Error fetching from trademark_searches:", error)
     }
 
-    return data
+    // Try verification_requests
+    try {
+      const { data: vrData, error: vrError } = await supabase
+        .from("verification_requests")
+        .select("*")
+        .eq("id", id)
+        .single()
+
+      if (!vrError && vrData) {
+        return { ...vrData, table_type: "verification_requests" }
+      }
+    } catch (error) {
+      console.error("Error fetching from verification_requests:", error)
+    }
+
+    throw new Error("Search not found in either table")
   } catch (error) {
     console.error("Error in getSearchById:", error)
     throw error
   }
 }
 
-// Delete search (server-side)
-export async function deleteSearch(id: string) {
-  if (!supabase) {
-    console.warn("⚠️ Cannot delete search - server-side Supabase client not available")
-    throw new Error("Server-side Supabase client not available")
-  }
-
+// Delete search (works for both tables)
+export async function deleteSearch(id: string, tableType: "trademark_searches" | "verification_requests") {
   try {
-    const { error } = await supabase.from("trademark_searches").delete().eq("id", id)
+    try {
+      const { error } = await supabase.from(tableType).delete().eq("id", id)
 
-    if (error) {
-      console.error("Error deleting search:", error)
+      if (error) {
+        console.error("Error deleting search:", error)
+        throw error
+      }
+
+      return { success: true }
+    } catch (error) {
+      console.error("Error during Supabase delete:", error)
       throw error
     }
-
-    return { success: true }
   } catch (error) {
     console.error("Error in deleteSearch:", error)
     throw error
   }
 }
 
-// Client-side update function for admin panel
-export const updateSearchRecord = async (id: string, status: string, notes?: string) => {
-  try {
-    const supabase = getSupabaseClient()
-
-    // Get current search data
-    const { data: currentData, error: fetchError } = await supabase
-      .from("trademark_searches")
-      .select("*")
-      .eq("id", id)
-      .single()
-
-    if (fetchError) {
-      throw fetchError
-    }
-
-    // Update with new status and notes
-    const updateData = {
-      status,
-      search_results: {
-        ...currentData.search_results,
-        notes: notes || currentData.search_results?.notes,
-      },
-    }
-
-    const { data, error } = await supabase.from("trademark_searches").update(updateData).eq("id", id).select()
-
-    if (error) {
-      throw error
-    }
-
-    return data
-  } catch (error) {
-    console.error("Error in updateSearchRecord:", error)
-    throw error
-  }
+// Legacy function for backward compatibility
+export async function ensureTrademarkSearchesTableExists() {
+  return ensureTablesExist()
 }
 
-// Client-side delete function for admin panel
-export const deleteSearchRecord = async (id: string) => {
-  try {
-    const supabase = getSupabaseClient()
-    const { error } = await supabase.from("trademark_searches").delete().eq("id", id)
+// Additional exports for compatibility
+export function getSupabaseClient() {
+  return supabase
+}
 
-    if (error) {
-      throw error
-    }
+export async function getSearchData(searchId: string) {
+  return getSearchById(searchId)
+}
 
-    return { success: true }
-  } catch (error) {
-    console.error("Error in deleteSearchRecord:", error)
-    throw error
-  }
+export async function ensureTableExists() {
+  return ensureTablesExist()
+}
+
+export async function getAllSearchData() {
+  return getAllSearches()
 }

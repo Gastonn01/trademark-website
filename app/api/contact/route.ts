@@ -1,7 +1,17 @@
 import { NextResponse } from "next/server"
 import { Resend } from "resend"
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+// Initialize Resend with error handling
+let resend: Resend | null = null
+try {
+  if (process.env.RESEND_API_KEY) {
+    resend = new Resend(process.env.RESEND_API_KEY)
+  } else {
+    console.log("Resend API key not found, email functionality will be disabled")
+  }
+} catch (error) {
+  console.error("Failed to initialize Resend:", error)
+}
 
 export async function POST(request: Request) {
   console.log("📧 Contact form submission received at:", new Date().toISOString())
@@ -44,6 +54,7 @@ export async function POST(request: Request) {
         {
           error: "Invalid email format",
           message: "Please provide a valid email address",
+          received: email,
         },
         { status: 400 },
       )
