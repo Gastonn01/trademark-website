@@ -11,20 +11,23 @@ export function getSupabaseClient() {
 
 export async function ensureTablesExist() {
   try {
-    const { error } = await supabase.rpc("create_trademark_searches_table_if_not_exists")
-    if (error) {
-      console.error("Error creating table:", error)
-      throw error
+    // Check if trademark_searches table exists
+    const { data, error } = await supabase.from("trademark_searches").select("id").limit(1)
+
+    if (error && error.code === "PGRST116") {
+      // Table doesn't exist, create it
+      const { error: createError } = await supabase.rpc("create_trademark_searches_table_if_not_exists")
+      if (createError) {
+        console.error("Error creating table:", createError)
+        throw createError
+      }
     }
+
     return true
   } catch (error) {
     console.error("Error ensuring tables exist:", error)
     throw error
   }
-}
-
-export async function ensureTrademarkSearchesTableExists() {
-  return ensureTablesExist()
 }
 
 export async function saveSearchData(searchData: any) {
@@ -77,10 +80,6 @@ export async function getSearchById(searchId: string) {
   }
 }
 
-export async function getSearchData(searchId: string) {
-  return getSearchById(searchId)
-}
-
 export async function deleteSearch(searchId: string) {
   try {
     const { error } = await supabase.from("trademark_searches").delete().eq("id", searchId)
@@ -116,10 +115,8 @@ export async function getAllSearches() {
   }
 }
 
-export async function getAllSearchData() {
-  return getAllSearches()
-}
-
-export function ensureTableExists() {
-  return ensureTablesExist()
-}
+// Alias exports for backward compatibility
+export const getSearchData = getSearchById
+export const ensureTableExists = ensureTablesExist
+export const getAllSearchData = getAllSearches
+export const ensureTrademarkSearchesTableExists = ensureTablesExist

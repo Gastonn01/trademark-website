@@ -2,7 +2,7 @@ import { type NextRequest, NextResponse } from "next/server"
 import { Resend } from "resend"
 import { put } from "@vercel/blob"
 import { v4 as uuidv4 } from "uuid"
-import { saveSearchData, ensureTrademarkSearchesTableExists } from "@/lib/supabase"
+import { saveSearchData } from "@/lib/supabase"
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
@@ -13,7 +13,8 @@ export async function POST(request: NextRequest) {
     // Extract form data
     const trademarkName = formData.get("trademarkName") as string
     const trademarkType = formData.get("trademarkType") as string
-    const description = formData.get("description") as string
+    const countriesData = formData.get("countries") as string
+    const classesData = formData.get("classes") as string
     const firstName = formData.get("firstName") as string
     const lastName = formData.get("lastName") as string
     const email = formData.get("email") as string
@@ -21,27 +22,18 @@ export async function POST(request: NextRequest) {
     const company = formData.get("company") as string
     const address = formData.get("address") as string
     const city = formData.get("city") as string
-    const state = formData.get("state") as string
-    const zipCode = formData.get("zipCode") as string
+    const postalCode = formData.get("postalCode") as string
     const country = formData.get("country") as string
 
     // Parse countries and classes
-    const countriesStr = formData.get("countries") as string
-    const classesStr = formData.get("classes") as string
-
     let countries = []
     let classes = []
 
     try {
-      countries = countriesStr ? JSON.parse(countriesStr) : []
-    } catch (e) {
-      countries = []
-    }
-
-    try {
-      classes = classesStr ? JSON.parse(classesStr) : []
-    } catch (e) {
-      classes = []
+      countries = countriesData ? JSON.parse(countriesData) : []
+      classes = classesData ? JSON.parse(classesData) : []
+    } catch (parseError) {
+      console.error("Error parsing countries or classes:", parseError)
     }
 
     // Handle file uploads
@@ -51,17 +43,19 @@ export async function POST(request: NextRequest) {
     for (const [key, file] of fileEntries) {
       if (file instanceof File && file.size > 0) {
         try {
-          const blob = await put(`verification-files/${uuidv4()}-${file.name}`, file, {
+          const filename = `${uuidv4()}-${file.name}`
+          const blob = await put(filename, file, {
             access: "public",
           })
+
           files.push({
             name: file.name,
             url: blob.url,
             size: file.size,
             type: file.type,
           })
-        } catch (error) {
-          console.error("Error uploading file:", error)
+        } catch (uploadError) {
+          console.error("Error uploading file:", uploadError)
         }
       }
     }
@@ -69,36 +63,32 @@ export async function POST(request: NextRequest) {
     // Generate reference ID
     const referenceId = `TM-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`
 
-    // Prepare search data for database
+    // Save to database
     const searchData = {
       id: uuidv4(),
       reference_id: referenceId,
       trademark_name: trademarkName,
       trademark_type: trademarkType,
-      description,
-      countries: JSON.stringify(countries),
-      classes: JSON.stringify(classes),
+      countries: countries,
+      classes: classes,
       first_name: firstName,
       last_name: lastName,
-      email,
-      phone,
-      company,
-      address,
-      city,
-      state,
-      zip_code: zipCode,
-      country,
-      files: JSON.stringify(files),
-      status: "submitted",
+      email: email,
+      phone: phone,
+      company: company,
+      address: address,
+      city: city,
+      postal_code: postalCode,
+      country: country,
+      files: files,
+      status: "pending",
       created_at: new Date().toISOString(),
     }
 
-    // Save to database
     try {
-      await ensureTrademarkSearchesTableExists()
       await saveSearchData(searchData)
-    } catch (error) {
-      console.error("Error saving to database:", error)
+    } catch (dbError) {
+      console.error("Database save error:", dbError)
     }
 
     // Send confirmation email to user
@@ -108,19 +98,19 @@ export async function POST(request: NextRequest) {
         
         <p>Dear ${firstName} ${lastName},</p>
         
-        <p>We have received your trademark verification request and our team is now processing it.</p>
+        <p>We have received your trademark verification request and our team will begin processing it immediately.</p>
         
         <div style="background-color: #f5f5f5; padding: 20px; margin: 20px 0; border-radius: 5px;">
           <h3 style="margin-top: 0;">Submission Details:</h3>
           <p><strong>Reference ID:</strong> ${referenceId}</p>
           <p><strong>Trademark Name:</strong> ${trademarkName}</p>
-          <p><strong>Type:</strong> ${trademarkType}</p>
+          <p><strong>Trademark Type:</strong> ${trademarkType}</p>
           <p><strong>Countries:</strong> ${countries.map((c: any) => c.name).join(", ")}</p>
-          <p><strong>Classes:</strong> ${classes.map((c: any) => `Class ${c.number}: ${c.name}`).join(", ")}</p>
-          ${files.length > 0 ? `<p><strong>Files:</strong> ${files.map((f) => f.name).join(", ")}</p>` : ""}
+          <p><strong>Classes:</strong> ${classes.map((c: any) => `Class ${c.number}: ${c.description}`).join(", ")}</p>
+          ${files.length > 0 ? `<p><strong>Files Uploaded:</strong> ${files.map((f) => f.name).join(", ")}</p>` : ""}
         </div>
         
-        <p>Our trademark experts will review your request and you can expect to receive a detailed report within 24-48 hours.</p>
+        <p>Your request is now being processed by our trademark experts. You can expect to receive a detailed report within 24-48 hours.</p>
         
         <p>If you have any questions, please don't hesitate to contact us at support@trademarkia.com or call us at +1 (555) 123-4567.</p>
         
@@ -131,7 +121,7 @@ export async function POST(request: NextRequest) {
     await resend.emails.send({
       from: "Trademarkia <noreply@trademarkia.com>",
       to: [email],
-      subject: "Trademark Verification Request Received",
+      subject: `Trademark Verification Request Received - ${referenceId}`,
       html: userEmailHtml,
     })
 
@@ -144,25 +134,24 @@ export async function POST(request: NextRequest) {
           <h3 style="margin-top: 0;">Request Details:</h3>
           <p><strong>Reference ID:</strong> ${referenceId}</p>
           <p><strong>Trademark Name:</strong> ${trademarkName}</p>
-          <p><strong>Type:</strong> ${trademarkType}</p>
-          <p><strong>Description:</strong> ${description}</p>
+          <p><strong>Trademark Type:</strong> ${trademarkType}</p>
           <p><strong>Countries:</strong> ${countries.map((c: any) => c.name).join(", ")}</p>
-          <p><strong>Classes:</strong> ${classes.map((c: any) => `Class ${c.number}: ${c.name}`).join(", ")}</p>
+          <p><strong>Classes:</strong> ${classes.map((c: any) => `Class ${c.number}: ${c.description}`).join(", ")}</p>
         </div>
         
-        <div style="background-color: #e8f4fd; padding: 20px; margin: 20px 0; border-radius: 5px;">
+        <div style="background-color: #f0f8ff; padding: 20px; margin: 20px 0; border-radius: 5px;">
           <h3 style="margin-top: 0;">Contact Information:</h3>
           <p><strong>Name:</strong> ${firstName} ${lastName}</p>
           <p><strong>Email:</strong> ${email}</p>
           <p><strong>Phone:</strong> ${phone}</p>
           <p><strong>Company:</strong> ${company}</p>
-          <p><strong>Address:</strong> ${address}, ${city}, ${state} ${zipCode}, ${country}</p>
+          <p><strong>Address:</strong> ${address}, ${city}, ${postalCode}, ${country}</p>
         </div>
         
         ${
           files.length > 0
             ? `
-        <div style="background-color: #fff3cd; padding: 20px; margin: 20px 0; border-radius: 5px;">
+        <div style="background-color: #fff5f5; padding: 20px; margin: 20px 0; border-radius: 5px;">
           <h3 style="margin-top: 0;">Uploaded Files:</h3>
           ${files
             .map(
