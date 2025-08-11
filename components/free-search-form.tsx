@@ -357,6 +357,14 @@ export function FreeSearchForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    // Require email address before any submission logic
+    if (!formData.email || !formData.email.trim()) {
+      setErrorMessage("Please enter your email address so we can send your results.")
+      setStep(3)
+      return
+    }
+
     setIsSubmitting(true)
     setErrorMessage(null)
     setSuccessMessage(null)
@@ -823,6 +831,11 @@ export function FreeSearchForm() {
                       value={formData.email}
                       onChange={(e) => setFormData((prev) => ({ ...prev, email: e.target.value }))}
                       className="mt-1"
+                      required
+                      autoComplete="email"
+                      inputMode="email"
+                      aria-required="true"
+                      pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$"
                     />
                   </div>
                 </div>
