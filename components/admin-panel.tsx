@@ -20,7 +20,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useToast } from "@/components/ui/use-toast"
-import { Mail, RefreshCw, Eye, AlertCircle, Edit, Loader2, Info, DollarSign, Globe } from "lucide-react"
+import { Mail, RefreshCw, Eye, AlertCircle, Edit, Loader2, Info, DollarSign, Globe, Upload } from "lucide-react"
 
 interface SearchData {
   id: string
@@ -64,6 +64,18 @@ export function AdminPanel() {
   const [composeSubject, setComposeSubject] = useState("")
   const [composeMessage, setComposeMessage] = useState("")
   const [sendingComposeEmail, setSendingComposeEmail] = useState(false)
+
+  // Follow-up email functionality state
+  const [followUpDialogOpen, setFollowUpDialogOpen] = useState(false)
+  const [selectedUsers, setSelectedUsers] = useState<SearchData[]>([])
+  const [followUpSubject, setFollowUpSubject] = useState("Following up on your trademark inquiry")
+  const [followUpMessage, setFollowUpMessage] = useState("")
+  const [sendingFollowUp, setSendingFollowUp] = useState(false)
+
+  // CSV upload state
+  const [csvUploadOpen, setCsvUploadOpen] = useState(false)
+  const [csvData, setCsvData] = useState("")
+  const [processingCsv, setProcessingCsv] = useState(false)
 
   useEffect(() => {
     fetchSearches()
@@ -273,6 +285,65 @@ export function AdminPanel() {
     }
   }
 
+  const handleSendFollowUp = async () => {
+    // Validate that we have users with valid email addresses
+    const validUsers = selectedUsers.filter((user) => user.email && user.email.trim() !== "")
+
+    if (validUsers.length === 0 || !followUpSubject || !followUpMessage) {
+      toast({
+        title: "Required fields",
+        description: "Please add at least one valid email address and complete all required fields",
+        variant: "destructive",
+      })
+      return
+    }
+
+    setSendingFollowUp(true)
+    try {
+      const response = await fetch("/api/admin/send-follow-up", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          users: validUsers.map((user) => ({
+            id: user.id,
+            email: user.email,
+            trademarkName: user.trademark_name || "",
+            name: "", // No name for manual entries
+            address: "", // No address needed
+          })),
+          subject: followUpSubject,
+          message: followUpMessage,
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`)
+      }
+
+      const result = await response.json()
+
+      toast({
+        title: "Follow-up emails sent",
+        description: `Successfully sent ${result.successCount} emails to users`,
+      })
+
+      setFollowUpDialogOpen(false)
+      setSelectedUsers([])
+      setFollowUpMessage("")
+    } catch (err) {
+      console.error("Error in handleSendFollowUp:", err)
+      toast({
+        title: "Error",
+        description: `Could not send follow-up emails: ${err instanceof Error ? err.message : String(err)}`,
+        variant: "destructive",
+      })
+    } finally {
+      setSendingFollowUp(false)
+    }
+  }
+
   const openEmailDialog = (search: SearchData) => {
     setSelectedSearch(search)
     setRecipientEmail(search.email || getSafeValue(search, "search_results.email", ""))
@@ -284,6 +355,30 @@ export function AdminPanel() {
     setEditedResults({})
     updateStatus(search.id, "processing", search.table_type)
     setEditDialogOpen(true)
+  }
+
+  const openFollowUpDialog = () => {
+    // Start with empty manual entries instead of auto-selecting users
+    setSelectedUsers([])
+
+    setFollowUpMessage(`I hope this email finds you well.
+
+I wanted to follow up on your recent trademark search inquiry. I understand that trademark registration can seem complex, but I'm here to help make the process as smooth as possible for you.
+
+Based on our initial review, your trademark appears to have good potential for registration. However, there are several important factors we need to consider to ensure the best possible outcome:
+
+• Comprehensive trademark search across all relevant databases
+• Proper classification of your goods/services
+• Strategic filing approach to maximize protection
+• Ongoing monitoring to protect your rights
+
+The trademark landscape is constantly evolving, and timing can be crucial. The sooner we can secure your application, the better positioned you'll be to protect your brand.
+
+I'd be happy to discuss your specific situation and provide you with a detailed assessment of your trademark's registrability, along with a clear roadmap for moving forward.
+
+Would you be interested in scheduling a brief consultation to discuss your trademark protection strategy?`)
+
+    setFollowUpDialogOpen(true)
   }
 
   const handleEditChange = (field: string, value: string) => {
@@ -489,6 +584,123 @@ export function AdminPanel() {
     )
   }
 
+  const addManualEmailEntry = () => {
+    const newId = `manual-${Date.now()}`
+    const newUser: SearchData = {
+      id: newId,
+      email: "",
+      trademark_name: "",
+      status: "pending",
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      search_results: {},
+      table_type: "trademark_searches",
+      form_type: "free-search",
+    }
+
+    setSelectedUsers([...selectedUsers, newUser])
+  }
+
+  const removeManualEmailEntry = (userId: string) => {
+    setSelectedUsers(selectedUsers.filter((user) => user.id !== userId))
+  }
+
+  const updateManualEmail = (userId: string, email: string) => {
+    setSelectedUsers(selectedUsers.map((user) => (user.id === userId ? { ...user, email } : user)))
+  }
+
+  const updateManualTrademark = (userId: string, trademark: string) => {
+    setSelectedUsers(selectedUsers.map((user) => (user.id === userId ? { ...user, trademark_name: trademark } : user)))
+  }
+
+  const processCsvData = () => {
+    if (!csvData.trim()) {
+      toast({
+        title: "No data",
+        description: "Please paste your CSV data",
+        variant: "destructive",
+      })
+      return
+    }
+
+    setProcessingCsv(true)
+    try {
+      const lines = csvData.trim().split("\n")
+      const newUsers: SearchData[] = []
+
+      lines.forEach((line, index) => {
+        // Handle different separators and clean the line
+        const cleanLine = line.trim()
+        if (!cleanLine) return // Skip empty lines
+
+        // Try different separators: comma, tab, semicolon
+        let columns: string[] = []
+        if (cleanLine.includes("\t")) {
+          columns = cleanLine.split("\t")
+        } else if (cleanLine.includes(";")) {
+          columns = cleanLine.split(";")
+        } else {
+          columns = cleanLine.split(",")
+        }
+
+        // Clean each column - remove quotes, extra spaces
+        columns = columns.map((col) => col.trim().replace(/^["']|["']$/g, ""))
+
+        if (columns.length >= 2) {
+          const email = columns[0].trim()
+          const trademark = columns[1].trim()
+
+          // Basic email validation - just check if it contains @ and a dot
+          const isValidEmail = email.includes("@") && email.includes(".") && email.length > 5
+
+          if (isValidEmail && trademark && trademark.length > 0) {
+            const newId = `csv-${Date.now()}-${index}`
+            const newUser: SearchData = {
+              id: newId,
+              email: email,
+              trademark_name: trademark,
+              status: "pending",
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString(),
+              search_results: {},
+              table_type: "trademark_searches",
+              form_type: "free-search",
+            }
+
+            newUsers.push(newUser)
+          }
+        }
+      })
+
+      if (newUsers.length > 0) {
+        setSelectedUsers([...selectedUsers, ...newUsers])
+
+        toast({
+          title: "CSV imported",
+          description: `Successfully imported ${newUsers.length} entries`,
+        })
+
+        setCsvUploadOpen(false)
+        setCsvData("")
+      } else {
+        toast({
+          title: "No valid data found",
+          description: "Please check your data format. Each line should have: email,trademark (or separated by tabs)",
+          variant: "destructive",
+        })
+      }
+    } catch (error) {
+      console.error("CSV processing error:", error)
+      toast({
+        title: "Import error",
+        description: "Error processing CSV data. Please check the format and try again.",
+        variant: "destructive",
+      })
+    } finally {
+      setProcessingCsv(false)
+    }
+  }
+
   // Filter searches based on active tab
   const freeSearches = searches.filter((search) => search.form_type === "free-search")
   const verifications = searches.filter((search) => search.form_type === "verification")
@@ -499,6 +711,10 @@ export function AdminPanel() {
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-semibold">Trademark Search Requests</h2>
           <div className="flex items-center gap-4">
+            <Button onClick={openFollowUpDialog} variant="outline">
+              <Mail className="h-4 w-4 mr-2" />
+              Send Follow-up Emails
+            </Button>
             <Button onClick={() => setComposeDialogOpen(true)} variant="default">
               <Mail className="h-4 w-4 mr-2" />
               Compose Email
@@ -751,6 +967,193 @@ export function AdminPanel() {
                 </>
               ) : (
                 "Save changes"
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* CSV Upload Dialog */}
+      <Dialog open={csvUploadOpen} onOpenChange={setCsvUploadOpen}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle>Import Email List</DialogTitle>
+            <DialogDescription>Paste your CSV data with columns: Email, Trademark</DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="csv-data">CSV Data</Label>
+              <Textarea
+                id="csv-data"
+                value={csvData}
+                onChange={(e) => setCsvData(e.target.value)}
+                className="min-h-[200px] font-mono text-sm"
+                placeholder={`john@example.com,Nike Swoosh
+sarah@example.com,Apple Logo
+mike@example.com,Google Brand
+
+Or tab-separated:
+john@example.com	Nike Swoosh
+sarah@example.com	Apple Logo`}
+              />
+            </div>
+            <div className="bg-blue-50 p-3 rounded-md text-sm text-blue-800">
+              <p className="font-medium mb-1">Supported formats:</p>
+              <p>• Comma separated: email,trademark</p>
+              <p>• Tab separated (copy from Excel): email[TAB]trademark</p>
+              <p>• Semicolon separated: email;trademark</p>
+              <p>Empty lines will be ignored automatically.</p>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setCsvUploadOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={processCsvData} disabled={!csvData.trim() || processingCsv}>
+              {processingCsv ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Processing...
+                </>
+              ) : (
+                "Import Data"
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Follow-up Email Dialog */}
+      <Dialog open={followUpDialogOpen} onOpenChange={setFollowUpDialogOpen}>
+        <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Send Follow-up Emails</DialogTitle>
+            <DialogDescription>
+              Send follow-up emails to users who haven't completed their trademark registration.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4 max-h-[60vh] overflow-y-auto">
+            <div className="bg-blue-50 p-4 rounded-lg">
+              <div className="flex justify-between items-center mb-3">
+                <h4 className="font-medium text-blue-900">Email Recipients ({selectedUsers.length})</h4>
+                <div className="flex gap-2">
+                  <Button onClick={() => setCsvUploadOpen(true)} size="sm" variant="outline">
+                    <Upload className="h-4 w-4 mr-1" />
+                    Import CSV
+                  </Button>
+                  <Button onClick={addManualEmailEntry} size="sm" variant="outline">
+                    + Add Email
+                  </Button>
+                </div>
+              </div>
+              <div className="max-h-64 overflow-y-auto">
+                {selectedUsers.length === 0 ? (
+                  <p className="text-blue-700 text-sm text-center py-4">
+                    Click "Add Email" or "Import CSV" to start adding recipients
+                  </p>
+                ) : (
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead className="text-xs">Email Address</TableHead>
+                        <TableHead className="text-xs">Trademark</TableHead>
+                        <TableHead className="text-xs w-16">Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {selectedUsers.map((user) => (
+                        <TableRow key={user.id}>
+                          <TableCell className="text-xs">
+                            <Input
+                              type="email"
+                              value={user.email || ""}
+                              onChange={(e) => updateManualEmail(user.id, e.target.value)}
+                              className="h-8 text-xs"
+                              placeholder="email@example.com"
+                            />
+                          </TableCell>
+                          <TableCell className="text-xs">
+                            <Input
+                              value={user.trademark_name || ""}
+                              onChange={(e) => updateManualTrademark(user.id, e.target.value)}
+                              className="h-8 text-xs"
+                              placeholder="Trademark name"
+                            />
+                          </TableCell>
+                          <TableCell className="text-xs">
+                            <Button
+                              onClick={() => removeManualEmailEntry(user.id)}
+                              size="sm"
+                              variant="ghost"
+                              className="h-6 w-6 p-0 text-red-500 hover:text-red-700"
+                            >
+                              ×
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                )}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-4 items-center gap-4">
+              <Label htmlFor="followup-subject" className="text-right">
+                Subject
+              </Label>
+              <Input
+                id="followup-subject"
+                value={followUpSubject}
+                onChange={(e) => setFollowUpSubject(e.target.value)}
+                className="col-span-3"
+                placeholder="Email subject"
+              />
+            </div>
+
+            <div className="grid grid-cols-4 items-start gap-4">
+              <Label htmlFor="followup-message" className="text-right pt-2">
+                Message
+              </Label>
+              <div className="col-span-3">
+                <Textarea
+                  id="followup-message"
+                  value={followUpMessage}
+                  onChange={(e) => setFollowUpMessage(e.target.value)}
+                  className="min-h-[300px] resize-y"
+                  placeholder="Your follow-up message..."
+                  rows={15}
+                />
+              </div>
+            </div>
+
+            <div className="bg-amber-50 p-3 rounded-md text-sm text-amber-800 flex items-start gap-2">
+              <Info className="h-4 w-4 mt-0.5 flex-shrink-0" />
+              <div>
+                <p className="font-medium">Email will be signed as Sarah Mitchell, Trademark Specialist</p>
+                <p>Recipients will be instructed to email trademarks@justprotected.com to proceed.</p>
+              </div>
+            </div>
+          </div>
+          <DialogFooter className="sticky bottom-0 bg-white pt-4 border-t">
+            <Button variant="outline" onClick={() => setFollowUpDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button
+              onClick={handleSendFollowUp}
+              disabled={
+                selectedUsers.filter((u) => u.email && u.email.trim() !== "").length === 0 ||
+                !followUpSubject ||
+                !followUpMessage ||
+                sendingFollowUp
+              }
+            >
+              {sendingFollowUp ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Sending to{" "}
+                  {selectedUsers.filter((u) => u.email && u.email.trim() !== "").length} users...
+                </>
+              ) : (
+                `Send to ${selectedUsers.filter((u) => u.email && u.email.trim() !== "").length} users`
               )}
             </Button>
           </DialogFooter>
