@@ -8,7 +8,7 @@ type Currency = "USD" | "EUR"
 interface CurrencyContextType {
   currency: Currency
   setCurrency: (currency: Currency) => void
-  formatPrice: (price: number) => string
+  formatPrice: (amount: number) => string
 }
 
 const CurrencyContext = createContext<CurrencyContextType | undefined>(undefined)
@@ -25,16 +25,27 @@ export function CurrencyProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   // Save currency to localStorage when it changes
-  useEffect(() => {
-    localStorage.setItem("preferred-currency", currency)
-  }, [currency])
-
-  const formatPrice = (price: number) => {
-    const symbol = currency === "USD" ? "$" : "€"
-    return `${symbol}${price}`
+  const handleSetCurrency = (newCurrency: Currency) => {
+    setCurrency(newCurrency)
+    localStorage.setItem("preferred-currency", newCurrency)
   }
 
-  return <CurrencyContext.Provider value={{ currency, setCurrency, formatPrice }}>{children}</CurrencyContext.Provider>
+  const formatPrice = (amount: number) => {
+    const symbol = currency === "USD" ? "$" : "€"
+    return `${symbol}${amount}`
+  }
+
+  return (
+    <CurrencyContext.Provider
+      value={{
+        currency,
+        setCurrency: handleSetCurrency,
+        formatPrice,
+      }}
+    >
+      {children}
+    </CurrencyContext.Provider>
+  )
 }
 
 export function useCurrency() {

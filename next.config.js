@@ -7,7 +7,7 @@ const nextConfig = {
     ignoreBuildErrors: true,
   },
   images: {
-    domains: ["images.unsplash.com", "via.placeholder.com"],
+    domains: ["flagcdn.com", "images.unsplash.com"],
     unoptimized: true,
   },
   async headers() {
