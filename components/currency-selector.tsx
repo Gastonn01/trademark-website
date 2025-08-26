@@ -1,7 +1,7 @@
 "use client"
 
-import { useCurrency } from "@/lib/currency-context"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useCurrency } from "@/lib/currency-context"
 
 export function CurrencySelector() {
   const { currency, setCurrency } = useCurrency()
