@@ -17,6 +17,8 @@ import Image from "next/image"
 import { Upload, ChevronDown, ChevronUp } from "lucide-react"
 import { TrademarkClassesDialog } from "@/components/trademark-classes-dialog"
 import { useRouter } from "next/navigation"
+import { CurrencySelector } from "@/components/currency-selector"
+import { useCurrency } from "@/lib/currency-context"
 
 interface FormData {
   trademarkType: string
@@ -262,6 +264,7 @@ interface VerificationFormContentProps {
 }
 
 const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoading, initialData }) => {
+  const { formatPrice } = useCurrency()
   const [step, setStep] = useState(1)
   const totalSteps = 4
   const [formData, setFormData] = useState<FormData>({
@@ -503,12 +506,15 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
 
         <div className="grid lg:grid-cols-7 gap-12">
           <div className="lg:col-span-5">
-            <div className="mb-8">
-              <h1 className="text-4xl font-bold mb-4 text-indigo-700">Complete Your Registration</h1>
-              <p className="text-lg text-gray-600">Your trademark information is ready for registration.</p>
-              <p className="text-lg text-gray-600 mb-8">
-                Review and complete the details below to proceed with your trademark application.
-              </p>
+            <div className="mb-8 flex justify-between items-start">
+              <div>
+                <h1 className="text-4xl font-bold mb-4 text-indigo-700">Complete Your Registration</h1>
+                <p className="text-lg text-gray-600">Your trademark information is ready for registration.</p>
+                <p className="text-lg text-gray-600 mb-8">
+                  Review and complete the details below to proceed with your trademark application.
+                </p>
+              </div>
+              <CurrencySelector />
             </div>
 
             <div className="mb-12">
@@ -673,6 +679,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
                           additionalClassPrice={country.additionalClassPrice}
                           onSelect={() => toggleCountry(country.name)}
                           selected={selectedCountries.some((c) => c.name === country.name)}
+                          formatPrice={formatPrice}
                         />
                       ))}
                     </div>
@@ -702,6 +709,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
                               additionalClassPrice={country.additionalClassPrice}
                               onSelect={() => toggleCountry(country.name)}
                               selected={selectedCountries.some((c) => c.name === country.name)}
+                              formatPrice={formatPrice}
                             />
                           ))}
                         </div>
@@ -818,7 +826,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
                   <CardTitle>Your Selection</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-2xl font-bold mb-4">Estimated price: ${totalPrice}</p>
+                  <p className="text-2xl font-bold mb-4">Estimated price: {formatPrice(totalPrice)}</p>
                   <div className="mb-6 max-h-[calc(100vh-300px)] overflow-y-auto">
                     <ul>
                       {selectedCountries.map((country) => {
@@ -844,7 +852,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
                             </div>
                             <div className="flex items-center gap-2">
                               <span>{Math.max(1, formData.selectedClasses.length)} classes</span>
-                              <span className="min-w-[80px] text-right">${totalCountryPrice}</span>
+                              <span className="min-w-[80px] text-right">{formatPrice(totalCountryPrice)}</span>
                             </div>
                           </li>
                         )

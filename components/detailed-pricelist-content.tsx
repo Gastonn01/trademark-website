@@ -5,6 +5,8 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import { CountrySelectCard } from "@/components/country-select-card"
 import { ChevronDown, ChevronUp } from "lucide-react"
+import { CurrencySelector } from "@/components/currency-selector"
+import { useCurrency } from "@/lib/currency-context"
 
 interface CountrySelection {
   name: string
@@ -223,6 +225,7 @@ const regions: RegionData[] = [
 ]
 
 export function DetailedPricelistContent() {
+  const { formatPrice } = useCurrency()
   const [selectedCountries, setSelectedCountries] = useState<CountrySelection[]>([])
   const [searchTerm, setSearchTerm] = useState("")
   const [expandedRegions, setExpandedRegions] = useState<string[]>([])
@@ -360,8 +363,13 @@ export function DetailedPricelistContent() {
   return (
     <div id="pricing-table" className="container mx-auto px-4 py-16 bg-blue-50">
       <div className="mt-16">
-        <h2 className="text-3xl font-bold mb-2 text-center text-indigo-900">Select Your Trademark Coverage</h2>
-        <p className="text-center text-gray-600 mb-8">Add additional trademark classes for comprehensive protection.</p>
+        <div className="flex justify-between items-center mb-8">
+          <div>
+            <h2 className="text-3xl font-bold mb-2 text-indigo-900">Select Your Trademark Coverage</h2>
+            <p className="text-gray-600">Add additional trademark classes for comprehensive protection.</p>
+          </div>
+          <CurrencySelector />
+        </div>
       </div>
       <div className="grid lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">
@@ -388,6 +396,7 @@ export function DetailedPricelistContent() {
                       additionalClassPrice={country.additionalClassPrice}
                       onSelect={() => toggleCountry(country.name)}
                       selected={selectedCountries.some((c) => c.name === country.name)}
+                      formatPrice={formatPrice}
                     />
                   ))}
                 </div>
@@ -408,6 +417,7 @@ export function DetailedPricelistContent() {
                       additionalClassPrice={country.additionalClassPrice}
                       onSelect={() => toggleCountry(country.name)}
                       selected={selectedCountries.some((c) => c.name === country.name)}
+                      formatPrice={formatPrice}
                     />
                   ))}
                 </div>
@@ -440,6 +450,7 @@ export function DetailedPricelistContent() {
                           additionalClassPrice={country.additionalClassPrice}
                           onSelect={() => toggleCountry(country.name)}
                           selected={selectedCountries.some((c) => c.name === country.name)}
+                          formatPrice={formatPrice}
                         />
                       ))}
                     </div>
@@ -454,7 +465,7 @@ export function DetailedPricelistContent() {
               <CardContent className="p-6">
                 <h3 className="text-2xl font-bold mb-6">Your Selection</h3>
 
-                <p className="text-2xl font-bold mb-6">Estimated price: ${totalPrice}</p>
+                <p className="text-2xl font-bold mb-6">Estimated price: {formatPrice(totalPrice)}</p>
 
                 <div className="space-y-4 mb-6">
                   {selectedCountries.map((country) => (
@@ -486,7 +497,7 @@ export function DetailedPricelistContent() {
                             +
                           </button>
                         </div>
-                        <span className="font-medium text-right w-16">${country.price}</span>
+                        <span className="font-medium text-right w-16">{formatPrice(country.price)}</span>
                       </div>
                     </div>
                   ))}

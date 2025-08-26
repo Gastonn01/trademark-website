@@ -3,6 +3,7 @@ import { DetailedPricelistHero } from "@/components/detailed-pricelist-hero"
 import { DetailedPricelistContent } from "@/components/detailed-pricelist-content"
 import { DetailedPricelistFAQ } from "@/components/detailed-pricelist-faq"
 import { Footer } from "@/components/footer"
+import { CurrencyProvider } from "@/lib/currency-context"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
@@ -13,15 +14,17 @@ export const metadata: Metadata = {
 
 export default function DetailedPricelistPage() {
   return (
-    <main className="bg-blue-900">
-      <div id="top"></div>
-      <NavBar />
-      <DetailedPricelistHero />
-      <div className="bg-blue-50">
-        <DetailedPricelistContent />
-        <DetailedPricelistFAQ />
-      </div>
-      <Footer />
-    </main>
+    <CurrencyProvider>
+      <main className="bg-blue-900">
+        <div id="top"></div>
+        <NavBar />
+        <DetailedPricelistHero />
+        <div className="bg-blue-50">
+          <DetailedPricelistContent />
+          <DetailedPricelistFAQ />
+        </div>
+        <Footer />
+      </main>
+    </CurrencyProvider>
   )
 }

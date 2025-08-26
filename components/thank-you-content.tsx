@@ -45,37 +45,13 @@ export function ThankYouContent() {
                 </div>
 
                 <div className="flex items-start space-x-4">
-                  <div className="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">
+                  <div className="w-10 h-10 bg-green-600 text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">
                     2
                   </div>
                   <div>
-                    <h4 className="font-semibold text-gray-900 mb-1">Expert Review</h4>
+                    <h4 className="font-semibold text-gray-900 mb-1">Team Contact</h4>
                     <p className="text-gray-600 text-sm">
-                      Our trademark specialists conduct a thorough analysis of your request.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-start space-x-4">
-                  <div className="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">
-                    3
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-gray-900 mb-1">Detailed Report</h4>
-                    <p className="text-gray-600 text-sm">
-                      You'll receive comprehensive findings and strategic recommendations.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-start space-x-4">
-                  <div className="w-10 h-10 bg-green-600 text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">
-                    4
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-gray-900 mb-1">Personal Contact</h4>
-                    <p className="text-gray-600 text-sm">
-                      Our team will guide you through the next steps for your trademark protection.
+                      Our team will get in touch with you shortly to discuss your trademark needs.
                     </p>
                   </div>
                 </div>

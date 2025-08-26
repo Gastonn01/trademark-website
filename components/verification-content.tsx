@@ -133,10 +133,6 @@ export function VerificationContent({ searchId }: VerificationContentProps) {
       <div className="min-h-screen bg-gray-50">
         <NavBar />
         <div className="container max-w-6xl mx-auto px-4 py-12">
-          <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">Start Your Trademark Registration</h1>
-            <p className="text-xl text-gray-600">Protect your brand with our comprehensive trademark services</p>
-          </div>
           <VerificationForm />
         </div>
         <Footer />
@@ -156,11 +152,13 @@ export function VerificationContent({ searchId }: VerificationContentProps) {
 
       <div className="container max-w-6xl mx-auto px-4 py-8">
         {/* Header Section */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Your Trademark Analysis Results</h1>
-          <p className="text-xl text-gray-600">
-            Complete your registration for <strong>"{trademarkName}"</strong>
-          </p>
+        <div className="text-center mb-8 flex justify-between items-start">
+          <div>
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">Your Trademark Analysis Results</h1>
+            <p className="text-xl text-gray-600">
+              Complete your registration for <strong>"{trademarkName}"</strong>
+            </p>
+          </div>
         </div>
 
         <div className="grid lg:grid-cols-3 gap-8">

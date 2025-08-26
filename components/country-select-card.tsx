@@ -1,17 +1,18 @@
 "use client"
 
-import { Info } from "lucide-react"
+import { Card, CardContent } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Check } from "lucide-react"
 import Image from "next/image"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { Button } from "@/components/ui/button"
 
 interface CountrySelectCardProps {
   country: string
   flag: string
-  price?: number
+  price: number
   additionalClassPrice?: number
   onSelect: () => void
   selected: boolean
+  formatPrice?: (price: number) => string
 }
 
 export function CountrySelectCard({
@@ -21,43 +22,44 @@ export function CountrySelectCard({
   additionalClassPrice,
   onSelect,
   selected,
+  formatPrice = (price: number) => `$${price}`,
 }: CountrySelectCardProps) {
   return (
-    <div
+    <Card
+      className={`cursor-pointer transition-all duration-200 hover:shadow-md ${
+        selected ? "ring-2 ring-indigo-500 bg-indigo-50" : "hover:bg-gray-50"
+      }`}
       onClick={onSelect}
-      className={`
-        w-full flex items-center justify-between p-4 rounded-lg cursor-pointer
-        ${selected ? "bg-[#1D4ED8] text-white" : "bg-white hover:bg-gray-50 border border-gray-200"}
-      `}
     >
-      <div className="flex items-center gap-3">
-        <Image src={flag || "/placeholder.svg"} alt={`${country} flag`} width={40} height={30} className="rounded" />
-        <span className="text-sm font-medium leading-none">{country === "Surinam" ? "Suriname" : country}</span>
-      </div>
-      {price !== undefined && (
-        <div className="flex items-center gap-2">
-          <span className="font-semibold">${price}</span>
-          {additionalClassPrice !== undefined && (
-            <TooltipProvider>
-              <Tooltip delayDuration={0}>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className={`h-6 w-6 p-0 ${selected ? "text-white/70 hover:text-white" : "text-muted-foreground hover:text-foreground"}`}
-                  >
-                    <Info className="h-4 w-4" />
-                    <span className="sr-only">Additional class price information</span>
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent sideOffset={5}>
-                  <p>Additional class price: ${additionalClassPrice}</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+      <CardContent className="p-4">
+        <div className="flex items-center justify-between mb-3">
+          <div className="flex items-center space-x-3">
+            <Image
+              src={flag || "/placeholder.svg"}
+              alt={`${country} flag`}
+              width={32}
+              height={24}
+              className="rounded border"
+            />
+            <span className="font-medium text-sm">{country}</span>
+          </div>
+          {selected && <Check className="h-5 w-5 text-indigo-600" />}
+        </div>
+        <div className="space-y-1">
+          <div className="flex justify-between items-center">
+            <span className="text-sm text-gray-600">Base price:</span>
+            <Badge variant="secondary" className="font-semibold">
+              {formatPrice(price)}
+            </Badge>
+          </div>
+          {additionalClassPrice && additionalClassPrice > 0 && (
+            <div className="flex justify-between items-center">
+              <span className="text-xs text-gray-500">Additional class:</span>
+              <span className="text-xs text-gray-600">{formatPrice(additionalClassPrice)}</span>
+            </div>
           )}
         </div>
-      )}
-    </div>
+      </CardContent>
+    </Card>
   )
 }
