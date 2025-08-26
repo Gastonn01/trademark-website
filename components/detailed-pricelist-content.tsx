@@ -4,9 +4,8 @@ import { useState, useMemo, useEffect } from "react"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import { CountrySelectCard } from "@/components/country-select-card"
-import { ChevronDown, ChevronUp } from "lucide-react"
 import { CurrencySelector } from "@/components/currency-selector"
-import { useCurrency } from "@/lib/currency-context"
+import { ChevronDown, ChevronUp } from "lucide-react"
 
 interface CountrySelection {
   name: string
@@ -225,13 +224,13 @@ const regions: RegionData[] = [
 ]
 
 export function DetailedPricelistContent() {
-  const { formatPrice } = useCurrency()
   const [selectedCountries, setSelectedCountries] = useState<CountrySelection[]>([])
   const [searchTerm, setSearchTerm] = useState("")
   const [expandedRegions, setExpandedRegions] = useState<string[]>([])
   const [formData, setFormData] = useState({ selectedClasses: [] })
   const [searchResults, setSearchResults] = useState<CountryData[]>([])
   const [isSearching, setIsSearching] = useState(false)
+  const [selectedCurrency, setSelectedCurrency] = useState<"USD" | "EUR">("EUR")
 
   // Función para buscar países en todas las regiones
   const searchCountries = (term: string) => {
@@ -362,14 +361,10 @@ export function DetailedPricelistContent() {
 
   return (
     <div id="pricing-table" className="container mx-auto px-4 py-16 bg-blue-50">
+      <CurrencySelector selectedCurrency={selectedCurrency} onCurrencyChange={setSelectedCurrency} />
       <div className="mt-16">
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <h2 className="text-3xl font-bold mb-2 text-indigo-900">Select Your Trademark Coverage</h2>
-            <p className="text-gray-600">Add additional trademark classes for comprehensive protection.</p>
-          </div>
-          <CurrencySelector />
-        </div>
+        <h2 className="text-3xl font-bold mb-2 text-center text-indigo-900">Select Your Trademark Coverage</h2>
+        <p className="text-center text-gray-600 mb-8">Add additional trademark classes for comprehensive protection.</p>
       </div>
       <div className="grid lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">
@@ -396,7 +391,7 @@ export function DetailedPricelistContent() {
                       additionalClassPrice={country.additionalClassPrice}
                       onSelect={() => toggleCountry(country.name)}
                       selected={selectedCountries.some((c) => c.name === country.name)}
-                      formatPrice={formatPrice}
+                      currency={selectedCurrency}
                     />
                   ))}
                 </div>
@@ -417,7 +412,7 @@ export function DetailedPricelistContent() {
                       additionalClassPrice={country.additionalClassPrice}
                       onSelect={() => toggleCountry(country.name)}
                       selected={selectedCountries.some((c) => c.name === country.name)}
-                      formatPrice={formatPrice}
+                      currency={selectedCurrency}
                     />
                   ))}
                 </div>
@@ -450,7 +445,7 @@ export function DetailedPricelistContent() {
                           additionalClassPrice={country.additionalClassPrice}
                           onSelect={() => toggleCountry(country.name)}
                           selected={selectedCountries.some((c) => c.name === country.name)}
-                          formatPrice={formatPrice}
+                          currency={selectedCurrency}
                         />
                       ))}
                     </div>
@@ -465,7 +460,7 @@ export function DetailedPricelistContent() {
               <CardContent className="p-6">
                 <h3 className="text-2xl font-bold mb-6">Your Selection</h3>
 
-                <p className="text-2xl font-bold mb-6">Estimated price: {formatPrice(totalPrice)}</p>
+                <p className="text-2xl font-bold mb-6">{`${selectedCurrency === "USD" ? "$" : "€"}${totalPrice}`}</p>
 
                 <div className="space-y-4 mb-6">
                   {selectedCountries.map((country) => (
@@ -497,7 +492,7 @@ export function DetailedPricelistContent() {
                             +
                           </button>
                         </div>
-                        <span className="font-medium text-right w-16">{formatPrice(country.price)}</span>
+                        <span className="font-medium text-right w-16">{`${selectedCurrency === "USD" ? "$" : "€"}${country.price}`}</span>
                       </div>
                     </div>
                   ))}
@@ -508,7 +503,7 @@ export function DetailedPricelistContent() {
                 </div>
 
                 <a
-                  href={`/free-search?countries=${encodeURIComponent(JSON.stringify(selectedCountries.map((c) => c.name)))}`}
+                  href={`/free-search?countries=${encodeURIComponent(JSON.stringify(selectedCountries.map((c) => c.name)))}&currency=${selectedCurrency}`}
                   className="block w-full py-3 text-center text-white font-semibold bg-[#1a4bff] hover:bg-[#0035e0] rounded-full transition-colors duration-200"
                 >
                   Get Free Search

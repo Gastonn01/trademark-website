@@ -12,96 +12,80 @@ export async function POST(request: NextRequest) {
     }
 
     const results = []
+    const errors = []
 
+    // Process emails with 1 second delay between each to respect rate limits
     for (let i = 0; i < recipients.length; i++) {
       const recipient = recipients[i]
 
       try {
-        // Wait 1 second between emails to respect rate limits
+        // Add delay before each email (except the first one)
         if (i > 0) {
           await new Promise((resolve) => setTimeout(resolve, 1000))
         }
 
-        let attempt = 0
-        const maxAttempts = 3
-        let success = false
-
-        while (attempt < maxAttempts && !success) {
-          try {
-            const { data, error } = await resend.emails.send({
-              from: "JustProtected <noreply@justprotected.com>",
-              to: [recipient.email],
-              subject: "Complete Your Trademark Filing - Time Sensitive",
-              html: `
-                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-                  <p>Hi there,</p>
-                  
-                  <p>You started a trademark search with us but didn't complete the filing. Brand names move fast—waiting increases the chance someone else files first.</p>
-                  
-                  <p>Check pricing: <a href="https://justprotected.com/detailed-pricelist" style="color: #1a4bff;">https://justprotected.com/detailed-pricelist</a></p>
-                  
-                  <p>To proceed, email <a href="mailto:trademarks@justprotected.com" style="color: #1a4bff;">trademarks@justprotected.com</a> and we'll send your filing summary and next steps today.</p>
-                  
-                  <p>— JustProtected</p>
-                </div>
-              `,
-            })
-
-            if (error) {
-              throw error
-            }
-
-            success = true
-            results.push({
-              email: recipient.email,
-              trademark: recipient.trademark_name,
-              status: "success",
-              messageId: data?.id,
-            })
-          } catch (error: any) {
-            attempt++
-
-            if (error.message?.includes("rate limit") || error.message?.includes("Too many requests")) {
-              // Wait progressively longer for rate limit errors
-              const waitTime = attempt * 2000 // 2s, 4s, 6s
-              console.log(`Rate limited, waiting ${waitTime}ms before retry ${attempt}/${maxAttempts}`)
-              await new Promise((resolve) => setTimeout(resolve, waitTime))
-            } else {
-              // For other errors, don't retry
-              break
-            }
-          }
-        }
-
-        if (!success) {
-          results.push({
-            email: recipient.email,
-            trademark: recipient.trademark_name,
-            status: "failed",
-            error: "Failed after multiple attempts",
-          })
-        }
-      } catch (error: any) {
+        const result = await sendEmailWithRetry(recipient)
+        results.push(result)
+      } catch (error) {
         console.error(`Error sending email to ${recipient.email}:`, error)
-        results.push({
+        errors.push({
           email: recipient.email,
-          trademark: recipient.trademark_name,
-          status: "failed",
-          error: error.message,
+          error: error instanceof Error ? error.message : "Unknown error",
         })
       }
     }
 
-    const successCount = results.filter((r) => r.status === "success").length
-    const failedCount = results.filter((r) => r.status === "failed").length
-
     return NextResponse.json({
       success: true,
-      message: `Sent ${successCount} emails successfully, ${failedCount} failed`,
+      sent: results.length,
+      errors: errors.length,
       results,
+      errors,
     })
-  } catch (error: any) {
-    console.error("Error in send-follow-up:", error)
-    return NextResponse.json({ error: "Failed to send follow-up emails", details: error.message }, { status: 500 })
+  } catch (error) {
+    console.error("Follow-up email error:", error)
+    return NextResponse.json({ error: "Failed to send follow-up emails" }, { status: 500 })
+  }
+}
+
+async function sendEmailWithRetry(recipient: any, maxRetries = 3) {
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      const result = await resend.emails.send({
+        from: "JustProtected <noreply@justprotected.com>",
+        to: [recipient.email],
+        subject: "Complete Your Trademark Filing - Time Sensitive",
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <p>Hi there,</p>
+            
+            <p>You started a trademark search with us but didn't complete the filing. Brand names move fast—waiting increases the chance someone else files first.</p>
+            
+            <p><strong>Check pricing:</strong> <a href="https://justprotected.com/detailed-pricelist" style="color: #0066cc;">https://justprotected.com/detailed-pricelist</a></p>
+            
+            <p>To proceed, email <a href="mailto:trademarks@justprotected.com" style="color: #0066cc;">trademarks@justprotected.com</a> and we'll send your filing summary and next steps today.</p>
+            
+            <p>— JustProtected</p>
+          </div>
+        `,
+      })
+
+      return {
+        email: recipient.email,
+        trademark: recipient.trademark_name,
+        messageId: result.data?.id,
+        status: "sent",
+      }
+    } catch (error: any) {
+      if (error.message?.includes("Too many requests") && attempt < maxRetries) {
+        // Wait progressively longer for each retry
+        const delay = attempt * 2000 // 2s, 4s, 6s
+        console.log(`Rate limited, retrying in ${delay}ms (attempt ${attempt}/${maxRetries})`)
+        await new Promise((resolve) => setTimeout(resolve, delay))
+        continue
+      }
+
+      throw error
+    }
   }
 }

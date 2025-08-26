@@ -13,8 +13,6 @@ import { Textarea } from "@/components/ui/textarea"
 import { CountrySelectCard } from "@/components/country-select-card"
 import { Upload, CheckCircle, ChevronDown, ChevronUp, AlertCircle } from "lucide-react"
 import { v4 as uuidv4 } from "uuid"
-import { CurrencySelector } from "@/components/currency-selector"
-import { useCurrency } from "@/lib/currency-context"
 
 // More comprehensive check for preview environment
 const isPreviewEnvironment = () => {
@@ -49,8 +47,6 @@ interface FormData {
 interface CountryData {
   name: string
   flag: string
-  price?: number
-  additionalClassPrice?: number
 }
 
 interface RegionData {
@@ -59,140 +55,139 @@ interface RegionData {
 }
 
 const topCountries: CountryData[] = [
-  { name: "European Union", flag: "eu", price: 1551, additionalClassPrice: 425 },
-  { name: "United States", flag: "us", price: 1012, additionalClassPrice: 499 },
-  { name: "Germany", flag: "de", price: 863, additionalClassPrice: 500 },
-  { name: "Argentina", flag: "ar", price: 460, additionalClassPrice: 350 },
-  { name: "Spain", flag: "es", price: 564, additionalClassPrice: 385 },
-  { name: "United Kingdom", flag: "gb", price: 909, additionalClassPrice: 300 },
+  { name: "European Union", flag: "eu" },
+  { name: "United States", flag: "us" },
+  { name: "Germany", flag: "de" },
+  { name: "Argentina", flag: "ar" },
+  { name: "Spain", flag: "es" },
+  { name: "United Kingdom", flag: "gb" },
 ]
 
 const regions: RegionData[] = [
   {
     name: "North America",
     countries: [
-      { name: "United States", flag: "us", price: 1012, additionalClassPrice: 499 },
-      { name: "Canada", flag: "ca", price: 1369, additionalClassPrice: 150 },
-      { name: "Mexico", flag: "mx", price: 685, additionalClassPrice: 540 },
+      { name: "United States", flag: "us" },
+      { name: "Canada", flag: "ca" },
+      { name: "Mexico", flag: "mx" },
     ],
   },
   {
     name: "Europe",
     countries: [
-      { name: "European Union", flag: "eu", price: 1551, additionalClassPrice: 425 },
-      { name: "Germany", flag: "de", price: 863, additionalClassPrice: 500 },
-      { name: "Spain", flag: "es", price: 564, additionalClassPrice: 385 },
-      { name: "United Kingdom", flag: "gb", price: 909, additionalClassPrice: 300 },
-      { name: "France", flag: "fr", price: 667, additionalClassPrice: 190 },
-      { name: "Italy", flag: "it", price: 920, additionalClassPrice: 180 },
-      { name: "Portugal", flag: "pt", price: 909, additionalClassPrice: 265 },
-      { name: "Greece", flag: "gr", price: 736, additionalClassPrice: 570 },
-      { name: "Bosnia and Herzegovina", flag: "ba", price: 656, additionalClassPrice: 170 },
-      { name: "Belarus", flag: "by", price: 800, additionalClassPrice: 400 },
-      { name: "Benelux", flag: "be", price: 794, additionalClassPrice: 190 },
-      { name: "Cyprus", flag: "cy", price: 750, additionalClassPrice: 350 },
-      { name: "Georgia", flag: "ge", price: 650, additionalClassPrice: 300 },
-      { name: "Iceland", flag: "is", price: 850, additionalClassPrice: 400 },
-      { name: "Lithuania", flag: "lt", price: 700, additionalClassPrice: 350 },
+      { name: "European Union", flag: "eu" },
+      { name: "Germany", flag: "de" },
+      { name: "Spain", flag: "es" },
+      { name: "United Kingdom", flag: "gb" },
+      { name: "France", flag: "fr" },
+      { name: "Italy", flag: "it" },
+      { name: "Portugal", flag: "pt" },
+      { name: "Greece", flag: "gr" },
+      { name: "Bosnia and Herzegovina", flag: "ba" },
+      { name: "Belarus", flag: "by" },
+      { name: "Benelux", flag: "be" },
+      { name: "Cyprus", flag: "cy" },
+      { name: "Georgia", flag: "ge" },
+      { name: "Iceland", flag: "is" },
+      { name: "Lithuania", flag: "lt" },
     ],
   },
   {
     name: "South America",
     countries: [
-      { name: "Argentina", flag: "ar", price: 460, additionalClassPrice: 350 },
-      { name: "Bolivia", flag: "bo", price: 777, additionalClassPrice: 585 },
-      { name: "Brazil", flag: "br", price: 644, additionalClassPrice: 418 },
-      { name: "Chile", flag: "cl", price: 689, additionalClassPrice: 499 },
-      { name: "Colombia", flag: "co", price: 794, additionalClassPrice: 490 },
-      { name: "Ecuador", flag: "ec", price: 632, additionalClassPrice: 549 },
-      { name: "Paraguay", flag: "py", price: 564, additionalClassPrice: 399 },
-      { name: "Peru", flag: "pe", price: 667, additionalClassPrice: 570 },
-      { name: "Uruguay", flag: "uy", price: 604, additionalClassPrice: 299 },
-      { name: "Venezuela", flag: "ve", price: 604, additionalClassPrice: 510 },
+      { name: "Argentina", flag: "ar" },
+      { name: "Bolivia", flag: "bo" },
+      { name: "Brazil", flag: "br" },
+      { name: "Chile", flag: "cl" },
+      { name: "Colombia", flag: "co" },
+      { name: "Ecuador", flag: "ec" },
+      { name: "Paraguay", flag: "py" },
+      { name: "Peru", flag: "pe" },
+      { name: "Uruguay", flag: "uy" },
+      { name: "Venezuela", flag: "ve" },
     ],
   },
   {
     name: "Asia",
     countries: [
-      { name: "China", flag: "cn", price: 518, additionalClassPrice: 450 },
-      { name: "Japan", flag: "jp", price: 777, additionalClassPrice: 500 },
-      { name: "Afghanistan", flag: "af", price: 863, additionalClassPrice: 1090 },
-      { name: "Saudi Arabia", flag: "sa", price: 2818, additionalClassPrice: 2450 },
-      { name: "Armenia", flag: "am", price: 1495, additionalClassPrice: 1300 },
-      { name: "Azerbaijan", flag: "az", price: 1001, additionalClassPrice: 470 },
-      { name: "Bahrain", flag: "bh", price: 3013, additionalClassPrice: 2620 },
-      { name: "Bangladesh", flag: "bd", price: 892, additionalClassPrice: 775 },
-      { name: "Bhutan", flag: "bt", price: 690, additionalClassPrice: 380 },
-      { name: "Brunei", flag: "bn", price: 863, additionalClassPrice: 750 },
-      { name: "Cambodia", flag: "kh", price: 724, additionalClassPrice: 629 },
-      { name: "Hong Kong", flag: "hk", price: 978, additionalClassPrice: 490 },
-      { name: "India", flag: "in", price: 662, additionalClassPrice: 450 },
-      { name: "Indonesia", flag: "id", price: 1139, additionalClassPrice: 950 },
-      { name: "Iran", flag: "ir", price: 1725, additionalClassPrice: 490 },
-      { name: "Iraq", flag: "iq", price: 1737, additionalClassPrice: 300 },
-      { name: "Jordan", flag: "jo", price: 1495, additionalClassPrice: 1300 },
-      { name: "Kazakhstan", flag: "kz", price: 920, additionalClassPrice: 430 },
-      { name: "Kyrgyzstan", flag: "kg", price: 851, additionalClassPrice: 520 },
-      { name: "South Korea", flag: "kr", price: 804, additionalClassPrice: 600 },
-      { name: "Kuwait", flag: "kw", price: 2093, additionalClassPrice: 1820 },
-      { name: "Laos", flag: "la", price: 736, additionalClassPrice: 640 },
-      { name: "Lebanon", flag: "lb", price: 1012, additionalClassPrice: 470 },
-      { name: "Macao", flag: "mo", price: 886, additionalClassPrice: 770 },
-      { name: "Malaysia", flag: "my", price: 1323, additionalClassPrice: 970 },
-      { name: "Maldives", flag: "mv", price: 1024, additionalClassPrice: 490 },
-      { name: "Mongolia", flag: "mn", price: 782, additionalClassPrice: 480 },
-      { name: "Myanmar", flag: "mm", price: 725, additionalClassPrice: 520 },
-      { name: "Nepal", flag: "np", price: 725, additionalClassPrice: 630 },
-      { name: "North Korea", flag: "kp", price: 1553, additionalClassPrice: 570 },
-      { name: "Oman", flag: "om", price: 1645, additionalClassPrice: 1430 },
-      { name: "Pakistan", flag: "pk", price: 863, additionalClassPrice: 690 },
-      { name: "Palestine", flag: "ps", price: 1012, additionalClassPrice: 880 },
-      { name: "Philippines", flag: "ph", price: 748, additionalClassPrice: 530 },
-      { name: "Qatar", flag: "qa", price: 2507, additionalClassPrice: 2180 },
-      { name: "Singapore", flag: "sg", price: 1024, additionalClassPrice: 750 },
-      { name: "Sri Lanka", flag: "lk", price: 685, additionalClassPrice: 595 },
-      { name: "Syria", flag: "sy", price: 2013, additionalClassPrice: 1750 },
-      { name: "Taiwan", flag: "tw", price: 817, additionalClassPrice: 710 },
-      { name: "Tajikistan", flag: "tj", price: 2012, additionalClassPrice: 1749 },
-      { name: "Thailand", flag: "th", price: 1380, additionalClassPrice: 1000 },
-      { name: "Turkey", flag: "tr", price: 644, additionalClassPrice: 265 },
-      { name: "Turkmenistan", flag: "tm", price: 1145, additionalClassPrice: 545 },
-      { name: "United Arab Emirates", flag: "ae", price: 2990, additionalClassPrice: 2475 },
-      { name: "Uzbekistan", flag: "uz", price: 1541, additionalClassPrice: 590 },
-      { name: "Vietnam", flag: "vn", price: 575, additionalClassPrice: 500 },
-      { name: "Yemen", flag: "ye", price: 1840, additionalClassPrice: 1600 },
+      { name: "China", flag: "cn" },
+      { name: "Japan", flag: "jp" },
+      { name: "Afghanistan", flag: "af" },
+      { name: "Saudi Arabia", flag: "sa" },
+      { name: "Armenia", flag: "am" },
+      { name: "Azerbaijan", flag: "az" },
+      { name: "Bahrain", flag: "bh" },
+      { name: "Bangladesh", flag: "bd" },
+      { name: "Bhutan", flag: "bt" },
+      { name: "Brunei", flag: "bn" },
+      { name: "Cambodia", flag: "kh" },
+      { name: "Hong Kong", flag: "hk" },
+      { name: "India", flag: "in" },
+      { name: "Indonesia", flag: "id" },
+      { name: "Iran", flag: "ir" },
+      { name: "Iraq", flag: "iq" },
+      { name: "Jordan", flag: "jo" },
+      { name: "Kazakhstan", flag: "kz" },
+      { name: "Kyrgyzstan", flag: "kg" },
+      { name: "South Korea", flag: "kr" },
+      { name: "Kuwait", flag: "kw" },
+      { name: "Laos", flag: "la" },
+      { name: "Lebanon", flag: "lb" },
+      { name: "Macao", flag: "mo" },
+      { name: "Malaysia", flag: "my" },
+      { name: "Maldives", flag: "mv" },
+      { name: "Mongolia", flag: "mn" },
+      { name: "Myanmar", flag: "mm" },
+      { name: "Nepal", flag: "np" },
+      { name: "North Korea", flag: "kp" },
+      { name: "Oman", flag: "om" },
+      { name: "Pakistan", flag: "pk" },
+      { name: "Palestine", flag: "ps" },
+      { name: "Philippines", flag: "ph" },
+      { name: "Qatar", flag: "qa" },
+      { name: "Singapore", flag: "sg" },
+      { name: "Sri Lanka", flag: "lk" },
+      { name: "Syria", flag: "sy" },
+      { name: "Taiwan", flag: "tw" },
+      { name: "Tajikistan", flag: "tj" },
+      { name: "Thailand", flag: "th" },
+      { name: "Turkey", flag: "tr" },
+      { name: "Turkmenistan", flag: "tm" },
+      { name: "United Arab Emirates", flag: "ae" },
+      { name: "Uzbekistan", flag: "uz" },
+      { name: "Vietnam", flag: "vn" },
+      { name: "Yemen", flag: "ye" },
     ],
   },
   {
     name: "Caribbean",
     countries: [
-      { name: "Anguilla", flag: "ai", price: 1012, additionalClassPrice: 430 },
-      { name: "Antigua and Barbuda", flag: "ag", price: 759, additionalClassPrice: 330 },
-      { name: "Aruba", flag: "aw", price: 943, additionalClassPrice: 170 },
-      { name: "Bahamas", flag: "bs", price: 1076, additionalClassPrice: 935 },
-      { name: "Barbados", flag: "bb", price: 1400, additionalClassPrice: 1150 },
-      { name: "Bermuda", flag: "bm", price: 1770, additionalClassPrice: 1539 },
-      { name: "British Virgin Islands", flag: "vg", price: 1001, additionalClassPrice: 480 },
-      { name: "Cayman Islands", flag: "ky", price: 1242, additionalClassPrice: 350 },
-      { name: "Cuba", flag: "cu", price: 1375, additionalClassPrice: 730 },
-      { name: "Curacao", flag: "cw", price: 1208, additionalClassPrice: 200 },
-      { name: "Dominica", flag: "dm", price: 1024, additionalClassPrice: 530 },
-      { name: "Dominican Republic", flag: "do", price: 621, additionalClassPrice: 420 },
-      { name: "Grenada", flag: "gd", price: 1145, additionalClassPrice: 280 },
-      { name: "Haiti", flag: "ht", price: 736, additionalClassPrice: 430 },
-      { name: "Jamaica", flag: "jm", price: 1231, additionalClassPrice: 355 },
-      { name: "Puerto Rico", flag: "pr", price: 817, additionalClassPrice: 680 },
-      { name: "Saint Kitts and Nevis", flag: "kn", price: 1070, additionalClassPrice: 390 },
-      { name: "Saint Lucia", flag: "lc", price: 1024, additionalClassPrice: 390 },
-      { name: "Saint Vincent and the Grenadines", flag: "vc", price: 656, additionalClassPrice: 570 },
-      { name: "Trinidad and Tobago", flag: "tt", price: 828, additionalClassPrice: 250 },
-      { name: "Turks and Caicos Islands", flag: "tc", price: 2128, additionalClassPrice: 1850 },
+      { name: "Anguilla", flag: "ai" },
+      { name: "Antigua and Barbuda", flag: "ag" },
+      { name: "Aruba", flag: "aw" },
+      { name: "Bahamas", flag: "bs" },
+      { name: "Barbados", flag: "bb" },
+      { name: "Bermuda", flag: "bm" },
+      { name: "British Virgin Islands", flag: "vg" },
+      { name: "Cayman Islands", flag: "ky" },
+      { name: "Cuba", flag: "cu" },
+      { name: "Curacao", flag: "cw" },
+      { name: "Dominica", flag: "dm" },
+      { name: "Dominican Republic", flag: "do" },
+      { name: "Grenada", flag: "gd" },
+      { name: "Haiti", flag: "ht" },
+      { name: "Jamaica", flag: "jm" },
+      { name: "Puerto Rico", flag: "pr" },
+      { name: "Saint Kitts and Nevis", flag: "kn" },
+      { name: "Saint Lucia", flag: "lc" },
+      { name: "Saint Vincent and the Grenadines", flag: "vc" },
+      { name: "Trinidad and Tobago", flag: "tt" },
+      { name: "Turks and Caicos Islands", flag: "tc" },
     ],
   },
 ]
 
 export function FreeSearchForm() {
-  const { formatPrice } = useCurrency()
   const router = useRouter()
   const searchParams = useSearchParams()
   const [step, setStep] = useState(1)
@@ -490,15 +485,12 @@ export function FreeSearchForm() {
 
       <div className="grid lg:grid-cols-5 gap-12">
         <div className="lg:col-span-3">
-          <div className="mb-8 flex justify-between items-start">
-            <div>
-              <h1 className="text-4xl font-bold mb-4 text-indigo-700">Free Trademark Search</h1>
-              <p className="text-lg text-gray-600">Start your trademark journey with a free search.</p>
-              <p className="text-lg text-gray-600 mb-8">
-                Fill out this simple form to get your free trademark search and expert assessment within 24 hours.
-              </p>
-            </div>
-            <CurrencySelector />
+          <div className="mb-8">
+            <h1 className="text-4xl font-bold mb-4 text-indigo-700">Free Trademark Search</h1>
+            <p className="text-lg text-gray-600">Start your trademark journey with a free search.</p>
+            <p className="text-lg text-gray-600 mb-8">
+              Fill out this simple form to get your free trademark search and expert assessment within 24 hours.
+            </p>
           </div>
 
           {/* Progress bar */}
@@ -725,11 +717,8 @@ export function FreeSearchForm() {
                           key={country.name}
                           country={country.name}
                           flag={`https://flagcdn.com/${country.flag}.svg`}
-                          price={country.price}
-                          additionalClassPrice={country.additionalClassPrice}
                           onSelect={() => toggleCountry(country.name)}
                           selected={selectedCountries.includes(country.name)}
-                          formatPrice={formatPrice}
                         />
                       ))}
                     </div>
@@ -746,11 +735,8 @@ export function FreeSearchForm() {
                           key={country.name}
                           country={country.name}
                           flag={`https://flagcdn.com/${country.flag}.svg`}
-                          price={country.price}
-                          additionalClassPrice={country.additionalClassPrice}
                           onSelect={() => toggleCountry(country.name)}
                           selected={selectedCountries.includes(country.name)}
-                          formatPrice={formatPrice}
                         />
                       ))}
                     </div>
@@ -780,11 +766,8 @@ export function FreeSearchForm() {
                               key={country.name}
                               country={country.name}
                               flag={`https://flagcdn.com/${country.flag}.svg`}
-                              price={country.price}
-                              additionalClassPrice={country.additionalClassPrice}
                               onSelect={() => toggleCountry(country.name)}
                               selected={selectedCountries.includes(country.name)}
-                              formatPrice={formatPrice}
                             />
                           ))}
                         </div>

@@ -16,9 +16,8 @@ import { CountrySelectCard } from "@/components/country-select-card"
 import Image from "next/image"
 import { Upload, ChevronDown, ChevronUp } from "lucide-react"
 import { TrademarkClassesDialog } from "@/components/trademark-classes-dialog"
-import { useRouter } from "next/navigation"
 import { CurrencySelector } from "@/components/currency-selector"
-import { useCurrency } from "@/lib/currency-context"
+import { useRouter } from "next/navigation"
 
 interface FormData {
   trademarkType: string
@@ -264,7 +263,6 @@ interface VerificationFormContentProps {
 }
 
 const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoading, initialData }) => {
-  const { formatPrice } = useCurrency()
   const [step, setStep] = useState(1)
   const totalSteps = 4
   const [formData, setFormData] = useState<FormData>({
@@ -289,6 +287,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
   const searchId = searchParams.get("search_id")
+  const [selectedCurrency, setSelectedCurrency] = useState<"USD" | "EUR">("EUR")
 
   // Pre-fill form with initial data
   useEffect(() => {
@@ -340,6 +339,13 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
       } catch (error) {
         console.error("Error parsing countries from URL:", error)
       }
+    }
+  }, [searchParams])
+
+  useEffect(() => {
+    const currencyParam = searchParams.get("currency")
+    if (currencyParam === "USD" || currencyParam === "EUR") {
+      setSelectedCurrency(currencyParam)
     }
   }, [searchParams])
 
@@ -486,6 +492,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
   return (
     <div>
       <div id="verification-form" className="max-w-6xl mx-auto px-4 pt-24 pb-12 scroll-mt-16">
+        <CurrencySelector selectedCurrency={selectedCurrency} onCurrencyChange={setSelectedCurrency} />
         {isLoading && (
           <div className="w-full p-4 mb-4 bg-blue-50 text-blue-700 rounded-md">
             <p className="text-center">Loading your previous search data...</p>
@@ -506,15 +513,12 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
 
         <div className="grid lg:grid-cols-7 gap-12">
           <div className="lg:col-span-5">
-            <div className="mb-8 flex justify-between items-start">
-              <div>
-                <h1 className="text-4xl font-bold mb-4 text-indigo-700">Complete Your Registration</h1>
-                <p className="text-lg text-gray-600">Your trademark information is ready for registration.</p>
-                <p className="text-lg text-gray-600 mb-8">
-                  Review and complete the details below to proceed with your trademark application.
-                </p>
-              </div>
-              <CurrencySelector />
+            <div className="mb-8">
+              <h1 className="text-4xl font-bold mb-4 text-indigo-700">Complete Your Registration</h1>
+              <p className="text-lg text-gray-600">Your trademark information is ready for registration.</p>
+              <p className="text-lg text-gray-600 mb-8">
+                Review and complete the details below to proceed with your trademark application.
+              </p>
             </div>
 
             <div className="mb-12">
@@ -679,7 +683,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
                           additionalClassPrice={country.additionalClassPrice}
                           onSelect={() => toggleCountry(country.name)}
                           selected={selectedCountries.some((c) => c.name === country.name)}
-                          formatPrice={formatPrice}
+                          currency={selectedCurrency}
                         />
                       ))}
                     </div>
@@ -709,7 +713,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
                               additionalClassPrice={country.additionalClassPrice}
                               onSelect={() => toggleCountry(country.name)}
                               selected={selectedCountries.some((c) => c.name === country.name)}
-                              formatPrice={formatPrice}
+                              currency={selectedCurrency}
                             />
                           ))}
                         </div>
@@ -826,7 +830,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
                   <CardTitle>Your Selection</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-2xl font-bold mb-4">Estimated price: {formatPrice(totalPrice)}</p>
+                  <p className="text-2xl font-bold mb-4">{`${selectedCurrency === "USD" ? "$" : "€"}${totalPrice}`}</p>
                   <div className="mb-6 max-h-[calc(100vh-300px)] overflow-y-auto">
                     <ul>
                       {selectedCountries.map((country) => {
@@ -852,7 +856,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
                             </div>
                             <div className="flex items-center gap-2">
                               <span>{Math.max(1, formData.selectedClasses.length)} classes</span>
-                              <span className="min-w-[80px] text-right">{formatPrice(totalCountryPrice)}</span>
+                              <span className="min-w-[80px] text-right">{`${selectedCurrency === "USD" ? "$" : "€"}${totalCountryPrice}`}</span>
                             </div>
                           </li>
                         )
