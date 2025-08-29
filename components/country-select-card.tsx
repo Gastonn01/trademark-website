@@ -1,12 +1,15 @@
 "use client"
-import { Card, CardContent } from "@mui/material"
-import Check from "@mui/icons-material/Check"
+
+import { Info } from "lucide-react"
+import Image from "next/image"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { Button } from "@/components/ui/button"
 
 interface CountrySelectCardProps {
   country: string
   flag: string
-  price: number
-  additionalClassPrice: number
+  price?: number
+  additionalClassPrice?: number
   onSelect: () => void
   selected: boolean
   currency?: "USD" | "EUR"
@@ -19,34 +22,52 @@ export function CountrySelectCard({
   additionalClassPrice,
   onSelect,
   selected,
-  currency = "EUR",
+  currency = "USD",
 }: CountrySelectCardProps) {
   const currencySymbol = currency === "USD" ? "$" : "€"
 
   return (
-    <Card
-      className={`cursor-pointer transition-all duration-200 hover:shadow-md ${
-        selected ? "ring-2 ring-indigo-500 bg-indigo-50" : "hover:bg-gray-50"
-      }`}
+    <div
       onClick={onSelect}
+      className={`
+        w-full flex items-center justify-between p-4 rounded-lg cursor-pointer
+        ${selected ? "bg-[#1D4ED8] text-white" : "bg-white hover:bg-gray-50 border border-gray-200"}
+      `}
     >
-      <CardContent className="p-4">
-        <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center">
-            <img src={flag || "/placeholder.svg"} alt={`${country} flag`} className="w-6 h-4 mr-2" />
-            <span className="font-medium text-sm">{country}</span>
-          </div>
-          {selected && <Check className="h-4 w-4 text-indigo-600" />}
+      <div className="flex items-center gap-3">
+        <Image src={flag || "/placeholder.svg"} alt={`${country} flag`} width={40} height={30} className="rounded" />
+        <span className="text-sm font-medium leading-none">{country === "Surinam" ? "Suriname" : country}</span>
+      </div>
+      {price !== undefined && (
+        <div className="flex items-center gap-2">
+          <span className="font-semibold">
+            {currencySymbol}
+            {price}
+          </span>
+          {additionalClassPrice !== undefined && (
+            <TooltipProvider>
+              <Tooltip delayDuration={0}>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className={`h-6 w-6 p-0 ${selected ? "text-white/70 hover:text-white" : "text-muted-foreground hover:text-foreground"}`}
+                  >
+                    <Info className="h-4 w-4" />
+                    <span className="sr-only">Additional class price information</span>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent sideOffset={5}>
+                  <p>
+                    Additional class price: {currencySymbol}
+                    {additionalClassPrice}
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          )}
         </div>
-        <div className="text-lg font-bold text-indigo-600">
-          {currencySymbol}
-          {price}
-        </div>
-        <div className="text-xs text-gray-500">
-          +{currencySymbol}
-          {additionalClassPrice} per additional class
-        </div>
-      </CardContent>
-    </Card>
+      )}
+    </div>
   )
 }

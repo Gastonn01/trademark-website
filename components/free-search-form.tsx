@@ -11,6 +11,8 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Textarea } from "@/components/ui/textarea"
 import { CountrySelectCard } from "@/components/country-select-card"
+import { CurrencySelector } from "@/components/currency-selector"
+import { trackLeadSubmission } from "@/components/gtm-tracking"
 import { Upload, CheckCircle, ChevronDown, ChevronUp, AlertCircle } from "lucide-react"
 import { v4 as uuidv4 } from "uuid"
 
@@ -52,6 +54,85 @@ interface CountryData {
 interface RegionData {
   name: string
   countries: CountryData[]
+}
+
+// Pricing data for countries
+const pricingData = {
+  "European Union": { price: 1200, additionalClassPrice: 150, flag: "eu" },
+  "United States": { price: 1500, additionalClassPrice: 400, flag: "us" },
+  Germany: { price: 900, additionalClassPrice: 300, flag: "de" },
+  Argentina: { price: 1000, additionalClassPrice: 250, flag: "ar" },
+  Spain: { price: 600, additionalClassPrice: 150, flag: "es" },
+  "United Kingdom": { price: 900, additionalClassPrice: 200, flag: "gb" },
+  Canada: { price: 1200, additionalClassPrice: 300, flag: "ca" },
+  Mexico: { price: 800, additionalClassPrice: 200, flag: "mx" },
+  France: { price: 900, additionalClassPrice: 200, flag: "fr" },
+  Italy: { price: 900, additionalClassPrice: 200, flag: "it" },
+  Portugal: { price: 600, additionalClassPrice: 150, flag: "pt" },
+  Greece: { price: 600, additionalClassPrice: 150, flag: "gr" },
+  "Bosnia and Herzegovina": { price: 500, additionalClassPrice: 100, flag: "ba" },
+  Belarus: { price: 400, additionalClassPrice: 100, flag: "by" },
+  Benelux: { price: 800, additionalClassPrice: 200, flag: "be" },
+  Cyprus: { price: 600, additionalClassPrice: 150, flag: "cy" },
+  Georgia: { price: 400, additionalClassPrice: 100, flag: "ge" },
+  Iceland: { price: 800, additionalClassPrice: 200, flag: "is" },
+  Lithuania: { price: 500, additionalClassPrice: 150, flag: "lt" },
+  Bolivia: { price: 600, additionalClassPrice: 150, flag: "bo" },
+  Brazil: { price: 1200, additionalClassPrice: 300, flag: "br" },
+  Chile: { price: 800, additionalClassPrice: 200, flag: "cl" },
+  Colombia: { price: 800, additionalClassPrice: 200, flag: "co" },
+  Ecuador: { price: 600, additionalClassPrice: 150, flag: "ec" },
+  Paraguay: { price: 500, additionalClassPrice: 150, flag: "py" },
+  Peru: { price: 600, additionalClassPrice: 150, flag: "pe" },
+  Uruguay: { price: 700, additionalClassPrice: 200, flag: "uy" },
+  Venezuela: { price: 600, additionalClassPrice: 150, flag: "ve" },
+  China: { price: 1000, additionalClassPrice: 200, flag: "cn" },
+  Japan: { price: 1500, additionalClassPrice: 400, flag: "jp" },
+  Afghanistan: { price: 500, additionalClassPrice: 100, flag: "af" },
+  "Saudi Arabia": { price: 800, additionalClassPrice: 200, flag: "sa" },
+  Armenia: { price: 400, additionalClassPrice: 100, flag: "am" },
+  Azerbaijan: { price: 400, additionalClassPrice: 100, flag: "az" },
+  Bahrain: { price: 600, additionalClassPrice: 150, flag: "bh" },
+  Bangladesh: { price: 500, additionalClassPrice: 100, flag: "bd" },
+  Bhutan: { price: 500, additionalClassPrice: 100, flag: "bt" },
+  Brunei: { price: 600, additionalClassPrice: 150, flag: "bn" },
+  Cambodia: { price: 500, additionalClassPrice: 100, flag: "kh" },
+  "Hong Kong": { price: 800, additionalClassPrice: 200, flag: "hk" },
+  India: { price: 800, additionalClassPrice: 150, flag: "in" },
+  Indonesia: { price: 600, additionalClassPrice: 150, flag: "id" },
+  Iran: { price: 500, additionalClassPrice: 100, flag: "ir" },
+  Iraq: { price: 500, additionalClassPrice: 100, flag: "iq" },
+  Jordan: { price: 600, additionalClassPrice: 150, flag: "jo" },
+  Kazakhstan: { price: 500, additionalClassPrice: 150, flag: "kz" },
+  Kyrgyzstan: { price: 400, additionalClassPrice: 100, flag: "kg" },
+  "South Korea": { price: 1200, additionalClassPrice: 300, flag: "kr" },
+  Kuwait: { price: 600, additionalClassPrice: 150, flag: "kw" },
+  Laos: { price: 500, additionalClassPrice: 100, flag: "la" },
+  Lebanon: { price: 600, additionalClassPrice: 150, flag: "lb" },
+  Macao: { price: 600, additionalClassPrice: 150, flag: "mo" },
+  Malaysia: { price: 600, additionalClassPrice: 150, flag: "my" },
+  Maldives: { price: 500, additionalClassPrice: 100, flag: "mv" },
+  Mongolia: { price: 500, additionalClassPrice: 100, flag: "mn" },
+  Myanmar: { price: 500, additionalClassPrice: 100, flag: "mm" },
+  Nepal: { price: 500, additionalClassPrice: 100, flag: "np" },
+  "North Korea": { price: 500, additionalClassPrice: 100, flag: "kp" },
+  Oman: { price: 600, additionalClassPrice: 150, flag: "om" },
+  Pakistan: { price: 500, additionalClassPrice: 100, flag: "pk" },
+  Palestine: { price: 500, additionalClassPrice: 100, flag: "ps" },
+  Philippines: { price: 600, additionalClassPrice: 150, flag: "ph" },
+  Qatar: { price: 600, additionalClassPrice: 150, flag: "qa" },
+  Singapore: { price: 800, additionalClassPrice: 200, flag: "sg" },
+  "Sri Lanka": { price: 500, additionalClassPrice: 100, flag: "lk" },
+  Syria: { price: 500, additionalClassPrice: 100, flag: "sy" },
+  Taiwan: { price: 800, additionalClassPrice: 200, flag: "tw" },
+  Tajikistan: { price: 400, additionalClassPrice: 100, flag: "tj" },
+  Thailand: { price: 600, additionalClassPrice: 150, flag: "th" },
+  Turkey: { price: 700, additionalClassPrice: 200, flag: "tr" },
+  Turkmenistan: { price: 400, additionalClassPrice: 100, flag: "tm" },
+  "United Arab Emirates": { price: 800, additionalClassPrice: 200, flag: "ae" },
+  Uzbekistan: { price: 400, additionalClassPrice: 100, flag: "uz" },
+  Vietnam: { price: 600, additionalClassPrice: 150, flag: "vn" },
+  Yemen: { price: 500, additionalClassPrice: 100, flag: "ye" },
 }
 
 const topCountries: CountryData[] = [
@@ -159,32 +240,6 @@ const regions: RegionData[] = [
       { name: "Yemen", flag: "ye" },
     ],
   },
-  {
-    name: "Caribbean",
-    countries: [
-      { name: "Anguilla", flag: "ai" },
-      { name: "Antigua and Barbuda", flag: "ag" },
-      { name: "Aruba", flag: "aw" },
-      { name: "Bahamas", flag: "bs" },
-      { name: "Barbados", flag: "bb" },
-      { name: "Bermuda", flag: "bm" },
-      { name: "British Virgin Islands", flag: "vg" },
-      { name: "Cayman Islands", flag: "ky" },
-      { name: "Cuba", flag: "cu" },
-      { name: "Curacao", flag: "cw" },
-      { name: "Dominica", flag: "dm" },
-      { name: "Dominican Republic", flag: "do" },
-      { name: "Grenada", flag: "gd" },
-      { name: "Haiti", flag: "ht" },
-      { name: "Jamaica", flag: "jm" },
-      { name: "Puerto Rico", flag: "pr" },
-      { name: "Saint Kitts and Nevis", flag: "kn" },
-      { name: "Saint Lucia", flag: "lc" },
-      { name: "Saint Vincent and the Grenadines", flag: "vc" },
-      { name: "Trinidad and Tobago", flag: "tt" },
-      { name: "Turks and Caicos Islands", flag: "tc" },
-    ],
-  },
 ]
 
 export function FreeSearchForm() {
@@ -192,6 +247,7 @@ export function FreeSearchForm() {
   const searchParams = useSearchParams()
   const [step, setStep] = useState(1)
   const totalSteps = 3
+  const [currency, setCurrency] = useState<"USD" | "EUR">("USD")
   const [formData, setFormData] = useState<FormData>({
     trademarkType: "",
     trademarkName: "",
@@ -221,6 +277,19 @@ export function FreeSearchForm() {
   useEffect(() => {
     setIsPreview(isPreviewEnvironment())
   }, [])
+
+  // Load currency from localStorage on mount
+  useEffect(() => {
+    const savedCurrency = localStorage.getItem("selectedCurrency") as "USD" | "EUR"
+    if (savedCurrency) {
+      setCurrency(savedCurrency)
+    }
+  }, [])
+
+  const handleCurrencyChange = (newCurrency: "USD" | "EUR") => {
+    setCurrency(newCurrency)
+    localStorage.setItem("selectedCurrency", newCurrency)
+  }
 
   // Function to search countries in all regions
   const searchCountries = (term: string) => {
@@ -376,6 +445,9 @@ export function FreeSearchForm() {
       // Save to localStorage as backup
       saveFormToLocalStorage(formData, searchId)
 
+      // Track lead submission in GTM
+      trackLeadSubmission("free_search", 1, currency)
+
       // If in preview mode, we'll simulate a successful submission
       if (isPreview) {
         console.log("Preview mode detected, simulating successful submission")
@@ -465,6 +537,13 @@ export function FreeSearchForm() {
     }
   }
 
+  const totalPrice = selectedCountries.reduce((sum, country) => {
+    const countryData = pricingData[country as keyof typeof pricingData]
+    return sum + (countryData?.price || 0)
+  }, 0)
+
+  const currencySymbol = currency === "USD" ? "$" : "€"
+
   return (
     <div id="free-search-form" className="max-w-6xl mx-auto px-4 pt-24 pb-12 scroll-mt-16">
       {isPreview && previewModeNotice && (
@@ -492,6 +571,8 @@ export function FreeSearchForm() {
               Fill out this simple form to get your free trademark search and expert assessment within 24 hours.
             </p>
           </div>
+
+          {step === 2 && <CurrencySelector selectedCurrency={currency} onCurrencyChange={handleCurrencyChange} />}
 
           {/* Progress bar */}
           <div className="mb-12">
@@ -699,6 +780,29 @@ export function FreeSearchForm() {
                   Select the countries or regions where you want to register your trademark.
                 </p>
 
+                {selectedCountries.length > 0 && (
+                  <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-4 mb-6">
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <h3 className="font-semibold text-indigo-900">
+                          Selected: {selectedCountries.length} countries
+                        </h3>
+                        <p className="text-sm text-indigo-700">
+                          {selectedCountries.slice(0, 3).join(", ")}
+                          {selectedCountries.length > 3 && ` and ${selectedCountries.length - 3} more`}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-xl font-bold text-indigo-900">
+                          {currencySymbol}
+                          {totalPrice.toLocaleString()}
+                        </div>
+                        <p className="text-xs text-indigo-700">Total for first class</p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
                 <Input
                   type="text"
                   placeholder="Search for countries..."
@@ -712,15 +816,21 @@ export function FreeSearchForm() {
                   <div>
                     <h3 className="text-xl font-semibold mb-4 text-indigo-700">Search Results</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {searchResults.map((country) => (
-                        <CountrySelectCard
-                          key={country.name}
-                          country={country.name}
-                          flag={`https://flagcdn.com/${country.flag}.svg`}
-                          onSelect={() => toggleCountry(country.name)}
-                          selected={selectedCountries.includes(country.name)}
-                        />
-                      ))}
+                      {searchResults.map((country) => {
+                        const countryData = pricingData[country.name as keyof typeof pricingData]
+                        return (
+                          <CountrySelectCard
+                            key={country.name}
+                            country={country.name}
+                            flag={`https://flagcdn.com/${country.flag}.svg`}
+                            price={countryData?.price}
+                            additionalClassPrice={countryData?.additionalClassPrice}
+                            onSelect={() => toggleCountry(country.name)}
+                            selected={selectedCountries.includes(country.name)}
+                            currency={currency}
+                          />
+                        )
+                      })}
                     </div>
                   </div>
                 )}
@@ -730,15 +840,21 @@ export function FreeSearchForm() {
                   <div>
                     <h3 className="text-xl font-semibold mb-4 text-indigo-700">Most Requested Countries</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {filteredTopCountries.map((country) => (
-                        <CountrySelectCard
-                          key={country.name}
-                          country={country.name}
-                          flag={`https://flagcdn.com/${country.flag}.svg`}
-                          onSelect={() => toggleCountry(country.name)}
-                          selected={selectedCountries.includes(country.name)}
-                        />
-                      ))}
+                      {filteredTopCountries.map((country) => {
+                        const countryData = pricingData[country.name as keyof typeof pricingData]
+                        return (
+                          <CountrySelectCard
+                            key={country.name}
+                            country={country.name}
+                            flag={`https://flagcdn.com/${country.flag}.svg`}
+                            price={countryData?.price}
+                            additionalClassPrice={countryData?.additionalClassPrice}
+                            onSelect={() => toggleCountry(country.name)}
+                            selected={selectedCountries.includes(country.name)}
+                            currency={currency}
+                          />
+                        )
+                      })}
                     </div>
                   </div>
                 )}
@@ -761,15 +877,21 @@ export function FreeSearchForm() {
                       </button>
                       {expandedRegions.includes(region.name) && (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                          {region.countries.map((country) => (
-                            <CountrySelectCard
-                              key={country.name}
-                              country={country.name}
-                              flag={`https://flagcdn.com/${country.flag}.svg`}
-                              onSelect={() => toggleCountry(country.name)}
-                              selected={selectedCountries.includes(country.name)}
-                            />
-                          ))}
+                          {region.countries.map((country) => {
+                            const countryData = pricingData[country.name as keyof typeof pricingData]
+                            return (
+                              <CountrySelectCard
+                                key={country.name}
+                                country={country.name}
+                                flag={`https://flagcdn.com/${country.flag}.svg`}
+                                price={countryData?.price}
+                                additionalClassPrice={countryData?.additionalClassPrice}
+                                onSelect={() => toggleCountry(country.name)}
+                                selected={selectedCountries.includes(country.name)}
+                                currency={currency}
+                              />
+                            )
+                          })}
                         </div>
                       )}
                     </div>
