@@ -1,13 +1,12 @@
 "use client"
 
 import type React from "react"
-
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { useStripe, useElements, PaymentElement } from "@stripe/react-stripe-js"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { AlertCircle, CheckCircle } from "lucide-react"
 import { useRouter } from "next/navigation"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Loader2, CheckCircle, AlertCircle } from "lucide-react"
 
 interface PaymentFormProps {
   amount: number
@@ -18,62 +17,40 @@ interface PaymentFormProps {
 export function PaymentForm({ amount, formData, currency = "EUR" }: PaymentFormProps) {
   const stripe = useStripe()
   const elements = useElements()
-  const [errorMessage, setErrorMessage] = useState<string | null>(null)
-  const [isProcessing, setIsProcessing] = useState(false)
-  const [paymentStatus, setPaymentStatus] = useState<"idle" | "processing" | "succeeded" | "failed">("idle")
   const router = useRouter()
-
-  // Guardar el email del cliente para usarlo en la verificación del pago
-  useEffect(() => {
-    if (formData?.email) {
-      localStorage.setItem("customerEmail", formData.email)
-    }
-  }, [formData])
-
-  // Solo redirigir cuando el pago es exitoso
-  useEffect(() => {
-    let redirectTimer: NodeJS.Timeout
-
-    if (paymentStatus === "succeeded") {
-      redirectTimer = setTimeout(() => {
-        router.push("/payment-confirmation?status=success")
-      }, 2000)
-    }
-
-    return () => {
-      if (redirectTimer) clearTimeout(redirectTimer)
-    }
-  }, [paymentStatus, router])
+  const [isLoading, setIsLoading] = useState(false)
+  const [message, setMessage] = useState<string | null>(null)
+  const [isSuccess, setIsSuccess] = useState(false)
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
 
     if (!stripe || !elements) {
-      setErrorMessage("Stripe has not been properly initialized")
+      setMessage("Payment system is not ready. Please refresh the page.")
       return
     }
 
-    setIsProcessing(true)
-    setPaymentStatus("processing")
+    setIsLoading(true)
+    setMessage(null)
 
     try {
-      // Create the payment
+      // Submit the form to validate fields
       const { error: submitError } = await elements.submit()
       if (submitError) {
-        setErrorMessage(submitError.message ?? "An error occurred while submitting your payment information")
-        setPaymentStatus("failed")
-        setIsProcessing(false)
+        setMessage(submitError.message || "Please check your payment details.")
+        setIsLoading(false)
         return
       }
 
-      const { error } = await stripe.confirmPayment({
+      // Confirm the payment
+      const { error, paymentIntent } = await stripe.confirmPayment({
         elements,
+        redirect: "if_required",
         confirmParams: {
-          return_url: `${window.location.origin}/payment-confirmation`,
           receipt_email: formData?.email,
           payment_method_data: {
             billing_details: {
-              name: formData?.name ? `${formData.name} ${formData.surname || ""}` : undefined,
+              name: formData?.name ? `${formData.name} ${formData.surname || ""}`.trim() : undefined,
               email: formData?.email,
               phone: formData?.phone,
             },
@@ -82,69 +59,146 @@ export function PaymentForm({ amount, formData, currency = "EUR" }: PaymentFormP
       })
 
       if (error) {
-        setErrorMessage(error.message ?? "An unknown error occurred")
-        setPaymentStatus("failed")
-      } else {
-        // Payment succeeded if no error
-        setPaymentStatus("succeeded")
+        console.error("Payment error:", error)
+        if (error.type === "card_error" || error.type === "validation_error") {
+          setMessage(error.message || "Your payment could not be processed.")
+        } else {
+          setMessage("An unexpected error occurred. Please try again.")
+        }
+      } else if (paymentIntent) {
+        // Payment succeeded
+        setIsSuccess(true)
+        setMessage("Payment successful! Redirecting...")
+
+        // Store payment details for confirmation page
+        if (typeof window !== "undefined") {
+          localStorage.setItem(
+            "paymentSuccess",
+            JSON.stringify({
+              paymentIntentId: paymentIntent.id,
+              amount: amount,
+              currency: currency,
+              customerEmail: formData?.email,
+            }),
+          )
+        }
+
+        // Navigate to confirmation page
+        setTimeout(() => {
+          router.push(`/payment-confirmation?status=success&payment_intent=${paymentIntent.id}`)
+        }, 1500)
       }
-    } catch (e) {
-      setErrorMessage("An error occurred while processing your payment")
-      setPaymentStatus("failed")
+    } catch (err: any) {
+      console.error("Payment processing error:", err)
+      setMessage("An unexpected error occurred. Please try again.")
     } finally {
-      setIsProcessing(false)
+      setIsLoading(false)
     }
   }
 
-  if (!stripe || !elements) {
-    return <div className="p-8 text-center">Loading payment form...</div>
+  const formatAmount = (amount: number, currency: string) => {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: currency,
+    }).format(amount)
+  }
+
+  if (isSuccess) {
+    return (
+      <Card className="w-full max-w-2xl mx-auto">
+        <CardContent className="flex flex-col items-center justify-center py-12">
+          <CheckCircle className="h-16 w-16 text-green-500 mb-4" />
+          <h3 className="text-xl font-semibold mb-2 text-green-600">Payment Successful!</h3>
+          <p className="text-center text-gray-600 mb-4">Thank you for your payment. You will be redirected shortly.</p>
+          <Loader2 className="h-6 w-6 animate-spin text-blue-600" />
+        </CardContent>
+      </Card>
+    )
   }
 
   return (
-    <Card>
+    <Card className="w-full max-w-2xl mx-auto">
       <CardHeader>
-        <CardTitle>Complete Your Payment</CardTitle>
+        <CardTitle className="text-center">Complete Your Payment</CardTitle>
+        <div className="text-center">
+          <span className="text-2xl font-bold text-blue-600">{formatAmount(amount, currency)}</span>
+          <p className="text-sm text-gray-600 mt-1">Trademark Registration Service</p>
+        </div>
       </CardHeader>
-      <form onSubmit={handleSubmit}>
-        <CardContent>
-          {paymentStatus === "succeeded" ? (
-            <div className="flex flex-col items-center justify-center py-8">
-              <CheckCircle className="h-16 w-16 text-green-500 mb-4" />
-              <h3 className="text-xl font-semibold mb-2">Payment Successful!</h3>
-              <p className="text-center text-gray-600">
-                Thank you for your payment. You will be redirected to the confirmation page shortly.
-              </p>
-            </div>
-          ) : (
-            <>
-              <div className="mb-6">
-                <PaymentElement />
+      <CardContent>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Customer Information Display */}
+          {formData && (
+            <div className="bg-gray-50 p-4 rounded-lg">
+              <h4 className="font-medium mb-2 text-gray-900">Customer Information</h4>
+              <div className="text-sm text-gray-600 space-y-1">
+                <p>
+                  <strong>Name:</strong> {formData.name} {formData.surname}
+                </p>
+                <p>
+                  <strong>Email:</strong> {formData.email}
+                </p>
+                {formData.phone && (
+                  <p>
+                    <strong>Phone:</strong> {formData.phone}
+                  </p>
+                )}
+                {formData.trademarkName && (
+                  <p>
+                    <strong>Trademark:</strong> {formData.trademarkName}
+                  </p>
+                )}
               </div>
+            </div>
+          )}
 
-              {errorMessage && (
-                <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-md flex items-start">
-                  <AlertCircle className="h-5 w-5 text-red-500 mr-2 flex-shrink-0 mt-0.5" />
-                  <p className="text-red-700 text-sm">{errorMessage}</p>
-                </div>
-              )}
-            </>
-          )}
-        </CardContent>
-        <CardFooter className="flex justify-between">
-          <p className="text-lg font-semibold">
-            Total: {amount.toFixed(2)} {currency}
-          </p>
-          {paymentStatus !== "succeeded" && (
-            <Button
-              type="submit"
-              disabled={isProcessing || !stripe || !elements}
-              className="bg-blue-600 hover:bg-blue-700"
+          {/* Payment Element */}
+          <div className="p-4 bg-gray-50 rounded-lg">
+            <PaymentElement
+              options={{
+                layout: "tabs",
+                paymentMethodOrder: ["card", "ideal", "bancontact"],
+              }}
+            />
+          </div>
+
+          {/* Error/Success Message */}
+          {message && (
+            <div
+              className={`flex items-center p-4 rounded-lg ${
+                isSuccess
+                  ? "bg-green-50 text-green-700 border border-green-200"
+                  : "bg-red-50 text-red-700 border border-red-200"
+              }`}
             >
-              {isProcessing ? "Processing..." : "Pay Now"}
-            </Button>
+              {isSuccess ? <CheckCircle className="h-5 w-5 mr-2" /> : <AlertCircle className="h-5 w-5 mr-2" />}
+              {message}
+            </div>
           )}
-        </CardFooter>
-      </form>
+
+          {/* Submit Button */}
+          <Button
+            type="submit"
+            disabled={isLoading || !stripe || !elements || isSuccess}
+            className="w-full py-3 text-lg"
+          >
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                Processing Payment...
+              </>
+            ) : (
+              `Pay ${formatAmount(amount, currency)}`
+            )}
+          </Button>
+
+          {/* Security Notice */}
+          <div className="text-xs text-gray-500 text-center space-y-1">
+            <p>🔒 Your payment information is secure and encrypted</p>
+            <p>Powered by Stripe • PCI DSS Compliant</p>
+          </div>
+        </form>
+      </CardContent>
     </Card>
   )
 }

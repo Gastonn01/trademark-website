@@ -3,661 +3,553 @@
 import type React from "react"
 
 import { useState, useEffect } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Checkbox } from "@/components/ui/checkbox"
-import { PlusCircle, Trash2, Upload, Check, AlertCircle } from "lucide-react"
-import { useRouter } from "next/navigation"
+import { Badge } from "@/components/ui/badge"
+import { Loader2, CheckCircle, AlertCircle } from "lucide-react"
 
-// Types for the form
-type OwnerType = "person" | "entity"
-
-interface Owner {
-  id: string
-  type: OwnerType
-  name: string
-  country: string
-  address: string
-  email: string
-  ownershipPercentage: number
-  // Additional fields that may be required based on country
-  maritalStatus?: string
-  translation?: string
-  stateProvince?: string
-  taxId?: string
-  documents: {
-    id: string
-    type: string
-    file: File | null
-    name: string
-  }[]
-}
-
-interface CountryRequirement {
-  country: string
-  requiredFields: string[]
-  documents: {
-    type: string
-    required: boolean
-    description: string
-  }[]
-}
-
-// Sample country requirements - in a real app, this would come from an API or database
-const countryRequirements: CountryRequirement[] = [
-  {
-    country: "US",
-    requiredFields: ["stateProvince", "taxId"],
-    documents: [
-      {
-        type: "identificationDocument",
-        required: true,
-        description: "Government-issued ID (passport, driver's license)",
-      },
-      { type: "proofOfAddress", required: true, description: "Proof of address (utility bill, bank statement)" },
-      {
-        type: "businessRegistration",
-        required: false,
-        description: "Business registration certificate (for entities)",
-      },
-    ],
-  },
-  {
-    country: "EU",
-    requiredFields: ["translation"],
-    documents: [
-      {
-        type: "identificationDocument",
-        required: true,
-        description: "Government-issued ID (passport, national ID card)",
-      },
-      { type: "proofOfAddress", required: true, description: "Proof of address (utility bill, bank statement)" },
-      { type: "powerOfAttorney", required: false, description: "Power of attorney (if applicable)" },
-    ],
-  },
-  {
-    country: "UK",
-    requiredFields: [],
-    documents: [
-      {
-        type: "identificationDocument",
-        required: true,
-        description: "Government-issued ID (passport, driver's license)",
-      },
-      { type: "proofOfAddress", required: true, description: "Proof of address (utility bill, bank statement)" },
-    ],
-  },
-  {
-    country: "CN",
-    requiredFields: ["translation"],
-    documents: [
-      {
-        type: "identificationDocument",
-        required: true,
-        description: "Government-issued ID (passport, national ID card)",
-      },
-      { type: "businessRegistration", required: true, description: "Business registration certificate (for entities)" },
-      { type: "chineseTranslation", required: true, description: "Chinese translation of all documents" },
-    ],
-  },
-  // Add more countries as needed
-]
-
-// List of countries for the dropdown
 const countries = [
-  { code: "US", name: "United States" },
-  { code: "EU", name: "European Union" },
-  { code: "UK", name: "United Kingdom" },
-  { code: "CN", name: "China" },
-  { code: "CA", name: "Canada" },
-  { code: "AU", name: "Australia" },
-  { code: "JP", name: "Japan" },
-  { code: "BR", name: "Brazil" },
-  { code: "MX", name: "Mexico" },
-  { code: "IN", name: "India" },
-  // Add more countries as needed
+  "United States",
+  "United Kingdom",
+  "Germany",
+  "France",
+  "Spain",
+  "Italy",
+  "Canada",
+  "Australia",
+  "Japan",
+  "China",
+  "India",
+  "Brazil",
+  "Mexico",
+  "Netherlands",
+  "Sweden",
+  "Norway",
+  "Denmark",
+  "Finland",
+  "Switzerland",
+  "Austria",
+  "Belgium",
+  "Portugal",
+  "Ireland",
+  "New Zealand",
+  "South Korea",
+  "Singapore",
+  "Hong Kong",
+  "Poland",
+  "Czech Republic",
+  "Hungary",
+  "Greece",
+  "Turkey",
+  "Israel",
+  "South Africa",
+  "Argentina",
+  "Chile",
+  "Colombia",
+  "Peru",
+  "Uruguay",
+  "Costa Rica",
+  "Panama",
+  "Ecuador",
+  "Bolivia",
+  "Paraguay",
+  "Venezuela",
+  "Dominican Republic",
+  "Guatemala",
+  "Honduras",
+  "El Salvador",
+  "Nicaragua",
 ]
 
-// Generate a unique ID
-const generateId = () => Math.random().toString(36).substring(2, 9)
+interface FormData {
+  // Personal Information
+  firstName: string
+  lastName: string
+  email: string
+  phone: string
+  address: string
+  city: string
+  state: string
+  zipCode: string
+  country: string
 
-// Initial owner template
-const createNewOwner = (): Owner => ({
-  id: generateId(),
-  type: "person",
-  name: "",
-  country: "",
-  address: "",
-  email: "",
-  ownershipPercentage: 100,
-  documents: [],
-})
+  // Trademark Information
+  trademarkName: string
+  trademarkType: "word" | "logo" | "figurative"
+  goodsAndServices: string
+  trademarkClasses: string[]
 
-export function RegistrationInfoForm({ token }: { token?: string }) {
+  // Registration Details
+  selectedCountries: string[]
+  priorityClaim: boolean
+  priorityDate: string
+  priorityCountry: string
+
+  // Additional Information
+  currentUse: boolean
+  firstUseDate: string
+  additionalInfo: string
+}
+
+export function RegistrationInfoForm() {
   const router = useRouter()
-  const [owners, setOwners] = useState<Owner[]>([createNewOwner()])
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [successMessage, setSuccessMessage] = useState("")
-  const [errorMessage, setErrorMessage] = useState("")
-  const [submissionId, setSubmissionId] = useState<string | null>(null)
+  const searchParams = useSearchParams()
+  const searchId = searchParams.get("search_id")
 
-  // Load data from token if provided
+  const [loading, setLoading] = useState(false)
+  const [dataLoading, setDataLoading] = useState(!!searchId) // Only show loading if we have a search_id
+  const [submitted, setSubmitted] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  const [formData, setFormData] = useState<FormData>({
+    // Personal Information
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    address: "",
+    city: "",
+    state: "",
+    zipCode: "",
+    country: "",
+
+    // Trademark Information
+    trademarkName: "",
+    trademarkType: "word",
+    goodsAndServices: "",
+    trademarkClasses: [],
+
+    // Registration Details
+    selectedCountries: [],
+    priorityClaim: false,
+    priorityDate: "",
+    priorityCountry: "",
+
+    // Additional Information
+    currentUse: false,
+    firstUseDate: "",
+    additionalInfo: "",
+  })
+
+  // Fetch and pre-fill data if search_id is provided
   useEffect(() => {
-    if (token) {
-      // In a real application, you would fetch the data using the token
-      const fetchDataWithToken = async () => {
-        try {
-          const response = await fetch(`/api/get-registration-data?token=${token}`)
-          if (response.ok) {
-            const data = await response.json()
-            if (data.success && data.registrationData) {
-              setOwners(data.registrationData.owners || [createNewOwner()])
-            }
-          }
-        } catch (error) {
-          console.error("Error fetching data with token:", error)
+    if (!searchId) return
+
+    const fetchSearchData = async () => {
+      try {
+        setDataLoading(true)
+        const response = await fetch(`/api/get-registration-data?search_id=${searchId}`)
+
+        if (!response.ok) {
+          throw new Error(`Error fetching search data: ${response.status}`)
         }
+
+        const data = await response.json()
+
+        if (data.error) {
+          throw new Error(data.error)
+        }
+
+        // Extract data from the search results
+        const originalData = data.search_results || {}
+
+        // Pre-fill the form with the original search data
+        setFormData((prev) => ({
+          ...prev,
+          // Personal Information
+          firstName: originalData.name || originalData.firstName || "",
+          lastName: originalData.surname || originalData.lastName || "",
+          email: data.email || originalData.email || "",
+
+          // Trademark Information
+          trademarkName: data.trademark_name || originalData.trademarkName || "",
+          trademarkType: originalData.trademarkType || "word",
+          goodsAndServices: originalData.goodsAndServices || originalData.description || "",
+
+          // Registration Details
+          selectedCountries: Array.isArray(originalData.countries) ? originalData.countries : [],
+        }))
+      } catch (err) {
+        console.error("Error fetching search data:", err)
+        setError(err instanceof Error ? err.message : "Failed to load search data")
+      } finally {
+        setDataLoading(false)
       }
-
-      fetchDataWithToken()
     }
-  }, [token])
 
-  // Add a new owner
-  const addOwner = () => {
-    setOwners([...owners, createNewOwner()])
+    fetchSearchData()
+  }, [searchId])
+
+  const handleInputChange = (field: keyof FormData, value: any) => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value,
+    }))
   }
 
-  // Remove an owner
-  const removeOwner = (id: string) => {
-    if (owners.length > 1) {
-      setOwners(owners.filter((owner) => owner.id !== id))
-
-      // Recalculate percentages
-      const remainingOwners = owners.filter((owner) => owner.id !== id)
-      const equalPercentage = 100 / remainingOwners.length
-      setOwners(
-        remainingOwners.map((owner) => ({
-          ...owner,
-          ownershipPercentage: Number.parseFloat(equalPercentage.toFixed(2)),
-        })),
-      )
-    }
+  const handleCountryToggle = (country: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      selectedCountries: prev.selectedCountries.includes(country)
+        ? prev.selectedCountries.filter((c) => c !== country)
+        : [...prev.selectedCountries, country],
+    }))
   }
 
-  // Update owner information
-  const updateOwner = (id: string, field: keyof Owner, value: any) => {
-    setOwners(
-      owners.map((owner) => {
-        if (owner.id === id) {
-          return { ...owner, [field]: value }
-        }
-        return owner
-      }),
-    )
-  }
-
-  // Get required documents based on country
-  const getRequiredDocuments = (countryCode: string) => {
-    const country = countryRequirements.find((c) => c.country === countryCode)
-    return country?.documents || []
-  }
-
-  // Check if a field is required for a country
-  const isFieldRequired = (countryCode: string, field: string) => {
-    const country = countryRequirements.find((c) => c.country === countryCode)
-    return country?.requiredFields.includes(field) || false
-  }
-
-  // Handle document upload
-  const handleDocumentUpload = (ownerId: string, documentType: string, file: File) => {
-    setOwners(
-      owners.map((owner) => {
-        if (owner.id === ownerId) {
-          // Check if document already exists
-          const existingDocIndex = owner.documents.findIndex((doc) => doc.type === documentType)
-
-          if (existingDocIndex >= 0) {
-            // Update existing document
-            const updatedDocs = [...owner.documents]
-            updatedDocs[existingDocIndex] = {
-              ...updatedDocs[existingDocIndex],
-              file,
-              name: file.name,
-            }
-            return { ...owner, documents: updatedDocs }
-          } else {
-            // Add new document
-            return {
-              ...owner,
-              documents: [
-                ...owner.documents,
-                {
-                  id: generateId(),
-                  type: documentType,
-                  file,
-                  name: file.name,
-                },
-              ],
-            }
-          }
-        }
-        return owner
-      }),
-    )
-  }
-
-  // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setIsSubmitting(true)
-    setErrorMessage("")
-    setSuccessMessage("")
+    setLoading(true)
+    setError(null)
 
     try {
-      // Validate form
-      let isValid = true
-      let validationMessage = ""
-
-      // Check if all owners have required fields
-      owners.forEach((owner, index) => {
-        if (!owner.name || !owner.country || !owner.address || !owner.email) {
-          isValid = false
-          validationMessage = `Owner ${index + 1} is missing required information.`
-        }
-
-        // Check country-specific required fields
-        if (owner.country) {
-          const requiredFields = countryRequirements.find((c) => c.country === owner.country)?.requiredFields || []
-          requiredFields.forEach((field) => {
-            if (!owner[field as keyof Owner]) {
-              isValid = false
-              validationMessage = `Owner ${index + 1} is missing required field: ${field}.`
-            }
-          })
-
-          // Check required documents
-          const requiredDocs = getRequiredDocuments(owner.country)
-            .filter((doc) => doc.required)
-            .map((doc) => doc.type)
-
-          const missingDocs = requiredDocs.filter(
-            (docType) => !owner.documents.some((doc) => doc.type === docType && doc.file),
-          )
-
-          if (missingDocs.length > 0) {
-            isValid = false
-            validationMessage = `Owner ${index + 1} is missing required documents: ${missingDocs.join(", ")}.`
-          }
-        }
-      })
-
-      // Check if ownership percentages add up to 100%
-      const totalPercentage = owners.reduce((sum, owner) => sum + owner.ownershipPercentage, 0)
-      if (Math.abs(totalPercentage - 100) > 0.01) {
-        isValid = false
-        validationMessage = `Ownership percentages must add up to 100%. Current total: ${totalPercentage}%.`
-      }
-
-      if (!isValid) {
-        setErrorMessage(validationMessage)
-        setIsSubmitting(false)
-        return
-      }
-
-      // Create FormData for submission
-      const formData = new FormData()
-      formData.append("ownerCount", owners.length.toString())
-
-      // Add all owner data to FormData
-      owners.forEach((owner, index) => {
-        formData.append(`owners[${index}][id]`, owner.id)
-        formData.append(`owners[${index}][type]`, owner.type)
-        formData.append(`owners[${index}][name]`, owner.name)
-        formData.append(`owners[${index}][country]`, owner.country)
-        formData.append(`owners[${index}][address]`, owner.address)
-        formData.append(`owners[${index}][email]`, owner.email)
-        formData.append(`owners[${index}][ownershipPercentage]`, owner.ownershipPercentage.toString())
-
-        // Add optional fields if they exist
-        if (owner.maritalStatus) {
-          formData.append(`owners[${index}][maritalStatus]`, owner.maritalStatus)
-        }
-
-        if (owner.translation) {
-          formData.append(`owners[${index}][translation]`, owner.translation)
-        }
-
-        if (owner.stateProvince) {
-          formData.append(`owners[${index}][stateProvince]`, owner.stateProvince)
-        }
-
-        if (owner.taxId) {
-          formData.append(`owners[${index}][taxId]`, owner.taxId)
-        }
-
-        // Add documents
-        const documentTypes = owner.documents.filter((doc) => doc.file).map((doc) => doc.type)
-
-        documentTypes.forEach((docType) => {
-          formData.append(`owners[${index}][documentTypes][]`, docType)
-        })
-
-        owner.documents.forEach((doc) => {
-          if (doc.file) {
-            formData.append(`owners[${index}][documents][${doc.type}]`, doc.file)
-          }
-        })
-      })
-
-      // Submit the form data to the API
       const response = await fetch("/api/submit-registration-info", {
         method: "POST",
-        body: formData,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...formData,
+          searchId, // Include the search_id if available
+        }),
       })
 
-      const result = await response.json()
-
-      if (result.success) {
-        setSuccessMessage("Registration information submitted successfully!")
-        setSubmissionId(result.submissionId)
-
-        // Optional: redirect to a thank you page after a delay
-        // setTimeout(() => {
-        //   router.push(`/thank-you?id=${result.submissionId}`)
-        // }, 3000)
-      } else {
-        throw new Error(result.message || "Failed to submit registration information")
+      if (!response.ok) {
+        throw new Error("Failed to submit registration information")
       }
-    } catch (error) {
-      console.error("Error submitting form:", error)
-      setErrorMessage("An error occurred while submitting the form. Please try again.")
+
+      const result = await response.json()
+      setSubmitted(true)
+
+      // Redirect to thank you page after a short delay
+      setTimeout(() => {
+        router.push("/thank-you")
+      }, 2000)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "An error occurred")
     } finally {
-      setIsSubmitting(false)
+      setLoading(false)
     }
+  }
+
+  if (dataLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[50vh] p-4">
+        <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
+        <p className="text-lg text-center">Loading your information...</p>
+        <p className="text-sm text-gray-500 text-center">We're pre-filling the form with your search data</p>
+      </div>
+    )
+  }
+
+  if (submitted) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[50vh] p-4">
+        <CheckCircle className="h-12 w-12 text-green-500 mb-4" />
+        <h2 className="text-2xl font-bold text-center mb-2">Registration Submitted Successfully!</h2>
+        <p className="text-center mb-4">
+          Thank you for providing your registration information. We'll be in touch soon.
+        </p>
+      </div>
+    )
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8">
-      {/* Success/Error Messages */}
-      {successMessage && (
-        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
-          <div className="flex items-center">
-            <Check className="h-5 w-5 mr-2" />
-            <span className="block sm:inline">{successMessage}</span>
-          </div>
-          {submissionId && (
-            <p className="mt-2 text-sm">
-              Your submission ID: <span className="font-medium">{submissionId}</span>
-            </p>
+    <div className="container max-w-4xl mx-auto py-8 px-4">
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-2xl">Trademark Registration Information</CardTitle>
+          <CardDescription>
+            {searchId
+              ? "Please review and complete your registration information below. We've pre-filled the form with your search data."
+              : "Please provide your information to proceed with trademark registration."}
+          </CardDescription>
+          {searchId && (
+            <div className="flex items-center gap-2 mt-2">
+              <Badge variant="secondary" className="bg-green-100 text-green-800">
+                <CheckCircle className="h-3 w-3 mr-1" />
+                Data Pre-filled from Search ID: {searchId}
+              </Badge>
+            </div>
           )}
-        </div>
-      )}
+        </CardHeader>
 
-      {errorMessage && (
-        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
-          <div className="flex items-center">
-            <AlertCircle className="h-5 w-5 mr-2" />
-            <span className="block sm:inline">{errorMessage}</span>
-          </div>
-        </div>
-      )}
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-8">
+            {/* Personal Information Section */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold border-b pb-2">Personal Information</h3>
 
-      {/* Owners Section */}
-      <div className="space-y-6">
-        <div className="flex justify-between items-center">
-          <h2 className="text-xl font-semibold">Trademark Owners</h2>
-          <Button type="button" onClick={addOwner} variant="outline" className="flex items-center gap-2">
-            <PlusCircle size={16} />
-            Add Owner
-          </Button>
-        </div>
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="firstName">First Name *</Label>
+                  <Input
+                    id="firstName"
+                    value={formData.firstName}
+                    onChange={(e) => handleInputChange("firstName", e.target.value)}
+                    required
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="lastName">Last Name *</Label>
+                  <Input
+                    id="lastName"
+                    value={formData.lastName}
+                    onChange={(e) => handleInputChange("lastName", e.target.value)}
+                    required
+                  />
+                </div>
+              </div>
 
-        {owners.map((owner, index) => (
-          <Card key={owner.id} className="border-2">
-            <CardContent className="pt-6">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-medium">Owner {index + 1}</h3>
-                {owners.length > 1 && (
-                  <Button
-                    type="button"
-                    onClick={() => removeOwner(owner.id)}
-                    variant="outline"
-                    size="sm"
-                    className="text-red-500 hover:text-red-700 flex items-center gap-1"
-                  >
-                    <Trash2 size={16} />
-                    Remove
-                  </Button>
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="email">Email Address *</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => handleInputChange("email", e.target.value)}
+                    required
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="phone">Phone Number</Label>
+                  <Input
+                    id="phone"
+                    type="tel"
+                    value={formData.phone}
+                    onChange={(e) => handleInputChange("phone", e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="address">Address</Label>
+                <Input
+                  id="address"
+                  value={formData.address}
+                  onChange={(e) => handleInputChange("address", e.target.value)}
+                />
+              </div>
+
+              <div className="grid md:grid-cols-3 gap-4">
+                <div>
+                  <Label htmlFor="city">City</Label>
+                  <Input id="city" value={formData.city} onChange={(e) => handleInputChange("city", e.target.value)} />
+                </div>
+                <div>
+                  <Label htmlFor="state">State/Province</Label>
+                  <Input
+                    id="state"
+                    value={formData.state}
+                    onChange={(e) => handleInputChange("state", e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="zipCode">ZIP/Postal Code</Label>
+                  <Input
+                    id="zipCode"
+                    value={formData.zipCode}
+                    onChange={(e) => handleInputChange("zipCode", e.target.value)}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Trademark Information Section */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold border-b pb-2">Trademark Information</h3>
+
+              <div>
+                <Label htmlFor="trademarkName">Trademark Name *</Label>
+                <Input
+                  id="trademarkName"
+                  value={formData.trademarkName}
+                  onChange={(e) => handleInputChange("trademarkName", e.target.value)}
+                  required
+                />
+              </div>
+
+              <div>
+                <Label>Trademark Type *</Label>
+                <RadioGroup
+                  value={formData.trademarkType}
+                  onValueChange={(value) => handleInputChange("trademarkType", value)}
+                  className="mt-2"
+                >
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="word" id="word" />
+                    <Label htmlFor="word">Word Mark (text only)</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="logo" id="logo" />
+                    <Label htmlFor="logo">Logo/Design Mark</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="figurative" id="figurative" />
+                    <Label htmlFor="figurative">Figurative Mark (combination)</Label>
+                  </div>
+                </RadioGroup>
+              </div>
+
+              <div>
+                <Label htmlFor="goodsAndServices">Goods and Services Description *</Label>
+                <Textarea
+                  id="goodsAndServices"
+                  value={formData.goodsAndServices}
+                  onChange={(e) => handleInputChange("goodsAndServices", e.target.value)}
+                  placeholder="Describe the goods and/or services your trademark will cover..."
+                  rows={4}
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Registration Countries Section */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold border-b pb-2">Registration Countries</h3>
+
+              <div>
+                <Label>Select Countries for Trademark Protection *</Label>
+                <div className="mt-2 max-h-60 overflow-y-auto border rounded-md p-4">
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                    {countries.map((country) => (
+                      <div key={country} className="flex items-center space-x-2">
+                        <Checkbox
+                          id={country}
+                          checked={formData.selectedCountries.includes(country)}
+                          onCheckedChange={() => handleCountryToggle(country)}
+                        />
+                        <Label htmlFor={country} className="text-sm">
+                          {country}
+                        </Label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                {formData.selectedCountries.length > 0 && (
+                  <div className="mt-2">
+                    <p className="text-sm text-gray-600">Selected countries:</p>
+                    <div className="flex flex-wrap gap-1 mt-1">
+                      {formData.selectedCountries.map((country) => (
+                        <Badge key={country} variant="secondary">
+                          {country}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
                 )}
               </div>
+            </div>
 
-              {/* Owner Type */}
-              <div className="mb-4">
-                <Label htmlFor={`owner-type-${owner.id}`}>Owner Type</Label>
-                <Select value={owner.type} onValueChange={(value: OwnerType) => updateOwner(owner.id, "type", value)}>
-                  <SelectTrigger id={`owner-type-${owner.id}`}>
-                    <SelectValue placeholder="Select owner type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="person">Individual Person</SelectItem>
-                    <SelectItem value="entity">Business Entity</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+            {/* Priority Claim Section */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold border-b pb-2">Priority Claim (Optional)</h3>
 
-              {/* Owner Name */}
-              <div className="mb-4">
-                <Label htmlFor={`owner-name-${owner.id}`}>
-                  {owner.type === "person" ? "Full Name" : "Entity Name"}
-                </Label>
-                <Input
-                  id={`owner-name-${owner.id}`}
-                  value={owner.name}
-                  onChange={(e) => updateOwner(owner.id, "name", e.target.value)}
-                  placeholder={owner.type === "person" ? "John Doe" : "Acme Corporation"}
-                  required
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="priorityClaim"
+                  checked={formData.priorityClaim}
+                  onCheckedChange={(checked) => handleInputChange("priorityClaim", checked)}
                 />
+                <Label htmlFor="priorityClaim">I want to claim priority from an earlier application</Label>
               </div>
 
-              {/* Country */}
-              <div className="mb-4">
-                <Label htmlFor={`owner-country-${owner.id}`}>Country</Label>
-                <Select value={owner.country} onValueChange={(value) => updateOwner(owner.id, "country", value)}>
-                  <SelectTrigger id={`owner-country-${owner.id}`}>
-                    <SelectValue placeholder="Select country" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {countries.map((country) => (
-                      <SelectItem key={country.code} value={country.code}>
-                        {country.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* Address */}
-              <div className="mb-4">
-                <Label htmlFor={`owner-address-${owner.id}`}>Address</Label>
-                <Textarea
-                  id={`owner-address-${owner.id}`}
-                  value={owner.address}
-                  onChange={(e) => updateOwner(owner.id, "address", e.target.value)}
-                  placeholder="123 Main St, City, State, Zip"
-                  required
-                />
-              </div>
-
-              {/* Email */}
-              <div className="mb-4">
-                <Label htmlFor={`owner-email-${owner.id}`}>Email</Label>
-                <Input
-                  id={`owner-email-${owner.id}`}
-                  type="email"
-                  value={owner.email}
-                  onChange={(e) => updateOwner(owner.id, "email", e.target.value)}
-                  placeholder="email@example.com"
-                  required
-                />
-              </div>
-
-              {/* Ownership Percentage */}
-              <div className="mb-4">
-                <Label htmlFor={`owner-percentage-${owner.id}`}>Ownership Percentage</Label>
-                <div className="flex items-center">
-                  <Input
-                    id={`owner-percentage-${owner.id}`}
-                    type="number"
-                    min="0.01"
-                    max="100"
-                    step="0.01"
-                    value={owner.ownershipPercentage}
-                    onChange={(e) => updateOwner(owner.id, "ownershipPercentage", Number.parseFloat(e.target.value))}
-                    required
-                    className="w-24"
-                  />
-                  <span className="ml-2">%</span>
-                </div>
-              </div>
-
-              {/* Country-specific fields */}
-              {owner.country && (
-                <div className="mt-6 space-y-4">
-                  <h4 className="font-medium">
-                    Additional Information for {countries.find((c) => c.code === owner.country)?.name}
-                  </h4>
-
-                  {/* State/Province (US) */}
-                  {isFieldRequired(owner.country, "stateProvince") && (
-                    <div className="mb-4">
-                      <Label htmlFor={`owner-state-${owner.id}`}>State/Province</Label>
-                      <Input
-                        id={`owner-state-${owner.id}`}
-                        value={owner.stateProvince || ""}
-                        onChange={(e) => updateOwner(owner.id, "stateProvince", e.target.value)}
-                        placeholder="California"
-                        required
-                      />
-                    </div>
-                  )}
-
-                  {/* Tax ID (US) */}
-                  {isFieldRequired(owner.country, "taxId") && (
-                    <div className="mb-4">
-                      <Label htmlFor={`owner-taxid-${owner.id}`}>
-                        {owner.type === "person" ? "SSN/Tax ID" : "EIN/Tax ID"}
-                      </Label>
-                      <Input
-                        id={`owner-taxid-${owner.id}`}
-                        value={owner.taxId || ""}
-                        onChange={(e) => updateOwner(owner.id, "taxId", e.target.value)}
-                        placeholder={owner.type === "person" ? "XXX-XX-XXXX" : "XX-XXXXXXX"}
-                        required
-                      />
-                    </div>
-                  )}
-
-                  {/* Translation (EU, CN) */}
-                  {isFieldRequired(owner.country, "translation") && (
-                    <div className="mb-4">
-                      <Label htmlFor={`owner-translation-${owner.id}`}>Trademark Translation (if applicable)</Label>
-                      <Textarea
-                        id={`owner-translation-${owner.id}`}
-                        value={owner.translation || ""}
-                        onChange={(e) => updateOwner(owner.id, "translation", e.target.value)}
-                        placeholder="Provide translation of your trademark in the local language"
-                      />
-                    </div>
-                  )}
-
-                  {/* Marital Status (for some countries) */}
-                  {isFieldRequired(owner.country, "maritalStatus") && owner.type === "person" && (
-                    <div className="mb-4">
-                      <Label htmlFor={`owner-marital-${owner.id}`}>Marital Status</Label>
-                      <Select
-                        value={owner.maritalStatus || ""}
-                        onValueChange={(value) => updateOwner(owner.id, "maritalStatus", value)}
-                      >
-                        <SelectTrigger id={`owner-marital-${owner.id}`}>
-                          <SelectValue placeholder="Select marital status" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="single">Single</SelectItem>
-                          <SelectItem value="married">Married</SelectItem>
-                          <SelectItem value="divorced">Divorced</SelectItem>
-                          <SelectItem value="widowed">Widowed</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* Required Documents */}
-              {owner.country && (
-                <div className="mt-6">
-                  <h4 className="font-medium mb-3">Required Documents</h4>
-                  <div className="space-y-4">
-                    {getRequiredDocuments(owner.country).map((doc) => {
-                      const existingDoc = owner.documents.find((d) => d.type === doc.type)
-                      return (
-                        <div key={doc.type} className="border p-4 rounded-md">
-                          <div className="flex items-start gap-2 mb-2">
-                            <Checkbox id={`doc-${owner.id}-${doc.type}`} checked={!!existingDoc?.file} disabled />
-                            <div>
-                              <Label htmlFor={`doc-${owner.id}-${doc.type}`} className="font-medium">
-                                {doc.description}
-                                {doc.required && <span className="text-red-500 ml-1">*</span>}
-                              </Label>
-                            </div>
-                          </div>
-
-                          <div className="mt-2">
-                            <div className="flex items-center gap-2">
-                              <Input
-                                id={`file-${owner.id}-${doc.type}`}
-                                type="file"
-                                onChange={(e) => {
-                                  if (e.target.files && e.target.files[0]) {
-                                    handleDocumentUpload(owner.id, doc.type, e.target.files[0])
-                                  }
-                                }}
-                                className="hidden"
-                              />
-                              <Label
-                                htmlFor={`file-${owner.id}-${doc.type}`}
-                                className="cursor-pointer flex items-center gap-2 px-4 py-2 border rounded-md hover:bg-gray-50"
-                              >
-                                <Upload size={16} />
-                                {existingDoc?.file ? "Change File" : "Upload File"}
-                              </Label>
-                              {existingDoc?.file && (
-                                <span className="text-sm text-gray-600 truncate max-w-xs">{existingDoc.name}</span>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      )
-                    })}
+              {formData.priorityClaim && (
+                <div className="grid md:grid-cols-2 gap-4 ml-6">
+                  <div>
+                    <Label htmlFor="priorityDate">Priority Date</Label>
+                    <Input
+                      id="priorityDate"
+                      type="date"
+                      value={formData.priorityDate}
+                      onChange={(e) => handleInputChange("priorityDate", e.target.value)}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="priorityCountry">Priority Country</Label>
+                    <Input
+                      id="priorityCountry"
+                      value={formData.priorityCountry}
+                      onChange={(e) => handleInputChange("priorityCountry", e.target.value)}
+                      placeholder="Country of first application"
+                    />
                   </div>
                 </div>
               )}
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+            </div>
 
-      {/* Submit Button */}
-      <div className="flex justify-center mt-8">
-        <Button type="submit" disabled={isSubmitting} className="w-full max-w-md" size="lg">
-          {isSubmitting ? "Submitting..." : "Submit Registration Information"}
-        </Button>
-      </div>
-    </form>
+            {/* Current Use Section */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold border-b pb-2">Current Use</h3>
+
+              <div className="flex items-center space-x-2">
+                <Checkbox
+                  id="currentUse"
+                  checked={formData.currentUse}
+                  onCheckedChange={(checked) => handleInputChange("currentUse", checked)}
+                />
+                <Label htmlFor="currentUse">I am currently using this trademark in commerce</Label>
+              </div>
+
+              {formData.currentUse && (
+                <div className="ml-6">
+                  <Label htmlFor="firstUseDate">Date of First Use</Label>
+                  <Input
+                    id="firstUseDate"
+                    type="date"
+                    value={formData.firstUseDate}
+                    onChange={(e) => handleInputChange("firstUseDate", e.target.value)}
+                  />
+                </div>
+              )}
+            </div>
+
+            {/* Additional Information Section */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold border-b pb-2">Additional Information</h3>
+
+              <div>
+                <Label htmlFor="additionalInfo">Additional Comments or Special Instructions</Label>
+                <Textarea
+                  id="additionalInfo"
+                  value={formData.additionalInfo}
+                  onChange={(e) => handleInputChange("additionalInfo", e.target.value)}
+                  placeholder="Any additional information you'd like us to know..."
+                  rows={3}
+                />
+              </div>
+            </div>
+
+            {error && (
+              <div className="flex items-center gap-2 p-4 bg-red-50 border border-red-200 rounded-md">
+                <AlertCircle className="h-4 w-4 text-red-500" />
+                <p className="text-red-700">{error}</p>
+              </div>
+            )}
+
+            <div className="flex justify-end">
+              <Button type="submit" disabled={loading} className="min-w-32">
+                {loading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Submitting...
+                  </>
+                ) : (
+                  "Submit Registration"
+                )}
+              </Button>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
+    </div>
   )
 }
+
+export default RegistrationInfoForm

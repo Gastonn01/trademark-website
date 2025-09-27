@@ -1,9 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
-  images: {
-    domains: ["images.unsplash.com", "flagcdn.com"],
-    unoptimized: true, // Necesario para export
+  experimental: {
+    appDir: true,
   },
   eslint: {
     ignoreDuringBuilds: true,
@@ -11,8 +9,10 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  // Add this to handle API routes in static export
-  trailingSlash: true,
+  images: {
+    domains: ["images.unsplash.com", "via.placeholder.com"],
+    unoptimized: true,
+  },
 }
 
 module.exports = nextConfig

@@ -1,87 +1,86 @@
-import { NextResponse } from "next/server"
-import { getAllSearchData, updateSearchStatus } from "@/lib/supabase"
-import { getMockSearchData } from "@/lib/mock-data"
+import { type NextRequest, NextResponse } from "next/server"
 
-// Configure this route for static export
-export const dynamic = "force-dynamic"
-export const dynamicParams = true
-export const revalidate = 0
-export const fetchCache = "force-no-store"
-export const runtime = "nodejs"
-export const preferredRegion = "auto"
-
-export async function GET(req: Request) {
-  const { searchParams } = new URL(req.url)
-  const status = searchParams.get("status") || undefined
-  const limit = Number.parseInt(searchParams.get("limit") || "100")
-  const offset = Number.parseInt(searchParams.get("offset") || "0")
-
-  console.log("API route: Fetching search data with status filter:", status)
-
+export async function GET(request: NextRequest) {
   try {
-    // Fetch actual data from Supabase with robust error handling
-    const result = await getAllSearchData(limit, offset, status)
+    console.log("🔍 Admin searches API called")
 
-    console.log(`API route: Returning ${result.data?.length || 0} records from source: ${result.source}`)
+    const { searchParams } = new URL(request.url)
+    const statusFilter = searchParams.get("status") || "all"
+    const formTypeFilter = searchParams.get("formType") || "all"
+    const tableType = (searchParams.get("tableType") as "trademark_searches" | "verification_requests" | "all") || "all"
 
-    // Return the result, which may contain real data or fallback mock data
-    return NextResponse.json({
-      data: result.data || [],
-      error: result.error,
-      source: result.source,
-    })
-  } catch (error) {
-    console.error("API route: Unhandled error fetching data:", error)
+    console.log("📊 Filters:", { statusFilter, formTypeFilter, tableType })
 
-    // Return mock data as ultimate fallback
-    const mockData = getMockSearchData(status)
-    return NextResponse.json({
-      data: mockData,
-      error: error instanceof Error ? error.message : "Unknown error",
-      source: "mock-api-error",
-    })
-  }
-}
+    // Import dynamically to avoid module loading issues
+    const { getAllSearches } = await import("@/lib/supabase")
 
-export async function PATCH(req: Request) {
-  try {
-    const body = await req.json()
-    const { searchId, status } = body
+    // Get data from both tables
+    const allData = await getAllSearches(tableType)
 
-    if (!searchId || !status) {
-      return NextResponse.json({ error: "Search ID and status are required" }, { status: 400 })
+    console.log(`✅ Retrieved ${allData?.length || 0} total records from both tables`)
+
+    // Apply frontend filtering
+    let filteredData = allData || []
+
+    // Filter by status
+    if (statusFilter !== "all") {
+      filteredData = filteredData.filter((item) => item.status === statusFilter)
     }
 
-    console.log("API route: Updating status for:", { searchId, status })
-
-    try {
-      // Update the status in Supabase
-      const result = await updateSearchStatus(searchId, status)
-
-      return NextResponse.json({
-        data: result.data,
-        error: result.error,
-        source: result.source,
-      })
-    } catch (updateError) {
-      console.error("API route: Error updating search status:", updateError)
-
-      // Return a success response with error details to prevent UI errors
-      return NextResponse.json({
-        data: { id: searchId, status: status },
-        error: updateError instanceof Error ? updateError.message : "Error updating status",
-        source: "mock-update-error",
+    // Filter by form type
+    if (formTypeFilter !== "all") {
+      filteredData = filteredData.filter((item) => {
+        const formType = item.form_type || item.search_results?.formType
+        return formType === formTypeFilter
       })
     }
-  } catch (parseError) {
-    console.error("API route: Error parsing request body:", parseError)
+
+    console.log(`📋 After filtering: ${filteredData.length} records`)
+
+    // Transform the data to ensure consistent structure
+    const transformedData = filteredData.map((item) => ({
+      id: item.id,
+      trademark_name: item.trademark_name,
+      email: item.email,
+      status: item.status || "pending",
+      created_at: item.created_at,
+      updated_at: item.updated_at,
+      search_results: item.search_results || {},
+      table_type: item.table_type,
+      form_type: item.form_type,
+      // Verification-specific fields (will be null for trademark_searches)
+      estimated_price: item.estimated_price || null,
+      files_count: item.files_count || null,
+      selected_countries: item.selected_countries || null,
+      selected_classes: item.selected_classes || null,
+      trademark_type: item.trademark_type || null,
+      contact_phone: item.contact_phone || null,
+      marketing_consent: item.marketing_consent || null,
+    }))
+
+    return NextResponse.json({
+      data: transformedData,
+      source: "both-tables",
+      total: allData.length,
+      filtered: filteredData.length,
+      filters: { statusFilter, formTypeFilter, tableType },
+    })
+  } catch (err) {
+    console.error("💥 Critical error in admin searches API:", err)
+
+    // Return more detailed error information for debugging
+    const errorMessage = err instanceof Error ? err.message : String(err)
+    const errorStack = err instanceof Error ? err.stack : undefined
+
     return NextResponse.json(
       {
-        error: "Error parsing request",
-        details: parseError instanceof Error ? parseError.message : "Invalid request format",
-        success: false,
+        error: "Internal server error",
+        details: errorMessage,
+        stack: process.env.NODE_ENV === "development" ? errorStack : undefined,
+        data: [],
+        source: "critical-error",
       },
-      { status: 400 },
+      { status: 500 },
     )
   }
 }

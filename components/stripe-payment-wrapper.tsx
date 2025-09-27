@@ -1,40 +1,47 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { Elements } from "@stripe/react-stripe-js"
 import { loadStripe } from "@stripe/stripe-js"
+import { Elements } from "@stripe/react-stripe-js"
+import { useEffect, useState } from "react"
 import { PaymentForm } from "./payment-form"
+import { Card, CardContent } from "@/components/ui/card"
+import { Loader2, AlertCircle } from "lucide-react"
 
-// Make sure to call loadStripe outside of a component's render to avoid
-// recreating the Stripe object on every render.
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY as string)
+// Initialize Stripe
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
 
 interface StripePaymentWrapperProps {
   amount: number
-  currency?: string
   formData?: any
+  currency?: string
 }
 
-export function StripePaymentWrapper({ amount, currency = "EUR", formData }: StripePaymentWrapperProps) {
-  const [clientSecret, setClientSecret] = useState("")
-  const [loading, setLoading] = useState(true)
+export function StripePaymentWrapper({ amount, formData, currency = "eur" }: StripePaymentWrapperProps) {
+  const [clientSecret, setClientSecret] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Create PaymentIntent as soon as the page loads
     const createPaymentIntent = async () => {
       try {
         setLoading(true)
+        setError(null)
+
         const response = await fetch("/api/create-payment-intent", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify({
             amount,
-            currency,
+            currency: currency.toLowerCase(),
             metadata: {
-              customerName: formData?.name ? `${formData.name} ${formData.surname || ""}` : "Unknown",
+              customerName: formData?.name ? `${formData.name} ${formData.surname || ""}`.trim() : "Unknown",
               customerEmail: formData?.email || "Unknown",
-              service: "Trademark Registration",
+              customerPhone: formData?.phone || "",
+              trademarkName: formData?.trademarkName || "",
+              service: "trademark-registration",
+              timestamp: new Date().toISOString(),
             },
           }),
         })
@@ -48,7 +55,7 @@ export function StripePaymentWrapper({ amount, currency = "EUR", formData }: Str
         setClientSecret(data.clientSecret)
       } catch (err: any) {
         console.error("Error creating payment intent:", err)
-        setError(err.message || "Something went wrong. Please try again later.")
+        setError(err.message || "Failed to initialize payment. Please try again.")
       } finally {
         setLoading(false)
       }
@@ -56,58 +63,78 @@ export function StripePaymentWrapper({ amount, currency = "EUR", formData }: Str
 
     if (amount > 0) {
       createPaymentIntent()
+    } else {
+      setError("Invalid payment amount")
+      setLoading(false)
     }
   }, [amount, currency, formData])
 
-  const appearance = {
-    theme: "stripe",
-    variables: {
-      colorPrimary: "#0070f3",
-      colorBackground: "#ffffff",
-      colorText: "#1a1a1a",
-      colorDanger: "#df1b41",
-      fontFamily: "system-ui, sans-serif",
-      spacingUnit: "4px",
-      borderRadius: "4px",
-    },
-  }
-
   if (loading) {
     return (
-      <div className="flex justify-center items-center p-8">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-700"></div>
-      </div>
+      <Card className="w-full max-w-2xl mx-auto">
+        <CardContent className="flex items-center justify-center py-12">
+          <Loader2 className="h-8 w-8 animate-spin mr-3 text-blue-600" />
+          <span className="text-gray-600">Initializing secure payment...</span>
+        </CardContent>
+      </Card>
     )
   }
 
   if (error) {
     return (
-      <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative" role="alert">
-        <strong className="font-bold">Error: </strong>
-        <span className="block sm:inline">{error}</span>
-        <button
-          className="mt-4 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-          onClick={() => window.location.reload()}
-        >
-          Try Again
-        </button>
-      </div>
+      <Card className="w-full max-w-2xl mx-auto">
+        <CardContent className="py-12">
+          <div className="flex items-center justify-center mb-4">
+            <AlertCircle className="h-12 w-12 text-red-500" />
+          </div>
+          <div className="text-center">
+            <h3 className="text-lg font-semibold text-red-600 mb-2">Payment Initialization Failed</h3>
+            <p className="text-gray-600 mb-4">{error}</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+            >
+              Try Again
+            </button>
+          </div>
+        </CardContent>
+      </Card>
     )
   }
 
+  if (!clientSecret) {
+    return (
+      <Card className="w-full max-w-2xl mx-auto">
+        <CardContent className="py-12">
+          <div className="text-center">
+            <AlertCircle className="h-12 w-12 text-yellow-500 mx-auto mb-4" />
+            <h3 className="text-lg font-semibold text-yellow-600 mb-2">Payment Not Ready</h3>
+            <p className="text-gray-600">Unable to initialize payment. Please refresh the page.</p>
+          </div>
+        </CardContent>
+      </Card>
+    )
+  }
+
+  const options = {
+    clientSecret,
+    appearance: {
+      theme: "stripe" as const,
+      variables: {
+        colorPrimary: "#2563eb",
+        colorBackground: "#ffffff",
+        colorText: "#1f2937",
+        colorDanger: "#dc2626",
+        fontFamily: "system-ui, sans-serif",
+        spacingUnit: "4px",
+        borderRadius: "6px",
+      },
+    },
+  }
+
   return (
-    <div className="w-full max-w-md mx-auto">
-      {clientSecret && (
-        <Elements
-          stripe={stripePromise}
-          options={{
-            clientSecret,
-            appearance: appearance as any,
-          }}
-        >
-          <PaymentForm amount={amount} formData={formData} currency={currency} />
-        </Elements>
-      )}
-    </div>
+    <Elements options={options} stripe={stripePromise}>
+      <PaymentForm amount={amount} formData={formData} currency={currency.toUpperCase()} />
+    </Elements>
   )
 }

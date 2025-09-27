@@ -1,31 +1,42 @@
-import { NextResponse } from "next/server"
+import { type NextRequest, NextResponse } from "next/server"
+import { updateSearchResults } from "@/lib/supabase-admin"
 
-export async function POST(req: Request) {
+export async function POST(request: NextRequest) {
   try {
-    const body = await req.json()
+    const body = await request.json()
     const { searchId, updatedResults } = body
 
     if (!searchId || !updatedResults) {
-      return NextResponse.json({ error: "Search ID and updated results are required" }, { status: 400 })
+      return NextResponse.json(
+        {
+          error: "Missing required fields: searchId and updatedResults",
+          success: false,
+        },
+        { status: 400 },
+      )
     }
 
-    console.log("API route: Simulating search results update for:", { searchId, updatedResults })
+    console.log("Updating search results for:", searchId)
+    console.log("Updated results:", updatedResults)
 
-    // Always return success for now
+    const result = await updateSearchResults(searchId, updatedResults)
+
     return NextResponse.json({
+      data: result,
+      error: null,
+      source: "supabase",
       success: true,
-      message: "Search results updated successfully",
-      source: "mock-update",
+      timestamp: new Date().toISOString(),
     })
   } catch (error) {
-    console.error("API route: Error updating search results:", error)
+    console.error("Error in POST /api/admin/update-search:", error)
     return NextResponse.json(
       {
-        error: "Error updating search results",
-        details: "An unexpected error occurred",
-        success: true, // Return success anyway to prevent client-side errors
+        error: error instanceof Error ? error.message : String(error),
+        success: false,
+        timestamp: new Date().toISOString(),
       },
-      { status: 200 },
+      { status: 500 },
     )
   }
 }

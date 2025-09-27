@@ -11,6 +11,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Textarea } from "@/components/ui/textarea"
 import { CountrySelectCard } from "@/components/country-select-card"
+import { trackLeadSubmission } from "@/components/gtm-tracker"
 import { Upload, CheckCircle, ChevronDown, ChevronUp, AlertCircle } from "lucide-react"
 import { v4 as uuidv4 } from "uuid"
 
@@ -52,6 +53,85 @@ interface CountryData {
 interface RegionData {
   name: string
   countries: CountryData[]
+}
+
+// Pricing data for countries
+const pricingData = {
+  "European Union": { price: 1200, additionalClassPrice: 150, flag: "eu" },
+  "United States": { price: 1500, additionalClassPrice: 400, flag: "us" },
+  Germany: { price: 900, additionalClassPrice: 300, flag: "de" },
+  Argentina: { price: 1000, additionalClassPrice: 250, flag: "ar" },
+  Spain: { price: 600, additionalClassPrice: 150, flag: "es" },
+  "United Kingdom": { price: 900, additionalClassPrice: 200, flag: "gb" },
+  Canada: { price: 1200, additionalClassPrice: 300, flag: "ca" },
+  Mexico: { price: 800, additionalClassPrice: 200, flag: "mx" },
+  France: { price: 900, additionalClassPrice: 200, flag: "fr" },
+  Italy: { price: 900, additionalClassPrice: 200, flag: "it" },
+  Portugal: { price: 600, additionalClassPrice: 150, flag: "pt" },
+  Greece: { price: 600, additionalClassPrice: 150, flag: "gr" },
+  "Bosnia and Herzegovina": { price: 500, additionalClassPrice: 100, flag: "ba" },
+  Belarus: { price: 400, additionalClassPrice: 100, flag: "by" },
+  Benelux: { price: 800, additionalClassPrice: 200, flag: "be" },
+  Cyprus: { price: 600, additionalClassPrice: 150, flag: "cy" },
+  Georgia: { price: 400, additionalClassPrice: 100, flag: "ge" },
+  Iceland: { price: 800, additionalClassPrice: 200, flag: "is" },
+  Lithuania: { price: 500, additionalClassPrice: 150, flag: "lt" },
+  Bolivia: { price: 600, additionalClassPrice: 150, flag: "bo" },
+  Brazil: { price: 1200, additionalClassPrice: 300, flag: "br" },
+  Chile: { price: 800, additionalClassPrice: 200, flag: "cl" },
+  Colombia: { price: 800, additionalClassPrice: 200, flag: "co" },
+  Ecuador: { price: 600, additionalClassPrice: 150, flag: "ec" },
+  Paraguay: { price: 500, additionalClassPrice: 150, flag: "py" },
+  Peru: { price: 600, additionalClassPrice: 150, flag: "pe" },
+  Uruguay: { price: 700, additionalClassPrice: 200, flag: "uy" },
+  Venezuela: { price: 600, additionalClassPrice: 150, flag: "ve" },
+  China: { price: 1000, additionalClassPrice: 200, flag: "cn" },
+  Japan: { price: 1500, additionalClassPrice: 400, flag: "jp" },
+  Afghanistan: { price: 500, additionalClassPrice: 100, flag: "af" },
+  "Saudi Arabia": { price: 800, additionalClassPrice: 200, flag: "sa" },
+  Armenia: { price: 400, additionalClassPrice: 100, flag: "am" },
+  Azerbaijan: { price: 400, additionalClassPrice: 100, flag: "az" },
+  Bahrain: { price: 600, additionalClassPrice: 150, flag: "bh" },
+  Bangladesh: { price: 500, additionalClassPrice: 100, flag: "bd" },
+  Bhutan: { price: 500, additionalClassPrice: 100, flag: "bt" },
+  Brunei: { price: 600, additionalClassPrice: 150, flag: "bn" },
+  Cambodia: { price: 500, additionalClassPrice: 100, flag: "kh" },
+  "Hong Kong": { price: 800, additionalClassPrice: 200, flag: "hk" },
+  India: { price: 800, additionalClassPrice: 150, flag: "in" },
+  Indonesia: { price: 600, additionalClassPrice: 150, flag: "id" },
+  Iran: { price: 500, additionalClassPrice: 100, flag: "ir" },
+  Iraq: { price: 500, additionalClassPrice: 100, flag: "iq" },
+  Jordan: { price: 600, additionalClassPrice: 150, flag: "jo" },
+  Kazakhstan: { price: 500, additionalClassPrice: 150, flag: "kz" },
+  Kyrgyzstan: { price: 400, additionalClassPrice: 100, flag: "kg" },
+  "South Korea": { price: 1200, additionalClassPrice: 300, flag: "kr" },
+  Kuwait: { price: 600, additionalClassPrice: 150, flag: "kw" },
+  Laos: { price: 500, additionalClassPrice: 100, flag: "la" },
+  Lebanon: { price: 600, additionalClassPrice: 150, flag: "lb" },
+  Macao: { price: 600, additionalClassPrice: 150, flag: "mo" },
+  Malaysia: { price: 600, additionalClassPrice: 150, flag: "my" },
+  Maldives: { price: 500, additionalClassPrice: 100, flag: "mv" },
+  Mongolia: { price: 500, additionalClassPrice: 100, flag: "mn" },
+  Myanmar: { price: 500, additionalClassPrice: 100, flag: "mm" },
+  Nepal: { price: 500, additionalClassPrice: 100, flag: "np" },
+  "North Korea": { price: 500, additionalClassPrice: 100, flag: "kp" },
+  Oman: { price: 600, additionalClassPrice: 150, flag: "om" },
+  Pakistan: { price: 500, additionalClassPrice: 100, flag: "pk" },
+  Palestine: { price: 500, additionalClassPrice: 100, flag: "ps" },
+  Philippines: { price: 600, additionalClassPrice: 150, flag: "ph" },
+  Qatar: { price: 600, additionalClassPrice: 150, flag: "qa" },
+  Singapore: { price: 800, additionalClassPrice: 200, flag: "sg" },
+  "Sri Lanka": { price: 500, additionalClassPrice: 100, flag: "lk" },
+  Syria: { price: 500, additionalClassPrice: 100, flag: "sy" },
+  Taiwan: { price: 800, additionalClassPrice: 200, flag: "tw" },
+  Tajikistan: { price: 400, additionalClassPrice: 100, flag: "tj" },
+  Thailand: { price: 600, additionalClassPrice: 150, flag: "th" },
+  Turkey: { price: 700, additionalClassPrice: 200, flag: "tr" },
+  Turkmenistan: { price: 400, additionalClassPrice: 100, flag: "tm" },
+  "United Arab Emirates": { price: 800, additionalClassPrice: 200, flag: "ae" },
+  Uzbekistan: { price: 400, additionalClassPrice: 100, flag: "uz" },
+  Vietnam: { price: 600, additionalClassPrice: 150, flag: "vn" },
+  Yemen: { price: 500, additionalClassPrice: 100, flag: "ye" },
 }
 
 const topCountries: CountryData[] = [
@@ -159,32 +239,6 @@ const regions: RegionData[] = [
       { name: "Yemen", flag: "ye" },
     ],
   },
-  {
-    name: "Caribbean",
-    countries: [
-      { name: "Anguilla", flag: "ai" },
-      { name: "Antigua and Barbuda", flag: "ag" },
-      { name: "Aruba", flag: "aw" },
-      { name: "Bahamas", flag: "bs" },
-      { name: "Barbados", flag: "bb" },
-      { name: "Bermuda", flag: "bm" },
-      { name: "British Virgin Islands", flag: "vg" },
-      { name: "Cayman Islands", flag: "ky" },
-      { name: "Cuba", flag: "cu" },
-      { name: "Curacao", flag: "cw" },
-      { name: "Dominica", flag: "dm" },
-      { name: "Dominican Republic", flag: "do" },
-      { name: "Grenada", flag: "gd" },
-      { name: "Haiti", flag: "ht" },
-      { name: "Jamaica", flag: "jm" },
-      { name: "Puerto Rico", flag: "pr" },
-      { name: "Saint Kitts and Nevis", flag: "kn" },
-      { name: "Saint Lucia", flag: "lc" },
-      { name: "Saint Vincent and the Grenadines", flag: "vc" },
-      { name: "Trinidad and Tobago", flag: "tt" },
-      { name: "Turks and Caicos Islands", flag: "tc" },
-    ],
-  },
 ]
 
 export function FreeSearchForm() {
@@ -192,6 +246,7 @@ export function FreeSearchForm() {
   const searchParams = useSearchParams()
   const [step, setStep] = useState(1)
   const totalSteps = 3
+  const [currency, setCurrency] = useState<"USD" | "EUR">("USD")
   const [formData, setFormData] = useState<FormData>({
     trademarkType: "",
     trademarkName: "",
@@ -216,11 +271,25 @@ export function FreeSearchForm() {
   const [initialLoadDone, setInitialLoadDone] = useState(false)
   const [previewModeNotice, setPreviewModeNotice] = useState(true)
   const [isPreview, setIsPreview] = useState(false)
+  const [validationErrors, setValidationErrors] = useState<string[]>([])
 
   // Check if we're in preview mode on component mount
   useEffect(() => {
     setIsPreview(isPreviewEnvironment())
   }, [])
+
+  // Load currency from localStorage on mount
+  useEffect(() => {
+    const savedCurrency = localStorage.getItem("selectedCurrency") as "USD" | "EUR"
+    if (savedCurrency) {
+      setCurrency(savedCurrency)
+    }
+  }, [])
+
+  const handleCurrencyChange = (newCurrency: "USD" | "EUR") => {
+    setCurrency(newCurrency)
+    localStorage.setItem("selectedCurrency", newCurrency)
+  }
 
   // Function to search countries in all regions
   const searchCountries = (term: string) => {
@@ -355,8 +424,83 @@ export function FreeSearchForm() {
     }
   }
 
+  const validateStep = (stepNumber: number): boolean => {
+    const errors: string[] = []
+    setValidationErrors([])
+
+    if (stepNumber === 1) {
+      if (!formData.trademarkType) {
+        errors.push("Please select a trademark type")
+      }
+      if (formData.trademarkType !== "figurative" && !formData.trademarkName.trim()) {
+        errors.push("Please enter your trademark name")
+      }
+      if ((formData.trademarkType === "logo" || formData.trademarkType === "figurative") && !formData.logo) {
+        errors.push("Please upload your logo")
+      }
+      if (!formData.goodsAndServices.trim()) {
+        errors.push("Please describe your goods and services")
+      }
+    }
+
+    if (stepNumber === 2) {
+      if (selectedCountries.length === 0) {
+        errors.push("Please select at least one country for trademark protection")
+      }
+    }
+
+    if (stepNumber === 3) {
+      if (!formData.name.trim()) {
+        errors.push("Please enter your first name")
+      }
+      if (!formData.surname.trim()) {
+        errors.push("Please enter your last name")
+      }
+      if (!formData.email.trim()) {
+        errors.push("Please enter your email address")
+      } else {
+        // Basic email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        if (!emailRegex.test(formData.email)) {
+          errors.push("Please enter a valid email address")
+        }
+      }
+      if (!formData.acceptTerms) {
+        errors.push("Please accept the Terms and Conditions to continue")
+      }
+    }
+
+    if (errors.length > 0) {
+      setValidationErrors(errors)
+      setErrorMessage("Please complete all required fields before continuing")
+      return false
+    }
+
+    setErrorMessage(null)
+    return true
+  }
+
+  const goToNextStep = () => {
+    if (validateStep(step)) {
+      setStep(step + 1)
+      window.scrollTo(0, 0)
+    }
+  }
+
+  const goToPreviousStep = () => {
+    setStep(step - 1)
+    setValidationErrors([])
+    setErrorMessage(null)
+    window.scrollTo(0, 0)
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+
+    if (!validateStep(1) || !validateStep(2) || !validateStep(3)) {
+      return
+    }
+
     setIsSubmitting(true)
     setErrorMessage(null)
     setSuccessMessage(null)
@@ -373,6 +517,9 @@ export function FreeSearchForm() {
         console.log("Preview mode detected, simulating successful submission")
         // Wait a bit to simulate network request
         await new Promise((resolve) => setTimeout(resolve, 1000))
+
+        // Track lead submission
+        trackLeadSubmission("free_search")
 
         // Show success message and redirect
         setSuccessMessage("Form submitted successfully in preview mode!")
@@ -430,6 +577,9 @@ export function FreeSearchForm() {
         // Even if the response is not OK, we'll still proceed
         console.log("Form submission response:", response.status)
 
+        // Track lead submission on successful form submission
+        trackLeadSubmission("free_search")
+
         // Show success message and redirect
         setSuccessMessage("Form submitted successfully!")
         setTimeout(() => {
@@ -438,7 +588,8 @@ export function FreeSearchForm() {
       } catch (error) {
         console.error("Error submitting form:", error)
 
-        // Even if there's an error, we'll still proceed
+        // Even if there's an error, we'll still proceed and track
+        trackLeadSubmission("free_search")
         setSuccessMessage("Your submission has been saved. Thank you!")
         setTimeout(() => {
           router.push("/thank-you")
@@ -447,7 +598,8 @@ export function FreeSearchForm() {
     } catch (error) {
       console.error("Error in form submission process:", error)
 
-      // Always proceed to thank you page after showing a message
+      // Always proceed to thank you page after showing a message and track
+      trackLeadSubmission("free_search")
       setSuccessMessage("Your request has been recorded. Thank you for your submission!")
       setTimeout(() => {
         router.push("/thank-you")
@@ -456,6 +608,13 @@ export function FreeSearchForm() {
       setIsSubmitting(false)
     }
   }
+
+  const totalPrice = selectedCountries.reduce((sum, country) => {
+    const countryData = pricingData[country as keyof typeof pricingData]
+    return sum + (countryData?.price || 0)
+  }, 0)
+
+  const currencySymbol = currency === "USD" ? "$" : "€"
 
   return (
     <div id="free-search-form" className="max-w-6xl mx-auto px-4 pt-24 pb-12 scroll-mt-16">
@@ -480,10 +639,55 @@ export function FreeSearchForm() {
           <div className="mb-8">
             <h1 className="text-4xl font-bold mb-4 text-indigo-700">Free Trademark Search</h1>
             <p className="text-lg text-gray-600">Start your trademark journey with a free search.</p>
-            <p className="text-lg text-gray-600 mb-8">
+            <p className="text-lg text-gray-600 mb-4">
               Fill out this simple form to get your free trademark search and expert assessment within 24 hours.
             </p>
+            <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
+              <div className="flex items-start gap-3">
+                <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
+                <div>
+                  <h3 className="font-medium text-green-800 mb-1">Your Search is Completely Free</h3>
+                  <p className="text-green-700 text-sm">
+                    The trademark search and assessment are free. The prices shown are only for trademark registration
+                    services if you choose to proceed with filing.
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
+
+          {step === 2 && (
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 className="text-2xl font-semibold text-indigo-700">Where do you need protection?</h2>
+                <p className="text-gray-600 text-sm mt-1">
+                  Select countries to see registration pricing (search remains free)
+                </p>
+              </div>
+              <div className="flex items-center gap-2 text-sm">
+                <span className="text-gray-500">Currency:</span>
+                <button
+                  type="button"
+                  onClick={() => handleCurrencyChange("USD")}
+                  className={`px-2 py-1 rounded text-xs ${
+                    currency === "USD" ? "bg-indigo-100 text-indigo-700" : "text-gray-500 hover:text-gray-700"
+                  }`}
+                >
+                  USD
+                </button>
+                <span className="text-gray-300">|</span>
+                <button
+                  type="button"
+                  onClick={() => handleCurrencyChange("EUR")}
+                  className={`px-2 py-1 rounded text-xs ${
+                    currency === "EUR" ? "bg-indigo-100 text-indigo-700" : "text-gray-500 hover:text-gray-700"
+                  }`}
+                >
+                  EUR
+                </button>
+              </div>
+            </div>
+          )}
 
           {/* Progress bar */}
           <div className="mb-12">
@@ -514,11 +718,21 @@ export function FreeSearchForm() {
             </div>
           )}
 
+          {/* Updated error message display to include validation errors */}
           {errorMessage && (
-            <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-lg flex items-start gap-3">
-              <AlertCircle className="h-5 w-5 text-amber-500 mt-0.5 flex-shrink-0" />
-              <div>
-                <p className="text-amber-700">{errorMessage}</p>
+            <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+              <div className="flex items-start gap-3">
+                <AlertCircle className="h-5 w-5 text-red-500 mt-0.5 flex-shrink-0" />
+                <div>
+                  <p className="text-red-700 font-medium">{errorMessage}</p>
+                  {validationErrors.length > 0 && (
+                    <ul className="mt-2 text-sm text-red-600 list-disc list-inside">
+                      {validationErrors.map((error, index) => (
+                        <li key={index}>{error}</li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
               </div>
             </div>
           )}
@@ -658,26 +872,10 @@ export function FreeSearchForm() {
                     rows={4}
                   />
                 </div>
-                {!formData.trademarkType && <div className="text-red-500 text-sm">Please select a trademark type</div>}
-                {formData.trademarkType !== "figurative" && !formData.trademarkName && (
-                  <div className="text-red-500 text-sm">Please enter your trademark name</div>
-                )}
-                {(formData.trademarkType === "logo" || formData.trademarkType === "figurative") && !formData.logo && (
-                  <div className="text-red-500 text-sm">Please upload your logo</div>
-                )}
-                {!formData.goodsAndServices && (
-                  <div className="text-red-500 text-sm">Please describe your goods and services</div>
-                )}
                 <Button
                   type="button"
                   className="w-full py-3 text-lg bg-indigo-600 hover:bg-indigo-700 text-white"
-                  onClick={() => setStep(2)}
-                  disabled={
-                    !formData.trademarkType ||
-                    !formData.goodsAndServices ||
-                    (formData.trademarkType !== "figurative" && !formData.trademarkName) ||
-                    ((formData.trademarkType === "logo" || formData.trademarkType === "figurative") && !formData.logo)
-                  }
+                  onClick={goToNextStep}
                 >
                   Continue to Countries
                 </Button>
@@ -686,10 +884,25 @@ export function FreeSearchForm() {
 
             {step === 2 && (
               <div className="space-y-8">
-                <h2 className="text-2xl font-semibold mb-4 text-indigo-700">Where do you need protection?</h2>
                 <p className="text-gray-600">
                   Select the countries or regions where you want to register your trademark.
                 </p>
+
+                {selectedCountries.length > 0 && (
+                  <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-4 mb-6">
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <h3 className="font-semibold text-indigo-900">
+                          Selected: {selectedCountries.length} countries
+                        </h3>
+                        <p className="text-sm text-indigo-700">
+                          {selectedCountries.slice(0, 3).join(", ")}
+                          {selectedCountries.length > 3 && ` and ${selectedCountries.length - 3} more`}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 <Input
                   type="text"
@@ -704,15 +917,21 @@ export function FreeSearchForm() {
                   <div>
                     <h3 className="text-xl font-semibold mb-4 text-indigo-700">Search Results</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {searchResults.map((country) => (
-                        <CountrySelectCard
-                          key={country.name}
-                          country={country.name}
-                          flag={`https://flagcdn.com/${country.flag}.svg`}
-                          onSelect={() => toggleCountry(country.name)}
-                          selected={selectedCountries.includes(country.name)}
-                        />
-                      ))}
+                      {searchResults.map((country) => {
+                        const countryData = pricingData[country.name as keyof typeof pricingData]
+                        return (
+                          <CountrySelectCard
+                            key={country.name}
+                            country={country.name}
+                            flag={`https://flagcdn.com/${country.flag}.svg`}
+                            price={countryData?.price}
+                            additionalClassPrice={countryData?.additionalClassPrice}
+                            onSelect={() => toggleCountry(country.name)}
+                            selected={selectedCountries.includes(country.name)}
+                            currency={currency}
+                          />
+                        )
+                      })}
                     </div>
                   </div>
                 )}
@@ -722,15 +941,21 @@ export function FreeSearchForm() {
                   <div>
                     <h3 className="text-xl font-semibold mb-4 text-indigo-700">Most Requested Countries</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {filteredTopCountries.map((country) => (
-                        <CountrySelectCard
-                          key={country.name}
-                          country={country.name}
-                          flag={`https://flagcdn.com/${country.flag}.svg`}
-                          onSelect={() => toggleCountry(country.name)}
-                          selected={selectedCountries.includes(country.name)}
-                        />
-                      ))}
+                      {filteredTopCountries.map((country) => {
+                        const countryData = pricingData[country.name as keyof typeof pricingData]
+                        return (
+                          <CountrySelectCard
+                            key={country.name}
+                            country={country.name}
+                            flag={`https://flagcdn.com/${country.flag}.svg`}
+                            price={countryData?.price}
+                            additionalClassPrice={countryData?.additionalClassPrice}
+                            onSelect={() => toggleCountry(country.name)}
+                            selected={selectedCountries.includes(country.name)}
+                            currency={currency}
+                          />
+                        )
+                      })}
                     </div>
                   </div>
                 )}
@@ -753,29 +978,39 @@ export function FreeSearchForm() {
                       </button>
                       {expandedRegions.includes(region.name) && (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                          {region.countries.map((country) => (
-                            <CountrySelectCard
-                              key={country.name}
-                              country={country.name}
-                              flag={`https://flagcdn.com/${country.flag}.svg`}
-                              onSelect={() => toggleCountry(country.name)}
-                              selected={selectedCountries.includes(country.name)}
-                            />
-                          ))}
+                          {region.countries.map((country) => {
+                            const countryData = pricingData[country.name as keyof typeof pricingData]
+                            return (
+                              <CountrySelectCard
+                                key={country.name}
+                                country={country.name}
+                                flag={`https://flagcdn.com/${country.flag}.svg`}
+                                price={countryData?.price}
+                                additionalClassPrice={countryData?.additionalClassPrice}
+                                onSelect={() => toggleCountry(country.name)}
+                                selected={selectedCountries.includes(country.name)}
+                                currency={currency}
+                              />
+                            )
+                          })}
                         </div>
                       )}
                     </div>
                   ))}
 
                 <div className="flex gap-4">
-                  <Button type="button" variant="outline" onClick={() => setStep(1)} className="flex-1 py-3 text-lg">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={goToPreviousStep}
+                    className="flex-1 py-3 text-lg bg-transparent"
+                  >
                     Back
                   </Button>
                   <Button
                     type="button"
                     className="flex-1 py-3 text-lg bg-indigo-600 hover:bg-indigo-700 text-white"
-                    onClick={() => setStep(3)}
-                    disabled={selectedCountries.length === 0}
+                    onClick={goToNextStep}
                   >
                     Continue to Contact Info
                   </Button>
@@ -823,6 +1058,11 @@ export function FreeSearchForm() {
                       value={formData.email}
                       onChange={(e) => setFormData((prev) => ({ ...prev, email: e.target.value }))}
                       className="mt-1"
+                      required
+                      autoComplete="email"
+                      inputMode="email"
+                      aria-required="true"
+                      pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$"
                     />
                   </div>
                 </div>
@@ -888,15 +1128,18 @@ export function FreeSearchForm() {
                 </div>
 
                 <div className="flex gap-4">
-                  <Button type="button" variant="outline" onClick={() => setStep(2)} className="flex-1 py-3 text-lg">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={goToPreviousStep}
+                    className="flex-1 py-3 text-lg bg-transparent"
+                  >
                     Back
                   </Button>
                   <Button
                     type="submit"
                     className="flex-1 py-3 text-lg bg-indigo-600 hover:bg-indigo-700 text-white"
-                    disabled={
-                      isSubmitting || !formData.name || !formData.surname || !formData.email || !formData.acceptTerms
-                    }
+                    disabled={isSubmitting}
                   >
                     {isSubmitting ? "Submitting..." : "Submit"}
                   </Button>
@@ -927,10 +1170,27 @@ export function FreeSearchForm() {
               </li>
             </ul>
             <div className="mt-6">
-              <h4 className="text-lg font-semibold mb-2 text-indigo-700">Need More Help?</h4>
-              <p className="text-gray-600">
-                Contact us for a comprehensive trademark search and expert advice on protecting your brand.
-              </p>
+              <h4 className="text-lg font-semibold mb-2 text-indigo-700">How It Works</h4>
+              <div className="space-y-2 text-sm text-gray-600">
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-green-500" />
+                  <span>
+                    <strong>Step 1:</strong> Free trademark search & assessment
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-green-500" />
+                  <span>
+                    <strong>Step 2:</strong> Review results & expert recommendations
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-indigo-500" />
+                  <span>
+                    <strong>Step 3:</strong> Choose to proceed with registration (optional)
+                  </span>
+                </div>
+              </div>
               <Button variant="secondary" className="mt-4">
                 Contact Us
               </Button>
