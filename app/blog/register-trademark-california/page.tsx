@@ -81,7 +81,7 @@ export default function RegisterTrademarkCaliforniaPage() {
 
               <div className="my-6">
                 <Image
-                  src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/8777996los-angeles-hollywood-sign.jpg-rLwjzZLJASUIniBUJeIU7NFLJiQuYO.jpeg"
+                  src="/images/design-mode/8777996los-angeles-hollywood-sign.jpg.jpeg"
                   alt="Hollywood Sign in Los Angeles, California"
                   width={1200}
                   height={630}

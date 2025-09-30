@@ -53,7 +53,10 @@ export async function POST(req: Request) {
         const result = await resend.emails.send({
           from: "Just Protected <noreply@justprotected.com>",
           to: recipientEmail,
-          subject: subject,
+              replyTo: "trademarks@justprotected.com",
+    text: message,
+    subject: subject ? "Message via Just Protected: " + subject : "Message via Just Protected",
+         
           html: `
 <!DOCTYPE html>
 <html lang="en">

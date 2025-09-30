@@ -11,8 +11,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Textarea } from "@/components/ui/textarea"
 import { CountrySelectCard } from "@/components/country-select-card"
-import { CurrencySelector } from "@/components/currency-selector"
-import { trackLeadSubmission } from "@/components/gtm-tracking"
+import { trackLeadSubmission } from "@/components/gtm-tracker"
 import { Upload, CheckCircle, ChevronDown, ChevronUp, AlertCircle } from "lucide-react"
 import { v4 as uuidv4 } from "uuid"
 
@@ -445,14 +444,14 @@ export function FreeSearchForm() {
       // Save to localStorage as backup
       saveFormToLocalStorage(formData, searchId)
 
-      // Track lead submission in GTM
-      trackLeadSubmission("free_search", 1, currency)
-
       // If in preview mode, we'll simulate a successful submission
       if (isPreview) {
         console.log("Preview mode detected, simulating successful submission")
         // Wait a bit to simulate network request
         await new Promise((resolve) => setTimeout(resolve, 1000))
+
+        // Track lead submission
+        trackLeadSubmission("free_search")
 
         // Show success message and redirect
         setSuccessMessage("Form submitted successfully in preview mode!")
@@ -510,6 +509,9 @@ export function FreeSearchForm() {
         // Even if the response is not OK, we'll still proceed
         console.log("Form submission response:", response.status)
 
+        // Track lead submission on successful form submission
+        trackLeadSubmission("free_search")
+
         // Show success message and redirect
         setSuccessMessage("Form submitted successfully!")
         setTimeout(() => {
@@ -518,7 +520,8 @@ export function FreeSearchForm() {
       } catch (error) {
         console.error("Error submitting form:", error)
 
-        // Even if there's an error, we'll still proceed
+        // Even if there's an error, we'll still proceed and track
+        trackLeadSubmission("free_search")
         setSuccessMessage("Your submission has been saved. Thank you!")
         setTimeout(() => {
           router.push("/thank-you")
@@ -527,7 +530,8 @@ export function FreeSearchForm() {
     } catch (error) {
       console.error("Error in form submission process:", error)
 
-      // Always proceed to thank you page after showing a message
+      // Always proceed to thank you page after showing a message and track
+      trackLeadSubmission("free_search")
       setSuccessMessage("Your request has been recorded. Thank you for your submission!")
       setTimeout(() => {
         router.push("/thank-you")
@@ -567,12 +571,55 @@ export function FreeSearchForm() {
           <div className="mb-8">
             <h1 className="text-4xl font-bold mb-4 text-indigo-700">Free Trademark Search</h1>
             <p className="text-lg text-gray-600">Start your trademark journey with a free search.</p>
-            <p className="text-lg text-gray-600 mb-8">
+            <p className="text-lg text-gray-600 mb-4">
               Fill out this simple form to get your free trademark search and expert assessment within 24 hours.
             </p>
+            <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
+              <div className="flex items-start gap-3">
+                <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
+                <div>
+                  <h3 className="font-medium text-green-800 mb-1">Your Search is Completely Free</h3>
+                  <p className="text-green-700 text-sm">
+                    The trademark search and assessment are free. The prices shown are only for trademark registration
+                    services if you choose to proceed with filing.
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
 
-          {step === 2 && <CurrencySelector selectedCurrency={currency} onCurrencyChange={handleCurrencyChange} />}
+          {step === 2 && (
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 className="text-2xl font-semibold text-indigo-700">Where do you need protection?</h2>
+                <p className="text-gray-600 text-sm mt-1">
+                  Select countries to see registration pricing (search remains free)
+                </p>
+              </div>
+              <div className="flex items-center gap-2 text-sm">
+                <span className="text-gray-500">Currency:</span>
+                <button
+                  type="button"
+                  onClick={() => handleCurrencyChange("USD")}
+                  className={`px-2 py-1 rounded text-xs ${
+                    currency === "USD" ? "bg-indigo-100 text-indigo-700" : "text-gray-500 hover:text-gray-700"
+                  }`}
+                >
+                  USD
+                </button>
+                <span className="text-gray-300">|</span>
+                <button
+                  type="button"
+                  onClick={() => handleCurrencyChange("EUR")}
+                  className={`px-2 py-1 rounded text-xs ${
+                    currency === "EUR" ? "bg-indigo-100 text-indigo-700" : "text-gray-500 hover:text-gray-700"
+                  }`}
+                >
+                  EUR
+                </button>
+              </div>
+            </div>
+          )}
 
           {/* Progress bar */}
           <div className="mb-12">
@@ -775,7 +822,6 @@ export function FreeSearchForm() {
 
             {step === 2 && (
               <div className="space-y-8">
-                <h2 className="text-2xl font-semibold mb-4 text-indigo-700">Where do you need protection?</h2>
                 <p className="text-gray-600">
                   Select the countries or regions where you want to register your trademark.
                 </p>
@@ -791,13 +837,6 @@ export function FreeSearchForm() {
                           {selectedCountries.slice(0, 3).join(", ")}
                           {selectedCountries.length > 3 && ` and ${selectedCountries.length - 3} more`}
                         </p>
-                      </div>
-                      <div className="text-right">
-                        <div className="text-xl font-bold text-indigo-900">
-                          {currencySymbol}
-                          {totalPrice.toLocaleString()}
-                        </div>
-                        <p className="text-xs text-indigo-700">Total for first class</p>
                       </div>
                     </div>
                   </div>
@@ -1062,10 +1101,27 @@ export function FreeSearchForm() {
               </li>
             </ul>
             <div className="mt-6">
-              <h4 className="text-lg font-semibold mb-2 text-indigo-700">Need More Help?</h4>
-              <p className="text-gray-600">
-                Contact us for a comprehensive trademark search and expert advice on protecting your brand.
-              </p>
+              <h4 className="text-lg font-semibold mb-2 text-indigo-700">How It Works</h4>
+              <div className="space-y-2 text-sm text-gray-600">
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-green-500" />
+                  <span>
+                    <strong>Step 1:</strong> Free trademark search & assessment
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-green-500" />
+                  <span>
+                    <strong>Step 2:</strong> Review results & expert recommendations
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-indigo-500" />
+                  <span>
+                    <strong>Step 3:</strong> Choose to proceed with registration (optional)
+                  </span>
+                </div>
+              </div>
               <Button variant="secondary" className="mt-4">
                 Contact Us
               </Button>

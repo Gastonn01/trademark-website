@@ -10,13 +10,13 @@ declare global {
   }
 }
 
-export function GTMTracking() {
+export function GTMTracker() {
   const pathname = usePathname()
   const searchParams = useSearchParams()
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const url = pathname + (searchParams?.toString() ? `?${searchParams.toString()}` : "")
+      const url = pathname + (searchParams.toString() ? `?${searchParams.toString()}` : "")
 
       window.dataLayer = window.dataLayer || []
       window.dataLayer.push({
@@ -29,27 +29,27 @@ export function GTMTracking() {
   return null
 }
 
-// Utility function to track lead conversions
-export const trackLeadSubmission = (source: string, value = 1, currency = "EUR") => {
+// Utility function to grant consent
+export function grantConsent() {
+  if (typeof window !== "undefined" && window.gtag) {
+    window.gtag("consent", "update", {
+      ad_storage: "granted",
+      ad_user_data: "granted",
+      ad_personalization: "granted",
+      analytics_storage: "granted",
+    })
+  }
+}
+
+// Utility function to track lead conversion
+export function trackLeadSubmission(source = "free_search") {
   if (typeof window !== "undefined") {
     window.dataLayer = window.dataLayer || []
     window.dataLayer.push({
       event: "lead_submitted",
       source: source,
-      value: value,
-      currency: currency,
-    })
-  }
-}
-
-// Utility function to update consent
-export const updateConsent = (granted: boolean) => {
-  if (typeof window !== "undefined" && window.gtag) {
-    window.gtag("consent", "update", {
-      ad_storage: granted ? "granted" : "denied",
-      ad_user_data: granted ? "granted" : "denied",
-      ad_personalization: granted ? "granted" : "denied",
-      analytics_storage: granted ? "granted" : "denied",
+      value: 1,
+      currency: "EUR",
     })
   }
 }
