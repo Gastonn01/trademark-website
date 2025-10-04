@@ -13,9 +13,8 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
 import Image from "next/image"
-import { ChevronDown, ChevronUp, Info, X } from "lucide-react"
+import { ChevronDown, ChevronUp, Info, X, Search } from "lucide-react"
 import { useRouter } from "next/navigation"
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 
 interface FormData {
@@ -369,7 +368,6 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
   const [files, setFiles] = useState<File[]>([])
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
-  const [classPopoverOpen, setClassPopoverOpen] = useState(false)
 
   // Pre-fill form with initial data
   useEffect(() => {
@@ -634,7 +632,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
                   <div className="flex justify-end">
                     <Button
                       onClick={() => {
-                        window.scrollTo({ top: 0, behavior: "smooth" }) // Scroll to top
+                        window.scrollTo({ top: 0, behavior: "smooth" })
                         setStep(2)
                       }}
                       disabled={!formData.trademarkType || !formData.goodsAndServices}
@@ -753,7 +751,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
                     <Button
                       variant="outline"
                       onClick={() => {
-                        window.scrollTo({ top: 0, behavior: "smooth" }) // Scroll to top
+                        window.scrollTo({ top: 0, behavior: "smooth" })
                         setStep(1)
                       }}
                     >
@@ -761,7 +759,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
                     </Button>
                     <Button
                       onClick={() => {
-                        window.scrollTo({ top: 0, behavior: "smooth" }) // Scroll to top
+                        window.scrollTo({ top: 0, behavior: "smooth" })
                         setStep(3)
                       }}
                       disabled={selectedCountries.length === 0}
@@ -781,78 +779,68 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
                   </div>
 
                   <div className="space-y-4">
-                    <Label className="text-base font-medium">Select Classes</Label>
-                    <Popover open={classPopoverOpen} onOpenChange={setClassPopoverOpen}>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant="outline"
-                          role="combobox"
-                          aria-expanded={classPopoverOpen}
-                          className="w-full justify-between h-auto min-h-[40px] py-2 bg-transparent"
-                        >
-                          <span className="text-left">
-                            {formData.selectedClasses.length > 0
-                              ? `${formData.selectedClasses.length} class${formData.selectedClasses.length > 1 ? "es" : ""} selected`
-                              : "Select classes..."}
-                          </span>
-                          <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-[600px] p-0" align="start">
-                        <Command>
-                          <CommandInput placeholder="Search classes by number or description..." />
-                          <CommandList className="max-h-[400px]">
-                            <CommandEmpty>No classes found.</CommandEmpty>
-                            <CommandGroup heading="Goods (Classes 1-34)">
-                              {trademarkClasses
-                                .filter((c) => c.class <= 34)
-                                .map((classItem) => (
-                                  <CommandItem
-                                    key={classItem.class}
-                                    value={`${classItem.class} ${classItem.description}`}
-                                    onSelect={() => {
-                                      toggleClass(classItem.class)
-                                    }}
-                                    className="flex items-start space-x-2 py-3"
-                                  >
-                                    <Checkbox
-                                      checked={formData.selectedClasses.includes(classItem.class)}
-                                      className="mt-1"
-                                    />
-                                    <div className="flex-1">
-                                      <div className="font-medium">Class {classItem.class}</div>
-                                      <div className="text-sm text-gray-600 line-clamp-2">{classItem.description}</div>
-                                    </div>
-                                  </CommandItem>
-                                ))}
-                            </CommandGroup>
-                            <CommandGroup heading="Services (Classes 35-45)">
-                              {trademarkClasses
-                                .filter((c) => c.class >= 35)
-                                .map((classItem) => (
-                                  <CommandItem
-                                    key={classItem.class}
-                                    value={`${classItem.class} ${classItem.description}`}
-                                    onSelect={() => {
-                                      toggleClass(classItem.class)
-                                    }}
-                                    className="flex items-start space-x-2 py-3"
-                                  >
-                                    <Checkbox
-                                      checked={formData.selectedClasses.includes(classItem.class)}
-                                      className="mt-1"
-                                    />
-                                    <div className="flex-1">
-                                      <div className="font-medium">Class {classItem.class}</div>
-                                      <div className="text-sm text-gray-600 line-clamp-2">{classItem.description}</div>
-                                    </div>
-                                  </CommandItem>
-                                ))}
-                            </CommandGroup>
-                          </CommandList>
-                        </Command>
-                      </PopoverContent>
-                    </Popover>
+                    <div className="relative">
+                      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                      <Input
+                        type="text"
+                        placeholder="Search classes by number or description..."
+                        value={classSearchTerm}
+                        onChange={(e) => setClassSearchTerm(e.target.value)}
+                        className="pl-10"
+                      />
+                    </div>
+
+                    <div className="border rounded-lg max-h-[500px] overflow-y-auto">
+                      <div className="p-4 space-y-4">
+                        <div>
+                          <h4 className="font-semibold text-sm text-gray-700 mb-3">Goods (Classes 1-34)</h4>
+                          <div className="space-y-2">
+                            {filteredClasses
+                              .filter((c) => c.class <= 34)
+                              .map((classItem) => (
+                                <div
+                                  key={classItem.class}
+                                  className="flex items-start space-x-3 p-3 hover:bg-gray-50 rounded-lg cursor-pointer"
+                                  onClick={() => toggleClass(classItem.class)}
+                                >
+                                  <Checkbox
+                                    checked={formData.selectedClasses.includes(classItem.class)}
+                                    className="mt-1"
+                                  />
+                                  <div className="flex-1">
+                                    <div className="font-medium text-sm">Class {classItem.class}</div>
+                                    <div className="text-sm text-gray-600">{classItem.description}</div>
+                                  </div>
+                                </div>
+                              ))}
+                          </div>
+                        </div>
+
+                        <div className="border-t pt-4">
+                          <h4 className="font-semibold text-sm text-gray-700 mb-3">Services (Classes 35-45)</h4>
+                          <div className="space-y-2">
+                            {filteredClasses
+                              .filter((c) => c.class >= 35)
+                              .map((classItem) => (
+                                <div
+                                  key={classItem.class}
+                                  className="flex items-start space-x-3 p-3 hover:bg-gray-50 rounded-lg cursor-pointer"
+                                  onClick={() => toggleClass(classItem.class)}
+                                >
+                                  <Checkbox
+                                    checked={formData.selectedClasses.includes(classItem.class)}
+                                    className="mt-1"
+                                  />
+                                  <div className="flex-1">
+                                    <div className="font-medium text-sm">Class {classItem.class}</div>
+                                    <div className="text-sm text-gray-600">{classItem.description}</div>
+                                  </div>
+                                </div>
+                              ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
 
                     {formData.selectedClasses.length > 0 && (
                       <div className="space-y-3">
@@ -911,7 +899,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
                     <Button
                       variant="outline"
                       onClick={() => {
-                        window.scrollTo({ top: 0, behavior: "smooth" }) // Scroll to top
+                        window.scrollTo({ top: 0, behavior: "smooth" })
                         setStep(2)
                       }}
                     >
@@ -919,7 +907,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
                     </Button>
                     <Button
                       onClick={() => {
-                        window.scrollTo({ top: 0, behavior: "smooth" }) // Scroll to top
+                        window.scrollTo({ top: 0, behavior: "smooth" })
                         setStep(4)
                       }}
                       disabled={formData.selectedClasses.length === 0}
@@ -1013,7 +1001,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
                     <Button
                       variant="outline"
                       onClick={() => {
-                        window.scrollTo({ top: 0, behavior: "smooth" }) // Scroll to top
+                        window.scrollTo({ top: 0, behavior: "smooth" })
                         setStep(3)
                       }}
                     >
