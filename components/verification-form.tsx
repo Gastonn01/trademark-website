@@ -13,8 +13,10 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Textarea } from "@/components/ui/textarea"
 import { Badge } from "@/components/ui/badge"
 import Image from "next/image"
-import { ChevronDown, ChevronUp, Info } from "lucide-react"
+import { ChevronDown, ChevronUp, Info, X } from "lucide-react"
 import { useRouter } from "next/navigation"
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 
 interface FormData {
   trademarkType: string
@@ -189,6 +191,152 @@ const trademarkClasses = [
     class: 12,
     description: "Vehicles; apparatus for locomotion by land, air or water",
   },
+  {
+    class: 13,
+    description: "Firearms; ammunition and projectiles; explosives; fireworks",
+  },
+  {
+    class: 14,
+    description:
+      "Precious metals and their alloys; jewellery, precious and semi-precious stones; horological and chronometric instruments",
+  },
+  {
+    class: 15,
+    description: "Musical instruments; music stands and stands for musical instruments; conductors' batons",
+  },
+  {
+    class: 16,
+    description:
+      "Paper and cardboard; printed matter; bookbinding material; photographs; stationery and office requisites, except furniture",
+  },
+  {
+    class: 17,
+    description:
+      "Unprocessed and semi-processed rubber, gutta-percha, gum, asbestos, mica and substitutes for all these materials",
+  },
+  {
+    class: 18,
+    description:
+      "Leather and imitations of leather; animal skins and hides; luggage and carrying bags; umbrellas and parasols; walking sticks",
+  },
+  {
+    class: 19,
+    description: "Materials, not of metal, for building and construction; rigid pipes, not of metal, for building",
+  },
+  {
+    class: 20,
+    description: "Furniture, mirrors, picture frames; containers, not of metal, for storage or transport",
+  },
+  {
+    class: 21,
+    description:
+      "Household or kitchen utensils and containers; cookware and tableware, except forks, knives and spoons; combs and sponges",
+  },
+  {
+    class: 22,
+    description: "Ropes and string; nets; tents and tarpaulins; awnings of textile or synthetic materials; sails",
+  },
+  {
+    class: 23,
+    description: "Yarns and threads for textile use",
+  },
+  {
+    class: 24,
+    description: "Textiles and substitutes for textiles; household linen; curtains of textile or plastic",
+  },
+  {
+    class: 25,
+    description: "Clothing, footwear, headwear",
+  },
+  {
+    class: 26,
+    description:
+      "Lace, braid and embroidery, and haberdashery ribbons and bows; buttons, hooks and eyes, pins and needles",
+  },
+  {
+    class: 27,
+    description:
+      "Carpets, rugs, mats and matting, linoleum and other materials for covering existing floors; wall hangings, not of textile",
+  },
+  {
+    class: 28,
+    description: "Games, toys and playthings; video game apparatus; gymnastic and sporting articles",
+  },
+  {
+    class: 29,
+    description:
+      "Meat, fish, poultry and game; meat extracts; preserved, frozen, dried and cooked fruits and vegetables",
+  },
+  {
+    class: 30,
+    description:
+      "Coffee, tea, cocoa and substitutes therefor; rice, pasta and noodles; tapioca and sago; flour and preparations made from cereals",
+  },
+  {
+    class: 31,
+    description:
+      "Raw and unprocessed agricultural, aquacultural, horticultural and forestry products; raw and unprocessed grains and seeds",
+  },
+  {
+    class: 32,
+    description: "Beers; non-alcoholic beverages; mineral and aerated waters; fruit beverages and fruit juices",
+  },
+  {
+    class: 33,
+    description: "Alcoholic beverages, except beers; alcoholic preparations for making beverages",
+  },
+  {
+    class: 34,
+    description:
+      "Tobacco and tobacco substitutes; cigarettes and cigars; electronic cigarettes and oral vaporizers for smokers",
+  },
+  {
+    class: 35,
+    description: "Advertising; business management, organization and administration; office functions",
+  },
+  {
+    class: 36,
+    description: "Financial, monetary and banking services; insurance services; real estate affairs",
+  },
+  {
+    class: 37,
+    description: "Construction services; installation and repair services; mining extraction, oil and gas drilling",
+  },
+  {
+    class: 38,
+    description: "Telecommunications services",
+  },
+  {
+    class: 39,
+    description: "Transport; packaging and storage of goods; travel arrangement",
+  },
+  {
+    class: 40,
+    description: "Treatment of materials; recycling of waste and trash; air purification and treatment of water",
+  },
+  {
+    class: 41,
+    description: "Education; providing of training; entertainment; sporting and cultural activities",
+  },
+  {
+    class: 42,
+    description:
+      "Scientific and technological services and research and design relating thereto; industrial analysis, industrial research and industrial design services; quality control and authentication services; design and development of computer hardware and software",
+  },
+  {
+    class: 43,
+    description: "Services for providing food and drink; temporary accommodation",
+  },
+  {
+    class: 44,
+    description:
+      "Medical services; veterinary services; hygienic and beauty care for human beings or animals; agriculture, aquaculture, horticulture and forestry services",
+  },
+  {
+    class: 45,
+    description:
+      "Legal services; security services for the physical protection of tangible property and individuals; personal and social services rendered by others to meet the needs of individuals",
+  },
 ]
 
 interface VerificationFormContentProps {
@@ -204,7 +352,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
     trademarkName: "",
     goodsAndServices: "",
     countries: [],
-    selectedClasses: [1],
+    selectedClasses: [], // No default class selection
     name: "",
     surname: "",
     email: "",
@@ -221,6 +369,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
   const [files, setFiles] = useState<File[]>([])
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
+  const [classPopoverOpen, setClassPopoverOpen] = useState(false)
 
   // Pre-fill form with initial data
   useEffect(() => {
@@ -234,7 +383,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
         email: initialData.email || prev.email,
         phone: initialData.phone || prev.phone,
         trademarkType: initialData.trademarkType || "word",
-        selectedClasses: initialData.selectedClasses || [1],
+        selectedClasses: initialData.selectedClasses || [],
       }))
 
       if (initialData.countries && Array.isArray(initialData.countries)) {
@@ -313,6 +462,13 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
       selectedClasses: prev.selectedClasses.includes(classNumber)
         ? prev.selectedClasses.filter((c) => c !== classNumber)
         : [...prev.selectedClasses, classNumber],
+    }))
+  }
+
+  const removeClass = (classNumber: number) => {
+    setFormData((prev) => ({
+      ...prev,
+      selectedClasses: prev.selectedClasses.filter((c) => c !== classNumber),
     }))
   }
 
@@ -477,7 +633,10 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
 
                   <div className="flex justify-end">
                     <Button
-                      onClick={() => setStep(2)}
+                      onClick={() => {
+                        window.scrollTo({ top: 0, behavior: "smooth" }) // Scroll to top
+                        setStep(2)
+                      }}
                       disabled={!formData.trademarkType || !formData.goodsAndServices}
                       className="bg-indigo-600 hover:bg-indigo-700 px-8"
                     >
@@ -591,11 +750,20 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
                   ))}
 
                   <div className="flex justify-between">
-                    <Button variant="outline" onClick={() => setStep(1)}>
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        window.scrollTo({ top: 0, behavior: "smooth" }) // Scroll to top
+                        setStep(1)
+                      }}
+                    >
                       Back
                     </Button>
                     <Button
-                      onClick={() => setStep(3)}
+                      onClick={() => {
+                        window.scrollTo({ top: 0, behavior: "smooth" }) // Scroll to top
+                        setStep(3)
+                      }}
                       disabled={selectedCountries.length === 0}
                       className="bg-indigo-600 hover:bg-indigo-700 px-8"
                     >
@@ -612,53 +780,148 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
                     <p className="text-gray-600">Select the classes that apply to your goods and services.</p>
                   </div>
 
-                  <div className="flex items-center space-x-4">
-                    <Input
-                      type="text"
-                      placeholder="Search classes..."
-                      value={classSearchTerm}
-                      onChange={(e) => setClassSearchTerm(e.target.value)}
-                      className="flex-1 max-w-md"
-                    />
-                    <Button variant="outline" className="flex items-center space-x-2 bg-transparent">
-                      <Info className="w-4 h-4" />
-                      <span>Class Info</span>
-                    </Button>
-                  </div>
+                  <div className="space-y-4">
+                    <Label className="text-base font-medium">Select Classes</Label>
+                    <Popover open={classPopoverOpen} onOpenChange={setClassPopoverOpen}>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          role="combobox"
+                          aria-expanded={classPopoverOpen}
+                          className="w-full justify-between h-auto min-h-[40px] py-2 bg-transparent"
+                        >
+                          <span className="text-left">
+                            {formData.selectedClasses.length > 0
+                              ? `${formData.selectedClasses.length} class${formData.selectedClasses.length > 1 ? "es" : ""} selected`
+                              : "Select classes..."}
+                          </span>
+                          <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-[600px] p-0" align="start">
+                        <Command>
+                          <CommandInput placeholder="Search classes by number or description..." />
+                          <CommandList className="max-h-[400px]">
+                            <CommandEmpty>No classes found.</CommandEmpty>
+                            <CommandGroup heading="Goods (Classes 1-34)">
+                              {trademarkClasses
+                                .filter((c) => c.class <= 34)
+                                .map((classItem) => (
+                                  <CommandItem
+                                    key={classItem.class}
+                                    value={`${classItem.class} ${classItem.description}`}
+                                    onSelect={() => {
+                                      toggleClass(classItem.class)
+                                    }}
+                                    className="flex items-start space-x-2 py-3"
+                                  >
+                                    <Checkbox
+                                      checked={formData.selectedClasses.includes(classItem.class)}
+                                      className="mt-1"
+                                    />
+                                    <div className="flex-1">
+                                      <div className="font-medium">Class {classItem.class}</div>
+                                      <div className="text-sm text-gray-600 line-clamp-2">{classItem.description}</div>
+                                    </div>
+                                  </CommandItem>
+                                ))}
+                            </CommandGroup>
+                            <CommandGroup heading="Services (Classes 35-45)">
+                              {trademarkClasses
+                                .filter((c) => c.class >= 35)
+                                .map((classItem) => (
+                                  <CommandItem
+                                    key={classItem.class}
+                                    value={`${classItem.class} ${classItem.description}`}
+                                    onSelect={() => {
+                                      toggleClass(classItem.class)
+                                    }}
+                                    className="flex items-start space-x-2 py-3"
+                                  >
+                                    <Checkbox
+                                      checked={formData.selectedClasses.includes(classItem.class)}
+                                      className="mt-1"
+                                    />
+                                    <div className="flex-1">
+                                      <div className="font-medium">Class {classItem.class}</div>
+                                      <div className="text-sm text-gray-600 line-clamp-2">{classItem.description}</div>
+                                    </div>
+                                  </CommandItem>
+                                ))}
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {filteredClasses.map((classItem) => (
-                      <div key={classItem.class} className="border rounded-lg p-4">
-                        <div className="flex items-start space-x-3">
-                          <Checkbox
-                            id={`class-${classItem.class}`}
-                            checked={formData.selectedClasses.includes(classItem.class)}
-                            onCheckedChange={() => toggleClass(classItem.class)}
-                          />
-                          <div className="flex-1">
-                            <Label htmlFor={`class-${classItem.class}`} className="font-medium cursor-pointer">
-                              Class {classItem.class}
-                            </Label>
-                            <p className="text-sm text-gray-600 mt-1">{classItem.description}</p>
-                          </div>
+                    {formData.selectedClasses.length > 0 && (
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between">
+                          <Label className="text-sm font-medium text-gray-700">
+                            Selected Classes ({formData.selectedClasses.length})
+                          </Label>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setFormData((prev) => ({ ...prev, selectedClasses: [] }))}
+                            className="text-sm text-gray-600 hover:text-gray-900"
+                          >
+                            Clear All
+                          </Button>
+                        </div>
+                        <div className="flex flex-wrap gap-2">
+                          {formData.selectedClasses
+                            .sort((a, b) => a - b)
+                            .map((classNumber) => {
+                              const classInfo = trademarkClasses.find((c) => c.class === classNumber)
+                              return (
+                                <Popover key={classNumber}>
+                                  <PopoverTrigger asChild>
+                                    <Badge
+                                      variant="secondary"
+                                      className="cursor-pointer hover:bg-indigo-100 px-3 py-1.5 text-sm"
+                                    >
+                                      Class {classNumber}
+                                      <button
+                                        onClick={(e) => {
+                                          e.stopPropagation()
+                                          removeClass(classNumber)
+                                        }}
+                                        className="ml-2 hover:text-red-600"
+                                      >
+                                        <X className="h-3 w-3" />
+                                      </button>
+                                    </Badge>
+                                  </PopoverTrigger>
+                                  <PopoverContent className="w-80">
+                                    <div className="space-y-2">
+                                      <h4 className="font-semibold">Class {classNumber}</h4>
+                                      <p className="text-sm text-gray-600">{classInfo?.description}</p>
+                                    </div>
+                                  </PopoverContent>
+                                </Popover>
+                              )
+                            })}
                         </div>
                       </div>
-                    ))}
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <p className="text-sm text-gray-600">Selected classes: {formData.selectedClasses.length}</p>
-                    <Button variant="outline" onClick={() => setFormData((prev) => ({ ...prev, selectedClasses: [] }))}>
-                      Clear All
-                    </Button>
+                    )}
                   </div>
 
                   <div className="flex justify-between">
-                    <Button variant="outline" onClick={() => setStep(2)}>
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        window.scrollTo({ top: 0, behavior: "smooth" }) // Scroll to top
+                        setStep(2)
+                      }}
+                    >
                       Back
                     </Button>
                     <Button
-                      onClick={() => setStep(4)}
+                      onClick={() => {
+                        window.scrollTo({ top: 0, behavior: "smooth" }) // Scroll to top
+                        setStep(4)
+                      }}
                       disabled={formData.selectedClasses.length === 0}
                       className="bg-indigo-600 hover:bg-indigo-700 px-8"
                     >
@@ -747,7 +1010,13 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
                   </div>
 
                   <div className="flex justify-between">
-                    <Button variant="outline" onClick={() => setStep(3)}>
+                    <Button
+                      variant="outline"
+                      onClick={() => {
+                        window.scrollTo({ top: 0, behavior: "smooth" }) // Scroll to top
+                        setStep(3)
+                      }}
+                    >
                       Back
                     </Button>
                     <Button
@@ -811,7 +1080,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
                         </Badge>
                       ))
                     ) : (
-                      <Badge variant="secondary">Class 1</Badge>
+                      <p className="text-sm text-gray-500">No classes selected</p>
                     )}
                   </div>
                 </div>

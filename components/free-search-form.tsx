@@ -426,10 +426,17 @@ export function FreeSearchForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
+    if (selectedCountries.length === 0) {
+      setErrorMessage("Please select at least one country to continue.")
+      window.scrollTo({ top: 0, behavior: "smooth" })
+      return
+    }
+
     // Require email address before any submission logic
     if (!formData.email || !formData.email.trim()) {
       setErrorMessage("Please enter your email address so we can send your results.")
       setStep(3)
+      window.scrollTo({ top: 0, behavior: "smooth" })
       return
     }
 
@@ -807,7 +814,10 @@ export function FreeSearchForm() {
                 <Button
                   type="button"
                   className="w-full py-3 text-lg bg-indigo-600 hover:bg-indigo-700 text-white"
-                  onClick={() => setStep(2)}
+                  onClick={() => {
+                    window.scrollTo({ top: 0, behavior: "smooth" })
+                    setStep(2)
+                  }}
                   disabled={
                     !formData.trademarkType ||
                     !formData.goodsAndServices ||
@@ -937,14 +947,29 @@ export function FreeSearchForm() {
                   ))}
 
                 <div className="flex gap-4">
-                  <Button type="button" variant="outline" onClick={() => setStep(1)} className="flex-1 py-3 text-lg">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => {
+                      window.scrollTo({ top: 0, behavior: "smooth" }) // Scroll to top
+                      setStep(1)
+                    }}
+                    className="flex-1 py-3 text-lg"
+                  >
                     Back
                   </Button>
                   <Button
                     type="button"
                     className="flex-1 py-3 text-lg bg-indigo-600 hover:bg-indigo-700 text-white"
-                    onClick={() => setStep(3)}
-                    disabled={selectedCountries.length === 0}
+                    onClick={() => {
+                      if (selectedCountries.length === 0) {
+                        setErrorMessage("Please select at least one country to continue.")
+                        window.scrollTo({ top: 0, behavior: "smooth" })
+                        return
+                      }
+                      window.scrollTo({ top: 0, behavior: "smooth" })
+                      setStep(3)
+                    }}
                   >
                     Continue to Contact Info
                   </Button>
@@ -1062,7 +1087,15 @@ export function FreeSearchForm() {
                 </div>
 
                 <div className="flex gap-4">
-                  <Button type="button" variant="outline" onClick={() => setStep(2)} className="flex-1 py-3 text-lg">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => {
+                      window.scrollTo({ top: 0, behavior: "smooth" }) // Scroll to top
+                      setStep(2)
+                    }}
+                    className="flex-1 py-3 text-lg"
+                  >
                     Back
                   </Button>
                   <Button
