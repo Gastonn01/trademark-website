@@ -53,10 +53,9 @@ export async function POST(req: Request) {
         const result = await resend.emails.send({
           from: "Just Protected <noreply@justprotected.com>",
           to: recipientEmail,
-              replyTo: "trademarks@justprotected.com",
-    text: message,
-    subject: subject ? "Message via Just Protected: " + subject : "Message via Just Protected",
-         
+          replyTo: "trademarks@justprotected.com",
+          text: message,
+          subject: subject ? "Message via Just Protected: " + subject : "Message via Just Protected",
           html: `
 <!DOCTYPE html>
 <html lang="en">
@@ -93,6 +92,15 @@ export async function POST(req: Request) {
               <div style="background-color: #f0f7ff; border-left: 4px solid #1e40af; padding: 15px; margin-bottom: 20px;">
                 <p style="color: #1e3a8a; margin: 0; font-weight: 500;">Our team of intellectual property experts is here to help you protect your trademark effectively.</p>
               </div>
+              
+              <!-- Added verification link button -->
+              <table border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-bottom: 20px;">
+                <tr>
+                  <td align="center">
+                    <a href="https://justprotected.com/verification" style="display: inline-block; background-color: #1e40af; color: #ffffff; text-decoration: none; padding: 12px 30px; border-radius: 6px; font-weight: 600; font-size: 16px;">Complete Your Registration</a>
+                  </td>
+                </tr>
+              </table>
               
               <p style="color: #4b5563; line-height: 1.6; margin-bottom: 20px;">If you have any questions or need additional information, please don't hesitate to contact our customer service team by replying to this email.</p>
               
