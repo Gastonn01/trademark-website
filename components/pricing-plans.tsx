@@ -9,6 +9,7 @@ import Link from "next/link"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Info } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
+import { countryPricingData } from "@/lib/pricing-data"
 
 interface Country {
   name: string
@@ -18,67 +19,312 @@ interface Country {
 }
 
 const mostRequestedCountries: Country[] = [
-  { name: "European Union", flag: "https://flagcdn.com/w40/eu.png", price: 1900 },
-  { name: "United States", flag: "https://flagcdn.com/w40/us.png", price: 1050 },
-  { name: "Germany", flag: "https://flagcdn.com/w40/de.png", price: 750 },
-  { name: "Spain", flag: "https://flagcdn.com/w40/es.png", price: 490 },
-  { name: "United Kingdom", flag: "https://flagcdn.com/w40/gb.png", price: 790 },
-  { name: "China", flag: "https://flagcdn.com/w40/cn.png", price: 590 },
+  {
+    name: "European Union",
+    flag: "https://flagcdn.com/w40/eu.png",
+    price: countryPricingData["European Union"].price,
+    additionalClassPrice: countryPricingData["European Union"].additionalClassPrice,
+  },
+  {
+    name: "United States",
+    flag: "https://flagcdn.com/w40/us.png",
+    price: countryPricingData["United States"].price,
+    additionalClassPrice: countryPricingData["United States"].additionalClassPrice,
+  },
+  {
+    name: "Germany",
+    flag: "https://flagcdn.com/w40/de.png",
+    price: countryPricingData["Germany"].price,
+    additionalClassPrice: countryPricingData["Germany"].additionalClassPrice,
+  },
+  {
+    name: "Spain",
+    flag: "https://flagcdn.com/w40/es.png",
+    price: countryPricingData["Spain"].price,
+    additionalClassPrice: countryPricingData["Spain"].additionalClassPrice,
+  },
+  {
+    name: "United Kingdom",
+    flag: "https://flagcdn.com/w40/gb.png",
+    price: countryPricingData["United Kingdom"].price,
+    additionalClassPrice: countryPricingData["United Kingdom"].additionalClassPrice,
+  },
+  {
+    name: "China",
+    flag: "https://flagcdn.com/w40/cn.png",
+    price: countryPricingData["China"].price,
+    additionalClassPrice: countryPricingData["China"].additionalClassPrice,
+  },
 ]
 
 const northAmericaCountries: Country[] = [
-  { name: "Canada", flag: "https://flagcdn.com/w40/ca.png", price: 1400 },
-  { name: "Mexico", flag: "https://flagcdn.com/w40/mx.png", price: 750 },
+  {
+    name: "Canada",
+    flag: "https://flagcdn.com/w40/ca.png",
+    price: countryPricingData["Canada"].price,
+    additionalClassPrice: countryPricingData["Canada"].additionalClassPrice,
+  },
+  {
+    name: "Mexico",
+    flag: "https://flagcdn.com/w40/mx.png",
+    price: countryPricingData["Mexico"].price,
+    additionalClassPrice: countryPricingData["Mexico"].additionalClassPrice,
+  },
 ]
 
 const centralAmericaCountries: Country[] = [
-  { name: "Costa Rica", flag: "https://flagcdn.com/w40/cr.png", price: 620 },
-  { name: "El Salvador", flag: "https://flagcdn.com/w40/sv.png", price: 650 },
-  { name: "Guatemala", flag: "https://flagcdn.com/w40/gt.png", price: 680 },
-  { name: "Nicaragua", flag: "https://flagcdn.com/w40/ni.png", price: 700 },
-  { name: "Panama", flag: "https://flagcdn.com/w40/pa.png", price: 700 },
-  { name: "Honduras", flag: "https://flagcdn.com/w40/hn.png", price: 750 },
-  { name: "Belize", flag: "https://flagcdn.com/w40/bz.png", price: 980 },
+  {
+    name: "Costa Rica",
+    flag: "https://flagcdn.com/w40/cr.png",
+    price: countryPricingData["Costa Rica"].price,
+    additionalClassPrice: countryPricingData["Costa Rica"].additionalClassPrice,
+  },
+  {
+    name: "El Salvador",
+    flag: "https://flagcdn.com/w40/sv.png",
+    price: countryPricingData["El Salvador"].price,
+    additionalClassPrice: countryPricingData["El Salvador"].additionalClassPrice,
+  },
+  {
+    name: "Guatemala",
+    flag: "https://flagcdn.com/w40/gt.png",
+    price: countryPricingData["Guatemala"].price,
+    additionalClassPrice: countryPricingData["Guatemala"].additionalClassPrice,
+  },
+  {
+    name: "Nicaragua",
+    flag: "https://flagcdn.com/w40/ni.png",
+    price: countryPricingData["Nicaragua"].price,
+    additionalClassPrice: countryPricingData["Nicaragua"].additionalClassPrice,
+  },
+  {
+    name: "Panama",
+    flag: "https://flagcdn.com/w40/pa.png",
+    price: countryPricingData["Panama"].price,
+    additionalClassPrice: countryPricingData["Panama"].additionalClassPrice,
+  },
+  {
+    name: "Honduras",
+    flag: "https://flagcdn.com/w40/hn.png",
+    price: countryPricingData["Honduras"].price,
+    additionalClassPrice: countryPricingData["Honduras"].additionalClassPrice,
+  },
+  {
+    name: "Belize",
+    flag: "https://flagcdn.com/w40/bz.png",
+    price: countryPricingData["Belize"].price,
+    additionalClassPrice: countryPricingData["Belize"].additionalClassPrice,
+  },
 ]
 
 const southAmericaCountries: Country[] = [
-  { name: "Argentina", flag: "https://flagcdn.com/w40/ar.png", price: 520 },
-  { name: "Paraguay", flag: "https://flagcdn.com/w40/py.png", price: 580 },
-  { name: "Venezuela", flag: "https://flagcdn.com/w40/ve.png", price: 680 },
-  { name: "Uruguay", flag: "https://flagcdn.com/w40/uy.png", price: 680 },
-  { name: "Ecuador", flag: "https://flagcdn.com/w40/ec.png", price: 700 },
-  { name: "Brazil", flag: "https://flagcdn.com/w40/br.png", price: 720 },
-  { name: "Peru", flag: "https://flagcdn.com/w40/pe.png", price: 750 },
-  { name: "Chile", flag: "https://flagcdn.com/w40/cl.png", price: 780 },
-  { name: "Bolivia", flag: "https://flagcdn.com/w40/bo.png", price: 850 },
-  { name: "Colombia", flag: "https://flagcdn.com/w40/co.png", price: 880 },
+  {
+    name: "Argentina",
+    flag: "https://flagcdn.com/w40/ar.png",
+    price: countryPricingData["Argentina"].price,
+    additionalClassPrice: countryPricingData["Argentina"].additionalClassPrice,
+  },
+  {
+    name: "Paraguay",
+    flag: "https://flagcdn.com/w40/py.png",
+    price: countryPricingData["Paraguay"].price,
+    additionalClassPrice: countryPricingData["Paraguay"].additionalClassPrice,
+  },
+  {
+    name: "Venezuela",
+    flag: "https://flagcdn.com/w40/ve.png",
+    price: countryPricingData["Venezuela"].price,
+    additionalClassPrice: countryPricingData["Venezuela"].additionalClassPrice,
+  },
+  {
+    name: "Uruguay",
+    flag: "https://flagcdn.com/w40/uy.png",
+    price: countryPricingData["Uruguay"].price,
+    additionalClassPrice: countryPricingData["Uruguay"].additionalClassPrice,
+  },
+  {
+    name: "Ecuador",
+    flag: "https://flagcdn.com/w40/ec.png",
+    price: countryPricingData["Ecuador"].price,
+    additionalClassPrice: countryPricingData["Ecuador"].additionalClassPrice,
+  },
+  {
+    name: "Brazil",
+    flag: "https://flagcdn.com/w40/br.png",
+    price: countryPricingData["Brazil"].price,
+    additionalClassPrice: countryPricingData["Brazil"].additionalClassPrice,
+  },
+  {
+    name: "Peru",
+    flag: "https://flagcdn.com/w40/pe.png",
+    price: countryPricingData["Peru"].price,
+    additionalClassPrice: countryPricingData["Peru"].additionalClassPrice,
+  },
+  {
+    name: "Chile",
+    flag: "https://flagcdn.com/w40/cl.png",
+    price: countryPricingData["Chile"].price,
+    additionalClassPrice: countryPricingData["Chile"].additionalClassPrice,
+  },
+  {
+    name: "Bolivia",
+    flag: "https://flagcdn.com/w40/bo.png",
+    price: countryPricingData["Bolivia"].price,
+    additionalClassPrice: countryPricingData["Bolivia"].additionalClassPrice,
+  },
+  {
+    name: "Colombia",
+    flag: "https://flagcdn.com/w40/co.png",
+    price: countryPricingData["Colombia"].price,
+    additionalClassPrice: countryPricingData["Colombia"].additionalClassPrice,
+  },
 ]
 
 const caribbeanCountries: Country[] = [
-  { name: "Anguilla", flag: "https://flagcdn.com/w40/ai.png", price: 1100 },
-  { name: "Antigua and Barbuda", flag: "https://flagcdn.com/w40/ag.png", price: 850 },
-  { name: "Aruba", flag: "https://flagcdn.com/w40/aw.png", price: 1050 },
-  { name: "Bahamas", flag: "https://flagcdn.com/w40/bs.png", price: 1150 },
-  { name: "Barbados", flag: "https://flagcdn.com/w40/bb.png", price: 1400 },
-  { name: "Bermuda", flag: "https://flagcdn.com/w40/bm.png", price: 1850 },
-  { name: "British Virgin Islands", flag: "https://flagcdn.com/w40/vg.png", price: 1100 },
-  { name: "Cayman Islands", flag: "https://flagcdn.com/w40/ky.png", price: 1350 },
-  { name: "Cuba", flag: "https://flagcdn.com/w40/cu.png", price: 1450 },
-  { name: "Curacao", flag: "https://flagcdn.com/w40/cw.png", price: 1300 },
-  { name: "Dominica", flag: "https://flagcdn.com/w40/dm.png", price: 1150 },
-  { name: "Grenada", flag: "https://flagcdn.com/w40/gd.png", price: 1250 },
-  { name: "Guyana", flag: "https://flagcdn.com/w40/gy.png", price: 650 },
-  { name: "Haiti", flag: "https://flagcdn.com/w40/ht.png", price: 800 },
-  { name: "Jamaica", flag: "https://flagcdn.com/w40/jm.png", price: 1350 },
-  { name: "Montserrat", flag: "https://flagcdn.com/w40/ms.png", price: 800 },
-  { name: "Puerto Rico", flag: "https://flagcdn.com/w40/pr.png", price: 900 },
-  { name: "Dominican Republic", flag: "https://flagcdn.com/w40/do.png", price: 700 },
-  { name: "Saint Kitts and Nevis", flag: "https://flagcdn.com/w40/kn.png", price: 1200 },
-  { name: "Saint Lucia", flag: "https://flagcdn.com/w40/lc.png", price: 1150 },
-  { name: "Saint Vincent and the Grenadines", flag: "https://flagcdn.com/w40/vc.png", price: 750 },
-  { name: "Sint Maarten", flag: "https://flagcdn.com/w40/sx.png", price: 1350 },
-  { name: "Suriname", flag: "https://flagcdn.com/w40/sr.png", price: 950 },
-  { name: "Trinidad and Tobago", flag: "https://flagcdn.com/w40/tt.png", price: 900 },
+  {
+    name: "Anguilla",
+    flag: "https://flagcdn.com/w40/ai.png",
+    price: countryPricingData["Anguilla"].price,
+    additionalClassPrice: countryPricingData["Anguilla"].additionalClassPrice,
+  },
+  {
+    name: "Antigua and Barbuda",
+    flag: "https://flagcdn.com/w40/ag.png",
+    price: countryPricingData["Antigua and Barbuda"].price,
+    additionalClassPrice: countryPricingData["Antigua and Barbuda"].additionalClassPrice,
+  },
+  {
+    name: "Aruba",
+    flag: "https://flagcdn.com/w40/aw.png",
+    price: countryPricingData["Aruba"].price,
+    additionalClassPrice: countryPricingData["Aruba"].additionalClassPrice,
+  },
+  {
+    name: "Bahamas",
+    flag: "https://flagcdn.com/w40/bs.png",
+    price: countryPricingData["Bahamas"].price,
+    additionalClassPrice: countryPricingData["Bahamas"].additionalClassPrice,
+  },
+  {
+    name: "Barbados",
+    flag: "https://flagcdn.com/w40/bb.png",
+    price: countryPricingData["Barbados"].price,
+    additionalClassPrice: countryPricingData["Barbados"].additionalClassPrice,
+  },
+  {
+    name: "Bermuda",
+    flag: "https://flagcdn.com/w40/bm.png",
+    price: countryPricingData["Bermuda"].price,
+    additionalClassPrice: countryPricingData["Bermuda"].additionalClassPrice,
+  },
+  {
+    name: "British Virgin Islands",
+    flag: "https://flagcdn.com/w40/vg.png",
+    price: countryPricingData["British Virgin Islands"].price,
+    additionalClassPrice: countryPricingData["British Virgin Islands"].additionalClassPrice,
+  },
+  {
+    name: "Cayman Islands",
+    flag: "https://flagcdn.com/w40/ky.png",
+    price: countryPricingData["Cayman Islands"].price,
+    additionalClassPrice: countryPricingData["Cayman Islands"].additionalClassPrice,
+  },
+  {
+    name: "Cuba",
+    flag: "https://flagcdn.com/w40/cu.png",
+    price: countryPricingData["Cuba"].price,
+    additionalClassPrice: countryPricingData["Cuba"].additionalClassPrice,
+  },
+  {
+    name: "Curacao",
+    flag: "https://flagcdn.com/w40/cw.png",
+    price: countryPricingData["Curacao"].price,
+    additionalClassPrice: countryPricingData["Curacao"].additionalClassPrice,
+  },
+  {
+    name: "Dominica",
+    flag: "https://flagcdn.com/w40/dm.png",
+    price: countryPricingData["Dominica"].price,
+    additionalClassPrice: countryPricingData["Dominica"].additionalClassPrice,
+  },
+  {
+    name: "Grenada",
+    flag: "https://flagcdn.com/w40/gd.png",
+    price: countryPricingData["Grenada"].price,
+    additionalClassPrice: countryPricingData["Grenada"].additionalClassPrice,
+  },
+  {
+    name: "Guyana",
+    flag: "https://flagcdn.com/w40/gy.png",
+    price: countryPricingData["Guyana"].price,
+    additionalClassPrice: countryPricingData["Guyana"].additionalClassPrice,
+  },
+  {
+    name: "Haiti",
+    flag: "https://flagcdn.com/w40/ht.png",
+    price: countryPricingData["Haiti"].price,
+    additionalClassPrice: countryPricingData["Haiti"].additionalClassPrice,
+  },
+  {
+    name: "Jamaica",
+    flag: "https://flagcdn.com/w40/jm.png",
+    price: countryPricingData["Jamaica"].price,
+    additionalClassPrice: countryPricingData["Jamaica"].additionalClassPrice,
+  },
+  {
+    name: "Montserrat",
+    flag: "https://flagcdn.com/w40/ms.png",
+    price: countryPricingData["Montserrat"].price,
+    additionalClassPrice: countryPricingData["Montserrat"].additionalClassPrice,
+  },
+  {
+    name: "Puerto Rico",
+    flag: "https://flagcdn.com/w40/pr.png",
+    price: countryPricingData["Puerto Rico"].price,
+    additionalClassPrice: countryPricingData["Puerto Rico"].additionalClassPrice,
+  },
+  {
+    name: "Dominican Republic",
+    flag: "https://flagcdn.com/w40/do.png",
+    price: countryPricingData["Dominican Republic"].price,
+    additionalClassPrice: countryPricingData["Dominican Republic"].additionalClassPrice,
+  },
+  {
+    name: "Saint Kitts and Nevis",
+    flag: "https://flagcdn.com/w40/kn.png",
+    price: countryPricingData["Saint Kitts and Nevis"].price,
+    additionalClassPrice: countryPricingData["Saint Kitts and Nevis"].additionalClassPrice,
+  },
+  {
+    name: "Saint Lucia",
+    flag: "https://flagcdn.com/w40/lc.png",
+    price: countryPricingData["Saint Lucia"].price,
+    additionalClassPrice: countryPricingData["Saint Lucia"].additionalClassPrice,
+  },
+  {
+    name: "Saint Vincent and the Grenadines",
+    flag: "https://flagcdn.com/w40/vc.png",
+    price: countryPricingData["Saint Vincent and the Grenadines"].price,
+    additionalClassPrice: countryPricingData["Saint Vincent and the Grenadines"].additionalClassPrice,
+  },
+  {
+    name: "Sint Maarten",
+    flag: "https://flagcdn.com/w40/sx.png",
+    price: countryPricingData["Sint Maarten"].price,
+    additionalClassPrice: countryPricingData["Sint Maarten"].additionalClassPrice,
+  },
+  {
+    name: "Suriname",
+    flag: "https://flagcdn.com/w40/sr.png",
+    price: countryPricingData["Suriname"].price,
+    additionalClassPrice: countryPricingData["Suriname"].additionalClassPrice,
+  },
+  {
+    name: "Trinidad and Tobago",
+    flag: "https://flagcdn.com/w40/tt.png",
+    price: countryPricingData["Trinidad and Tobago"].price,
+    additionalClassPrice: countryPricingData["Trinidad and Tobago"].additionalClassPrice,
+  },
 ]
 
 export function PricingPlans() {
@@ -197,11 +443,7 @@ export function PricingPlans() {
 
                 <AccordionItem value="europe">
                   <AccordionTrigger className="text-xl font-semibold">Europe</AccordionTrigger>
-                  <AccordionContent className="grid gap-4 pt-4">
-                    {/*europeCountries.map((country) => (
-                      <CountryCard key={country.name} country={country} />
-                    ))*/}
-                  </AccordionContent>
+                  <AccordionContent className="grid gap-4 pt-4">{/* Europe countries map here */}</AccordionContent>
                 </AccordionItem>
 
                 <AccordionItem value="south-america">

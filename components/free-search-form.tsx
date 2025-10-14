@@ -14,6 +14,7 @@ import { CountrySelectCard } from "@/components/country-select-card"
 import { trackLeadSubmission } from "@/components/gtm-tracker"
 import { Upload, CheckCircle, ChevronDown, ChevronUp, AlertCircle } from "lucide-react"
 import { v4 as uuidv4 } from "uuid"
+import { countryPricingData } from "@/lib/pricing-data"
 
 // More comprehensive check for preview environment
 const isPreviewEnvironment = () => {
@@ -53,85 +54,6 @@ interface CountryData {
 interface RegionData {
   name: string
   countries: CountryData[]
-}
-
-// Pricing data for countries
-const pricingData = {
-  "European Union": { price: 1200, additionalClassPrice: 150, flag: "eu" },
-  "United States": { price: 1500, additionalClassPrice: 400, flag: "us" },
-  Germany: { price: 900, additionalClassPrice: 300, flag: "de" },
-  Argentina: { price: 1000, additionalClassPrice: 250, flag: "ar" },
-  Spain: { price: 600, additionalClassPrice: 150, flag: "es" },
-  "United Kingdom": { price: 900, additionalClassPrice: 200, flag: "gb" },
-  Canada: { price: 1200, additionalClassPrice: 300, flag: "ca" },
-  Mexico: { price: 800, additionalClassPrice: 200, flag: "mx" },
-  France: { price: 900, additionalClassPrice: 200, flag: "fr" },
-  Italy: { price: 900, additionalClassPrice: 200, flag: "it" },
-  Portugal: { price: 600, additionalClassPrice: 150, flag: "pt" },
-  Greece: { price: 600, additionalClassPrice: 150, flag: "gr" },
-  "Bosnia and Herzegovina": { price: 500, additionalClassPrice: 100, flag: "ba" },
-  Belarus: { price: 400, additionalClassPrice: 100, flag: "by" },
-  Benelux: { price: 800, additionalClassPrice: 200, flag: "be" },
-  Cyprus: { price: 600, additionalClassPrice: 150, flag: "cy" },
-  Georgia: { price: 400, additionalClassPrice: 100, flag: "ge" },
-  Iceland: { price: 800, additionalClassPrice: 200, flag: "is" },
-  Lithuania: { price: 500, additionalClassPrice: 150, flag: "lt" },
-  Bolivia: { price: 600, additionalClassPrice: 150, flag: "bo" },
-  Brazil: { price: 1200, additionalClassPrice: 300, flag: "br" },
-  Chile: { price: 800, additionalClassPrice: 200, flag: "cl" },
-  Colombia: { price: 800, additionalClassPrice: 200, flag: "co" },
-  Ecuador: { price: 600, additionalClassPrice: 150, flag: "ec" },
-  Paraguay: { price: 500, additionalClassPrice: 150, flag: "py" },
-  Peru: { price: 600, additionalClassPrice: 150, flag: "pe" },
-  Uruguay: { price: 700, additionalClassPrice: 200, flag: "uy" },
-  Venezuela: { price: 600, additionalClassPrice: 150, flag: "ve" },
-  China: { price: 1000, additionalClassPrice: 200, flag: "cn" },
-  Japan: { price: 1500, additionalClassPrice: 400, flag: "jp" },
-  Afghanistan: { price: 500, additionalClassPrice: 100, flag: "af" },
-  "Saudi Arabia": { price: 800, additionalClassPrice: 200, flag: "sa" },
-  Armenia: { price: 400, additionalClassPrice: 100, flag: "am" },
-  Azerbaijan: { price: 400, additionalClassPrice: 100, flag: "az" },
-  Bahrain: { price: 600, additionalClassPrice: 150, flag: "bh" },
-  Bangladesh: { price: 500, additionalClassPrice: 100, flag: "bd" },
-  Bhutan: { price: 500, additionalClassPrice: 100, flag: "bt" },
-  Brunei: { price: 600, additionalClassPrice: 150, flag: "bn" },
-  Cambodia: { price: 500, additionalClassPrice: 100, flag: "kh" },
-  "Hong Kong": { price: 800, additionalClassPrice: 200, flag: "hk" },
-  India: { price: 800, additionalClassPrice: 150, flag: "in" },
-  Indonesia: { price: 600, additionalClassPrice: 150, flag: "id" },
-  Iran: { price: 500, additionalClassPrice: 100, flag: "ir" },
-  Iraq: { price: 500, additionalClassPrice: 100, flag: "iq" },
-  Jordan: { price: 600, additionalClassPrice: 150, flag: "jo" },
-  Kazakhstan: { price: 500, additionalClassPrice: 150, flag: "kz" },
-  Kyrgyzstan: { price: 400, additionalClassPrice: 100, flag: "kg" },
-  "South Korea": { price: 1200, additionalClassPrice: 300, flag: "kr" },
-  Kuwait: { price: 600, additionalClassPrice: 150, flag: "kw" },
-  Laos: { price: 500, additionalClassPrice: 100, flag: "la" },
-  Lebanon: { price: 600, additionalClassPrice: 150, flag: "lb" },
-  Macao: { price: 600, additionalClassPrice: 150, flag: "mo" },
-  Malaysia: { price: 600, additionalClassPrice: 150, flag: "my" },
-  Maldives: { price: 500, additionalClassPrice: 100, flag: "mv" },
-  Mongolia: { price: 500, additionalClassPrice: 100, flag: "mn" },
-  Myanmar: { price: 500, additionalClassPrice: 100, flag: "mm" },
-  Nepal: { price: 500, additionalClassPrice: 100, flag: "np" },
-  "North Korea": { price: 500, additionalClassPrice: 100, flag: "kp" },
-  Oman: { price: 600, additionalClassPrice: 150, flag: "om" },
-  Pakistan: { price: 500, additionalClassPrice: 100, flag: "pk" },
-  Palestine: { price: 500, additionalClassPrice: 100, flag: "ps" },
-  Philippines: { price: 600, additionalClassPrice: 150, flag: "ph" },
-  Qatar: { price: 600, additionalClassPrice: 150, flag: "qa" },
-  Singapore: { price: 800, additionalClassPrice: 200, flag: "sg" },
-  "Sri Lanka": { price: 500, additionalClassPrice: 100, flag: "lk" },
-  Syria: { price: 500, additionalClassPrice: 100, flag: "sy" },
-  Taiwan: { price: 800, additionalClassPrice: 200, flag: "tw" },
-  Tajikistan: { price: 400, additionalClassPrice: 100, flag: "tj" },
-  Thailand: { price: 600, additionalClassPrice: 150, flag: "th" },
-  Turkey: { price: 700, additionalClassPrice: 200, flag: "tr" },
-  Turkmenistan: { price: 400, additionalClassPrice: 100, flag: "tm" },
-  "United Arab Emirates": { price: 800, additionalClassPrice: 200, flag: "ae" },
-  Uzbekistan: { price: 400, additionalClassPrice: 100, flag: "uz" },
-  Vietnam: { price: 600, additionalClassPrice: 150, flag: "vn" },
-  Yemen: { price: 500, additionalClassPrice: 100, flag: "ye" },
 }
 
 const topCountries: CountryData[] = [
@@ -549,7 +471,7 @@ export function FreeSearchForm() {
   }
 
   const totalPrice = selectedCountries.reduce((sum, country) => {
-    const countryData = pricingData[country as keyof typeof pricingData]
+    const countryData = countryPricingData[country as keyof typeof countryPricingData]
     return sum + (countryData?.price || 0)
   }, 0)
 
@@ -866,7 +788,7 @@ export function FreeSearchForm() {
                     <h3 className="text-xl font-semibold mb-4 text-indigo-700">Search Results</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                       {searchResults.map((country) => {
-                        const countryData = pricingData[country.name as keyof typeof pricingData]
+                        const countryData = countryPricingData[country.name as keyof typeof countryPricingData]
                         return (
                           <CountrySelectCard
                             key={country.name}
@@ -890,7 +812,7 @@ export function FreeSearchForm() {
                     <h3 className="text-xl font-semibold mb-4 text-indigo-700">Most Requested Countries</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                       {filteredTopCountries.map((country) => {
-                        const countryData = pricingData[country.name as keyof typeof pricingData]
+                        const countryData = countryPricingData[country.name as keyof typeof countryPricingData]
                         return (
                           <CountrySelectCard
                             key={country.name}
@@ -927,7 +849,7 @@ export function FreeSearchForm() {
                       {expandedRegions.includes(region.name) && (
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                           {region.countries.map((country) => {
-                            const countryData = pricingData[country.name as keyof typeof pricingData]
+                            const countryData = countryPricingData[country.name as keyof typeof countryPricingData]
                             return (
                               <CountrySelectCard
                                 key={country.name}

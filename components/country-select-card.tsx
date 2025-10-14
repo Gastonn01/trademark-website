@@ -5,11 +5,26 @@ import Image from "next/image"
 interface CountrySelectCardProps {
   country: string
   flag: string
+  price: number
+  additionalClassPrice?: number
   onSelect: () => void
   selected: boolean
+  currency: "USD" | "EUR"
 }
 
-export function CountrySelectCard({ country, flag, onSelect, selected }: CountrySelectCardProps) {
+export function CountrySelectCard({
+  country,
+  flag,
+  price,
+  additionalClassPrice,
+  onSelect,
+  selected,
+  currency,
+}: CountrySelectCardProps) {
+  const convertedPrice = Math.floor(price)
+  const currencySymbol = currency === "USD" ? "$" : "€"
+  const currencyCode = currency
+
   return (
     <div
       onClick={onSelect}
@@ -22,6 +37,10 @@ export function CountrySelectCard({ country, flag, onSelect, selected }: Country
         <Image src={flag || "/placeholder.svg"} alt={`${country} flag`} width={40} height={30} className="rounded" />
         <span className="text-sm font-medium leading-none">{country === "Surinam" ? "Suriname" : country}</span>
       </div>
+      <span className={`text-sm font-semibold ${selected ? "text-white" : "text-indigo-600"}`}>
+        {currencySymbol}
+        {convertedPrice} {currencyCode}
+      </span>
     </div>
   )
 }

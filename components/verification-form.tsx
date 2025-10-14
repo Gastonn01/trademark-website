@@ -16,6 +16,7 @@ import Image from "next/image"
 import { ChevronDown, ChevronUp, Info, X, Search } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { countryPricingData, getTopCountries, getCountriesByRegion } from "@/lib/pricing-data"
 
 interface FormData {
   trademarkType: string
@@ -53,88 +54,13 @@ interface VerificationFormProps {
   isLoading?: boolean
 }
 
-// Pricing data matching the screenshots
-const topCountries: CountryData[] = [
-  { name: "European Union", flag: "eu", price: 1900, additionalClassPrice: 425 },
-  { name: "United States", flag: "us", price: 1050, additionalClassPrice: 499 },
-  { name: "Germany", flag: "de", price: 750, additionalClassPrice: 500 },
-  { name: "Spain", flag: "es", price: 490, additionalClassPrice: 385 },
-  { name: "United Kingdom", flag: "gb", price: 790, additionalClassPrice: 300 },
-  { name: "China", flag: "cn", price: 590, additionalClassPrice: 550 },
-]
+const topCountries = getTopCountries()
+const regionData = getCountriesByRegion()
 
-const regions: RegionData[] = [
-  {
-    name: "North America",
-    countries: [
-      { name: "United States", flag: "us", price: 1050, additionalClassPrice: 499 },
-      { name: "Canada", flag: "ca", price: 1369, additionalClassPrice: 150 },
-      { name: "Mexico", flag: "mx", price: 685, additionalClassPrice: 540 },
-    ],
-  },
-  {
-    name: "Europe",
-    countries: [
-      { name: "European Union", flag: "eu", price: 1900, additionalClassPrice: 425 },
-      { name: "Spain", flag: "es", price: 490, additionalClassPrice: 385 },
-      { name: "France", flag: "fr", price: 667, additionalClassPrice: 190 },
-      { name: "United Kingdom", flag: "gb", price: 790, additionalClassPrice: 300 },
-      { name: "Italy", flag: "it", price: 920, additionalClassPrice: 180 },
-      { name: "Germany", flag: "de", price: 750, additionalClassPrice: 500 },
-      { name: "Portugal", flag: "pt", price: 909, additionalClassPrice: 265 },
-      { name: "Greece", flag: "gr", price: 736, additionalClassPrice: 570 },
-    ],
-  },
-  {
-    name: "South America",
-    countries: [
-      { name: "Argentina", flag: "ar", price: 460, additionalClassPrice: 350 },
-      { name: "Brazil", flag: "br", price: 644, additionalClassPrice: 418 },
-      { name: "Chile", flag: "cl", price: 689, additionalClassPrice: 499 },
-      { name: "Colombia", flag: "co", price: 794, additionalClassPrice: 490 },
-    ],
-  },
-  {
-    name: "Central America",
-    countries: [
-      { name: "Costa Rica", flag: "cr", price: 529, additionalClassPrice: 299 },
-      { name: "Panama", flag: "pa", price: 621, additionalClassPrice: 440 },
-      { name: "Guatemala", flag: "gt", price: 599, additionalClassPrice: 520 },
-    ],
-  },
-  {
-    name: "Central America and Caribbean",
-    countries: [
-      { name: "Jamaica", flag: "jm", price: 1231, additionalClassPrice: 355 },
-      { name: "Dominican Republic", flag: "do", price: 621, additionalClassPrice: 420 },
-      { name: "Cuba", flag: "cu", price: 1375, additionalClassPrice: 730 },
-    ],
-  },
-  {
-    name: "Africa",
-    countries: [
-      { name: "South Africa", flag: "za", price: 1110, additionalClassPrice: 1110 },
-      { name: "Nigeria", flag: "ng", price: 1150, additionalClassPrice: 1150 },
-      { name: "Egypt", flag: "eg", price: 765, additionalClassPrice: 765 },
-    ],
-  },
-  {
-    name: "Asia and Middle East",
-    countries: [
-      { name: "China", flag: "cn", price: 590, additionalClassPrice: 450 },
-      { name: "Japan", flag: "jp", price: 777, additionalClassPrice: 500 },
-      { name: "India", flag: "in", price: 662, additionalClassPrice: 450 },
-      { name: "United Arab Emirates", flag: "ae", price: 2990, additionalClassPrice: 2475 },
-    ],
-  },
-  {
-    name: "Oceania",
-    countries: [
-      { name: "Australia", flag: "au", price: 1200, additionalClassPrice: 800 },
-      { name: "New Zealand", flag: "nz", price: 950, additionalClassPrice: 650 },
-    ],
-  },
-]
+const regions = Object.entries(regionData).map(([name, countries]) => ({
+  name,
+  countries,
+}))
 
 const trademarkClasses = [
   {
@@ -346,6 +272,7 @@ interface VerificationFormContentProps {
 const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoading, initialData }) => {
   const [step, setStep] = useState(1)
   const totalSteps = 4
+  const [currency, setCurrency] = useState<"USD" | "EUR">("USD")
   const [formData, setFormData] = useState<FormData>({
     trademarkType: "",
     trademarkName: "",
@@ -410,7 +337,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
 
   const totalPrice = useMemo(() => {
     return selectedCountries.reduce((sum, country) => {
-      const countryData = [...topCountries, ...regions.flatMap((r) => r.countries)].find((c) => c.name === country.name)
+      const countryData = countryPricingData[country.name]
       if (!countryData) return sum
       const basePrice = countryData.price
       const additionalClassesPrice =
@@ -418,6 +345,12 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
       return sum + basePrice + additionalClassesPrice
     }, 0)
   }, [selectedCountries, formData.selectedClasses])
+
+  const formatPrice = (price: number) => {
+    const symbol = currency === "EUR" ? "€" : "$"
+    const currencyCode = currency
+    return `${symbol}${Math.floor(price)} ${currencyCode}`
+  }
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -653,6 +586,28 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
                     </p>
                   </div>
 
+                  <div className="flex items-center space-x-4">
+                    <span className="text-sm font-medium text-gray-700">Select Currency:</span>
+                    <div className="flex space-x-2">
+                      <Button
+                        variant={currency === "USD" ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setCurrency("USD")}
+                        className={currency === "USD" ? "bg-indigo-600 hover:bg-indigo-700" : ""}
+                      >
+                        USD ($)
+                      </Button>
+                      <Button
+                        variant={currency === "EUR" ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setCurrency("EUR")}
+                        className={currency === "EUR" ? "bg-indigo-600 hover:bg-indigo-700" : ""}
+                      >
+                        EUR (€)
+                      </Button>
+                    </div>
+                  </div>
+
                   <Input
                     type="text"
                     placeholder="Search for countries..."
@@ -686,7 +641,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
                               <span className="font-medium">{country.name}</span>
                             </div>
                             <div className="text-right">
-                              <div className="font-semibold">${country.price}</div>
+                              <div className="font-semibold">{formatPrice(country.price)}</div>
                               <div className="text-xs text-gray-500 flex items-center">
                                 <Info className="w-3 h-3 mr-1" />
                               </div>
@@ -734,7 +689,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
                                   <span className="font-medium">{country.name}</span>
                                 </div>
                                 <div className="text-right">
-                                  <div className="font-semibold">${country.price}</div>
+                                  <div className="font-semibold">{formatPrice(country.price)}</div>
                                   <div className="text-xs text-gray-500 flex items-center">
                                     <Info className="w-3 h-3 mr-1" />
                                   </div>
@@ -1028,22 +983,45 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
               <Card className="p-6">
                 <h3 className="text-xl font-semibold mb-4">Your Selection</h3>
 
+                <div className="mb-4">
+                  <div className="flex space-x-2">
+                    <Button
+                      variant={currency === "USD" ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setCurrency("USD")}
+                      className={`flex-1 ${currency === "USD" ? "bg-indigo-600 hover:bg-indigo-700" : ""}`}
+                    >
+                      USD ($)
+                    </Button>
+                    <Button
+                      variant={currency === "EUR" ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setCurrency("EUR")}
+                      className={`flex-1 ${currency === "EUR" ? "bg-indigo-600 hover:bg-indigo-700" : ""}`}
+                    >
+                      EUR (€)
+                    </Button>
+                  </div>
+                </div>
+
                 <div className="mb-6">
                   <div className="text-lg font-medium mb-2">Estimated price:</div>
-                  <div className="text-3xl font-bold">${totalPrice}</div>
+                  <div className="text-3xl font-bold">{formatPrice(totalPrice)}</div>
                 </div>
 
                 {selectedCountries.length > 0 && (
                   <div className="mb-6">
                     {selectedCountries.map((country) => {
-                      const countryData = [...topCountries, ...regions.flatMap((r) => r.countries)].find(
-                        (c) => c.name === country.name,
-                      )
+                      const countryData = countryPricingData[country.name]
+                      if (!countryData) {
+                        console.error(`Country data not found for: ${country.name}`)
+                        return null
+                      }
                       return (
                         <div key={country.name} className="flex items-center justify-between mb-3">
                           <div className="flex items-center space-x-2">
                             <Image
-                              src={`https://flagcdn.com/${countryData?.flag}.svg`}
+                              src={`https://flagcdn.com/${countryData.flag}.svg`}
                               alt={`${country.name} flag`}
                               width={20}
                               height={15}
@@ -1051,7 +1029,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
                             />
                             <span className="text-sm">{country.name} classes</span>
                           </div>
-                          <span className="font-semibold">${countryData?.price}</span>
+                          <span className="font-semibold">{formatPrice(countryData.price)}</span>
                         </div>
                       )
                     })}

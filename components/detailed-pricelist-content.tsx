@@ -5,47 +5,171 @@ import { CountrySelectCard } from "./country-select-card"
 import { CurrencySelector } from "./currency-selector"
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
-
-// Import the pricing data
-const pricingData = {
-  "European Union": { price: 1200, additionalClassPrice: 150, flag: "eu" },
-  "United States": { price: 1500, additionalClassPrice: 400, flag: "us" },
-  Germany: { price: 900, additionalClassPrice: 300, flag: "de" },
-  Spain: { price: 600, additionalClassPrice: 150, flag: "es" },
-  "United Kingdom": { price: 900, additionalClassPrice: 200, flag: "gb" },
-  France: { price: 900, additionalClassPrice: 200, flag: "fr" },
-  Italy: { price: 900, additionalClassPrice: 200, flag: "it" },
-  Portugal: { price: 600, additionalClassPrice: 150, flag: "pt" },
-  Greece: { price: 600, additionalClassPrice: 150, flag: "gr" },
-  Canada: { price: 1200, additionalClassPrice: 300, flag: "ca" },
-  Mexico: { price: 800, additionalClassPrice: 200, flag: "mx" },
-  Argentina: { price: 1000, additionalClassPrice: 250, flag: "ar" },
-  Brazil: { price: 1200, additionalClassPrice: 300, flag: "br" },
-  Chile: { price: 800, additionalClassPrice: 200, flag: "cl" },
-  Colombia: { price: 800, additionalClassPrice: 200, flag: "co" },
-  China: { price: 1000, additionalClassPrice: 200, flag: "cn" },
-  Japan: { price: 1500, additionalClassPrice: 400, flag: "jp" },
-  India: { price: 800, additionalClassPrice: 150, flag: "in" },
-  Australia: { price: 1200, additionalClassPrice: 300, flag: "au" },
-  "New Zealand": { price: 1000, additionalClassPrice: 250, flag: "nz" },
-}
+import { countryPricingData } from "@/lib/pricing-data"
 
 const regions = [
   {
     name: "Most Popular",
-    countries: ["European Union", "United States", "Germany", "Spain", "United Kingdom", "Argentina"],
+    countries: ["European Union", "United States", "Germany", "Spain", "United Kingdom", "China"],
   },
   {
     name: "Europe",
-    countries: ["European Union", "Germany", "Spain", "United Kingdom", "France", "Italy", "Portugal", "Greece"],
+    countries: [
+      "European Union",
+      "Germany",
+      "Spain",
+      "United Kingdom",
+      "France",
+      "Italy",
+      "Benelux",
+      "Portugal",
+      "Greece",
+      "Bosnia and Herzegovina",
+    ],
   },
   {
-    name: "Americas",
-    countries: ["United States", "Canada", "Mexico", "Argentina", "Brazil", "Chile", "Colombia"],
+    name: "North America",
+    countries: ["United States", "Canada", "Mexico"],
   },
   {
-    name: "Asia Pacific",
-    countries: ["China", "Japan", "India", "Australia", "New Zealand"],
+    name: "South America",
+    countries: [
+      "Argentina",
+      "Bolivia",
+      "Brazil",
+      "Chile",
+      "Colombia",
+      "Ecuador",
+      "Paraguay",
+      "Peru",
+      "Uruguay",
+      "Venezuela",
+    ],
+  },
+  {
+    name: "Central America",
+    countries: ["Belize", "Costa Rica", "El Salvador", "Guatemala", "Honduras", "Nicaragua", "Panama"],
+  },
+  {
+    name: "Caribbean",
+    countries: [
+      "Anguilla",
+      "Antigua and Barbuda",
+      "Aruba",
+      "Bahamas",
+      "Barbados",
+      "Bermuda",
+      "BES Islands",
+      "British Virgin Islands",
+      "Cayman Islands",
+      "Cuba",
+      "Curacao",
+      "Dominica",
+      "Dominican Republic",
+      "Grenada",
+      "Guyana",
+      "Haiti",
+      "Jamaica",
+      "Montserrat",
+      "Puerto Rico",
+      "Saint Kitts and Nevis",
+      "Saint Lucia",
+      "Saint Vincent and the Grenadines",
+      "Sint Maarten",
+      "Suriname",
+      "Trinidad and Tobago",
+      "Turks and Caicos Islands",
+    ],
+  },
+  {
+    name: "Africa",
+    countries: [
+      "Algeria",
+      "Angola",
+      "ARIPO",
+      "Botswana",
+      "Burundi",
+      "Djibouti",
+      "Egypt",
+      "Ethiopia",
+      "Gambia",
+      "Ghana",
+      "Kenya",
+      "Libya",
+      "Madagascar",
+      "Morocco",
+      "Mauritania",
+      "Mozambique",
+      "Namibia",
+      "Nigeria",
+      "OAPI",
+      "DR Congo",
+      "Rwanda",
+      "Seychelles",
+      "South Africa",
+      "Sudan",
+      "Tanzania (TANU)",
+      "Tanzania (ZAN)",
+      "Tunisia",
+      "Uganda",
+      "Zambia",
+      "Zimbabwe",
+    ],
+  },
+  {
+    name: "Asia and Middle East",
+    countries: [
+      "Afghanistan",
+      "Saudi Arabia",
+      "Armenia",
+      "Azerbaijan",
+      "Bahrain",
+      "Bangladesh",
+      "Bhutan",
+      "Brunei",
+      "Cambodia",
+      "Hong Kong",
+      "India",
+      "Indonesia",
+      "Iran",
+      "Iraq (Baghdad)",
+      "Iraq (Kurdistan)",
+      "Japan",
+      "Jordan",
+      "Kazakhstan",
+      "Kyrgyzstan",
+      "South Korea",
+      "Kuwait",
+      "Laos",
+      "Lebanon",
+      "Macao",
+      "Malaysia",
+      "Maldives",
+      "Mongolia",
+      "Myanmar",
+      "Nepal",
+      "North Korea",
+      "Oman",
+      "Pakistan",
+      "Palestine (Gaza)",
+      "Palestine (West Bank)",
+      "Philippines",
+      "Qatar",
+      "Singapore",
+      "Syria",
+      "Sri Lanka",
+      "Taiwan",
+      "Tajikistan",
+      "Thailand",
+      "Turkey",
+      "Turkmenistan",
+      "United Arab Emirates",
+      "Uzbekistan",
+      "Vietnam",
+      "Yemen",
+      "China",
+      "Israel",
+    ],
   },
 ]
 
@@ -81,8 +205,9 @@ export function DetailedPricelistContent() {
   }
 
   const totalPrice = selectedCountries.reduce((sum, country) => {
-    const countryData = pricingData[country as keyof typeof pricingData]
-    return sum + (countryData?.price || 0)
+    const countryData = countryPricingData[country]
+    const price = countryData?.price || 0
+    return sum + (currency === "EUR" ? price * 1.0 : price)
   }, 0)
 
   const currencySymbol = currency === "USD" ? "$" : "€"
@@ -109,7 +234,7 @@ export function DetailedPricelistContent() {
             <div className="text-right">
               <div className="text-2xl font-bold text-indigo-900">
                 {currencySymbol}
-                {totalPrice.toLocaleString()}
+                {Math.floor(totalPrice).toLocaleString()}
               </div>
               <p className="text-sm text-indigo-700">Total for first class</p>
             </div>
@@ -126,14 +251,15 @@ export function DetailedPricelistContent() {
             <h2 className="text-2xl font-bold text-gray-900 mb-6">{region.name}</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {region.countries.map((country) => {
-                const countryData = pricingData[country as keyof typeof pricingData]
+                const countryData = countryPricingData[country]
+                if (!countryData) return null
                 return (
                   <CountrySelectCard
                     key={country}
                     country={country}
-                    flag={`https://flagcdn.com/${countryData?.flag}.svg`}
-                    price={countryData?.price}
-                    additionalClassPrice={countryData?.additionalClassPrice}
+                    flag={`https://flagcdn.com/${countryData.flag}.svg`}
+                    price={countryData.price}
+                    additionalClassPrice={countryData.additionalClassPrice}
                     onSelect={() => toggleCountry(country)}
                     selected={selectedCountries.includes(country)}
                     currency={currency}
