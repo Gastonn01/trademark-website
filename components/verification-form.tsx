@@ -509,7 +509,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
       const result = await response.json()
 
       if (response.ok && result.success) {
-        router.push("/thank-you")
+        router.push("/thank-you-verification")
       } else {
         setSubmitError(result.message || "There was an error submitting your form. Please try again.")
       }
