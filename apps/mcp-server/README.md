@@ -38,7 +38,18 @@ npm run dev
 
 Server runs on `http://localhost:3001`
 
-## Testing Locally with ngrok
+## Deployment Options
+
+### Option 1: Vercel Serverless (Recommended)
+
+\`\`\`bash
+cd apps/mcp-server
+vercel
+\`\`\`
+
+Your connector URL will be: `https://your-project.vercel.app/mcp`
+
+### Option 2: Local Testing with ngrok
 
 \`\`\`bash
 # Terminal 1: Run server
@@ -50,9 +61,7 @@ ngrok http 3001
 
 Use the ngrok URL in ChatGPT: `https://abc123.ngrok.app/mcp`
 
-## Production Deployment
-
-### Deploy to Railway
+### Option 3: Railway
 
 \`\`\`bash
 railway login
@@ -60,7 +69,7 @@ railway init
 railway up
 \`\`\`
 
-### Deploy to Render
+### Option 4: Render
 
 1. Connect your GitHub repo
 2. Set build command: `npm install && npm run build`

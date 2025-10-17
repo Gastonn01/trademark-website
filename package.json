@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@emotion/is-prop-valid": "latest",
+    "@fastify/cors": "11.1.0",
     "@hookform/resolvers": "^3.9.1",
     "@modelcontextprotocol/sdk": "latest",
     "@radix-ui/react-accordion": "1.2.2",
@@ -45,6 +46,7 @@
     "fastify": "latest",
     "framer-motion": "latest",
     "fs": "latest",
+    "http": "latest",
     "lucide-react": "^0.454.0",
     "next": "15.2.4",
     "path": "latest",
