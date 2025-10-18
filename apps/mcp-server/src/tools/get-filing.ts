@@ -1,3 +1,5 @@
+import type { FastifyRequest, FastifyReply } from "fastify"
+import { GetFilingResponseSchema, type GetFilingResponse } from "../types"
 import { config } from "../config.js"
 
 interface GetFilingArgs {
@@ -5,10 +7,35 @@ interface GetFilingArgs {
   searchId?: string
 }
 
+export async function getFilingHandler(req: FastifyRequest, reply: FastifyReply) {
+  const { id } = req.body as { id: string }
+
+  const r = await fetch(
+    `${process.env.BACKEND_URL || config.backendUrl}/api/get-registration-data?id=${encodeURIComponent(id)}`,
+    {
+      headers: {
+        ...(process.env.BACKEND_KEY ? { "x-api-key": process.env.BACKEND_KEY } : {}),
+      },
+    },
+  )
+
+  if (!r.ok) {
+    const text = await r.text().catch(() => "")
+    return reply.code(502).send({ error: "Upstream error", status: r.status, body: text })
+  }
+
+  const parsed = GetFilingResponseSchema.safeParse(await r.json())
+  if (!parsed.success) {
+    return reply.code(500).send({ error: "Invalid upstream shape", issues: parsed.error.issues })
+  }
+
+  const data: GetFilingResponse = parsed.data
+  return reply.send(data)
+}
+
 export async function getFiling(args: GetFilingArgs) {
   const { email, searchId } = args
 
-  // Proxy to Next.js backend
   const url = new URL(`${config.backendUrl}/api/get-registration-data`)
   url.searchParams.set("email", email)
   if (searchId) {

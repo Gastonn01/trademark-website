@@ -1,4 +1,5 @@
 import Fastify from "fastify"
+import cors from "@fastify/cors"
 import { Server } from "@modelcontextprotocol/sdk/server/index.js"
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import {
@@ -9,11 +10,14 @@ import {
 } from "@modelcontextprotocol/sdk/types.js"
 import { checkTrademark, createFiling, getFiling } from "./tools/index.js"
 import { getSearchResultsTemplate, getFilingStatusTemplate } from "./templates/index.js"
+import { registerTools } from "./tools"
 
 export async function createApp() {
   const fastify = Fastify({
     logger: true,
   })
+
+  await fastify.register(cors, { origin: true })
 
   // Health check endpoint
   fastify.get("/health", async () => {
@@ -239,6 +243,9 @@ export async function createApp() {
 
     reply.code(200).send({ status: "connected" })
   })
+
+  // Register /tools/check, /tools/createFiling, /tools/getFiling
+  await registerTools(fastify)
 
   return fastify
 }

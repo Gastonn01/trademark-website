@@ -1,6 +1,3 @@
 {
-  "routes": [
-    { "src": "/tools/.*", "dest": "/api/index.ts" },
-    { "src": "/health",   "dest": "/api/index.ts" }
-  ]
+  "routes": [{ "src": "/tools/.*", "dest": "/api/index.ts" }, { "src": "/health", "dest": "/api/index.ts" }]
 }
