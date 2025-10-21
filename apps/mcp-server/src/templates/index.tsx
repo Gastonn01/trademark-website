@@ -1,210 +1,155 @@
-// HTML templates for MCP UI components displayed in ChatGPT
-
-export const searchResultsTemplate = (data: {
-  trademark: string
-  country: string
-  status: string
-  searchId: string
-}) => `
+export function searchResultsTemplate(data?: any): string {
+  return `
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trademark Search Results</title>
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      margin: 0;
-      padding: 20px;
-      background: #f8f9fa;
-    }
-    .container {
-      max-width: 600px;
+      max-width: 800px;
       margin: 0 auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .card {
       background: white;
-      border-radius: 12px;
+      border-radius: 8px;
       padding: 24px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    .header {
-      border-bottom: 2px solid #4f46e5;
-      padding-bottom: 16px;
-      margin-bottom: 20px;
-    }
-    h1 {
-      margin: 0;
-      color: #1f2937;
-      font-size: 24px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
     .status {
       display: inline-block;
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-weight: 600;
+      padding: 4px 12px;
+      border-radius: 4px;
       font-size: 14px;
-      margin-top: 12px;
-    }
-    .status.pending {
-      background: #fef3c7;
-      color: #92400e;
-    }
-    .info {
-      margin: 20px 0;
-    }
-    .info-row {
-      display: flex;
-      justify-content: space-between;
-      padding: 12px 0;
-      border-bottom: 1px solid #e5e7eb;
-    }
-    .label {
-      color: #6b7280;
       font-weight: 500;
     }
-    .value {
-      color: #1f2937;
-      font-weight: 600;
+    .status.available {
+      background: #d4edda;
+      color: #155724;
+    }
+    .status.unavailable {
+      background: #f8d7da;
+      color: #721c24;
+    }
+    .price {
+      font-size: 24px;
+      font-weight: bold;
+      color: #2563eb;
+      margin: 16px 0;
     }
     .cta {
-      margin-top: 24px;
-      text-align: center;
-    }
-    .button {
       display: inline-block;
-      background: #4f46e5;
+      background: #2563eb;
       color: white;
       padding: 12px 24px;
-      border-radius: 8px;
+      border-radius: 6px;
       text-decoration: none;
-      font-weight: 600;
-      transition: background 0.2s;
-    }
-    .button:hover {
-      background: #4338ca;
+      font-weight: 500;
+      margin-top: 16px;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <h1>Trademark Search Results</h1>
-      <span class="status pending">${data.status}</span>
-    </div>
-    <div class="info">
-      <div class="info-row">
-        <span class="label">Trademark</span>
-        <span class="value">${data.trademark}</span>
-      </div>
-      <div class="info-row">
-        <span class="label">Country</span>
-        <span class="value">${data.country}</span>
-      </div>
-      <div class="info-row">
-        <span class="label">Search ID</span>
-        <span class="value">${data.searchId}</span>
-      </div>
-    </div>
-    <div class="cta">
-      <a href="https://justprotected.com/verification?search=${data.searchId}" class="button" target="_blank">
-        Complete Registration
-      </a>
-    </div>
+  <div class="card">
+    <h1>Trademark Search Results</h1>
+    ${
+      data
+        ? `
+      <p><strong>Trademark:</strong> ${data.trademark || "N/A"}</p>
+      <p><strong>Country:</strong> ${data.country || "N/A"}</p>
+      <p class="status ${data.available ? "available" : "unavailable"}">
+        ${data.available ? "Available" : "Not Available"}
+      </p>
+      ${data.price ? `<div class="price">$${data.price} USD</div>` : ""}
+      <p>Detailed results have been sent to your email.</p>
+      <a href="https://justprotected.com/verification" class="cta">Start Registration</a>
+    `
+        : "<p>Loading search results...</p>"
+    }
   </div>
 </body>
 </html>
-`
+  `.trim()
+}
 
-export const filingStatusTemplate = (data: {
-  trademarkName: string
-  country: string
-  status: string
-  email: string
-  createdAt: string
-}) => `
+export function filingStatusTemplate(data?: any): string {
+  return `
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Filing Status</title>
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      margin: 0;
-      padding: 20px;
-      background: #f8f9fa;
-    }
-    .container {
-      max-width: 600px;
+      max-width: 800px;
       margin: 0 auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .card {
       background: white;
-      border-radius: 12px;
+      border-radius: 8px;
       padding: 24px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-bottom: 16px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
-    .header {
-      border-bottom: 2px solid #10b981;
-      padding-bottom: 16px;
-      margin-bottom: 20px;
-    }
-    h1 {
-      margin: 0;
-      color: #1f2937;
-      font-size: 24px;
-    }
-    .status {
+    .status-badge {
       display: inline-block;
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-weight: 600;
+      padding: 6px 16px;
+      border-radius: 4px;
       font-size: 14px;
-      margin-top: 12px;
-      background: #d1fae5;
-      color: #065f46;
-    }
-    .info {
-      margin: 20px 0;
-    }
-    .info-row {
-      display: flex;
-      justify-content: space-between;
-      padding: 12px 0;
-      border-bottom: 1px solid #e5e7eb;
-    }
-    .label {
-      color: #6b7280;
       font-weight: 500;
+      margin: 8px 0;
     }
-    .value {
-      color: #1f2937;
-      font-weight: 600;
+    .status-pending {
+      background: #fff3cd;
+      color: #856404;
+    }
+    .status-paid {
+      background: #d4edda;
+      color: #155724;
+    }
+    .status-processing {
+      background: #d1ecf1;
+      color: #0c5460;
+    }
+    .cta {
+      display: inline-block;
+      background: #2563eb;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 500;
+      margin-top: 16px;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="header">
-      <h1>Filing Status</h1>
-      <span class="status">${data.status}</span>
-    </div>
-    <div class="info">
-      <div class="info-row">
-        <span class="label">Trademark</span>
-        <span class="value">${data.trademarkName}</span>
-      </div>
-      <div class="info-row">
-        <span class="label">Country</span>
-        <span class="value">${data.country}</span>
-      </div>
-      <div class="info-row">
-        <span class="label">Email</span>
-        <span class="value">${data.email}</span>
-      </div>
-      <div class="info-row">
-        <span class="label">Created</span>
-        <span class="value">${new Date(data.createdAt).toLocaleDateString()}</span>
-      </div>
-    </div>
+  <div class="card">
+    <h1>Trademark Filing Status</h1>
+    ${
+      data
+        ? `
+      <p><strong>Filing ID:</strong> ${data.id || "N/A"}</p>
+      <p><strong>Trademark:</strong> ${data.trademark || "N/A"}</p>
+      <p><strong>Status:</strong> <span class="status-badge status-${data.status || "pending"}">${data.status || "Pending"}</span></p>
+      ${data.countries ? `<p><strong>Countries:</strong> ${data.countries.join(", ")}</p>` : ""}
+      ${data.totalPrice ? `<p><strong>Total Price:</strong> $${data.totalPrice} USD</p>` : ""}
+      <p><strong>Next Steps:</strong> ${data.nextSteps || "We will contact you via email with updates."}</p>
+      <a href="https://justprotected.com/verification" class="cta">View Full Details</a>
+    `
+        : "<p>Loading filing status...</p>"
+    }
   </div>
 </body>
 </html>
-`
+  `.trim()
+}
