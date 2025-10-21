@@ -9,7 +9,7 @@ import {
   ReadResourceRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js"
 import { checkTrademark, createFiling, getFiling } from "./tools/index.js"
-import { getSearchResultsTemplate, getFilingStatusTemplate } from "./templates/index.js"
+import { searchResultsTemplate, filingStatusTemplate } from "./templates/index.js"
 import { registerTools } from "./tools"
 
 export async function createApp() {
@@ -216,7 +216,7 @@ export async function createApp() {
               {
                 uri,
                 mimeType: "text/html",
-                text: getSearchResultsTemplate(),
+                text: searchResultsTemplate(),
               },
             ],
           }
@@ -227,7 +227,7 @@ export async function createApp() {
               {
                 uri,
                 mimeType: "text/html",
-                text: getFilingStatusTemplate(),
+                text: filingStatusTemplate(),
               },
             ],
           }
