@@ -9,7 +9,6 @@
   },
   "scripts": {
     "dev": "tsx watch src/local.ts",
-    "build": "tsc",
     "start": "node dist/local.js",
     "typecheck": "tsc --noEmit",
     "lint": "eslint src --ext .ts"
