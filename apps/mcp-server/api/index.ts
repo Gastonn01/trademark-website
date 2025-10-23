@@ -4,8 +4,7 @@ import { createApp } from "../src/index"
 // Initialize once (faster cold starts)
 const appPromise = createApp()
 
-// Force Node 20 runtime on Vercel
-export const config = { runtime: "nodejs20.x" }
+export const config = { runtime: "nodejs" }
 
 export default async function handler(req: IncomingMessage, res: ServerResponse) {
   try {
