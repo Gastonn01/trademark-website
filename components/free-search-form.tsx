@@ -12,7 +12,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Textarea } from "@/components/ui/textarea"
 import { CountrySelectCard } from "@/components/country-select-card"
 import { trackLeadSubmission } from "@/components/gtm-tracker"
-import { Upload, CheckCircle, ChevronDown, ChevronUp, AlertCircle } from "lucide-react"
+import { Upload, CheckCircle, ChevronDown, ChevronUp, AlertCircle, Shield, Clock, Award } from "lucide-react"
 import { v4 as uuidv4 } from "uuid"
 import { countryPricingData } from "@/lib/pricing-data"
 
@@ -478,39 +478,60 @@ export function FreeSearchForm() {
   const currencySymbol = currency === "USD" ? "$" : "€"
 
   return (
-    <div id="free-search-form" className="max-w-6xl mx-auto px-4 pt-24 pb-12 scroll-mt-16">
+    <div id="free-search-form" className="max-w-7xl mx-auto px-4 pt-24 pb-16 scroll-mt-16">
       {isPreview && previewModeNotice && (
-        <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-lg flex items-start gap-3">
-          <AlertCircle className="h-5 w-5 text-amber-500 mt-0.5 flex-shrink-0" />
-          <div>
-            <h3 className="font-medium text-amber-800">Preview Mode</h3>
-            <p className="text-amber-700 text-sm">
+        <div className="mb-8 p-5 bg-amber-50 border-l-4 border-amber-400 rounded-r-lg shadow-sm flex items-start gap-4">
+          <AlertCircle className="h-6 w-6 text-amber-600 mt-0.5 flex-shrink-0" />
+          <div className="flex-1">
+            <h3 className="font-semibold text-amber-900 mb-1">Preview Mode Active</h3>
+            <p className="text-amber-800 text-sm leading-relaxed">
               You are viewing this form in preview mode. Form submissions will be simulated and no data will be saved to
               the database.
-              <button className="ml-2 text-amber-800 underline" onClick={() => setPreviewModeNotice(false)}>
-                Dismiss
-              </button>
             </p>
+            <button
+              className="mt-2 text-sm font-medium text-amber-900 underline hover:no-underline"
+              onClick={() => setPreviewModeNotice(false)}
+            >
+              Dismiss
+            </button>
           </div>
         </div>
       )}
 
-      <div className="grid lg:grid-cols-5 gap-12">
-        <div className="lg:col-span-3">
-          <div className="mb-8">
-            <h1 className="text-4xl font-bold mb-4 text-indigo-700">Free Trademark Search</h1>
-            <p className="text-lg text-gray-600">Start your trademark journey with a free search.</p>
-            <p className="text-lg text-gray-600 mb-4">
-              Fill out this simple form to get your free trademark search and expert assessment within 24 hours.
+      <div className="grid lg:grid-cols-3 gap-10">
+        <div className="lg:col-span-2">
+          <div className="mb-10">
+            <h1 className="text-5xl font-bold mb-4 text-indigo-900 tracking-tight">Professional Trademark Search</h1>
+            <p className="text-xl text-gray-700 leading-relaxed mb-2">
+              Comprehensive trademark analysis delivered by experienced IP professionals within 24 hours.
             </p>
-            <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
+            <p className="text-lg text-gray-600 leading-relaxed">
+              Complete the form below to receive your complimentary trademark search and expert assessment.
+            </p>
+
+            <div className="mt-6 flex flex-wrap gap-6 text-sm">
+              <div className="flex items-center gap-2 text-gray-700">
+                <Shield className="h-5 w-5 text-indigo-600" />
+                <span className="font-medium">Secure & Confidential</span>
+              </div>
+              <div className="flex items-center gap-2 text-gray-700">
+                <Clock className="h-5 w-5 text-indigo-600" />
+                <span className="font-medium">24-Hour Response</span>
+              </div>
+              <div className="flex items-center gap-2 text-gray-700">
+                <Award className="h-5 w-5 text-indigo-600" />
+                <span className="font-medium">Expert Analysis</span>
+              </div>
+            </div>
+
+            <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-500 rounded-r-lg p-5 mt-6 shadow-sm">
               <div className="flex items-start gap-3">
-                <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
+                <CheckCircle className="h-6 w-6 text-green-600 mt-0.5 flex-shrink-0" />
                 <div>
-                  <h3 className="font-medium text-green-800 mb-1">Your Search is Completely Free</h3>
-                  <p className="text-green-700 text-sm">
-                    The trademark search and assessment are free. The prices shown are only for trademark registration
-                    services if you choose to proceed with filing.
+                  <h3 className="font-semibold text-green-900 mb-1.5">Complimentary Search Service</h3>
+                  <p className="text-green-800 text-sm leading-relaxed">
+                    Your trademark search and professional assessment are provided at no cost. Registration fees apply
+                    only if you choose to proceed with filing.
                   </p>
                 </div>
               </div>
@@ -518,53 +539,56 @@ export function FreeSearchForm() {
           </div>
 
           {step === 2 && (
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center justify-between mb-8 pb-6 border-b border-gray-200">
               <div>
-                <h2 className="text-2xl font-semibold text-indigo-700">Where do you need protection?</h2>
-                <p className="text-gray-600 text-sm mt-1">
-                  Select countries to see registration pricing (search remains free)
+                <h2 className="text-3xl font-bold text-indigo-900 mb-2">Select Protection Territories</h2>
+                <p className="text-gray-600 leading-relaxed">
+                  Choose jurisdictions for trademark registration (search remains complimentary)
                 </p>
               </div>
-              <div className="flex items-center gap-2 text-sm">
-                <span className="text-gray-500">Currency:</span>
+              <div className="flex items-center gap-3 bg-white border border-gray-200 rounded-lg p-1.5 shadow-sm">
                 <button
                   type="button"
                   onClick={() => handleCurrencyChange("USD")}
-                  className={`px-2 py-1 rounded text-xs ${
-                    currency === "USD" ? "bg-indigo-100 text-indigo-700" : "text-gray-500 hover:text-gray-700"
+                  className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                    currency === "USD"
+                      ? "bg-indigo-600 text-white shadow-sm"
+                      : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
                   }`}
                 >
-                  USD
+                  USD ($)
                 </button>
-                <span className="text-gray-300">|</span>
                 <button
                   type="button"
                   onClick={() => handleCurrencyChange("EUR")}
-                  className={`px-2 py-1 rounded text-xs ${
-                    currency === "EUR" ? "bg-indigo-100 text-indigo-700" : "text-gray-500 hover:text-gray-700"
+                  className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                    currency === "EUR"
+                      ? "bg-indigo-600 text-white shadow-sm"
+                      : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
                   }`}
                 >
-                  EUR
+                  EUR (€)
                 </button>
               </div>
             </div>
           )}
 
-          {/* Progress bar */}
           <div className="mb-12">
-            <div className="flex justify-between mb-2">
-              {["Trademark Details", "Countries", "Contact Info"].map((label, index) => (
+            <div className="flex justify-between mb-3">
+              {["Trademark Details", "Territories", "Contact Information"].map((label, index) => (
                 <span
                   key={label}
-                  className={`text-sm font-medium ${step > index ? "text-indigo-600" : "text-gray-500"}`}
+                  className={`text-sm font-semibold transition-colors ${
+                    step > index ? "text-indigo-700" : step === index + 1 ? "text-indigo-900" : "text-gray-400"
+                  }`}
                 >
                   {label}
                 </span>
               ))}
             </div>
-            <div className="h-2 bg-gray-200 rounded-full">
+            <div className="h-2.5 bg-gray-100 rounded-full overflow-hidden shadow-inner">
               <div
-                className="h-full bg-indigo-600 rounded-full transition-all duration-300 ease-in-out"
+                className="h-full bg-gradient-to-r from-indigo-600 to-indigo-500 rounded-full transition-all duration-500 ease-out shadow-sm"
                 style={{ width: `${(step / totalSteps) * 100}%` }}
               ></div>
             </div>
@@ -588,11 +612,11 @@ export function FreeSearchForm() {
             </div>
           )}
 
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} className="space-y-8">
             {step === 1 && (
-              <div className="space-y-8">
+              <div className="space-y-10">
                 <div>
-                  <h2 className="text-2xl font-semibold mb-4 text-indigo-700">What type of trademark do you have?</h2>
+                  <h2 className="text-2xl font-bold mb-6 text-indigo-900">Trademark Classification</h2>
                   <RadioGroup
                     value={formData.trademarkType}
                     onValueChange={(value) => setFormData((prev) => ({ ...prev, trademarkType: value }))}
@@ -620,16 +644,24 @@ export function FreeSearchForm() {
                     ].map((option) => (
                       <div
                         key={option.value}
-                        className="flex items-center space-x-3 border rounded-lg p-4 hover:bg-indigo-50 transition-colors"
+                        className={`flex items-center space-x-4 border-2 rounded-xl p-5 transition-all cursor-pointer ${
+                          formData.trademarkType === option.value
+                            ? "border-indigo-600 bg-indigo-50 shadow-md"
+                            : "border-gray-200 bg-white hover:border-indigo-300 hover:shadow-sm"
+                        }`}
                       >
-                        <RadioGroupItem value={option.value} id={option.value} />
+                        <RadioGroupItem value={option.value} id={option.value} className="mt-0.5" />
                         <Label htmlFor={option.value} className="flex items-center gap-4 cursor-pointer flex-1">
-                          <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-2xl">
+                          <div
+                            className={`w-12 h-12 rounded-xl flex items-center justify-center text-2xl ${
+                              formData.trademarkType === option.value ? "bg-indigo-100" : "bg-gray-100"
+                            }`}
+                          >
                             {option.icon}
                           </div>
                           <div>
-                            <div className="font-medium">{option.label}</div>
-                            <div className="text-sm text-gray-600">{option.description}</div>
+                            <div className="font-semibold text-gray-900">{option.label}</div>
+                            <div className="text-sm text-gray-600 mt-0.5">{option.description}</div>
                           </div>
                         </Label>
                       </div>
@@ -639,24 +671,28 @@ export function FreeSearchForm() {
 
                 {(formData.trademarkType === "word" || formData.trademarkType === "logo") && (
                   <div>
-                    <Label htmlFor="trademarkName" className="block text-lg font-medium text-gray-700 mb-2">
-                      What's your trademark name?
+                    <Label htmlFor="trademarkName" className="block text-lg font-semibold text-gray-900 mb-3">
+                      Trademark Designation
                     </Label>
                     <Input
                       id="trademarkName"
                       value={formData.trademarkName}
                       onChange={(e) => setFormData((prev) => ({ ...prev, trademarkName: e.target.value }))}
                       placeholder="Enter your trademark name"
-                      className="w-full text-lg p-3"
+                      className="w-full text-lg p-4 border-2 border-gray-200 focus:border-indigo-500 rounded-lg shadow-sm"
                     />
                   </div>
                 )}
 
                 {(formData.trademarkType === "logo" || formData.trademarkType === "figurative") && (
                   <div>
-                    <h3 className="text-lg font-semibold mb-4 text-indigo-700">Upload your logo</h3>
+                    <h3 className="text-lg font-semibold mb-4 text-gray-900">Upload Trademark Design</h3>
                     <div
-                      className={`border-2 border-dashed ${isDragging ? "border-indigo-600 bg-indigo-50" : "border-indigo-300"} rounded-lg p-8 text-center hover:border-indigo-500 transition-colors`}
+                      className={`border-2 border-dashed rounded-xl p-10 text-center transition-all ${
+                        isDragging
+                          ? "border-indigo-500 bg-indigo-50 shadow-lg"
+                          : "border-gray-300 bg-gray-50 hover:border-indigo-400 hover:bg-indigo-50/50"
+                      }`}
                       onDragOver={(e) => {
                         e.preventDefault()
                         e.stopPropagation()
@@ -685,9 +721,9 @@ export function FreeSearchForm() {
                         }
                       }}
                     >
-                      <Upload className="mx-auto h-12 w-12 text-indigo-400 mb-4" />
-                      <div className="text-indigo-600 font-medium mb-2">Click to upload or drag and drop</div>
-                      <div className="text-sm text-gray-500">PNG, JPG, SVG or GIF (max. 5 MB)</div>
+                      <Upload className="mx-auto h-14 w-14 text-indigo-500 mb-4" />
+                      <div className="text-indigo-700 font-semibold mb-2 text-lg">Upload or drag and drop</div>
+                      <div className="text-sm text-gray-500 mb-4">PNG, JPG, SVG or GIF (maximum 5 MB)</div>
                       <input type="file" className="hidden" accept="image/*" onChange={handleFileUpload} />
                       <Button
                         type="button"
@@ -696,14 +732,14 @@ export function FreeSearchForm() {
                           ;(document.querySelector('input[type="file"]') as HTMLInputElement)?.click()
                         }}
                         variant="outline"
-                        className="mt-4"
+                        className="mt-2 border-2 border-indigo-600 text-indigo-600 hover:bg-indigo-600 hover:text-white font-medium"
                       >
                         Select File
                       </Button>
                       {formData.logo && (
-                        <div className="mt-4 flex items-center text-green-600">
+                        <div className="mt-6 flex items-center justify-center text-green-700 bg-green-50 rounded-lg p-3">
                           <CheckCircle className="h-5 w-5 mr-2" />
-                          <span>{formData.logo.name}</span>
+                          <span className="font-medium">{formData.logo.name}</span>
                         </div>
                       )}
                     </div>
@@ -711,31 +747,46 @@ export function FreeSearchForm() {
                 )}
 
                 <div>
-                  <Label htmlFor="goodsAndServices" className="block text-lg font-medium text-gray-700 mb-2">
-                    Describe your goods and services
+                  <Label htmlFor="goodsAndServices" className="block text-lg font-semibold text-gray-900 mb-3">
+                    Goods and Services Description
                   </Label>
                   <Textarea
                     id="goodsAndServices"
                     value={formData.goodsAndServices}
                     onChange={(e) => setFormData((prev) => ({ ...prev, goodsAndServices: e.target.value }))}
                     placeholder="e.g., Clothing, namely shirts, pants, and hats"
-                    className="w-full text-lg p-3"
-                    rows={4}
+                    className="w-full text-base p-4 border-2 border-gray-200 focus:border-indigo-500 rounded-lg shadow-sm"
+                    rows={5}
                   />
+                  <p className="text-sm text-gray-500 mt-2">
+                    Provide a detailed description of the products or services associated with your trademark
+                  </p>
                 </div>
-                {!formData.trademarkType && <div className="text-red-500 text-sm">Please select a trademark type</div>}
+
+                {!formData.trademarkType && (
+                  <div className="text-red-600 text-sm font-medium bg-red-50 p-3 rounded-lg">
+                    Please select a trademark classification
+                  </div>
+                )}
                 {formData.trademarkType !== "figurative" && !formData.trademarkName && (
-                  <div className="text-red-500 text-sm">Please enter your trademark name</div>
+                  <div className="text-red-600 text-sm font-medium bg-red-50 p-3 rounded-lg">
+                    Please enter your trademark designation
+                  </div>
                 )}
                 {(formData.trademarkType === "logo" || formData.trademarkType === "figurative") && !formData.logo && (
-                  <div className="text-red-500 text-sm">Please upload your logo</div>
+                  <div className="text-red-600 text-sm font-medium bg-red-50 p-3 rounded-lg">
+                    Please upload your trademark design
+                  </div>
                 )}
                 {!formData.goodsAndServices && (
-                  <div className="text-red-500 text-sm">Please describe your goods and services</div>
+                  <div className="text-red-600 text-sm font-medium bg-red-50 p-3 rounded-lg">
+                    Please describe your goods and services
+                  </div>
                 )}
+
                 <Button
                   type="button"
-                  className="w-full py-3 text-lg bg-indigo-600 hover:bg-indigo-700 text-white"
+                  className="w-full py-4 text-lg font-semibold bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg shadow-lg hover:shadow-xl transition-all"
                   onClick={() => {
                     window.scrollTo({ top: 0, behavior: "smooth" })
                     setStep(2)
@@ -747,7 +798,7 @@ export function FreeSearchForm() {
                     ((formData.trademarkType === "logo" || formData.trademarkType === "figurative") && !formData.logo)
                   }
                 >
-                  Continue to Countries
+                  Continue to Territory Selection
                 </Button>
               </div>
             )}
@@ -901,7 +952,7 @@ export function FreeSearchForm() {
 
             {step === 3 && (
               <div className="space-y-8">
-                <h2 className="text-2xl font-semibold mb-4 text-indigo-700">Almost there! We just need your details</h2>
+                <h2 className="text-2xl font-bold mb-6 text-indigo-900">Almost there! We just need your details</h2>
 
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
@@ -1035,51 +1086,71 @@ export function FreeSearchForm() {
           </form>
         </div>
 
-        <div className="lg:col-span-2">
-          <div className="bg-gray-50 rounded-lg p-6">
-            <h3 className="text-xl font-semibold mb-4 text-indigo-700">Why Trademark Your Brand?</h3>
-            <ul className="list-disc pl-5 text-gray-600 space-y-2">
-              <li>
-                <span className="font-medium">Legal Protection:</span> Prevents others from using your brand name or
-                logo.
+        <div className="lg:col-span-1">
+          <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-7 shadow-lg border border-gray-200 sticky top-24">
+            <h3 className="text-2xl font-bold mb-6 text-indigo-900">Why Protect Your Trademark?</h3>
+            <ul className="space-y-4 text-gray-700">
+              <li className="flex items-start gap-3">
+                <CheckCircle className="h-5 w-5 text-indigo-600 mt-0.5 flex-shrink-0" />
+                <div>
+                  <span className="font-semibold text-gray-900">Legal Protection:</span>
+                  <p className="text-sm mt-0.5">Prevents unauthorized use of your brand identity</p>
+                </div>
               </li>
-              <li>
-                <span className="font-medium">Brand Recognition:</span> Helps customers easily identify and trust your
-                products or services.
+              <li className="flex items-start gap-3">
+                <CheckCircle className="h-5 w-5 text-indigo-600 mt-0.5 flex-shrink-0" />
+                <div>
+                  <span className="font-semibold text-gray-900">Brand Recognition:</span>
+                  <p className="text-sm mt-0.5">Establishes trust and credibility with customers</p>
+                </div>
               </li>
-              <li>
-                <span className="font-medium">Business Growth:</span> Strengthens your brand equity and market position.
+              <li className="flex items-start gap-3">
+                <CheckCircle className="h-5 w-5 text-indigo-600 mt-0.5 flex-shrink-0" />
+                <div>
+                  <span className="font-semibold text-gray-900">Business Growth:</span>
+                  <p className="text-sm mt-0.5">Strengthens market position and brand equity</p>
+                </div>
               </li>
-              <li>
-                <span className="font-medium">Asset Value:</span> Trademarks are valuable assets that can be licensed or
-                sold.
+              <li className="flex items-start gap-3">
+                <CheckCircle className="h-5 w-5 text-indigo-600 mt-0.5 flex-shrink-0" />
+                <div>
+                  <span className="font-semibold text-gray-900">Asset Value:</span>
+                  <p className="text-sm mt-0.5">Creates valuable intellectual property for licensing or sale</p>
+                </div>
               </li>
             </ul>
-            <div className="mt-6">
-              <h4 className="text-lg font-semibold mb-2 text-indigo-700">How It Works</h4>
-              <div className="space-y-2 text-sm text-gray-600">
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4 text-green-500" />
-                  <span>
-                    <strong>Step 1:</strong> Free trademark search & assessment
-                  </span>
+
+            <div className="mt-8 pt-6 border-t border-gray-300">
+              <h4 className="text-lg font-bold mb-4 text-indigo-900">Our Process</h4>
+              <div className="space-y-3">
+                <div className="flex items-start gap-3">
+                  <div className="w-7 h-7 rounded-full bg-indigo-600 text-white flex items-center justify-center text-sm font-bold flex-shrink-0">
+                    1
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-900">Comprehensive Search</p>
+                    <p className="text-sm text-gray-600">Professional trademark database analysis</p>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4 text-green-500" />
-                  <span>
-                    <strong>Step 2:</strong> Review results & expert recommendations
-                  </span>
+                <div className="flex items-start gap-3">
+                  <div className="w-7 h-7 rounded-full bg-indigo-600 text-white flex items-center justify-center text-sm font-bold flex-shrink-0">
+                    2
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-900">Expert Review</p>
+                    <p className="text-sm text-gray-600">Detailed assessment and recommendations</p>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4 text-indigo-500" />
-                  <span>
-                    <strong>Step 3:</strong> Choose to proceed with registration (optional)
-                  </span>
+                <div className="flex items-start gap-3">
+                  <div className="w-7 h-7 rounded-full bg-indigo-500 text-white flex items-center justify-center text-sm font-bold flex-shrink-0">
+                    3
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-900">Registration Support</p>
+                    <p className="text-sm text-gray-600">Optional filing assistance (if desired)</p>
+                  </div>
                 </div>
               </div>
-              <Button variant="secondary" className="mt-4">
-                Contact Us
-              </Button>
             </div>
           </div>
         </div>
