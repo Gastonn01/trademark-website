@@ -5,17 +5,28 @@ import { motion } from "framer-motion"
 
 export function WhyChooseUsSection() {
   const reasons = [
-    { title: "Global Network", description: "Access to legal experts in over 180 countries", icon: Globe },
     {
-      title: "Industry Specialization",
-      description: "Tailored solutions for your specific business sector",
-      icon: Users,
+      title: "Global Reach + Speed",
+      description:
+        "File your trademark in over 70 countries. Most applications prepared and filed within 24 hours by qualified professionals.",
+      icon: Globe,
     },
-    { title: "Transparent Reporting", description: "Real-time dashboard to track application status", icon: Clock },
     {
-      title: "Flexible Payment Options",
-      description: "Installment plans and multi-country discounts available",
+      title: "Always Informed",
+      description:
+        "You'll receive clear updates at every stage. Our team keeps you in the loop from search to official filing.",
+      icon: Clock,
+    },
+    {
+      title: "Transparent Pricing",
+      description: "Flat fees with no hidden extras. What you see is what you pay — always.",
       icon: DollarSign,
+    },
+    {
+      title: "Expert Handling",
+      description:
+        "Qualified professionals handle your application from start to finish. Focus on your brand, not paperwork.",
+      icon: Users,
     },
     { title: "AI-Powered Analysis", description: "Advanced algorithms for higher approval rates", icon: Zap },
     { title: "Post-Registration Support", description: "Ongoing protection and renewal management", icon: Shield },
@@ -30,16 +41,17 @@ export function WhyChooseUsSection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h2 className="text-4xl font-bold text-blue-700 mb-4">Beyond The Process</h2>
+          <h2 className="text-4xl font-bold text-blue-700 mb-4">Your Brand is Safe With Us</h2>
           <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            While our streamlined process ensures efficiency, here's what makes our service truly exceptional
+            Transparent pricing, expert handling, and constant updates — everything designed to give you total
+            confidence in protecting your name.
           </p>
         </motion.div>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {reasons.map((reason, index) => (
             <motion.div
               key={index}
-              className="bg-gray-100 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
+              className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-100"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1, duration: 0.5 }}

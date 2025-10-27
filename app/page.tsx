@@ -2,6 +2,7 @@ import { NavBar } from "@/components/nav-bar"
 import { HeroSection } from "@/components/hero-section"
 import { ProcessSection } from "@/components/process-section"
 import { WhyChooseUsSection } from "@/components/why-choose-us-section"
+import { TrustBanner } from "@/components/trust-banner"
 import { CTASection } from "@/components/cta-section"
 import { FAQ } from "@/components/faq"
 import { Footer } from "@/components/footer"
@@ -18,6 +19,7 @@ export default function Home() {
     <main className="bg-white">
       <NavBar />
       <HeroSection />
+      <TrustBanner />
       <ProcessSection />
       <WhyChooseUsSection />
       <FAQ />

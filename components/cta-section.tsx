@@ -9,8 +9,12 @@ export function CTASection() {
           <div className="bg-white/10 backdrop-blur-sm rounded-lg p-8 shadow-xl border border-white/20">
             <div className="text-center mb-8">
               <h2 className="text-3xl md:text-4xl font-bold mb-4">Ready to Protect Your Brand?</h2>
-              <p className="text-lg md:text-xl opacity-90 max-w-2xl mx-auto">
-                Join thousands of businesses who trust us with their trademark protection. Start your journey today.
+              <p className="text-lg md:text-xl opacity-90 max-w-2xl mx-auto mb-4">
+                Join thousands of businesses who trust us with their trademark protection.
+              </p>
+              <p className="text-base opacity-80 max-w-2xl mx-auto">
+                Your brand is safe with us. Transparent pricing, expert handling, and constant updates — everything
+                designed to give you total confidence.
               </p>
             </div>
 
@@ -38,7 +42,7 @@ export function CTASection() {
                 href="/detailed-pricelist#top"
                 className="w-full md:w-auto px-8 py-3 text-lg font-medium text-white border-2 border-white/70 hover:bg-white/10 rounded-md transition-all duration-300 flex items-center justify-center"
               >
-                View Pricing
+                See Pricing
               </a>
             </div>
 
@@ -71,7 +75,7 @@ export function CTASection() {
                     clipRule="evenodd"
                   />
                 </svg>
-                <span>Satisfaction guaranteed</span>
+                <span>24-hour filing</span>
               </div>
               <div className="flex items-center">
                 <svg

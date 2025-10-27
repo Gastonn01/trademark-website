@@ -4,6 +4,7 @@ import { Inter } from "next/font/google"
 import { Toaster } from "@/components/ui/toaster"
 import { Analytics } from "@vercel/analytics/next"
 import { GTMTracker } from "@/components/gtm-tracker"
+import { ScrollToTop } from "@/components/scroll-to-top"
 import { Suspense } from "react"
 import Script from "next/script"
 import "./globals.css"
@@ -119,6 +120,7 @@ export default function RootLayout({
         </noscript>
 
         <Suspense fallback={null}>
+          <ScrollToTop />
           <GTMTracker />
           {children}
           <Toaster />

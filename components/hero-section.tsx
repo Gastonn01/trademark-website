@@ -15,47 +15,43 @@ export function HeroSection() {
       <div className="bg-gradient-to-b from-blue-800 to-blue-700 text-white">
         <div className="container mx-auto px-4 py-20">
           <div className="max-w-4xl mx-auto text-center">
-            {/* Main heading */}
             <motion.h1
               className="text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
             >
-              Global Trademark Registration Services
+              Trademark Registration Made Effortless
             </motion.h1>
 
-            {/* Subheading */}
             <motion.p
               className="text-xl mb-12 mt-6"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3, duration: 0.8 }}
             >
-              Protect your brand identity across borders with our AI-powered trademark search and registration services.
+              We handle everything — from search to filing — so you can focus on building your brand, not filling out
+              forms.
             </motion.p>
 
-            {/* Feature list */}
             <motion.div
               className="flex flex-wrap justify-center gap-6 max-w-2xl mx-auto mb-12"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5, duration: 0.8 }}
             >
-              {["24/7 Global Coverage", "AI-Powered Search", "Expert Legal Team", "Fast Registration"].map(
-                (feature, index) => (
-                  <motion.div
-                    key={feature}
-                    className="flex items-center gap-3 w-[200px]"
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.7 + index * 0.1, duration: 0.5 }}
-                  >
-                    <CheckCircle className="h-5 w-5 text-blue-300 flex-shrink-0" />
-                    <span className="text-center">{feature}</span>
-                  </motion.div>
-                ),
-              )}
+              {["70+ Countries", "24-Hour Filing", "Expert Handling", "Transparent Pricing"].map((feature, index) => (
+                <motion.div
+                  key={feature}
+                  className="flex items-center gap-3 w-[200px]"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.7 + index * 0.1, duration: 0.5 }}
+                >
+                  <CheckCircle className="h-5 w-5 text-blue-300 flex-shrink-0" />
+                  <span className="text-center">{feature}</span>
+                </motion.div>
+              ))}
             </motion.div>
 
             {/* Start Free Search Button */}
@@ -68,7 +64,7 @@ export function HeroSection() {
                 href="/free-search"
                 className="inline-block px-8 py-4 text-lg font-semibold text-blue-700 bg-white rounded-md shadow-lg hover:bg-blue-50 transition-colors duration-300"
               >
-                Start Free Search
+                Start My Registration
               </Link>
             </motion.div>
           </div>
