@@ -1,5 +1,5 @@
 import type { IncomingMessage, ServerResponse } from "http"
-import { createApp } from "../src/index"
+import { createApp } from "../src/index.js"
 
 // Initialize once (faster cold starts)
 const appPromise = createApp()
