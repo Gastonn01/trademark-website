@@ -41,8 +41,8 @@ export function WhyChooseUsSection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h2 className="text-4xl font-bold text-blue-700 mb-4">Your Brand is Safe With Us</h2>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+          <h2 className="text-3xl font-bold text-blue-700 mb-4">Your Brand is Safe With Us</h2>
+          <p className="text-base text-gray-600 max-w-3xl mx-auto">
             Transparent pricing, expert handling, and constant updates — everything designed to give you total
             confidence in protecting your name.
           </p>
@@ -57,7 +57,7 @@ export function WhyChooseUsSection() {
               transition={{ delay: index * 0.1, duration: 0.5 }}
             >
               <reason.icon className="h-12 w-12 mb-4 text-blue-700" />
-              <h3 className="text-xl font-semibold mb-2 text-blue-700">{reason.title}</h3>
+              <h3 className="text-lg font-semibold mb-2 text-blue-700">{reason.title}</h3>
               <p className="text-gray-700">{reason.description}</p>
             </motion.div>
           ))}

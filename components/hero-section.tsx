@@ -16,7 +16,7 @@ export function HeroSection() {
         <div className="container mx-auto px-4 py-20">
           <div className="max-w-4xl mx-auto text-center">
             <motion.h1
-              className="text-4xl font-bold tracking-tight text-white sm:text-5xl md:text-6xl"
+              className="text-3xl font-bold tracking-tight text-white sm:text-4xl md:text-5xl"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
@@ -25,7 +25,7 @@ export function HeroSection() {
             </motion.h1>
 
             <motion.p
-              className="text-xl mb-12 mt-6"
+              className="text-lg mb-12 mt-6"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3, duration: 0.8 }}
@@ -62,7 +62,7 @@ export function HeroSection() {
             >
               <Link
                 href="/free-search"
-                className="inline-block px-8 py-4 text-lg font-semibold text-blue-700 bg-white rounded-md shadow-lg hover:bg-blue-50 transition-colors duration-300"
+                className="inline-block px-8 py-4 text-base font-semibold text-blue-700 bg-white rounded-md shadow-lg hover:bg-blue-50 transition-colors duration-300"
               >
                 Start My Registration
               </Link>
@@ -89,7 +89,7 @@ export function HeroSection() {
                     <Shield className="h-8 w-8" />
                   </div>
                   <div>
-                    <h3 className="text-xl font-bold text-blue-700 mb-1">Trademark Registration</h3>
+                    <h3 className="text-lg font-bold text-blue-700 mb-1">Trademark Registration</h3>
                     <p className="text-gray-600 mb-2">Secure your brand identity legally</p>
                     <p className="text-blue-600 font-bold">Starting from $299</p>
                   </div>
@@ -110,7 +110,7 @@ export function HeroSection() {
                   <Globe className="h-8 w-8" />
                 </div>
                 <div>
-                  <h3 className="text-xl font-bold text-blue-700 mb-1">Worldwide Trademark Monitoring</h3>
+                  <h3 className="text-lg font-bold text-blue-700 mb-1">Worldwide Trademark Monitoring</h3>
                   <p className="text-gray-600 mb-2">Official trademark offices and web domains</p>
                   <p className="text-blue-600 font-bold inline-flex items-center">Starting from €10/month</p>
                 </div>

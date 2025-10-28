@@ -1,16 +1,14 @@
 {
   "version": 2,
-  "buildCommand": "pnpm build",
-  "installCommand": "pnpm install",
   "builds": [
     {
-      "src": "api/**/*.ts",
+      "src": "api/index.ts",
       "use": "@vercel/node"
     }
   ],
   "routes": [
-    { "src": "/tools/.*", "dest": "/api/index.ts" },
-    { "src": "/health", "dest": "/api/index.ts" },
-    { "src": "/(.*)", "dest": "/api/index.ts" }
+    { "src": "/tools/.*", "dest": "/api/index" },
+    { "src": "/health", "dest": "/api/index" },
+    { "src": "/(.*)", "dest": "/api/index" }
   ]
 }

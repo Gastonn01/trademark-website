@@ -8,11 +8,11 @@ export function CTASection() {
         <div className="max-w-4xl mx-auto">
           <div className="bg-white/10 backdrop-blur-sm rounded-lg p-8 shadow-xl border border-white/20">
             <div className="text-center mb-8">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4">Ready to Protect Your Brand?</h2>
-              <p className="text-lg md:text-xl opacity-90 max-w-2xl mx-auto mb-4">
+              <h2 className="text-2xl md:text-3xl font-bold mb-4">Ready to Protect Your Brand?</h2>
+              <p className="text-base md:text-lg opacity-90 max-w-2xl mx-auto mb-4">
                 Join thousands of businesses who trust us with their trademark protection.
               </p>
-              <p className="text-base opacity-80 max-w-2xl mx-auto">
+              <p className="text-sm opacity-80 max-w-2xl mx-auto">
                 Your brand is safe with us. Transparent pricing, expert handling, and constant updates — everything
                 designed to give you total confidence.
               </p>
@@ -21,7 +21,7 @@ export function CTASection() {
             <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8">
               <Link
                 href="/free-search"
-                className="w-full md:w-auto px-8 py-3 text-lg font-medium text-blue-700 bg-white hover:bg-gray-100 rounded-md shadow-lg transition-all duration-300 flex items-center justify-center"
+                className="w-full md:w-auto px-8 py-3 text-base font-medium text-blue-700 bg-white hover:bg-gray-100 rounded-md shadow-lg transition-all duration-300 flex items-center justify-center"
               >
                 Start Free Search
                 <svg
@@ -40,7 +40,7 @@ export function CTASection() {
 
               <a
                 href="/detailed-pricelist#top"
-                className="w-full md:w-auto px-8 py-3 text-lg font-medium text-white border-2 border-white/70 hover:bg-white/10 rounded-md transition-all duration-300 flex items-center justify-center"
+                className="w-full md:w-auto px-8 py-3 text-base font-medium text-white border-2 border-white/70 hover:bg-white/10 rounded-md transition-all duration-300 flex items-center justify-center"
               >
                 See Pricing
               </a>
