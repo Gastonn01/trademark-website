@@ -1,7 +1,6 @@
 import Fastify from "fastify"
 import cors from "@fastify/cors"
 import { Server } from "@modelcontextprotocol/sdk/server/index.js"
-import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
@@ -237,11 +236,29 @@ export async function createApp() {
       }
     })
 
-    // Handle the MCP request
-    const transport = new StdioServerTransport()
-    await server.connect(transport)
+    try {
+      const mcpRequest = request.body as any
 
-    reply.code(200).send({ status: "connected" })
+      // Handle different MCP request types
+      if (mcpRequest.method === "tools/list") {
+        const response = await server.request(mcpRequest, ListToolsRequestSchema)
+        return reply.code(200).send(response)
+      } else if (mcpRequest.method === "tools/call") {
+        const response = await server.request(mcpRequest, CallToolRequestSchema)
+        return reply.code(200).send(response)
+      } else if (mcpRequest.method === "resources/list") {
+        const response = await server.request(mcpRequest, ListResourcesRequestSchema)
+        return reply.code(200).send(response)
+      } else if (mcpRequest.method === "resources/read") {
+        const response = await server.request(mcpRequest, ReadResourceRequestSchema)
+        return reply.code(200).send(response)
+      } else {
+        return reply.code(400).send({ error: "Unknown MCP method" })
+      }
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Unknown error"
+      return reply.code(500).send({ error: errorMessage })
+    }
   })
 
   // Register /tools/check, /tools/createFiling, /tools/getFiling
