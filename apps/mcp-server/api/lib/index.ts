@@ -18,13 +18,27 @@ export async function createApp() {
 
   await fastify.register(cors, { origin: true })
 
+  console.log("[v0] Registering Fastify routes")
+
   // Health check endpoint
   fastify.get("/health", async () => {
+    console.log("[v0] Health check endpoint called")
     return { status: "ok", timestamp: new Date().toISOString() }
+  })
+
+  fastify.get("/", async () => {
+    console.log("[v0] Root endpoint called")
+    return {
+      message: "Just Protected MCP Server",
+      endpoints: ["/health", "/mcp", "/tools/check", "/tools/createFiling", "/tools/getFiling"],
+    }
   })
 
   // MCP endpoint
   fastify.post("/mcp", async (request, reply) => {
+    console.log("[v0] MCP endpoint called")
+    console.log("[v0] MCP request body:", JSON.stringify(request.body, null, 2))
+
     const server = new Server(
       {
         name: "just-protected-mcp",
@@ -263,6 +277,8 @@ export async function createApp() {
 
   // Register /tools/check, /tools/createFiling, /tools/getFiling
   await registerTools(fastify)
+
+  console.log("[v0] All routes registered successfully")
 
   return fastify
 }
