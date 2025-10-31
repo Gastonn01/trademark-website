@@ -1,14 +1,8 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node"
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  console.log("[v0] Simple handler called")
-  console.log("[v0] Method:", req.method)
-  console.log("[v0] URL:", req.url)
-
   return res.status(200).json({
-    message: "MCP Server is running",
-    method: req.method,
-    url: req.url,
+    status: "healthy",
     timestamp: new Date().toISOString(),
   })
 }
