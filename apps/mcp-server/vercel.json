@@ -1,9 +1,8 @@
 {
   "version": 2,
-  "builds": [{ "src": "api/index.ts", "use": "@vercel/node" }],
   "routes": [
-    { "src": "/mcp", "dest": "/api/index" },
     { "src": "/health", "dest": "/api/index" },
-    { "src": "/(.*)", "dest": "/api/index" }
+    { "src": "/mcp", "dest": "/api/index" },
+    { "src": "/tools/.*", "dest": "/api/index" }
   ]
 }

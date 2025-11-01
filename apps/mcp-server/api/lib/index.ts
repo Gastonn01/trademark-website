@@ -1,6 +1,7 @@
 import Fastify from "fastify"
 import cors from "@fastify/cors"
 import { Server } from "@modelcontextprotocol/sdk/server/index.js"
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
@@ -18,27 +19,13 @@ export async function createApp() {
 
   await fastify.register(cors, { origin: true })
 
-  console.log("[v0] Registering Fastify routes")
-
   // Health check endpoint
   fastify.get("/health", async () => {
-    console.log("[v0] Health check endpoint called")
     return { status: "ok", timestamp: new Date().toISOString() }
-  })
-
-  fastify.get("/", async () => {
-    console.log("[v0] Root endpoint called")
-    return {
-      message: "Just Protected MCP Server",
-      endpoints: ["/health", "/mcp", "/tools/check", "/tools/createFiling", "/tools/getFiling"],
-    }
   })
 
   // MCP endpoint
   fastify.post("/mcp", async (request, reply) => {
-    console.log("[v0] MCP endpoint called")
-    console.log("[v0] MCP request body:", JSON.stringify(request.body, null, 2))
-
     const server = new Server(
       {
         name: "just-protected-mcp",
@@ -250,35 +237,15 @@ export async function createApp() {
       }
     })
 
-    try {
-      const mcpRequest = request.body as any
+    // Handle the MCP request
+    const transport = new StdioServerTransport()
+    await server.connect(transport)
 
-      // Handle different MCP request types
-      if (mcpRequest.method === "tools/list") {
-        const response = await server.request(mcpRequest, ListToolsRequestSchema)
-        return reply.code(200).send(response)
-      } else if (mcpRequest.method === "tools/call") {
-        const response = await server.request(mcpRequest, CallToolRequestSchema)
-        return reply.code(200).send(response)
-      } else if (mcpRequest.method === "resources/list") {
-        const response = await server.request(mcpRequest, ListResourcesRequestSchema)
-        return reply.code(200).send(response)
-      } else if (mcpRequest.method === "resources/read") {
-        const response = await server.request(mcpRequest, ReadResourceRequestSchema)
-        return reply.code(200).send(response)
-      } else {
-        return reply.code(400).send({ error: "Unknown MCP method" })
-      }
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : "Unknown error"
-      return reply.code(500).send({ error: errorMessage })
-    }
+    reply.code(200).send({ status: "connected" })
   })
 
   // Register /tools/check, /tools/createFiling, /tools/getFiling
   await registerTools(fastify)
-
-  console.log("[v0] All routes registered successfully")
 
   return fastify
 }
