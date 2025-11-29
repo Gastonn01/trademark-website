@@ -4,6 +4,14 @@ import Link from "next/link"
 import { CheckCircle2, FileCheck, FileSearch, Globe, Scale, ShieldCheck } from "lucide-react"
 
 export function PricingSection() {
+  const ipLegalServicesEUR = 147 // €147 base price
+  const trademarkRegistrationEUR = 413 // €413 base price (approximate average)
+  const trademarkRenewalEUR = 628 // €628 base price (approximate average)
+
+  const ipLegalServicesUSD = Math.round(ipLegalServicesEUR * 1.09)
+  const trademarkRegistrationUSD = Math.round(trademarkRegistrationEUR * 1.09)
+  const trademarkRenewalUSD = Math.round(trademarkRenewalEUR * 1.09)
+
   return (
     <div className="bg-gray-50 py-20">
       <div className="container mx-auto px-4">
@@ -12,7 +20,7 @@ export function PricingSection() {
           {[
             {
               title: "IP Legal Services",
-              price: "from $160",
+              price: `from $${ipLegalServicesUSD}`,
               description: "Expert legal analysis of your trademark",
               cta: "Learn More",
               href: "/verification",
@@ -20,7 +28,7 @@ export function PricingSection() {
             },
             {
               title: "Trademark Registration",
-              price: "from $450",
+              price: `from $${trademarkRegistrationUSD}`,
               description: "Register your trademark with expert support",
               cta: "Start Free Search",
               href: "/free-search",
@@ -28,7 +36,7 @@ export function PricingSection() {
             },
             {
               title: "Trademark Renewal",
-              price: "from $685",
+              price: `from $${trademarkRenewalUSD}`,
               description: "Renew your trademark before expiration",
               cta: "Renew Trademark",
               href: "/services#trademark-renewal",

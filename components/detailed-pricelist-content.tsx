@@ -207,7 +207,7 @@ export function DetailedPricelistContent() {
   const totalPrice = selectedCountries.reduce((sum, country) => {
     const countryData = countryPricingData[country]
     const price = countryData?.price || 0
-    return sum + (currency === "EUR" ? price * 1.0 : price)
+    return sum + (currency === "USD" ? price * 1.09 : price)
   }, 0)
 
   const currencySymbol = currency === "USD" ? "$" : "€"

@@ -1,5 +1,4 @@
 // Updated pricing data based on your fee schedule with strategic markup
-// Currency kept as 1:1 (USD prices applied as EUR/local currency)
 
 export const centralAmericaCaribbeanCountries = [
   // Lower cost countries - 25-30% markup for good profit margin
@@ -39,14 +38,18 @@ export const centralAmericaCaribbeanCountries = [
 
 // Summary of pricing strategy:
 export const pricingStrategy = {
-  lowCost: "25-30% markup on countries under $700 base cost",
-  mediumCost: "15-20% markup on countries $700-$1000 base cost",
-  highCost: "10-15% markup on countries $1000-$1300 base cost",
-  veryHighCost: "5-10% markup on countries over $1300 base cost",
+  baseCurrency: "EUR",
+  usdConversion: "EUR * 1.09",
+  lowCost: "25-30% markup on countries under €700 base cost",
+  mediumCost: "15-20% markup on countries €700-€1000 base cost",
+  highCost: "10-15% markup on countries €1000-€1300 base cost",
+  veryHighCost: "5-10% markup on countries over €1300 base cost",
   notes: [
+    "All prices are in EUR as the base currency",
+    "USD prices calculated as EUR * 1.09 (current exchange rate)",
     "Prices kept competitive while ensuring healthy profit margins",
     "Higher markup on lower cost countries for better overall profitability",
     "Conservative markup on expensive countries to remain market competitive",
-    "All prices rounded to nearest $10 for clean presentation",
+    "All prices rounded to nearest €10 for clean presentation",
   ],
 }

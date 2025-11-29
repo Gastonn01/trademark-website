@@ -18,42 +18,44 @@ interface Country {
   additionalClassPrice?: number
 }
 
+const convertToUSD = (eurPrice: number) => Math.round(eurPrice * 1.09)
+
 const mostRequestedCountries: Country[] = [
   {
     name: "European Union",
     flag: "https://flagcdn.com/w40/eu.png",
-    price: countryPricingData["European Union"].price,
-    additionalClassPrice: countryPricingData["European Union"].additionalClassPrice,
+    price: convertToUSD(countryPricingData["European Union"].price),
+    additionalClassPrice: convertToUSD(countryPricingData["European Union"].additionalClassPrice),
   },
   {
     name: "United States",
     flag: "https://flagcdn.com/w40/us.png",
-    price: countryPricingData["United States"].price,
-    additionalClassPrice: countryPricingData["United States"].additionalClassPrice,
+    price: convertToUSD(countryPricingData["United States"].price),
+    additionalClassPrice: convertToUSD(countryPricingData["United States"].additionalClassPrice),
   },
   {
     name: "Germany",
     flag: "https://flagcdn.com/w40/de.png",
-    price: countryPricingData["Germany"].price,
-    additionalClassPrice: countryPricingData["Germany"].additionalClassPrice,
+    price: convertToUSD(countryPricingData["Germany"].price),
+    additionalClassPrice: convertToUSD(countryPricingData["Germany"].additionalClassPrice),
   },
   {
     name: "Spain",
     flag: "https://flagcdn.com/w40/es.png",
-    price: countryPricingData["Spain"].price,
-    additionalClassPrice: countryPricingData["Spain"].additionalClassPrice,
+    price: convertToUSD(countryPricingData["Spain"].price),
+    additionalClassPrice: convertToUSD(countryPricingData["Spain"].additionalClassPrice),
   },
   {
     name: "United Kingdom",
     flag: "https://flagcdn.com/w40/gb.png",
-    price: countryPricingData["United Kingdom"].price,
-    additionalClassPrice: countryPricingData["United Kingdom"].additionalClassPrice,
+    price: convertToUSD(countryPricingData["United Kingdom"].price),
+    additionalClassPrice: convertToUSD(countryPricingData["United Kingdom"].additionalClassPrice),
   },
   {
     name: "China",
     flag: "https://flagcdn.com/w40/cn.png",
-    price: countryPricingData["China"].price,
-    additionalClassPrice: countryPricingData["China"].additionalClassPrice,
+    price: convertToUSD(countryPricingData["China"].price),
+    additionalClassPrice: convertToUSD(countryPricingData["China"].additionalClassPrice),
   },
 ]
 
@@ -61,14 +63,14 @@ const northAmericaCountries: Country[] = [
   {
     name: "Canada",
     flag: "https://flagcdn.com/w40/ca.png",
-    price: countryPricingData["Canada"].price,
-    additionalClassPrice: countryPricingData["Canada"].additionalClassPrice,
+    price: convertToUSD(countryPricingData["Canada"].price),
+    additionalClassPrice: convertToUSD(countryPricingData["Canada"].additionalClassPrice),
   },
   {
     name: "Mexico",
     flag: "https://flagcdn.com/w40/mx.png",
-    price: countryPricingData["Mexico"].price,
-    additionalClassPrice: countryPricingData["Mexico"].additionalClassPrice,
+    price: convertToUSD(countryPricingData["Mexico"].price),
+    additionalClassPrice: convertToUSD(countryPricingData["Mexico"].additionalClassPrice),
   },
 ]
 
@@ -76,44 +78,44 @@ const centralAmericaCountries: Country[] = [
   {
     name: "Costa Rica",
     flag: "https://flagcdn.com/w40/cr.png",
-    price: countryPricingData["Costa Rica"].price,
-    additionalClassPrice: countryPricingData["Costa Rica"].additionalClassPrice,
+    price: convertToUSD(countryPricingData["Costa Rica"].price),
+    additionalClassPrice: convertToUSD(countryPricingData["Costa Rica"].additionalClassPrice),
   },
   {
     name: "El Salvador",
     flag: "https://flagcdn.com/w40/sv.png",
-    price: countryPricingData["El Salvador"].price,
-    additionalClassPrice: countryPricingData["El Salvador"].additionalClassPrice,
+    price: convertToUSD(countryPricingData["El Salvador"].price),
+    additionalClassPrice: convertToUSD(countryPricingData["El Salvador"].additionalClassPrice),
   },
   {
     name: "Guatemala",
     flag: "https://flagcdn.com/w40/gt.png",
-    price: countryPricingData["Guatemala"].price,
-    additionalClassPrice: countryPricingData["Guatemala"].additionalClassPrice,
+    price: convertToUSD(countryPricingData["Guatemala"].price),
+    additionalClassPrice: convertToUSD(countryPricingData["Guatemala"].additionalClassPrice),
   },
   {
     name: "Nicaragua",
     flag: "https://flagcdn.com/w40/ni.png",
-    price: countryPricingData["Nicaragua"].price,
-    additionalClassPrice: countryPricingData["Nicaragua"].additionalClassPrice,
+    price: convertToUSD(countryPricingData["Nicaragua"].price),
+    additionalClassPrice: convertToUSD(countryPricingData["Nicaragua"].additionalClassPrice),
   },
   {
     name: "Panama",
     flag: "https://flagcdn.com/w40/pa.png",
-    price: countryPricingData["Panama"].price,
-    additionalClassPrice: countryPricingData["Panama"].additionalClassPrice,
+    price: convertToUSD(countryPricingData["Panama"].price),
+    additionalClassPrice: convertToUSD(countryPricingData["Panama"].additionalClassPrice),
   },
   {
     name: "Honduras",
     flag: "https://flagcdn.com/w40/hn.png",
-    price: countryPricingData["Honduras"].price,
-    additionalClassPrice: countryPricingData["Honduras"].additionalClassPrice,
+    price: convertToUSD(countryPricingData["Honduras"].price),
+    additionalClassPrice: convertToUSD(countryPricingData["Honduras"].additionalClassPrice),
   },
   {
     name: "Belize",
     flag: "https://flagcdn.com/w40/bz.png",
-    price: countryPricingData["Belize"].price,
-    additionalClassPrice: countryPricingData["Belize"].additionalClassPrice,
+    price: convertToUSD(countryPricingData["Belize"].price),
+    additionalClassPrice: convertToUSD(countryPricingData["Belize"].additionalClassPrice),
   },
 ]
 
@@ -121,62 +123,62 @@ const southAmericaCountries: Country[] = [
   {
     name: "Argentina",
     flag: "https://flagcdn.com/w40/ar.png",
-    price: countryPricingData["Argentina"].price,
-    additionalClassPrice: countryPricingData["Argentina"].additionalClassPrice,
+    price: convertToUSD(countryPricingData["Argentina"].price),
+    additionalClassPrice: convertToUSD(countryPricingData["Argentina"].additionalClassPrice),
   },
   {
     name: "Paraguay",
     flag: "https://flagcdn.com/w40/py.png",
-    price: countryPricingData["Paraguay"].price,
-    additionalClassPrice: countryPricingData["Paraguay"].additionalClassPrice,
+    price: convertToUSD(countryPricingData["Paraguay"].price),
+    additionalClassPrice: convertToUSD(countryPricingData["Paraguay"].additionalClassPrice),
   },
   {
     name: "Venezuela",
     flag: "https://flagcdn.com/w40/ve.png",
-    price: countryPricingData["Venezuela"].price,
-    additionalClassPrice: countryPricingData["Venezuela"].additionalClassPrice,
+    price: convertToUSD(countryPricingData["Venezuela"].price),
+    additionalClassPrice: convertToUSD(countryPricingData["Venezuela"].additionalClassPrice),
   },
   {
     name: "Uruguay",
     flag: "https://flagcdn.com/w40/uy.png",
-    price: countryPricingData["Uruguay"].price,
-    additionalClassPrice: countryPricingData["Uruguay"].additionalClassPrice,
+    price: convertToUSD(countryPricingData["Uruguay"].price),
+    additionalClassPrice: convertToUSD(countryPricingData["Uruguay"].additionalClassPrice),
   },
   {
     name: "Ecuador",
     flag: "https://flagcdn.com/w40/ec.png",
-    price: countryPricingData["Ecuador"].price,
-    additionalClassPrice: countryPricingData["Ecuador"].additionalClassPrice,
+    price: convertToUSD(countryPricingData["Ecuador"].price),
+    additionalClassPrice: convertToUSD(countryPricingData["Ecuador"].additionalClassPrice),
   },
   {
     name: "Brazil",
     flag: "https://flagcdn.com/w40/br.png",
-    price: countryPricingData["Brazil"].price,
-    additionalClassPrice: countryPricingData["Brazil"].additionalClassPrice,
+    price: convertToUSD(countryPricingData["Brazil"].price),
+    additionalClassPrice: convertToUSD(countryPricingData["Brazil"].additionalClassPrice),
   },
   {
     name: "Peru",
     flag: "https://flagcdn.com/w40/pe.png",
-    price: countryPricingData["Peru"].price,
-    additionalClassPrice: countryPricingData["Peru"].additionalClassPrice,
+    price: convertToUSD(countryPricingData["Peru"].price),
+    additionalClassPrice: convertToUSD(countryPricingData["Peru"].additionalClassPrice),
   },
   {
     name: "Chile",
     flag: "https://flagcdn.com/w40/cl.png",
-    price: countryPricingData["Chile"].price,
-    additionalClassPrice: countryPricingData["Chile"].additionalClassPrice,
+    price: convertToUSD(countryPricingData["Chile"].price),
+    additionalClassPrice: convertToUSD(countryPricingData["Chile"].additionalClassPrice),
   },
   {
     name: "Bolivia",
     flag: "https://flagcdn.com/w40/bo.png",
-    price: countryPricingData["Bolivia"].price,
-    additionalClassPrice: countryPricingData["Bolivia"].additionalClassPrice,
+    price: convertToUSD(countryPricingData["Bolivia"].price),
+    additionalClassPrice: convertToUSD(countryPricingData["Bolivia"].additionalClassPrice),
   },
   {
     name: "Colombia",
     flag: "https://flagcdn.com/w40/co.png",
-    price: countryPricingData["Colombia"].price,
-    additionalClassPrice: countryPricingData["Colombia"].additionalClassPrice,
+    price: convertToUSD(countryPricingData["Colombia"].price),
+    additionalClassPrice: convertToUSD(countryPricingData["Colombia"].additionalClassPrice),
   },
 ]
 
@@ -184,146 +186,146 @@ const caribbeanCountries: Country[] = [
   {
     name: "Anguilla",
     flag: "https://flagcdn.com/w40/ai.png",
-    price: countryPricingData["Anguilla"].price,
-    additionalClassPrice: countryPricingData["Anguilla"].additionalClassPrice,
+    price: convertToUSD(countryPricingData["Anguilla"].price),
+    additionalClassPrice: convertToUSD(countryPricingData["Anguilla"].additionalClassPrice),
   },
   {
     name: "Antigua and Barbuda",
     flag: "https://flagcdn.com/w40/ag.png",
-    price: countryPricingData["Antigua and Barbuda"].price,
-    additionalClassPrice: countryPricingData["Antigua and Barbuda"].additionalClassPrice,
+    price: convertToUSD(countryPricingData["Antigua and Barbuda"].price),
+    additionalClassPrice: convertToUSD(countryPricingData["Antigua and Barbuda"].additionalClassPrice),
   },
   {
     name: "Aruba",
     flag: "https://flagcdn.com/w40/aw.png",
-    price: countryPricingData["Aruba"].price,
-    additionalClassPrice: countryPricingData["Aruba"].additionalClassPrice,
+    price: convertToUSD(countryPricingData["Aruba"].price),
+    additionalClassPrice: convertToUSD(countryPricingData["Aruba"].additionalClassPrice),
   },
   {
     name: "Bahamas",
     flag: "https://flagcdn.com/w40/bs.png",
-    price: countryPricingData["Bahamas"].price,
-    additionalClassPrice: countryPricingData["Bahamas"].additionalClassPrice,
+    price: convertToUSD(countryPricingData["Bahamas"].price),
+    additionalClassPrice: convertToUSD(countryPricingData["Bahamas"].additionalClassPrice),
   },
   {
     name: "Barbados",
     flag: "https://flagcdn.com/w40/bb.png",
-    price: countryPricingData["Barbados"].price,
-    additionalClassPrice: countryPricingData["Barbados"].additionalClassPrice,
+    price: convertToUSD(countryPricingData["Barbados"].price),
+    additionalClassPrice: convertToUSD(countryPricingData["Barbados"].additionalClassPrice),
   },
   {
     name: "Bermuda",
     flag: "https://flagcdn.com/w40/bm.png",
-    price: countryPricingData["Bermuda"].price,
-    additionalClassPrice: countryPricingData["Bermuda"].additionalClassPrice,
+    price: convertToUSD(countryPricingData["Bermuda"].price),
+    additionalClassPrice: convertToUSD(countryPricingData["Bermuda"].additionalClassPrice),
   },
   {
     name: "British Virgin Islands",
     flag: "https://flagcdn.com/w40/vg.png",
-    price: countryPricingData["British Virgin Islands"].price,
-    additionalClassPrice: countryPricingData["British Virgin Islands"].additionalClassPrice,
+    price: convertToUSD(countryPricingData["British Virgin Islands"].price),
+    additionalClassPrice: convertToUSD(countryPricingData["British Virgin Islands"].additionalClassPrice),
   },
   {
     name: "Cayman Islands",
     flag: "https://flagcdn.com/w40/ky.png",
-    price: countryPricingData["Cayman Islands"].price,
-    additionalClassPrice: countryPricingData["Cayman Islands"].additionalClassPrice,
+    price: convertToUSD(countryPricingData["Cayman Islands"].price),
+    additionalClassPrice: convertToUSD(countryPricingData["Cayman Islands"].additionalClassPrice),
   },
   {
     name: "Cuba",
     flag: "https://flagcdn.com/w40/cu.png",
-    price: countryPricingData["Cuba"].price,
-    additionalClassPrice: countryPricingData["Cuba"].additionalClassPrice,
+    price: convertToUSD(countryPricingData["Cuba"].price),
+    additionalClassPrice: convertToUSD(countryPricingData["Cuba"].additionalClassPrice),
   },
   {
     name: "Curacao",
     flag: "https://flagcdn.com/w40/cw.png",
-    price: countryPricingData["Curacao"].price,
-    additionalClassPrice: countryPricingData["Curacao"].additionalClassPrice,
+    price: convertToUSD(countryPricingData["Curacao"].price),
+    additionalClassPrice: convertToUSD(countryPricingData["Curacao"].additionalClassPrice),
   },
   {
     name: "Dominica",
     flag: "https://flagcdn.com/w40/dm.png",
-    price: countryPricingData["Dominica"].price,
-    additionalClassPrice: countryPricingData["Dominica"].additionalClassPrice,
+    price: convertToUSD(countryPricingData["Dominica"].price),
+    additionalClassPrice: convertToUSD(countryPricingData["Dominica"].additionalClassPrice),
   },
   {
     name: "Grenada",
     flag: "https://flagcdn.com/w40/gd.png",
-    price: countryPricingData["Grenada"].price,
-    additionalClassPrice: countryPricingData["Grenada"].additionalClassPrice,
+    price: convertToUSD(countryPricingData["Grenada"].price),
+    additionalClassPrice: convertToUSD(countryPricingData["Grenada"].additionalClassPrice),
   },
   {
     name: "Guyana",
     flag: "https://flagcdn.com/w40/gy.png",
-    price: countryPricingData["Guyana"].price,
-    additionalClassPrice: countryPricingData["Guyana"].additionalClassPrice,
+    price: convertToUSD(countryPricingData["Guyana"].price),
+    additionalClassPrice: convertToUSD(countryPricingData["Guyana"].additionalClassPrice),
   },
   {
     name: "Haiti",
     flag: "https://flagcdn.com/w40/ht.png",
-    price: countryPricingData["Haiti"].price,
-    additionalClassPrice: countryPricingData["Haiti"].additionalClassPrice,
+    price: convertToUSD(countryPricingData["Haiti"].price),
+    additionalClassPrice: convertToUSD(countryPricingData["Haiti"].additionalClassPrice),
   },
   {
     name: "Jamaica",
     flag: "https://flagcdn.com/w40/jm.png",
-    price: countryPricingData["Jamaica"].price,
-    additionalClassPrice: countryPricingData["Jamaica"].additionalClassPrice,
+    price: convertToUSD(countryPricingData["Jamaica"].price),
+    additionalClassPrice: convertToUSD(countryPricingData["Jamaica"].additionalClassPrice),
   },
   {
     name: "Montserrat",
     flag: "https://flagcdn.com/w40/ms.png",
-    price: countryPricingData["Montserrat"].price,
-    additionalClassPrice: countryPricingData["Montserrat"].additionalClassPrice,
+    price: convertToUSD(countryPricingData["Montserrat"].price),
+    additionalClassPrice: convertToUSD(countryPricingData["Montserrat"].additionalClassPrice),
   },
   {
     name: "Puerto Rico",
     flag: "https://flagcdn.com/w40/pr.png",
-    price: countryPricingData["Puerto Rico"].price,
-    additionalClassPrice: countryPricingData["Puerto Rico"].additionalClassPrice,
+    price: convertToUSD(countryPricingData["Puerto Rico"].price),
+    additionalClassPrice: convertToUSD(countryPricingData["Puerto Rico"].additionalClassPrice),
   },
   {
     name: "Dominican Republic",
     flag: "https://flagcdn.com/w40/do.png",
-    price: countryPricingData["Dominican Republic"].price,
-    additionalClassPrice: countryPricingData["Dominican Republic"].additionalClassPrice,
+    price: convertToUSD(countryPricingData["Dominican Republic"].price),
+    additionalClassPrice: convertToUSD(countryPricingData["Dominican Republic"].additionalClassPrice),
   },
   {
     name: "Saint Kitts and Nevis",
     flag: "https://flagcdn.com/w40/kn.png",
-    price: countryPricingData["Saint Kitts and Nevis"].price,
-    additionalClassPrice: countryPricingData["Saint Kitts and Nevis"].additionalClassPrice,
+    price: convertToUSD(countryPricingData["Saint Kitts and Nevis"].price),
+    additionalClassPrice: convertToUSD(countryPricingData["Saint Kitts and Nevis"].additionalClassPrice),
   },
   {
     name: "Saint Lucia",
     flag: "https://flagcdn.com/w40/lc.png",
-    price: countryPricingData["Saint Lucia"].price,
-    additionalClassPrice: countryPricingData["Saint Lucia"].additionalClassPrice,
+    price: convertToUSD(countryPricingData["Saint Lucia"].price),
+    additionalClassPrice: convertToUSD(countryPricingData["Saint Lucia"].additionalClassPrice),
   },
   {
     name: "Saint Vincent and the Grenadines",
     flag: "https://flagcdn.com/w40/vc.png",
-    price: countryPricingData["Saint Vincent and the Grenadines"].price,
-    additionalClassPrice: countryPricingData["Saint Vincent and the Grenadines"].additionalClassPrice,
+    price: convertToUSD(countryPricingData["Saint Vincent and the Grenadines"].price),
+    additionalClassPrice: convertToUSD(countryPricingData["Saint Vincent and the Grenadines"].additionalClassPrice),
   },
   {
     name: "Sint Maarten",
     flag: "https://flagcdn.com/w40/sx.png",
-    price: countryPricingData["Sint Maarten"].price,
-    additionalClassPrice: countryPricingData["Sint Maarten"].additionalClassPrice,
+    price: convertToUSD(countryPricingData["Sint Maarten"].price),
+    additionalClassPrice: convertToUSD(countryPricingData["Sint Maarten"].additionalClassPrice),
   },
   {
     name: "Suriname",
     flag: "https://flagcdn.com/w40/sr.png",
-    price: countryPricingData["Suriname"].price,
-    additionalClassPrice: countryPricingData["Suriname"].additionalClassPrice,
+    price: convertToUSD(countryPricingData["Suriname"].price),
+    additionalClassPrice: convertToUSD(countryPricingData["Suriname"].additionalClassPrice),
   },
   {
     name: "Trinidad and Tobago",
     flag: "https://flagcdn.com/w40/tt.png",
-    price: countryPricingData["Trinidad and Tobago"].price,
-    additionalClassPrice: countryPricingData["Trinidad and Tobago"].additionalClassPrice,
+    price: convertToUSD(countryPricingData["Trinidad and Tobago"].price),
+    additionalClassPrice: convertToUSD(countryPricingData["Trinidad and Tobago"].additionalClassPrice),
   },
 ]
 
@@ -443,7 +445,21 @@ export function PricingPlans() {
 
                 <AccordionItem value="europe">
                   <AccordionTrigger className="text-xl font-semibold">Europe</AccordionTrigger>
-                  <AccordionContent className="grid gap-4 pt-4">{/* Europe countries map here */}</AccordionContent>
+                  <AccordionContent className="grid gap-4 pt-4">
+                    {mostRequestedCountries
+                      .filter(
+                        (country) =>
+                          country.name !== "European Union" &&
+                          country.name !== "United States" &&
+                          country.name !== "Germany" &&
+                          country.name !== "Spain" &&
+                          country.name !== "United Kingdom" &&
+                          country.name !== "China",
+                      )
+                      .map((country) => (
+                        <CountryCard key={country.name} country={country} />
+                      ))}
+                  </AccordionContent>
                 </AccordionItem>
 
                 <AccordionItem value="south-america">

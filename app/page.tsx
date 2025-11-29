@@ -6,6 +6,7 @@ import { TrustBanner } from "@/components/trust-banner"
 import { CTASection } from "@/components/cta-section"
 import { FAQ } from "@/components/faq"
 import { Footer } from "@/components/footer"
+// import { ChatGPTIntegrationSection } from "@/components/chatgpt-integration-section"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
@@ -22,6 +23,7 @@ export default function Home() {
       <TrustBanner />
       <ProcessSection />
       <WhyChooseUsSection />
+      {/* <ChatGPTIntegrationSection /> */}
       <FAQ />
       <CTASection />
       <Footer />

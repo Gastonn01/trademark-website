@@ -342,9 +342,10 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
       const basePrice = countryData.price
       const additionalClassesPrice =
         (Math.max(1, formData.selectedClasses.length) - 1) * countryData.additionalClassPrice
-      return sum + basePrice + additionalClassesPrice
+      const totalCountryPrice = basePrice + additionalClassesPrice
+      return sum + (currency === "USD" ? totalCountryPrice * 1.09 : totalCountryPrice)
     }, 0)
-  }, [selectedCountries, formData.selectedClasses])
+  }, [selectedCountries, formData.selectedClasses, currency])
 
   const formatPrice = (price: number) => {
     const symbol = currency === "EUR" ? "€" : "$"

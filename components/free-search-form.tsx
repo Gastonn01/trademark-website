@@ -472,7 +472,8 @@ export function FreeSearchForm() {
 
   const totalPrice = selectedCountries.reduce((sum, country) => {
     const countryData = countryPricingData[country as keyof typeof countryPricingData]
-    return sum + (countryData?.price || 0)
+    const price = countryData?.price || 0
+    return sum + (currency === "USD" ? price * 1.09 : price)
   }, 0)
 
   const currencySymbol = currency === "USD" ? "$" : "€"

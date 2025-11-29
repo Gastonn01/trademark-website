@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster"
 import { Analytics } from "@vercel/analytics/next"
 import { GTMTracker } from "@/components/gtm-tracker"
 import { ScrollToTop } from "@/components/scroll-to-top"
+import { TrademarkFAQBot } from "@/components/trademark-faq-bot"
 import { Suspense } from "react"
 import Script from "next/script"
 import "./globals.css"
@@ -125,6 +126,7 @@ export default function RootLayout({
           {children}
           <Toaster />
           <Analytics />
+          <TrademarkFAQBot />
         </Suspense>
       </body>
     </html>
