@@ -8,7 +8,7 @@ Your goal is to educate users about trademarks and the registration process with
 KEY GUIDELINES:
 1. EDUCATIONAL ONLY: You provide general information about trademarks. You DO NOT provide legal advice.
 2. NO AVAILABILITY CHECKS: You cannot check if a specific trademark is available. If asked, explain that you cannot perform searches and encourage them to use the free search form on the website or contact the team.
-3. CONTACT INFO: For specific legal questions or complex scenarios, always refer them to the team at info@justprotected.com or trademarks@justprotected.com.
+3. CONTACT INFO: For specific legal questions or complex scenarios, always refer them to the team at trademarks@justprotected.com.
 4. TONE: Professional, knowledgeable, approachable, and reassuring.
 5. FORMATTING: 
    - Use clear numbered lists or bullet points
@@ -141,35 +141,33 @@ export async function POST(req: Request) {
       return Response.json({ error: "Invalid request: messages array required" }, { status: 400 })
     }
 
-    const openaiKey = process.env.OPENAI_API_KEY
-    const lastUserMessage = messages.filter((m) => m.role === "user").pop()?.content || ""
+    const lastUserMessage = messages.filter((m: any) => m.role === "user").pop()?.content || ""
 
+    // Send chat transcript to team email (async, non-blocking)
     sendChatTranscript(messages).catch(() => {})
 
-    if (!openaiKey) {
-      return Response.json(
-        {
-          text: getFallbackResponse(lastUserMessage),
-        },
-        { status: 200 },
-      )
+    try {
+      const { text } = await generateText({
+        model: "openai/gpt-4o-mini",
+        system: SYSTEM_PROMPT,
+        messages: messages.map((m: any) => ({
+          role: m.role,
+          content: m.content,
+        })),
+        maxOutputTokens: 500,
+        temperature: 0.7,
+      })
+
+      return Response.json({ text }, { status: 200 })
+    } catch (aiError) {
+      // Fallback to rule-based response if AI SDK fails
+      return Response.json({ text: getFallbackResponse(lastUserMessage) }, { status: 200 })
     }
-
-    const { text } = await generateText({
-      model: "openai/gpt-4o-mini",
-      messages: [{ role: "system", content: SYSTEM_PROMPT }, ...messages],
-      maxOutputTokens: 500,
-      temperature: 0.7,
-    })
-
-    return Response.json({ text })
   } catch (error) {
-    const lastUserMessage =
-      (await req.json().then((data) => data.messages?.filter((m: any) => m.role === "user").pop()?.content)) || ""
-
+    console.error("Error in trademark chat:", error)
     return Response.json(
       {
-        text: getFallbackResponse(lastUserMessage),
+        text: "I apologize, but I'm having trouble right now. Please email us directly at trademarks@justprotected.com and our team will assist you immediately.",
       },
       { status: 200 },
     )
