@@ -1,8 +1,9 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { CountrySelectCard } from "./country-select-card"
-import { CurrencySelector } from "./currency-selector"
+import { useCurrency } from "@/hooks/use-currency"
+import { getCurrencySymbol } from "@/lib/currency-converter"
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
 import { countryPricingData } from "@/lib/pricing-data"
@@ -176,20 +177,7 @@ const regions = [
 export function DetailedPricelistContent() {
   const router = useRouter()
   const [selectedCountries, setSelectedCountries] = useState<string[]>([])
-  const [currency, setCurrency] = useState<"USD" | "EUR">("USD")
-
-  // Load currency from localStorage on mount
-  useEffect(() => {
-    const savedCurrency = localStorage.getItem("selectedCurrency") as "USD" | "EUR"
-    if (savedCurrency) {
-      setCurrency(savedCurrency)
-    }
-  }, [])
-
-  const handleCurrencyChange = (newCurrency: "USD" | "EUR") => {
-    setCurrency(newCurrency)
-    localStorage.setItem("selectedCurrency", newCurrency)
-  }
+  const { currency } = useCurrency()
 
   const toggleCountry = (country: string) => {
     setSelectedCountries((prev) => (prev.includes(country) ? prev.filter((c) => c !== country) : [...prev, country]))
@@ -206,11 +194,11 @@ export function DetailedPricelistContent() {
 
   const totalPrice = selectedCountries.reduce((sum, country) => {
     const countryData = countryPricingData[country]
-    const price = countryData?.price || 0
-    return sum + (currency === "USD" ? price * 1.09 : price)
+    const price = countryData?.prices?.[currency] || 0
+    return sum + price
   }, 0)
 
-  const currencySymbol = currency === "USD" ? "$" : "€"
+  const currencySymbol = getCurrencySymbol(currency)
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-12">
@@ -221,8 +209,6 @@ export function DetailedPricelistContent() {
           cost.
         </p>
       </div>
-
-      <CurrencySelector selectedCurrency={currency} onCurrencyChange={handleCurrencyChange} />
 
       {selectedCountries.length > 0 && (
         <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-6 mb-8">
@@ -253,12 +239,13 @@ export function DetailedPricelistContent() {
               {region.countries.map((country) => {
                 const countryData = countryPricingData[country]
                 if (!countryData) return null
+                const priceForCurrency = countryData.prices?.[currency] || 0
                 return (
                   <CountrySelectCard
                     key={country}
                     country={country}
                     flag={`https://flagcdn.com/${countryData.flag}.svg`}
-                    price={countryData.price}
+                    price={priceForCurrency}
                     additionalClassPrice={countryData.additionalClassPrice}
                     onSelect={() => toggleCountry(country)}
                     selected={selectedCountries.includes(country)}

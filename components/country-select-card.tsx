@@ -9,7 +9,7 @@ interface CountrySelectCardProps {
   additionalClassPrice?: number
   onSelect: () => void
   selected: boolean
-  currency: "USD" | "EUR"
+  currency: "USD" | "EUR" | "GBP"
 }
 
 export function CountrySelectCard({
@@ -22,7 +22,7 @@ export function CountrySelectCard({
   currency,
 }: CountrySelectCardProps) {
   const convertedPrice = Math.floor(price)
-  const currencySymbol = currency === "USD" ? "$" : "€"
+  const currencySymbol = currency === "USD" ? "$" : currency === "GBP" ? "£" : "€"
   const currencyCode = currency
 
   return (

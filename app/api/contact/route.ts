@@ -98,7 +98,7 @@ export async function POST(request: Request) {
       // Send notification email to admin
       await resend.emails.send({
         from: "JustProtected <noreply@justprotected.com>",
-        to: ["admin@justprotected.com"],
+        to: ["trademarks@justprotected.com"],
         subject: `New Contact Form Submission: ${subject || "General Inquiry"}`,
         html: `
           <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">

@@ -32,12 +32,12 @@ export const metadata = {
 
 export default function RegisterTrademarkChina() {
   return (
-    <main className="bg-gradient-to-b from-red-50 to-white min-h-screen">
+    <main className="bg-gradient-to-b from-blue-50 to-white min-h-screen">
       <NavBar />
 
       {/* Hero Section with Enhanced Visual Appeal */}
       <div className="relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-red-900/80 to-red-800/80 z-10"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-900/80 to-indigo-900/80 z-10"></div>
         <Image
           src="https://images.unsplash.com/photo-1474181487882-5abf3f0ba6c2?w=1600&h=800&fit=crop"
           alt="Shanghai skyline representing trademark registration in China"
@@ -62,7 +62,7 @@ export default function RegisterTrademarkChina() {
         {/* Author and Publication Info */}
         <div className="flex flex-col sm:flex-row justify-between items-center mb-8 text-gray-600 border-b pb-4">
           <div className="flex items-center mb-4 sm:mb-0">
-            <div className="w-10 h-10 rounded-full bg-red-600 text-white flex items-center justify-center mr-3">
+            <div className="w-10 h-10 rounded-full bg-blue-600 text-white flex items-center justify-center mr-3">
               <span className="font-bold">JP</span>
             </div>
             <div>
@@ -76,7 +76,7 @@ export default function RegisterTrademarkChina() {
         </div>
 
         {/* Introduction */}
-        <div className="prose prose-red max-w-none mb-10">
+        <div className="prose prose-blue max-w-none mb-10">
           <p className="text-xl leading-relaxed">
             Registering a trademark in China is a crucial step for protecting your brand in the world's largest consumer
             market. Whether you're a foreign business entering the Chinese market or a local company seeking protection,
@@ -84,9 +84,9 @@ export default function RegisterTrademarkChina() {
             valuable legal protection against infringement and counterfeiting.
           </p>
 
-          <div className="flex items-start p-4 bg-red-50 rounded-lg border border-red-100 my-6">
-            <Lightbulb className="h-6 w-6 text-red-600 mr-3 flex-shrink-0 mt-1" />
-            <p className="italic text-red-800 m-0">
+          <div className="flex items-start p-4 bg-blue-50 rounded-lg border border-blue-100 my-6">
+            <Lightbulb className="h-6 w-6 text-blue-600 mr-3 flex-shrink-0 mt-1" />
+            <p className="italic text-blue-800 m-0">
               <strong>Did you know?</strong> China received over 9.5 million trademark applications in 2024, making it
               the world's busiest trademark office. With trademark squatting and counterfeiting concerns, early
               registration is more important than ever for businesses operating in or exporting to China.
@@ -95,8 +95,8 @@ export default function RegisterTrademarkChina() {
         </div>
 
         {/* Table of Contents */}
-        <div className="mb-10 p-6 bg-red-50 rounded-lg border border-red-100 shadow-sm">
-          <h2 className="text-xl font-semibold mb-4 text-red-800 flex items-center">
+        <div className="mb-10 p-6 bg-blue-50 rounded-lg border border-blue-100 shadow-sm">
+          <h2 className="text-xl font-semibold mb-4 text-blue-800 flex items-center">
             <BookOpen className="mr-2 h-5 w-5" />
             What We'll Cover in This Guide:
           </h2>
@@ -123,12 +123,12 @@ export default function RegisterTrademarkChina() {
                 desc: "Realistic timeframes and milestones in the Chinese registration process",
               },
             ].map((item, index) => (
-              <div key={index} className="flex items-start bg-white p-3 rounded-lg border border-red-100">
-                <div className="bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center font-bold mr-3 flex-shrink-0 mt-1">
+              <div key={index} className="flex items-start bg-white p-3 rounded-lg border border-blue-100">
+                <div className="bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center font-bold mr-3 flex-shrink-0 mt-1">
                   {index + 1}
                 </div>
                 <div>
-                  <p className="font-medium text-red-900 m-0">{item.section}</p>
+                  <p className="font-medium text-blue-900 m-0">{item.section}</p>
                   <p className="text-sm text-gray-600 m-0">{item.desc}</p>
                 </div>
               </div>
@@ -136,8 +136,8 @@ export default function RegisterTrademarkChina() {
           </div>
 
           {/* Quick Jump Links */}
-          <div className="mt-6 pt-4 border-t border-red-200">
-            <p className="font-medium text-red-800 mb-2">Jump to a section:</p>
+          <div className="mt-6 pt-4 border-t border-blue-200">
+            <p className="font-medium text-blue-800 mb-2">Jump to a section:</p>
             <div className="flex flex-wrap gap-2">
               {[
                 ["Why It Matters", "#why-it-matters"],
@@ -150,7 +150,7 @@ export default function RegisterTrademarkChina() {
                 <a
                   key={index}
                   href={link}
-                  className="px-3 py-1 bg-white text-red-700 rounded-full text-sm border border-red-200 hover:bg-red-700 hover:text-white transition-colors"
+                  className="px-3 py-1 bg-white text-blue-700 rounded-full text-sm border border-blue-200 hover:bg-blue-700 hover:text-white transition-colors"
                 >
                   {label}
                 </a>
@@ -159,9 +159,9 @@ export default function RegisterTrademarkChina() {
           </div>
         </div>
 
-        <div className="prose prose-red max-w-none">
-          <h2 id="why-it-matters" className="flex items-center text-2xl font-bold text-red-900 mb-4 scroll-mt-20">
-            <Target className="mr-3 h-6 w-6 text-red-700" />
+        <div className="prose prose-blue max-w-none">
+          <h2 id="why-it-matters" className="flex items-center text-2xl font-bold text-blue-900 mb-4 scroll-mt-20">
+            <Target className="mr-3 h-6 w-6 text-blue-700" />
             Why China Trademark Registration Matters in 2025
           </h2>
 
@@ -191,8 +191,8 @@ export default function RegisterTrademarkChina() {
             ))}
           </div>
 
-          <div className="bg-gradient-to-r from-red-50 to-white p-4 border-l-4 border-red-500 my-6">
-            <p className="text-red-900 font-medium m-0">
+          <div className="bg-gradient-to-r from-blue-50 to-white p-4 border-l-4 border-blue-500 my-6">
+            <p className="text-blue-900 font-medium m-0">
               "China's 'first-to-file' system means that the first person to file a trademark application will generally
               be granted the rights to that mark, regardless of who used it first. This makes early registration
               absolutely essential for foreign brands." — China IP Protection Report, 2025
@@ -208,9 +208,9 @@ export default function RegisterTrademarkChina() {
 
           <h2
             id="registration-process"
-            className="flex items-center text-2xl font-bold text-red-900 mb-4 mt-12 scroll-mt-20"
+            className="flex items-center text-2xl font-bold text-blue-900 mb-4 mt-12 scroll-mt-20"
           >
-            <FileText className="mr-3 h-6 w-6 text-red-700" />
+            <FileText className="mr-3 h-6 w-6 text-blue-700" />
             The Complete China Trademark Registration Process
           </h2>
 
@@ -222,11 +222,11 @@ export default function RegisterTrademarkChina() {
 
           <div className="space-y-8 my-6">
             {/* Step 1 */}
-            <div className="relative pl-8 border-l-2 border-red-200">
-              <div className="absolute left-[-10px] top-0 bg-red-600 text-white w-6 h-6 rounded-full flex items-center justify-center font-bold">
+            <div className="relative pl-8 border-l-2 border-blue-200">
+              <div className="absolute left-[-10px] top-0 bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center font-bold">
                 1
               </div>
-              <h3 className="text-xl font-semibold mb-2 text-red-800">Conduct a Comprehensive Trademark Search</h3>
+              <h3 className="text-xl font-semibold mb-2 text-blue-800">Conduct a Comprehensive Trademark Search</h3>
               <p className="mb-3">
                 Before filing, it's essential to determine if your desired mark is available in China. A thorough search
                 helps identify potential conflicts with existing trademarks that could lead to rejection.
@@ -254,11 +254,11 @@ export default function RegisterTrademarkChina() {
             </div>
 
             {/* Step 2 */}
-            <div className="relative pl-8 border-l-2 border-red-200">
-              <div className="absolute left-[-10px] top-0 bg-red-600 text-white w-6 h-6 rounded-full flex items-center justify-center font-bold">
+            <div className="relative pl-8 border-l-2 border-blue-200">
+              <div className="absolute left-[-10px] top-0 bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center font-bold">
                 2
               </div>
-              <h3 className="text-xl font-semibold mb-2 text-red-800">Consider Chinese Character Versions</h3>
+              <h3 className="text-xl font-semibold mb-2 text-blue-800">Consider Chinese Character Versions</h3>
               <p className="mb-3">
                 Foreign brands should consider registering both the original version of their mark and a Chinese
                 character version. This is crucial because:
@@ -269,9 +269,9 @@ export default function RegisterTrademarkChina() {
                 <li>Chinese character marks are essential for effective marketing in China</li>
               </ul>
 
-              <div className="flex items-start p-4 bg-red-50 rounded-lg border border-red-100 mt-4">
-                <Search className="h-6 w-6 text-red-600 mr-3 flex-shrink-0 mt-1" />
-                <p className="italic text-red-800 m-0">
+              <div className="flex items-start p-4 bg-blue-50 rounded-lg border border-blue-100 mt-4">
+                <Search className="h-6 w-6 text-blue-600 mr-3 flex-shrink-0 mt-1" />
+                <p className="italic text-blue-800 m-0">
                   <strong>Pro tip:</strong> When creating a Chinese version of your mark, consider working with local
                   branding experts who understand cultural nuances. The Chinese version can be a transliteration
                   (similar sound), a translation (similar meaning), or a combination of both.
@@ -280,11 +280,11 @@ export default function RegisterTrademarkChina() {
             </div>
 
             {/* Step 3 */}
-            <div className="relative pl-8 border-l-2 border-red-200">
-              <div className="absolute left-[-10px] top-0 bg-red-600 text-white w-6 h-6 rounded-full flex items-center justify-center font-bold">
+            <div className="relative pl-8 border-l-2 border-blue-200">
+              <div className="absolute left-[-10px] top-0 bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center font-bold">
                 3
               </div>
-              <h3 className="text-xl font-semibold mb-2 text-red-800">Prepare Your Application Materials</h3>
+              <h3 className="text-xl font-semibold mb-2 text-blue-800">Prepare Your Application Materials</h3>
               <p className="mb-3">
                 Gathering the right information and materials before starting your application will streamline the
                 process. For a Chinese trademark application, you'll need:
@@ -300,11 +300,11 @@ export default function RegisterTrademarkChina() {
             </div>
 
             {/* Step 4 */}
-            <div className="relative pl-8 border-l-2 border-red-200">
-              <div className="absolute left-[-10px] top-0 bg-red-600 text-white w-6 h-6 rounded-full flex items-center justify-center font-bold">
+            <div className="relative pl-8 border-l-2 border-blue-200">
+              <div className="absolute left-[-10px] top-0 bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center font-bold">
                 4
               </div>
-              <h3 className="text-xl font-semibold mb-2 text-red-800">File Your Application</h3>
+              <h3 className="text-xl font-semibold mb-2 text-blue-800">File Your Application</h3>
               <p className="mb-3">
                 Applications are filed with the CNIPA. Foreign applicants must file through a licensed Chinese trademark
                 agent. The filing process includes:
@@ -321,11 +321,11 @@ export default function RegisterTrademarkChina() {
             </div>
 
             {/* Step 5 */}
-            <div className="relative pl-8 border-l-2 border-red-200">
-              <div className="absolute left-[-10px] top-0 bg-red-600 text-white w-6 h-6 rounded-full flex items-center justify-center font-bold">
+            <div className="relative pl-8 border-l-2 border-blue-200">
+              <div className="absolute left-[-10px] top-0 bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center font-bold">
                 5
               </div>
-              <h3 className="text-xl font-semibold mb-2 text-red-800">Examination Process</h3>
+              <h3 className="text-xl font-semibold mb-2 text-blue-800">Examination Process</h3>
               <p className="mb-3">The CNIPA examination process has several phases:</p>
               <ul className="list-disc pl-5 space-y-1">
                 <li>
@@ -339,9 +339,9 @@ export default function RegisterTrademarkChina() {
                   <strong>Publication:</strong> If approved, the mark is published in the Trademark Gazette
                 </li>
               </ul>
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                <p className="font-medium text-red-800 mb-2">Common reasons for rejection in China:</p>
-                <ul className="list-disc pl-5 space-y-1 text-red-900 m-0">
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <p className="font-medium text-blue-800 mb-2">Common reasons for rejection in China:</p>
+                <ul className="list-disc pl-5 space-y-1 text-blue-900 m-0">
                   <li>Similarity to existing marks in the same or similar classes</li>
                   <li>Lack of distinctiveness</li>
                   <li>Containing prohibited elements (e.g., national flags, geographic names)</li>
@@ -357,10 +357,10 @@ export default function RegisterTrademarkChina() {
 
             {/* Step 6 */}
             <div className="relative pl-8">
-              <div className="absolute left-[-10px] top-0 bg-red-600 text-white w-6 h-6 rounded-full flex items-center justify-center font-bold">
+              <div className="absolute left-[-10px] top-0 bg-blue-600 text-white w-6 h-6 rounded-full flex items-center justify-center font-bold">
                 6
               </div>
-              <h3 className="text-xl font-semibold mb-2 text-red-800">Registration and Certificate</h3>
+              <h3 className="text-xl font-semibold mb-2 text-blue-800">Registration and Certificate</h3>
               <p className="mb-3">
                 If no opposition is filed during the three-month opposition period after publication, the CNIPA will
                 issue a trademark registration certificate. Once registered:
@@ -377,9 +377,9 @@ export default function RegisterTrademarkChina() {
 
           <h2
             id="application-requirements"
-            className="flex items-center text-2xl font-bold text-red-900 mb-4 mt-12 scroll-mt-20"
+            className="flex items-center text-2xl font-bold text-blue-900 mb-4 mt-12 scroll-mt-20"
           >
-            <FileText className="mr-3 h-6 w-6 text-red-700" />
+            <FileText className="mr-3 h-6 w-6 text-blue-700" />
             2025 China Trademark Application Requirements
           </h2>
 
@@ -389,7 +389,7 @@ export default function RegisterTrademarkChina() {
           </p>
 
           <div className="bg-white p-5 rounded-lg border border-gray-200 shadow-sm my-6">
-            <h3 className="font-semibold text-lg mb-2 text-red-800">Documentation Requirements</h3>
+            <h3 className="font-semibold text-lg mb-2 text-blue-800">Documentation Requirements</h3>
             <ul className="list-disc pl-5 space-y-1">
               <li>Application form in Chinese (prepared by your trademark agent)</li>
               <li>Clear representation of the mark (JPG format, 5cm x 5cm, 300 dpi)</li>
@@ -401,7 +401,7 @@ export default function RegisterTrademarkChina() {
           </div>
 
           <div className="bg-white p-5 rounded-lg border border-gray-200 shadow-sm my-6">
-            <h3 className="font-semibold text-lg mb-2 text-red-800">Classification System</h3>
+            <h3 className="font-semibold text-lg mb-2 text-blue-800">Classification System</h3>
             <p className="mb-3">
               China uses the Nice Classification system (45 classes) but has developed its own unique subclass system
               within each class. This means:
@@ -414,8 +414,8 @@ export default function RegisterTrademarkChina() {
             </ul>
           </div>
 
-          <div className="bg-red-50 p-5 rounded-lg border border-red-100 my-6">
-            <h3 className="font-semibold text-lg mb-2 text-red-800">2025 Updates to China's Trademark System</h3>
+          <div className="bg-blue-50 p-5 rounded-lg border border-blue-100 my-6">
+            <h3 className="font-semibold text-lg mb-2 text-blue-800">2025 Updates to China's Trademark System</h3>
             <p className="mb-3">Recent changes to China's trademark system that applicants should be aware of:</p>
             <ul className="list-disc pl-5 space-y-1 m-0">
               <li>Increased penalties for bad-faith applications and trademark squatting</li>
@@ -445,9 +445,9 @@ export default function RegisterTrademarkChina() {
 
           <h2
             id="common-pitfalls"
-            className="flex items-center text-2xl font-bold text-red-900 mb-4 mt-12 scroll-mt-20"
+            className="flex items-center text-2xl font-bold text-blue-900 mb-4 mt-12 scroll-mt-20"
           >
-            <AlertTriangle className="mr-3 h-6 w-6 text-red-700" />
+            <AlertTriangle className="mr-3 h-6 w-6 text-blue-700" />
             Common Pitfalls and How to Avoid Them
           </h2>
 
@@ -458,12 +458,12 @@ export default function RegisterTrademarkChina() {
 
           <div className="space-y-6 my-6">
             <div className="bg-white p-5 rounded-lg border border-gray-200 shadow-sm">
-              <h3 className="font-semibold text-lg mb-2 text-red-800">Trademark Squatting</h3>
+              <h3 className="font-semibold text-lg mb-2 text-blue-800">Trademark Squatting</h3>
               <p className="mb-3">
                 China's first-to-file system has historically led to trademark squatting, where third parties register
                 well-known foreign brands before the legitimate owner enters the Chinese market.
               </p>
-              <p className="font-medium text-red-700">How to avoid:</p>
+              <p className="font-medium text-blue-700">How to avoid:</p>
               <ul className="list-disc pl-5 space-y-1 m-0">
                 <li>File in China as early as possible, even before entering the market</li>
                 <li>Register both Latin character and Chinese character versions of your mark</li>
@@ -474,11 +474,11 @@ export default function RegisterTrademarkChina() {
             </div>
 
             <div className="bg-white p-5 rounded-lg border border-gray-200 shadow-sm">
-              <h3 className="font-semibold text-lg mb-2 text-red-800">Inadequate Coverage in Subclasses</h3>
+              <h3 className="font-semibold text-lg mb-2 text-blue-800">Inadequate Coverage in Subclasses</h3>
               <p className="mb-3">
                 Many applicants fail to understand China's subclass system, resulting in incomplete protection.
               </p>
-              <p className="font-medium text-red-700">How to avoid:</p>
+              <p className="font-medium text-blue-700">How to avoid:</p>
               <ul className="list-disc pl-5 space-y-1 m-0">
                 <li>Work with experts familiar with China's subclass system</li>
                 <li>File in all relevant subclasses, not just the main class</li>
@@ -488,12 +488,12 @@ export default function RegisterTrademarkChina() {
             </div>
 
             <div className="bg-white p-5 rounded-lg border border-gray-200 shadow-sm">
-              <h3 className="font-semibold text-lg mb-2 text-red-800">Neglecting Chinese Character Marks</h3>
+              <h3 className="font-semibold text-lg mb-2 text-blue-800">Neglecting Chinese Character Marks</h3>
               <p className="mb-3">
                 Foreign companies often register only their original mark, overlooking the importance of Chinese
                 character versions.
               </p>
-              <p className="font-medium text-red-700">How to avoid:</p>
+              <p className="font-medium text-blue-700">How to avoid:</p>
               <ul className="list-disc pl-5 space-y-1 m-0">
                 <li>Develop a Chinese character version of your mark with local branding experts</li>
                 <li>Register both transliteration (similar sound) and translation (similar meaning) versions</li>
@@ -503,11 +503,11 @@ export default function RegisterTrademarkChina() {
             </div>
 
             <div className="bg-white p-5 rounded-lg border border-gray-200 shadow-sm">
-              <h3 className="font-semibold text-lg mb-2 text-red-800">Improper Documentation</h3>
+              <h3 className="font-semibold text-lg mb-2 text-blue-800">Improper Documentation</h3>
               <p className="mb-3">
                 Applications are often rejected due to incomplete or improperly prepared documentation.
               </p>
-              <p className="font-medium text-red-700">How to avoid:</p>
+              <p className="font-medium text-blue-700">How to avoid:</p>
               <ul className="list-disc pl-5 space-y-1 m-0">
                 <li>Work with a licensed Chinese trademark agent familiar with CNIPA requirements</li>
                 <li>Ensure all documents are properly notarized and legalized as required</li>
@@ -517,11 +517,11 @@ export default function RegisterTrademarkChina() {
             </div>
 
             <div className="bg-white p-5 rounded-lg border border-gray-200 shadow-sm">
-              <h3 className="font-semibold text-lg mb-2 text-red-800">Non-Use Vulnerability</h3>
+              <h3 className="font-semibold text-lg mb-2 text-blue-800">Non-Use Vulnerability</h3>
               <p className="mb-3">
                 Trademarks unused for three consecutive years are vulnerable to cancellation for non-use.
               </p>
-              <p className="font-medium text-red-700">How to avoid:</p>
+              <p className="font-medium text-blue-700">How to avoid:</p>
               <ul className="list-disc pl-5 space-y-1 m-0">
                 <li>Maintain evidence of genuine commercial use in China</li>
                 <li>Document use through dated invoices, advertisements, product photos, etc.</li>
@@ -531,8 +531,8 @@ export default function RegisterTrademarkChina() {
             </div>
           </div>
 
-          <h2 id="timeline" className="flex items-center text-2xl font-bold text-red-900 mb-4 mt-12 scroll-mt-20">
-            <Calendar className="mr-3 h-6 w-6 text-red-700" />
+          <h2 id="timeline" className="flex items-center text-2xl font-bold text-blue-900 mb-4 mt-12 scroll-mt-20">
+            <Calendar className="mr-3 h-6 w-6 text-blue-700" />
             Timeline and What to Expect
           </h2>
 
@@ -543,15 +543,15 @@ export default function RegisterTrademarkChina() {
 
           <div className="relative my-8">
             {/* Timeline */}
-            <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-red-200"></div>
+            <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-blue-200"></div>
 
             {/* Filing */}
             <div className="relative mb-8 pl-12">
-              <div className="absolute left-0 w-8 h-8 rounded-full bg-red-600 text-white flex items-center justify-center">
+              <div className="absolute left-0 w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center">
                 <FileText className="h-4 w-4" />
               </div>
               <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
-                <h3 className="font-semibold text-lg mb-1 text-red-800">Application Filing</h3>
+                <h3 className="font-semibold text-lg mb-1 text-blue-800">Application Filing</h3>
                 <p className="text-sm text-gray-500 mb-2">Day 1</p>
                 <p className="m-0">
                   Your application is submitted to the CNIPA and assigned a filing number. This marks the official
@@ -562,11 +562,11 @@ export default function RegisterTrademarkChina() {
 
             {/* Initial Processing */}
             <div className="relative mb-8 pl-12">
-              <div className="absolute left-0 w-8 h-8 rounded-full bg-red-600 text-white flex items-center justify-center">
+              <div className="absolute left-0 w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center">
                 <CheckCircle className="h-4 w-4" />
               </div>
               <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
-                <h3 className="font-semibold text-lg mb-1 text-red-800">Formal Examination</h3>
+                <h3 className="font-semibold text-lg mb-1 text-blue-800">Formal Examination</h3>
                 <p className="text-sm text-gray-500 mb-2">1-2 months</p>
                 <p className="m-0">
                   The CNIPA reviews your application for compliance with formal requirements, including proper
@@ -578,11 +578,11 @@ export default function RegisterTrademarkChina() {
 
             {/* Substantive Examination */}
             <div className="relative mb-8 pl-12">
-              <div className="absolute left-0 w-8 h-8 rounded-full bg-red-600 text-white flex items-center justify-center">
+              <div className="absolute left-0 w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center">
                 <Search className="h-4 w-4" />
               </div>
               <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
-                <h3 className="font-semibold text-lg mb-1 text-red-800">Substantive Examination</h3>
+                <h3 className="font-semibold text-lg mb-1 text-blue-800">Substantive Examination</h3>
                 <p className="text-sm text-gray-500 mb-2">9-12 months</p>
                 <p className="m-0">
                   Examiners review your mark for absolute and relative grounds for refusal, including similarity to
@@ -594,11 +594,11 @@ export default function RegisterTrademarkChina() {
 
             {/* Publication */}
             <div className="relative mb-8 pl-12">
-              <div className="absolute left-0 w-8 h-8 rounded-full bg-red-600 text-white flex items-center justify-center">
+              <div className="absolute left-0 w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center">
                 <BookOpen className="h-4 w-4" />
               </div>
               <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
-                <h3 className="font-semibold text-lg mb-1 text-red-800">Publication</h3>
+                <h3 className="font-semibold text-lg mb-1 text-blue-800">Publication</h3>
                 <p className="text-sm text-gray-500 mb-2">After examination approval</p>
                 <p className="m-0">
                   If approved, your mark is published in the CNIPA Trademark Gazette for a three-month opposition
@@ -610,11 +610,11 @@ export default function RegisterTrademarkChina() {
 
             {/* Registration */}
             <div className="relative pl-12">
-              <div className="absolute left-0 w-8 h-8 rounded-full bg-red-600 text-white flex items-center justify-center">
+              <div className="absolute left-0 w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center">
                 <Award className="h-4 w-4" />
               </div>
               <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
-                <h3 className="font-semibold text-lg mb-1 text-red-800">Registration Certificate</h3>
+                <h3 className="font-semibold text-lg mb-1 text-blue-800">Registration Certificate</h3>
                 <p className="text-sm text-gray-500 mb-2">2-3 months after opposition period</p>
                 <p className="m-0">
                   If no opposition is filed or if oppositions are resolved in your favor, the CNIPA issues your
@@ -625,8 +625,8 @@ export default function RegisterTrademarkChina() {
             </div>
           </div>
 
-          <div className="bg-red-50 p-5 rounded-lg border border-red-100 my-6">
-            <h3 className="font-semibold text-lg mb-2 text-red-800">Total Timeline</h3>
+          <div className="bg-blue-50 p-5 rounded-lg border border-blue-100 my-6">
+            <h3 className="font-semibold text-lg mb-2 text-blue-800">Total Timeline</h3>
             <p className="mb-3">The entire process typically takes:</p>
             <ul className="list-disc pl-5 space-y-1 m-0">
               <li>
@@ -641,15 +641,15 @@ export default function RegisterTrademarkChina() {
                 <strong>Opposed applications:</strong> Add 12-24 months if your application faces opposition
               </li>
             </ul>
-            <p className="mt-3 italic text-red-700">
+            <p className="mt-3 italic text-blue-700">
               Note: These timelines are estimates based on current CNIPA processing times. Actual timelines may vary
               based on application complexity and CNIPA workload. The process has become more efficient in recent years,
               but China still has one of the highest trademark filing volumes in the world.
             </p>
           </div>
 
-          <h2 id="faqs" className="flex items-center text-2xl font-bold text-red-900 mb-4 mt-12 scroll-mt-20">
-            <HelpCircle className="mr-3 h-6 w-6 text-red-700" />
+          <h2 id="faqs" className="flex items-center text-2xl font-bold text-blue-900 mb-4 mt-12 scroll-mt-20">
+            <HelpCircle className="mr-3 h-6 w-6 text-blue-700" />
             Frequently Asked Questions
           </h2>
 
@@ -681,13 +681,13 @@ export default function RegisterTrademarkChina() {
               },
             ].map((faq, index) => (
               <div key={index} className="bg-white p-5 rounded-lg border border-gray-200 shadow-sm">
-                <h3 className="font-semibold text-lg mb-2 text-red-800">{faq.q}</h3>
+                <h3 className="font-semibold text-lg mb-2 text-blue-800">{faq.q}</h3>
                 <p className="text-gray-700 m-0">{faq.a}</p>
               </div>
             ))}
           </div>
 
-          <div className="my-12 p-8 bg-gradient-to-r from-red-600 to-red-700 rounded-lg text-center text-white shadow-lg">
+          <div className="my-12 p-8 bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg text-center text-white shadow-lg">
             <h2 className="text-2xl font-bold mb-4">Ready to Protect Your Brand in China?</h2>
             <p className="mb-6 text-lg max-w-2xl mx-auto">
               Securing trademark protection in China is a crucial step for any business with interests in the world's
@@ -695,7 +695,7 @@ export default function RegisterTrademarkChina() {
               action now can save you from costly disputes and protect your valuable brand assets.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <Button asChild size="lg" className="bg-white text-red-700 hover:bg-red-50">
+              <Button asChild size="lg" className="bg-white text-blue-700 hover:bg-blue-50">
                 <Link href="/free-search">Get a Free Trademark Search</Link>
               </Button>
               <Button

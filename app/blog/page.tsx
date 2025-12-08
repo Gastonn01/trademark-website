@@ -1,8 +1,6 @@
 import { NavBar } from "@/components/nav-bar"
 import { Footer } from "@/components/footer"
 import { BlogPostPreview } from "@/components/blog-post-preview"
-import fs from "fs"
-import path from "path"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
@@ -16,122 +14,97 @@ export const metadata: Metadata = {
 
 // Function to get all blog posts dynamically
 function getBlogPosts() {
-  const blogDir = path.join(process.cwd(), "app/blog")
-  const directories = fs
-    .readdirSync(blogDir, { withFileTypes: true })
-    .filter((dirent) => dirent.isDirectory())
-    .map((dirent) => dirent.name)
-    .filter((dir) => dir !== "assets" && !dir.startsWith(".")) // Exclude non-blog directories
+  // Define all blog post slugs (directories that exist)
+  const allSlugs = [
+    "register-trademark-singapore",
+    "hermes-metabirkins-trademark-battle",
+    "cole-palmer-celebration-trademark",
+    "five-things-about-trademark-registration",
+    "make-trademark-stand-out",
+    "meghan-markle-as-ever-trademark-challenges",
+    "jiffy-bag-genericized-trademark",
+    "registered-trademark-symbol-history",
+    "register-trademark-france",
+    "importance-of-brand-protection",
+    "trademark-registration-process",
+    "global-trademark-strategies",
+    "trademark-priority-period",
+    "maximise-successful-trademark-registration",
+    "trademark-classification",
+    "trademark-registration-comparison",
+    "register-trademark-usa",
+    "register-trademark-california",
+    "register-trademark-eu",
+    "register-trademark-china",
+    "register-trademark-india",
+    "register-trademark-united-kingdom",
+    "register-trademark-germany",
+    "register-trademark-spain",
+    "register-trademark-new-zealand",
+    "register-trademark-mexico",
+    "register-trademark-brazil",
+    "register-trademark-argentina",
+    "register-trademark-poland",
+    "register-trademark-czech-republic",
+  ]
 
-  // Define duplicate/related content groups and their preferred version
-  const duplicateGroups = {
-    // EU trademark articles - keep the main English version
-    "register-trademark-eu": ["register-trademark-european-union"],
-
-    // Country duplicates - keep the "register-trademark-X" version and remove "trademark-registration-X"
-    "register-trademark-china": ["trademark-registration-china"],
-    "register-trademark-india": ["trademark-registration-india"],
-    "register-trademark-germany": ["trademark-registration-germany"],
-    "register-trademark-united-kingdom": ["trademark-registration-united-kingdom"],
-  }
-
-  // Spanish versions to exclude
-  const spanishVersions = ["registrar-marca-estados-unidos", "registrar-marca-union-europea"]
-
-  // Flatten the duplicate groups to get a list of all duplicates
-  const duplicates = Object.values(duplicateGroups).flat().concat(spanishVersions)
-
-  // Filter out duplicates and Spanish versions from the directories list
-  const uniqueSlugs = directories.filter((slug) => !duplicates.includes(slug))
-
-  // Create a consistent publishing schedule (every Tuesday and Thursday)
-  // Starting from recent date and working backwards
+  // Generate consistent publishing dates (Tuesdays and Thursdays)
   const generateConsistentDates = () => {
     const dates = []
-    const today = new Date() // Current date
-
-    // Start from today and work backwards
-    // We'll generate dates for Tuesdays and Thursdays in the past
+    const today = new Date()
     const currentDate = new Date(today)
 
-    // If today is a publishing day (Tuesday or Thursday), include it
-    // Otherwise, move to the most recent past publishing day
     if (currentDate.getDay() !== 2 && currentDate.getDay() !== 4) {
-      // Move to the most recent past Tuesday or Thursday
       while (currentDate.getDay() !== 2 && currentDate.getDay() !== 4) {
         currentDate.setDate(currentDate.getDate() - 1)
       }
     }
 
-    // Generate dates going back in time (Tuesday and Thursday each week)
     for (let i = 0; i < 100; i++) {
-      // Generate plenty of dates
       dates.push(new Date(currentDate))
-
-      // Move to previous publishing day
       if (currentDate.getDay() === 2) {
-        // Tuesday
-        currentDate.setDate(currentDate.getDate() - 5) // Move to previous Thursday
+        currentDate.setDate(currentDate.getDate() - 5)
       } else {
-        // Thursday
-        currentDate.setDate(currentDate.getDate() - 2) // Move to previous Tuesday
+        currentDate.setDate(currentDate.getDate() - 2)
       }
     }
 
-    return dates // Already in reverse chronological order (newest to oldest)
+    return dates
   }
 
   const publishDates = generateConsistentDates()
 
-  // More diverse and engaging titles for country articles
-  const countryTitles: Record<string, string> = {
-    "register-trademark-usa": "Securing Your Brand in America: US Trademark Guide (2024)",
-    "register-trademark-eu": "Protecting Brands Across Europe: EU Trademark Essentials",
-    "register-trademark-china": "Navigating China's Trademark System: A Western Brand's Guide",
-    "register-trademark-india": "Brand Protection in India's Booming Market: Trademark Strategies",
-    "register-trademark-united-kingdom": "Post-Brexit Trademark Registration: UK Brand Protection",
-    "register-trademark-germany": "German Trademark Law: Protecting Your Brand in Europe's Largest Economy",
-    "register-trademark-spain": "Trademark Registration in Spain: Mediterranean Market Entry Guide",
-    "register-trademark-new-zealand": "Protecting Brands in New Zealand: Trademark Insights for Foreign Companies",
-    "register-trademark-mexico": "Mexican Trademark Strategy: Safeguarding Your Brand in Latin America",
-    "register-trademark-brazil": "Brazilian Trademark Essentials: Navigating South America's Largest Market",
-    "register-trademark-argentina": "Trademark Protection in Argentina: A Strategic Approach",
-    "register-trademark-poland": "Securing Trademarks in Poland: Eastern European Market Guide",
-    "register-trademark-czech-republic": "Czech Republic Trademark System: Central European Brand Protection",
-    "register-trademark-california": "How to Register a Trademark in California (2024) | Complete Guide",
-    "register-trademark-france": "French Trademark Registration: Protecting Your Brand in the Heart of Europe",
-  }
-
   // Group articles by category for strategic dating
   const categories = {
     featured: [
-      "hermes-metabirkins-trademark-battle", // Most recent - NFT/digital is cutting edge
-      "cole-palmer-celebration-trademark", // Sports/celebrity content is timely
-      "five-things-about-trademark-registration", // Listicle - good for recent content
-      "make-trademark-stand-out", // Practical advice - good for recent content
-      "meghan-markle-as-ever-trademark-challenges", // Add this line
-      "jiffy-bag-genericized-trademark", // Add this line
-      "registered-trademark-symbol-history", // Add this line
-      "register-trademark-france", // Add this line
+      "register-trademark-singapore",
+      "hermes-metabirkins-trademark-battle",
+      "cole-palmer-celebration-trademark",
+      "five-things-about-trademark-registration",
+      "make-trademark-stand-out",
+      "meghan-markle-as-ever-trademark-challenges",
+      "jiffy-bag-genericized-trademark",
+      "registered-trademark-symbol-history",
+      "register-trademark-france",
     ],
     fundamentals: [
-      "importance-of-brand-protection", // Foundational content
-      "trademark-registration-process", // Core process explanation
-      "global-trademark-strategies", // Strategic overview
-      "trademark-priority-period", // Important concept
-      "maximise-successful-trademark-registration", // General advice
-      "trademark-classification", // Technical knowledge
-      "trademark-registration-comparison", // Comparison content
+      "importance-of-brand-protection",
+      "trademark-registration-process",
+      "global-trademark-strategies",
+      "trademark-priority-period",
+      "maximise-successful-trademark-registration",
+      "trademark-classification",
+      "trademark-registration-comparison",
     ],
     majorMarkets: [
-      "register-trademark-usa", // US (English only)
-      "register-trademark-california", // California
-      "register-trademark-eu", // EU (English only)
-      "register-trademark-china", // China
-      "register-trademark-india", // India
-      "register-trademark-united-kingdom", // UK
-      "register-trademark-germany", // Germany
-      "register-trademark-france", // France
+      "register-trademark-usa",
+      "register-trademark-california",
+      "register-trademark-eu",
+      "register-trademark-china",
+      "register-trademark-india",
+      "register-trademark-united-kingdom",
+      "register-trademark-germany",
+      "register-trademark-france",
     ],
     otherMarkets: [
       "register-trademark-spain",
@@ -144,39 +117,26 @@ function getBlogPosts() {
     ],
   }
 
-  // Assign dates strategically by category
+  // Assign dates strategically
   let dateIndex = 0
   const dateMap: Record<string, Date> = {}
 
-  // Featured content gets the most recent dates
   categories.featured.forEach((slug) => {
-    const date = publishDates[dateIndex]
-    dateMap[slug] = date
-    dateIndex++
+    dateMap[slug] = publishDates[dateIndex++]
   })
 
-  // Fundamentals get slightly older dates but still recent
   categories.fundamentals.forEach((slug) => {
-    const date = publishDates[dateIndex]
-    dateMap[slug] = date
-    dateIndex++
+    dateMap[slug] = publishDates[dateIndex++]
   })
 
-  // Major markets get the next batch of dates
   categories.majorMarkets.forEach((slug) => {
-    const date = publishDates[dateIndex]
-    dateMap[slug] = date
-    dateIndex++
+    dateMap[slug] = publishDates[dateIndex++]
   })
 
-  // Other markets get the oldest dates
   categories.otherMarkets.forEach((slug) => {
-    const date = publishDates[dateIndex]
-    dateMap[slug] = date
-    dateIndex++
+    dateMap[slug] = publishDates[dateIndex++]
   })
 
-  // Format date as "Month Day, Year"
   const formatDate = (date: Date): string => {
     return date.toLocaleDateString("en-US", {
       month: "long",
@@ -185,57 +145,81 @@ function getBlogPosts() {
     })
   }
 
-  // Country-specific images that match the content
+  // Country-specific images
   const countryImages: Record<string, string> = {
-    "register-trademark-usa": "https://images.unsplash.com/photo-1508433957232-3107f5fd5995?w=600&h=400&fit=crop", // US flag or landmark
-    "register-trademark-eu": "https://images.unsplash.com/photo-1519985176271-adb1088fa94c?w=600&h=400&fit=crop", // EU flag or Brussels
-    "register-trademark-china": "https://images.unsplash.com/photo-1547981609-4b6bfe67ca0b?w=600&h=400&fit=crop", // Great Wall or Shanghai skyline
-    "register-trademark-india": "https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=600&h=400&fit=crop", // Taj Mahal or business district
+    "register-trademark-singapore": "https://images.unsplash.com/photo-1525625293386-3f8f99389edd?w=600&h=400&fit=crop",
+    "register-trademark-usa": "https://images.unsplash.com/photo-1508433957232-3107f5fd5995?w=600&h=400&fit=crop",
+    "register-trademark-eu": "https://images.unsplash.com/photo-1519985176271-adb1088fa94c?w=600&h=400&fit=crop",
+    "register-trademark-china": "https://images.unsplash.com/photo-1547981609437-b2863e0ac1ad?w=600&h=400&fit=crop",
+    "register-trademark-india": "https://images.unsplash.com/photo-1524492412937-e706e86654de?w=600&h=400&fit=crop",
     "register-trademark-united-kingdom":
-      "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=600&h=400&fit=crop", // London or UK flag
-    "register-trademark-germany": "https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=600&h=400&fit=crop", // Berlin or German landmark
-    "register-trademark-spain": "https://images.unsplash.com/photo-1543783207-ec64e4d95325?w=600&h=400&fit=crop", // Spanish architecture
+      "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=600&h=400&fit=crop",
+    "register-trademark-germany": "https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=600&h=400&fit=crop",
+    "register-trademark-spain": "https://images.unsplash.com/photo-1543783207637-e706e86654de?w=600&h=400&fit=crop",
     "register-trademark-new-zealand":
-      "https://images.unsplash.com/photo-1507699622108-4be3abd695ad?w=600&h=400&fit=crop", // NZ landscape
-    "register-trademark-mexico": "https://images.unsplash.com/photo-1518638150340-f706e86654de?w=600&h=400&fit=crop", // Mexican landmark
-    "register-trademark-brazil": "https://images.unsplash.com/photo-1483729558449-99ef09a8c325?w=600&h=400&fit=crop", // Rio or Brazilian scene
-    "register-trademark-argentina": "https://images.unsplash.com/photo-1589909202802-8f4aadce1849?w=600&h=400&fit=crop", // Buenos Aires or Argentine landmark
-    "register-trademark-poland": "https://images.unsplash.com/photo-1562109245-c9f084749538?w=600&h=400&fit=crop", // Warsaw or Polish scene
+      "https://images.unsplash.com/photo-1507699622108-4be3abd695ad?w=600&h=400&fit=crop",
+    "register-trademark-mexico": "https://images.unsplash.com/photo-1518638150340-f706e86654de?w=600&h=400&fit=crop",
+    "register-trademark-brazil": "https://images.unsplash.com/photo-1483729558449-99ef09a8c325?w=600&h=400&fit=crop",
+    "register-trademark-argentina": "https://images.unsplash.com/photo-1589909202802-8f4aadce1849?w=600&h=400&fit=crop",
+    "register-trademark-poland": "https://images.unsplash.com/photo-1562109245885-df96941cfa24?w=600&h=400&fit=crop",
     "register-trademark-czech-republic":
-      "https://images.unsplash.com/photo-1592906209472-a36b1f3782ef?w=600&h=400&fit=crop", // Prague or Czech landmark
+      "https://images.unsplash.com/photo-1592906209472-a36b1f3782ef?w=600&h=400&fit=crop",
     "register-trademark-california":
-      "https://images.unsplash.com/photo-1580655653885-65763b2597d0?w=600&h=400&fit=crop", // Hollywood Sign
+      "https://images.unsplash.com/photo-1580655653885-df96941cfa24?w=600&h=400&fit=crop",
   }
 
-  // Topic-specific images for non-country articles
+  // Topic-specific images
   const topicImages: Record<string, string> = {
     "hermes-metabirkins-trademark-battle":
-      "https://images.unsplash.com/photo-1584273143981-41c073dfe8f8?w=600&h=400&fit=crop", // Luxury goods/digital art
+      "https://images.unsplash.com/photo-1584273143981-41c073dfe8f8?w=600&h=400&fit=crop",
     "cole-palmer-celebration-trademark":
-      "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=600&h=400&fit=crop", // Football/sports
+      "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=600&h=400&fit=crop",
     "five-things-about-trademark-registration":
-      "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=600&h=400&fit=crop", // Business/documents
-    "trademark-priority-period": "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=600&h=400&fit=crop", // Calendar/time concept
-    "make-trademark-stand-out": "https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?w=600&h=400&fit=crop", // Creative branding
+      "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=600&h=400&fit=crop",
+    "trademark-priority-period": "https://images.unsplash.com/photo-1526304640581-d10d557cf95e?w=600&h=400&fit=crop",
+    "make-trademark-stand-out": "https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?w=600&h=400&fit=crop",
     "maximise-successful-trademark-registration":
-      "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=600&h=400&fit=crop", // Success/achievement
+      "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=600&h=400&fit=crop",
     "importance-of-brand-protection":
-      "https://images.unsplash.com/photo-1611224885990-ab7363d1f2a9?w=600&h=400&fit=crop", // Shield/protection concept
-    "trademark-registration-process": "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600&h=400&fit=crop", // Process/steps
-    "global-trademark-strategies": "https://images.unsplash.com/photo-1529119368496-2dfda6ec2804?w=600&h=400&fit=crop", // Global brand logos
-    "trademark-classification": "https://images.unsplash.com/photo-1568234928966-359c35dd8327?w=600&h=400&fit=crop", // Organization/classification
+      "https://images.unsplash.com/photo-1611224885990-ab7363d1f2a9?w=600&h=400&fit=crop",
+    "trademark-registration-process": "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600&h=400&fit=crop",
+    "global-trademark-strategies": "https://images.unsplash.com/photo-1529119368496-359c35dd8327?w=600&h=400&fit=crop",
+    "trademark-classification": "https://images.unsplash.com/photo-1568234928966-3f8f99389edd?w=600&h=400&fit=crop",
     "trademark-registration-comparison":
-      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=400&fit=crop", // Comparison/analysis
+      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=400&fit=crop",
   }
 
   // Blog post metadata
   const blogPostsData: Record<string, { title: string; description: string; image: string }> = {
-    // Existing blog posts
+    "register-trademark-singapore": {
+      title: "Why Trademark Registration Matters in Singapore — And Why Waiting Is the Most Expensive Mistake",
+      description:
+        "Singapore's business environment is highly competitive. Learn why trademark registration is crucial for startups, SMEs, and e-commerce businesses in this global hub.",
+      image: countryImages["register-trademark-singapore"],
+    },
     "hermes-metabirkins-trademark-battle": {
       title: "Virtual Handbags, Real Lawsuits: The Hermès MetaBirkins Trademark Battle",
       description:
         "Explore how the landmark Hermès vs. MetaBirkins case reshaped trademark law for the digital age, setting crucial precedents for brand protection in NFTs and the metaverse.",
       image: topicImages["hermes-metabirkins-trademark-battle"],
+    },
+    "cole-palmer-celebration-trademark": {
+      title: "Cole Palmer's Iconic Celebration: The Path to Trademarking It",
+      description:
+        "Explore how football star Cole Palmer could trademark his iconic goal celebration and the benefits of protecting personal brands in sports.",
+      image: topicImages["cole-palmer-celebration-trademark"],
+    },
+    "five-things-about-trademark-registration": {
+      title: "5 Things You Didn't Know About Trademark Registration",
+      description:
+        "Discover surprising facts about trademark registration that could impact your brand protection strategy. Learn about unusual trademarks, territorial rights, and more.",
+      image: topicImages["five-things-about-trademark-registration"],
+    },
+    "make-trademark-stand-out": {
+      title: "How to Make Your Trademark Stand Out",
+      description:
+        "Discover practical tips to create a distinctive, memorable trademark that stands out in the marketplace and provides stronger legal protection for your brand.",
+      image: topicImages["make-trademark-stand-out"],
     },
     "meghan-markle-as-ever-trademark-challenges": {
       title: "Meghan Markle's 'As Ever' Trademark Challenges",
@@ -309,19 +293,47 @@ function getBlogPosts() {
         "Learn how to develop an effective global trademark strategy to protect your brand across international markets.",
       image: topicImages["global-trademark-strategies"],
     },
-
-    // Additional blog posts with improved titles
     "register-trademark-usa": {
       title: "Securing Your Brand in America: US Trademark Guide (2024)",
       description:
         "Comprehensive guide to US trademark registration. Learn the step-by-step process, costs, timelines, and requirements to protect your brand in the United States.",
       image: countryImages["register-trademark-usa"],
     },
+    "register-trademark-california": {
+      title: "How to Register a Trademark in California (2024) | Complete Guide",
+      description:
+        "Complete guide to California trademark registration. Learn about state vs federal registration, costs, and the process.",
+      image: countryImages["register-trademark-california"],
+    },
     "register-trademark-eu": {
       title: "Protecting Brands Across Europe: EU Trademark Essentials",
       description:
         "Complete guide to EU trademark registration through the EUIPO. Learn about the process, costs, and protection across all 27 member states.",
       image: countryImages["register-trademark-eu"],
+    },
+    "register-trademark-china": {
+      title: "Navigating China's Trademark System: A Western Brand's Guide",
+      description:
+        "Complete guide to registering your trademark in China. Learn about the CNIPA process, costs, and timeline for protecting your brand.",
+      image: countryImages["register-trademark-china"],
+    },
+    "register-trademark-india": {
+      title: "Brand Protection in India's Booming Market: Trademark Strategies",
+      description:
+        "Comprehensive guide to trademark registration in India. Learn about the IPO process, costs, and timeline for protecting your brand.",
+      image: countryImages["register-trademark-india"],
+    },
+    "register-trademark-united-kingdom": {
+      title: "Post-Brexit Trademark Registration: UK Brand Protection",
+      description:
+        "Complete guide to trademark registration in the UK. Learn about the IPO process, costs, and timeline post-Brexit.",
+      image: countryImages["register-trademark-united-kingdom"],
+    },
+    "register-trademark-germany": {
+      title: "German Trademark Law: Protecting Your Brand in Europe's Largest Economy",
+      description:
+        "Comprehensive guide to trademark registration in Germany. Learn about the DPMA process, costs, and timeline.",
+      image: countryImages["register-trademark-germany"],
     },
     "register-trademark-spain": {
       title: "Trademark Registration in Spain: Mediterranean Market Entry Guide",
@@ -350,7 +362,7 @@ function getBlogPosts() {
     "register-trademark-argentina": {
       title: "Trademark Protection in Argentina: A Strategic Approach",
       description:
-        "Complete guide to trademark registration in Argentina. Learn about the INPI process, costs, and timeline for protecting your brand.",
+        "Comprehensive guide to trademark registration in Argentina. Learn about the INPI process, costs, and timeline for protecting your brand.",
       image: countryImages["register-trademark-argentina"],
     },
     "register-trademark-poland": {
@@ -366,148 +378,73 @@ function getBlogPosts() {
       image: countryImages["register-trademark-czech-republic"],
     },
     "trademark-classification": {
-      title: "Understanding Trademark Classification: A Complete Guide",
+      title: "Understanding Trademark Classification",
       description:
-        "Learn about the 45 classes of the Nice Classification system and how to properly classify your goods and services for trademark registration.",
+        "Learn about the Nice Classification system and how to choose the right trademark classes for your business.",
       image: topicImages["trademark-classification"],
     },
     "trademark-registration-comparison": {
-      title: "Trademark Registration: Country-by-Country Comparison",
+      title: "Trademark Registration Comparison",
       description:
-        "Compare trademark registration processes, costs, and timelines across major jurisdictions to develop your global brand protection strategy.",
+        "Compare trademark registration processes, costs, and timelines across different jurisdictions to make informed decisions.",
       image: topicImages["trademark-registration-comparison"],
     },
-    // Adding standardized titles for country articles
-    "register-trademark-china": {
-      title: "Navigating China's Trademark System: A Western Brand's Guide",
-      description:
-        "Learn how to register your trademark in China with our comprehensive guide. Understand the first-to-file system, costs, and essential steps to protect your brand.",
-      image: countryImages["register-trademark-china"],
-    },
-    "register-trademark-india": {
-      title: "Brand Protection in India's Booming Market: Trademark Strategies",
-      description:
-        "Expand your business to India with confidence. Our guide covers the trademark registration process, costs, and timeline for protecting your brand in this dynamic market.",
-      image: countryImages["register-trademark-india"],
-    },
-    "register-trademark-germany": {
-      title: "German Trademark Law: Protecting Your Brand in Europe's Largest Economy",
-      description:
-        "Navigate the trademark registration process in Europe's largest economy. Our guide covers everything you need to know about protecting your brand in Germany.",
-      image: countryImages["register-trademark-germany"],
-    },
-    "register-trademark-united-kingdom": {
-      title: "Post-Brexit Trademark Registration: UK Brand Protection",
-      description:
-        "Protect your brand in the UK market with our comprehensive guide to trademark registration. Learn about the process, costs, and timeline for securing your brand identity.",
-      image: countryImages["register-trademark-united-kingdom"],
-    },
-    "register-trademark-california": {
-      title: "How to Register a Trademark in California (2024) | Complete Guide",
-      description:
-        "Learn how to register a trademark in California with our step-by-step guide. Understand the process and benefits of trademark registration for California businesses.",
-      image: countryImages["register-trademark-california"],
-    },
   }
 
-  // Default images for different content types
-  const defaultImages: Record<string, string> = {
-    trademark: "https://images.unsplash.com/photo-1607703703674-df96941cfa24?w=600&h=400&fit=crop",
-    brand: "https://images.unsplash.com/photo-1523726491678-bf852e717f6a?w=600&h=400&fit=crop",
-    register: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600&h=400&fit=crop",
-    general: "https://images.unsplash.com/photo-1589578228447-e1a4e481c6c8?w=600&h=400&fit=crop",
-  }
-
-  // Map the unique slugs to blog post data
-  const blogPosts = uniqueSlugs.map((slug) => {
-    // Get the date for this slug from our date mapping
-    const date = dateMap[slug] ? dateMap[slug] : new Date() // Fallback to today
-    const formattedDate = formatDate(date)
-
-    // First check if we have specific data for this slug
-    if (blogPostsData[slug]) {
-      return {
-        ...blogPostsData[slug],
-        slug,
-        date: formattedDate,
-      }
-    }
-
-    // If not, create default data
-    // Create a title from the slug or use country-specific title
-    const title =
-      countryTitles[slug] ||
-      slug
-        .split("-")
-        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(" ")
-
-    // Determine the appropriate image
-    let image = countryImages[slug] || null
-
-    if (!image) {
-      // Assign more specific images based on slug keywords
-      if (slug.includes("trademark")) {
-        image = defaultImages.trademark
-      } else if (slug.includes("brand")) {
-        image = defaultImages.brand
-      } else if (slug.includes("register")) {
-        image = defaultImages.register
-      } else {
-        image = defaultImages.general
-      }
-    }
+  // Create blog post objects
+  const blogPosts = allSlugs.map((slug) => {
+    const metadata = blogPostsData[slug]
+    const date = dateMap[slug]
 
     return {
-      title,
-      description: `Learn more about ${slug.split("-").join(" ")} in our comprehensive guide.`,
-      image,
       slug,
-      date: formattedDate,
+      title:
+        metadata?.title ||
+        slug
+          .split("-")
+          .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(" "),
+      description: metadata?.description || "Learn about trademark registration and brand protection strategies.",
+      image: metadata?.image || "/placeholder.svg?height=400&width=600",
+      date: formatDate(date),
+      dateObj: date,
     }
   })
 
   // Sort by date (newest first)
-  return blogPosts.sort((a, b) => {
-    const dateA = new Date(a.date)
-    const dateB = new Date(b.date)
-    return dateB.getTime() - dateA.getTime()
-  })
+  return blogPosts.sort((a, b) => b.dateObj.getTime() - a.dateObj.getTime())
 }
 
 export default function BlogPage() {
   const blogPosts = getBlogPosts()
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
+    <>
       <NavBar />
-      <div className="pt-10 pb-16">
-        <div className="container mx-auto px-4">
-          <div className="bg-blue-50 rounded-lg py-12 mb-12">
-            <div className="text-center mb-8">
-              <h1 className="text-4xl font-bold mb-6 text-blue-900">Trademark Registration Blog</h1>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                Expert insights, guides, and tips on trademark registration and brand protection strategies for
-                businesses worldwide.
-              </p>
-            </div>
+      <main className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+        <div className="container mx-auto px-4 py-16">
+          <div className="max-w-4xl mx-auto mb-16 text-center">
+            <h1 className="text-4xl md:text-5xl font-bold text-blue-900 mb-6">Trademark Registration Blog</h1>
+            <p className="text-xl text-gray-700">
+              Expert insights, guides, and strategies for protecting your brand worldwide
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {blogPosts.map((post, index) => (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+            {blogPosts.map((post) => (
               <BlogPostPreview
-                key={index}
-                title={post.title}
-                excerpt={post.description}
-                image={post.image}
+                key={post.slug}
                 slug={post.slug}
+                title={post.title}
+                description={post.description}
+                image={post.image}
                 date={post.date}
               />
             ))}
           </div>
         </div>
-      </div>
+      </main>
       <Footer />
-    </main>
+    </>
   )
 }

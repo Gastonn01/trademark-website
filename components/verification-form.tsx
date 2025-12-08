@@ -17,6 +17,8 @@ import { ChevronDown, ChevronUp, Info, X, Search } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { countryPricingData, getTopCountries, getCountriesByRegion } from "@/lib/pricing-data"
+import { useCurrency } from "@/hooks/use-currency"
+import { getCurrencySymbol } from "@/lib/currency-converter"
 
 interface FormData {
   trademarkType: string
@@ -42,6 +44,8 @@ interface CountryData {
   flag: string
   price: number
   additionalClassPrice: number
+  prices?: { [key: string]: number }
+  additionalClassPrices?: { [key: string]: number }
 }
 
 interface RegionData {
@@ -272,7 +276,7 @@ interface VerificationFormContentProps {
 const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoading, initialData }) => {
   const [step, setStep] = useState(1)
   const totalSteps = 4
-  const [currency, setCurrency] = useState<"USD" | "EUR">("USD")
+  const { currency } = useCurrency()
   const [formData, setFormData] = useState<FormData>({
     trademarkType: "",
     trademarkName: "",
@@ -339,18 +343,18 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
     return selectedCountries.reduce((sum, country) => {
       const countryData = countryPricingData[country.name]
       if (!countryData) return sum
-      const basePrice = countryData.price
+      const basePrice = countryData.prices?.[currency] || countryData.price || 0
       const additionalClassesPrice =
-        (Math.max(1, formData.selectedClasses.length) - 1) * countryData.additionalClassPrice
+        (Math.max(1, formData.selectedClasses.length) - 1) *
+        (countryData.additionalClassPrices?.[currency] || countryData.additionalClassPrice || 0)
       const totalCountryPrice = basePrice + additionalClassesPrice
-      return sum + (currency === "USD" ? totalCountryPrice * 1.09 : totalCountryPrice)
+      return sum + totalCountryPrice
     }, 0)
   }, [selectedCountries, formData.selectedClasses, currency])
 
   const formatPrice = (price: number) => {
-    const symbol = currency === "EUR" ? "€" : "$"
-    const currencyCode = currency
-    return `${symbol}${Math.floor(price)} ${currencyCode}`
+    const symbol = getCurrencySymbol(currency)
+    return `${symbol}${Math.floor(price)} ${currency}`
   }
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -457,7 +461,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
   const stepTitles = ["Trademark Details", "Countries", "Classes", "Contact Info"]
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="container mx-auto px-4 py-12">
       <div className="max-w-7xl mx-auto px-4 py-12">
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-indigo-600 mb-4">Complete Your Registration</h1>
@@ -587,28 +591,6 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
                     </p>
                   </div>
 
-                  <div className="flex items-center space-x-4">
-                    <span className="text-sm font-medium text-gray-700">Select Currency:</span>
-                    <div className="flex space-x-2">
-                      <Button
-                        variant={currency === "USD" ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => setCurrency("USD")}
-                        className={currency === "USD" ? "bg-indigo-600 hover:bg-indigo-700" : ""}
-                      >
-                        USD ($)
-                      </Button>
-                      <Button
-                        variant={currency === "EUR" ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => setCurrency("EUR")}
-                        className={currency === "EUR" ? "bg-indigo-600 hover:bg-indigo-700" : ""}
-                      >
-                        EUR (€)
-                      </Button>
-                    </div>
-                  </div>
-
                   <Input
                     type="text"
                     placeholder="Search for countries..."
@@ -620,36 +602,50 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
                   <div>
                     <h3 className="text-xl font-semibold text-indigo-600 mb-4">Most Requested Countries</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                      {filteredTopCountries.map((country) => (
-                        <div
-                          key={country.name}
-                          onClick={() => toggleCountry(country.name)}
-                          className={`p-4 border rounded-lg cursor-pointer transition-colors ${
-                            selectedCountries.some((c) => c.name === country.name)
-                              ? "border-indigo-500 bg-indigo-50"
-                              : "border-gray-200 hover:border-gray-300"
-                          }`}
-                        >
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center space-x-3">
-                              <Image
-                                src={`https://flagcdn.com/${country.flag}.svg`}
-                                alt={`${country.name} flag`}
-                                width={32}
-                                height={24}
-                                className="rounded"
-                              />
-                              <span className="font-medium">{country.name}</span>
-                            </div>
-                            <div className="text-right">
-                              <div className="font-semibold">{formatPrice(country.price)}</div>
-                              <div className="text-xs text-gray-500 flex items-center">
-                                <Info className="w-3 h-3 mr-1" />
+                      {filteredTopCountries.map((country) => {
+                        const price = country.prices?.[currency] || 0
+                        console.log(
+                          "[v0] Most Requested Country:",
+                          country.name,
+                          "displayCurrency:",
+                          currency,
+                          "price:",
+                          price,
+                          "prices object:",
+                          country.prices,
+                        )
+
+                        return (
+                          <div
+                            key={country.name}
+                            onClick={() => toggleCountry(country.name)}
+                            className={`p-4 border rounded-lg cursor-pointer transition-colors ${
+                              selectedCountries.some((c) => c.name === country.name)
+                                ? "border-indigo-500 bg-indigo-50"
+                                : "border-gray-200 hover:border-gray-300"
+                            }`}
+                          >
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center space-x-3">
+                                <Image
+                                  src={`https://flagcdn.com/${country.flag}.svg`}
+                                  alt={`${country.name} flag`}
+                                  width={32}
+                                  height={24}
+                                  className="rounded"
+                                />
+                                <span className="font-medium">{country.name}</span>
+                              </div>
+                              <div className="text-right">
+                                <div className="font-semibold">{formatPrice(price)}</div>
+                                <div className="text-xs text-gray-500 flex items-center">
+                                  <Info className="w-3 h-3 mr-1" />
+                                </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-                      ))}
+                        )
+                      })}
                     </div>
                   </div>
 
@@ -690,7 +686,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
                                   <span className="font-medium">{country.name}</span>
                                 </div>
                                 <div className="text-right">
-                                  <div className="font-semibold">{formatPrice(country.price)}</div>
+                                  <div className="font-semibold">{formatPrice(country.prices?.[currency] || 0)}</div>
                                   <div className="text-xs text-gray-500 flex items-center">
                                     <Info className="w-3 h-3 mr-1" />
                                   </div>
@@ -984,27 +980,6 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
               <Card className="p-6">
                 <h3 className="text-xl font-semibold mb-4">Your Selection</h3>
 
-                <div className="mb-4">
-                  <div className="flex space-x-2">
-                    <Button
-                      variant={currency === "USD" ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => setCurrency("USD")}
-                      className={`flex-1 ${currency === "USD" ? "bg-indigo-600 hover:bg-indigo-700" : ""}`}
-                    >
-                      USD ($)
-                    </Button>
-                    <Button
-                      variant={currency === "EUR" ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => setCurrency("EUR")}
-                      className={`flex-1 ${currency === "EUR" ? "bg-indigo-600 hover:bg-indigo-700" : ""}`}
-                    >
-                      EUR (€)
-                    </Button>
-                  </div>
-                </div>
-
                 <div className="mb-6">
                   <div className="text-lg font-medium mb-2">Estimated price:</div>
                   <div className="text-3xl font-bold">{formatPrice(totalPrice)}</div>
@@ -1018,6 +993,12 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
                         console.error(`Country data not found for: ${country.name}`)
                         return null
                       }
+                      const countryPrice = countryData.prices?.[currency] || 0
+                      const additionalClassesPrice =
+                        (Math.max(1, formData.selectedClasses.length) - 1) *
+                        (countryData.additionalClassPrices?.[currency] || 0)
+                      const totalCountryPrice = countryPrice + additionalClassesPrice
+
                       return (
                         <div key={country.name} className="flex items-center justify-between mb-3">
                           <div className="flex items-center space-x-2">
@@ -1030,7 +1011,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
                             />
                             <span className="text-sm">{country.name} classes</span>
                           </div>
-                          <span className="font-semibold">{formatPrice(countryData.price)}</span>
+                          <span className="font-semibold">{formatPrice(totalCountryPrice)}</span>
                         </div>
                       )
                     })}

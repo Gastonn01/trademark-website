@@ -15,6 +15,8 @@ import { trackLeadSubmission } from "@/components/gtm-tracker"
 import { Upload, CheckCircle, ChevronDown, ChevronUp, AlertCircle, Shield, Clock, Award } from "lucide-react"
 import { v4 as uuidv4 } from "uuid"
 import { countryPricingData } from "@/lib/pricing-data"
+import { useCurrency } from "@/hooks/use-currency" // Assuming this hook is now available
+import { getCurrencySymbol } from "@/lib/currency-converter" // Use getCurrencySymbol from currency-converter
 
 // More comprehensive check for preview environment
 const isPreviewEnvironment = () => {
@@ -166,9 +168,9 @@ const regions: RegionData[] = [
 export function FreeSearchForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const { currency } = useCurrency() // Use global currency hook
   const [step, setStep] = useState(1)
   const totalSteps = 3
-  const [currency, setCurrency] = useState<"USD" | "EUR">("USD")
   const [formData, setFormData] = useState<FormData>({
     trademarkType: "",
     trademarkName: "",
@@ -199,18 +201,19 @@ export function FreeSearchForm() {
     setIsPreview(isPreviewEnvironment())
   }, [])
 
-  // Load currency from localStorage on mount
-  useEffect(() => {
-    const savedCurrency = localStorage.getItem("selectedCurrency") as "USD" | "EUR"
-    if (savedCurrency) {
-      setCurrency(savedCurrency)
-    }
-  }, [])
+  // Load currency from localStorage on mount - REMOVED
+  // useEffect(() => {
+  //   const savedCurrency = localStorage.getItem("selectedCurrency") as "USD" | "EUR"
+  //   if (savedCurrency) {
+  //     setCurrency(savedCurrency)
+  //   }
+  // }, [])
 
-  const handleCurrencyChange = (newCurrency: "USD" | "EUR") => {
-    setCurrency(newCurrency)
-    localStorage.setItem("selectedCurrency", newCurrency)
-  }
+  // Function to handle currency change - REMOVED
+  // const handleCurrencyChange = (newCurrency: "USD" | "EUR") => {
+  //   setCurrency(newCurrency)
+  //   localStorage.setItem("selectedCurrency", newCurrency)
+  // }
 
   // Function to search countries in all regions
   const searchCountries = (term: string) => {
@@ -470,13 +473,16 @@ export function FreeSearchForm() {
     }
   }
 
-  const totalPrice = selectedCountries.reduce((sum, country) => {
-    const countryData = countryPricingData[country as keyof typeof countryPricingData]
-    const price = countryData?.price || 0
-    return sum + (currency === "USD" ? price * 1.09 : price)
-  }, 0)
+  const totalPrice = useMemo(() => {
+    return selectedCountries.reduce((sum, country) => {
+      const countryData = countryPricingData[country as keyof typeof countryPricingData]
+      // Use prices[currency] instead of price if available, otherwise fallback to price
+      const price = countryData?.prices?.[currency] ?? countryData?.price ?? 0
+      return sum + price
+    }, 0)
+  }, [selectedCountries, currency])
 
-  const currencySymbol = currency === "USD" ? "$" : "€"
+  const currencySymbol = getCurrencySymbol(currency) // Use getCurrencySymbol helper
 
   return (
     <div id="free-search-form" className="max-w-7xl mx-auto px-4 pt-24 pb-16 scroll-mt-16">
@@ -547,7 +553,8 @@ export function FreeSearchForm() {
                   Choose jurisdictions for trademark registration (search remains complimentary)
                 </p>
               </div>
-              <div className="flex items-center gap-3 bg-white border border-gray-200 rounded-lg p-1.5 shadow-sm">
+              {/* Currency toggle buttons REMOVED - now controlled by global selector in nav */}
+              {/* <div className="flex items-center gap-3 bg-white border border-gray-200 rounded-lg p-1.5 shadow-sm">
                 <button
                   type="button"
                   onClick={() => handleCurrencyChange("USD")}
@@ -570,7 +577,7 @@ export function FreeSearchForm() {
                 >
                   EUR (€)
                 </button>
-              </div>
+              </div> */}
             </div>
           )}
 
@@ -806,6 +813,22 @@ export function FreeSearchForm() {
 
             {step === 2 && (
               <div className="space-y-8">
+                <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-500 rounded-xl p-6 shadow-md">
+                  <div className="flex items-start gap-4">
+                    <div className="bg-green-500 text-white rounded-full p-2 flex-shrink-0">
+                      <CheckCircle className="h-6 w-6" />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold text-green-900 mb-2">Your Search is 100% FREE</h3>
+                      <p className="text-green-800 leading-relaxed">
+                        The trademark search and professional analysis are completely free with no obligation. The
+                        prices shown below are registration fees that only apply if you decide to proceed with filing
+                        after receiving your search results.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
                 <p className="text-gray-600">
                   Select the countries or regions where you want to register your trademark.
                 </p>
@@ -846,7 +869,7 @@ export function FreeSearchForm() {
                             key={country.name}
                             country={country.name}
                             flag={`https://flagcdn.com/${country.flag}.svg`}
-                            price={countryData?.price}
+                            price={countryData?.prices?.[currency]}
                             additionalClassPrice={countryData?.additionalClassPrice}
                             onSelect={() => toggleCountry(country.name)}
                             selected={selectedCountries.includes(country.name)}
@@ -870,7 +893,7 @@ export function FreeSearchForm() {
                             key={country.name}
                             country={country.name}
                             flag={`https://flagcdn.com/${country.flag}.svg`}
-                            price={countryData?.price}
+                            price={countryData?.prices?.[currency]}
                             additionalClassPrice={countryData?.additionalClassPrice}
                             onSelect={() => toggleCountry(country.name)}
                             selected={selectedCountries.includes(country.name)}
@@ -907,7 +930,7 @@ export function FreeSearchForm() {
                                 key={country.name}
                                 country={country.name}
                                 flag={`https://flagcdn.com/${country.flag}.svg`}
-                                price={countryData?.price}
+                                price={countryData?.prices?.[currency]}
                                 additionalClassPrice={countryData?.additionalClassPrice}
                                 onSelect={() => toggleCountry(country.name)}
                                 selected={selectedCountries.includes(country.name)}

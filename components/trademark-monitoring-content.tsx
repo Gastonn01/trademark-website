@@ -1,8 +1,10 @@
 "use client"
-
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { Globe, Shield, Bell, CheckCircle, AlertTriangle } from "lucide-react"
+import { Check } from "lucide-react"
+import { useCurrency } from "@/hooks/use-currency"
+import { formatPrice } from "@/lib/currency-converter"
+import { Globe, Shield, Bell } from "lucide-react"
 import Link from "next/link"
 import { useEffect } from "react"
 
@@ -12,8 +14,14 @@ export function TrademarkMonitoringContent() {
     window.scrollTo(0, 0)
   }, [])
 
+  const { currency } = useCurrency()
+
+  const basicPlanPrices = { USD: 91, GBP: 68, EUR: 78 }
+  const standardPlanPrices = { USD: 183, GBP: 137, EUR: 157 }
+  const premiumPlanPrices = { USD: 366, GBP: 275, EUR: 314 }
+
   return (
-    <div>
+    <div className="min-h-screen bg-white">
       {/* Hero Section - With Visual Elements */}
       <div className="bg-gradient-to-r from-blue-800 to-blue-700 text-white relative overflow-hidden">
         {/* Decorative shapes */}
@@ -155,7 +163,7 @@ export function TrademarkMonitoringContent() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="flex items-start gap-4 bg-white p-4 rounded-lg shadow-sm">
                   <div className="bg-green-100 p-2 rounded-full">
-                    <CheckCircle className="w-6 h-6 text-green-600" />
+                    <Check className="w-6 h-6 text-green-600" />
                   </div>
                   <div>
                     <h4 className="font-semibold text-blue-900">Early Detection</h4>
@@ -165,7 +173,7 @@ export function TrademarkMonitoringContent() {
 
                 <div className="flex items-start gap-4 bg-white p-4 rounded-lg shadow-sm">
                   <div className="bg-blue-100 p-2 rounded-full">
-                    <Shield className="w-6 h-6 text-blue-600" />
+                    <Check className="w-6 h-6 text-blue-600" />
                   </div>
                   <div>
                     <h4 className="font-semibold text-blue-900">Protect Brand Value</h4>
@@ -175,7 +183,7 @@ export function TrademarkMonitoringContent() {
 
                 <div className="flex items-start gap-4 bg-white p-4 rounded-lg shadow-sm">
                   <div className="bg-amber-100 p-2 rounded-full">
-                    <AlertTriangle className="w-6 h-6 text-amber-600" />
+                    <Check className="w-6 h-6 text-amber-600" />
                   </div>
                   <div>
                     <h4 className="font-semibold text-blue-900">Reduce Legal Risks</h4>
@@ -185,7 +193,7 @@ export function TrademarkMonitoringContent() {
 
                 <div className="flex items-start gap-4 bg-white p-4 rounded-lg shadow-sm">
                   <div className="bg-purple-100 p-2 rounded-full">
-                    <Globe className="w-6 h-6 text-purple-600" />
+                    <Check className="w-6 h-6 text-purple-600" />
                   </div>
                   <div>
                     <h4 className="font-semibold text-blue-900">Global Protection</h4>
@@ -214,7 +222,9 @@ export function TrademarkMonitoringContent() {
               <div className="bg-blue-50 p-6 text-center border-b border-blue-100">
                 <h3 className="text-xl font-bold text-blue-900">Basic Monitoring</h3>
                 <div className="mt-4 mb-2">
-                  <span className="text-3xl font-bold text-blue-900">$99</span>
+                  <span className="text-3xl font-bold text-blue-900">
+                    {formatPrice(basicPlanPrices[currency], currency)}
+                  </span>
                   <span className="text-gray-600">/month</span>
                 </div>
                 <p className="text-sm text-gray-600">Perfect for small businesses</p>
@@ -222,19 +232,19 @@ export function TrademarkMonitoringContent() {
               <div className="p-6">
                 <ul className="space-y-3">
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                    <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
                     <span className="text-gray-700">1 trademark monitoring</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                    <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
                     <span className="text-gray-700">10 countries covered</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                    <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
                     <span className="text-gray-700">Monthly reports</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                    <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
                     <span className="text-gray-700">Email alerts</span>
                   </li>
                 </ul>
@@ -250,7 +260,9 @@ export function TrademarkMonitoringContent() {
               <div className="bg-blue-600 p-6 text-center border-b border-blue-500">
                 <h3 className="text-xl font-bold text-white">Standard Monitoring</h3>
                 <div className="mt-4 mb-2">
-                  <span className="text-3xl font-bold text-white">$199</span>
+                  <span className="text-3xl font-bold text-white">
+                    {formatPrice(standardPlanPrices[currency], currency)}
+                  </span>
                   <span className="text-blue-100">/month</span>
                 </div>
                 <p className="text-sm text-blue-100">Ideal for growing businesses</p>
@@ -258,23 +270,23 @@ export function TrademarkMonitoringContent() {
               <div className="p-6">
                 <ul className="space-y-3">
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                    <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
                     <span className="text-gray-700">3 trademarks monitoring</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                    <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
                     <span className="text-gray-700">30 countries covered</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                    <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
                     <span className="text-gray-700">Bi-weekly reports</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                    <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
                     <span className="text-gray-700">Email & SMS alerts</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                    <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
                     <span className="text-gray-700">Social media monitoring</span>
                   </li>
                 </ul>
@@ -287,7 +299,9 @@ export function TrademarkMonitoringContent() {
               <div className="bg-blue-50 p-6 text-center border-b border-blue-100">
                 <h3 className="text-xl font-bold text-blue-900">Premium Monitoring</h3>
                 <div className="mt-4 mb-2">
-                  <span className="text-3xl font-bold text-blue-900">$399</span>
+                  <span className="text-3xl font-bold text-blue-900">
+                    {formatPrice(premiumPlanPrices[currency], currency)}
+                  </span>
                   <span className="text-gray-600">/month</span>
                 </div>
                 <p className="text-sm text-gray-600">For established brands</p>
@@ -295,27 +309,27 @@ export function TrademarkMonitoringContent() {
               <div className="p-6">
                 <ul className="space-y-3">
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                    <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
                     <span className="text-gray-700">10 trademarks monitoring</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                    <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
                     <span className="text-gray-700">Global coverage (180+ countries)</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                    <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
                     <span className="text-gray-700">Weekly reports</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                    <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
                     <span className="text-gray-700">Priority alerts (all channels)</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                    <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
                     <span className="text-gray-700">Comprehensive online monitoring</span>
                   </li>
                   <li className="flex items-start gap-2">
-                    <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
+                    <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
                     <span className="text-gray-700">Dedicated account manager</span>
                   </li>
                 </ul>
@@ -326,7 +340,7 @@ export function TrademarkMonitoringContent() {
 
           <div className="text-center mt-8">
             <p className="text-gray-600 mb-4">Need a custom monitoring solution for your enterprise?</p>
-            <Button variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50">
+            <Button variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50 bg-transparent">
               Contact Us for Enterprise Solutions
             </Button>
           </div>

@@ -3,6 +3,7 @@
 import Link from "next/link"
 import { useState } from "react"
 import { Menu, X, Shield } from "lucide-react"
+import { CurrencySelector } from "@/components/currency-selector"
 
 export function NavBar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -48,11 +49,18 @@ export function NavBar() {
               Pricing
             </Link>
             <Link
+              href="/legal-services"
+              className="px-4 py-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg font-medium transition-all duration-200"
+            >
+              Legal Services
+            </Link>
+            <Link
               href="/blog"
               className="px-4 py-2 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg font-medium transition-all duration-200"
             >
               Blog
             </Link>
+            <CurrencySelector />
             <Link
               href="/free-search"
               className="ml-2 px-6 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-lg font-semibold shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
@@ -87,12 +95,22 @@ export function NavBar() {
                 Pricing
               </Link>
               <Link
+                href="/legal-services"
+                className="px-4 py-3 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg font-medium transition-all duration-200"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Legal Services
+              </Link>
+              <Link
                 href="/blog"
                 className="px-4 py-3 text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-lg font-medium transition-all duration-200"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Blog
               </Link>
+              <div className="px-4 py-3">
+                <CurrencySelector />
+              </div>
               <Link
                 href="/free-search"
                 className="mx-4 mt-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-lg font-semibold text-center shadow-md hover:shadow-lg transition-all duration-200"

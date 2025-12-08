@@ -3,8 +3,15 @@
 import Link from "next/link"
 import { CheckCircle, Globe, Shield } from "lucide-react"
 import { motion } from "framer-motion"
+import { useCurrency } from "@/hooks/use-currency"
+import { formatPrice } from "@/lib/currency-converter"
 
 export function HeroSection() {
+  const { currency } = useCurrency()
+
+  const registrationPrices = { USD: 275, GBP: 206, EUR: 236 }
+  const monitoringPrices = { USD: 10, GBP: 8, EUR: 9 }
+
   return (
     <>
       {/* 
@@ -91,7 +98,9 @@ export function HeroSection() {
                   <div>
                     <h3 className="text-lg font-bold text-blue-700 mb-1">Trademark Registration</h3>
                     <p className="text-gray-600 mb-2">Secure your brand identity legally</p>
-                    <p className="text-blue-600 font-bold">Starting from $299</p>
+                    <p className="text-blue-600 font-bold">
+                      Starting from {formatPrice(registrationPrices[currency], currency)}
+                    </p>
                   </div>
                 </motion.div>
               </Link>
@@ -112,7 +121,9 @@ export function HeroSection() {
                 <div>
                   <h3 className="text-lg font-bold text-blue-700 mb-1">Worldwide Trademark Monitoring</h3>
                   <p className="text-gray-600 mb-2">Official trademark offices and web domains</p>
-                  <p className="text-blue-600 font-bold inline-flex items-center">Starting from €10/month</p>
+                  <p className="text-blue-600 font-bold inline-flex items-center">
+                    Starting from {formatPrice(monitoringPrices[currency], currency)}/month
+                  </p>
                 </div>
               </motion.div>
             </div>

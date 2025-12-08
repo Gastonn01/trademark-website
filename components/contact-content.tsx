@@ -191,7 +191,7 @@ export function ContactContent() {
                   <Mail className="h-6 w-6 text-blue-600 mt-1" />
                   <div>
                     <h3 className="font-semibold text-gray-900">Email</h3>
-                    <p className="text-gray-600">support@justprotected.com</p>
+                    <p className="text-gray-600">trademarks@justprotected.com</p>
                     <p className="text-sm text-gray-500">We typically respond within 24 hours</p>
                   </div>
                 </div>

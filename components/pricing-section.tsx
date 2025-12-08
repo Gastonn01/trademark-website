@@ -1,16 +1,18 @@
+"use client"
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { CheckCircle2, FileCheck, FileSearch, Globe, Scale, ShieldCheck } from "lucide-react"
+import { useCurrency } from "@/hooks/use-currency"
+import { formatPrice } from "@/lib/currency-converter"
 
 export function PricingSection() {
-  const ipLegalServicesEUR = 147 // €147 base price
-  const trademarkRegistrationEUR = 413 // €413 base price (approximate average)
-  const trademarkRenewalEUR = 628 // €628 base price (approximate average)
+  const { currency } = useCurrency()
 
-  const ipLegalServicesUSD = Math.round(ipLegalServicesEUR * 1.09)
-  const trademarkRegistrationUSD = Math.round(trademarkRegistrationEUR * 1.09)
-  const trademarkRenewalUSD = Math.round(trademarkRenewalEUR * 1.09)
+  const ipLegalServices = { USD: 127, GBP: 95, EUR: 110 }
+  const trademarkRegistration = { USD: 356, GBP: 267, EUR: 306 }
+  const trademarkRenewal = { USD: 541, GBP: 406, EUR: 465 }
 
   return (
     <div className="bg-gray-50 py-20">
@@ -20,7 +22,7 @@ export function PricingSection() {
           {[
             {
               title: "IP Legal Services",
-              price: `from $${ipLegalServicesUSD}`,
+              prices: ipLegalServices,
               description: "Expert legal analysis of your trademark",
               cta: "Learn More",
               href: "/verification",
@@ -28,7 +30,7 @@ export function PricingSection() {
             },
             {
               title: "Trademark Registration",
-              price: `from $${trademarkRegistrationUSD}`,
+              prices: trademarkRegistration,
               description: "Register your trademark with expert support",
               cta: "Start Free Search",
               href: "/free-search",
@@ -36,7 +38,7 @@ export function PricingSection() {
             },
             {
               title: "Trademark Renewal",
-              price: `from $${trademarkRenewalUSD}`,
+              prices: trademarkRenewal,
               description: "Renew your trademark before expiration",
               cta: "Renew Trademark",
               href: "/services#trademark-renewal",
@@ -49,7 +51,7 @@ export function PricingSection() {
               </CardHeader>
               <CardContent>
                 <div className="mb-4">
-                  <div className="text-3xl font-bold">{plan.price}</div>
+                  <div className="text-3xl font-bold">from {formatPrice(plan.prices[currency], currency)}</div>
                   <div className="text-sm font-semibold text-indigo-600 mt-1">{plan.highlight}</div>
                 </div>
                 <p className="text-gray-600 mb-6">{plan.description}</p>

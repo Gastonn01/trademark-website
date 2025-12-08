@@ -1,4 +1,3 @@
-import Image from "next/image"
 import { NavBar } from "@/components/nav-bar"
 import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
@@ -9,19 +8,20 @@ import {
   HelpCircle,
   AlertTriangle,
   Award,
-  Lightbulb,
   Target,
   Calendar,
-  BookOpen,
   Search,
+  Shield,
+  TrendingUp,
+  Zap,
 } from "lucide-react"
 
 export const metadata = {
-  title: "How to Register a Trademark in Germany (2024) | Comprehensive Guide",
+  title: "Register Your Trademark in Germany - Fast, Affordable, Fully Guided | JustProtected",
   description:
-    "Master the process of trademark registration in Germany. Learn about local requirements, costs, and strategies for protecting your brand in Europe's largest economy.",
+    "Secure your brand with Germany's official trademark office (DPMA). No legal confusion, no costly mistakes - our specialists handle everything for you. Fixed pricing, 24h response.",
   keywords:
-    "Germany trademark registration, German IP law, DPMA, brand protection Germany, intellectual property Germany, trademark filing Germany",
+    "Germany trademark registration, DPMA trademark, register trademark Germany, German IP protection, trademark filing Germany, DPMA registration cost",
   alternates: {
     canonical: "https://justprotected.com/blog/register-trademark-germany/",
   },
@@ -29,701 +29,491 @@ export const metadata = {
 
 export default function RegisterTrademarkGermany() {
   return (
-    <main className="bg-gradient-to-b from-indigo-50 to-white min-h-screen">
+    <main className="bg-white min-h-screen">
       <NavBar />
 
-      {/* Hero Section with Enhanced Visual Appeal */}
-      <div className="relative">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-900/80 to-indigo-900/80 z-10"></div>
-        <Image
-          src="https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=1600&h=800&fit=crop"
-          alt="Berlin skyline representing trademark registration in Germany"
-          width={1600}
-          height={800}
-          className="w-full h-[400px] object-cover"
-          priority
-        />
-        <div className="absolute inset-0 z-20 flex items-center justify-center">
-          <div className="container px-4 text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4 text-white drop-shadow-lg">
-              How to Register a Trademark in Germany (2024)
+      <div className="relative bg-gradient-to-br from-blue-700 via-blue-800 to-indigo-900">
+        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=1600&h=800&fit=crop')] opacity-10 bg-cover bg-center"></div>
+        <div className="relative container mx-auto px-4 py-16 md:py-24">
+          <div className="max-w-4xl mx-auto">
+            <div className="text-sm text-blue-200 mb-4">Trademark Guide</div>
+            <h1 className="text-4xl md:text-5xl font-bold mb-6 text-white leading-tight">
+              How to Register a Trademark in Germany: Complete Guide for 2025
             </h1>
-            <p className="text-xl text-white/90 max-w-3xl mx-auto">
-              A Complete Guide to Protecting Your Brand Through DPMA Registration
+            <p className="text-xl text-blue-100 mb-8 leading-relaxed">
+              Everything you need to know about protecting your brand with the German Patent and Trade Mark Office
+              (DPMA), including costs, timelines, and common pitfalls to avoid.
             </p>
+            <div className="flex flex-wrap gap-4 text-sm text-blue-100">
+              <span>8 min read</span>
+              <span>•</span>
+              <span>Updated Jan 2025</span>
+              <span>•</span>
+              <span>By trademark specialists</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="bg-gray-50 py-8 border-b">
+        <div className="container mx-auto px-4">
+          <div className="grid md:grid-cols-4 gap-6 max-w-5xl mx-auto text-center">
+            <div>
+              <div className="text-3xl font-bold text-blue-700 mb-1">80,000+</div>
+              <p className="text-sm text-gray-600">Trademarks filed annually in Germany</p>
+            </div>
+            <div>
+              <div className="text-3xl font-bold text-blue-700 mb-1">€290+</div>
+              <p className="text-sm text-gray-600">DPMA filing fees from</p>
+            </div>
+            <div>
+              <div className="text-3xl font-bold text-blue-700 mb-1">6-12</div>
+              <p className="text-sm text-gray-600">Months typical processing time</p>
+            </div>
+            <div>
+              <div className="text-3xl font-bold text-blue-700 mb-1">10 years</div>
+              <p className="text-sm text-gray-600">Initial protection period</p>
+            </div>
           </div>
         </div>
       </div>
 
       <article className="container mx-auto px-4 py-12 max-w-4xl">
-        {/* Author and Publication Info */}
-        <div className="flex flex-col sm:flex-row justify-between items-center mb-8 text-gray-600 border-b pb-4">
-          <div className="flex items-center mb-4 sm:mb-0">
-            <div className="w-10 h-10 rounded-full bg-indigo-600 text-white flex items-center justify-center mr-3">
-              <span className="font-bold">JP</span>
-            </div>
-            <div>
-              <p className="font-medium">By JustProtected Team</p>
-              <p className="text-sm">Trademark Specialists</p>
-            </div>
-          </div>
-          <div className="text-sm">
-            <p>Published: March 15, 2024</p>
-          </div>
-        </div>
+        <div className="prose prose-lg max-w-none">
+          <h2 className="text-3xl font-bold text-gray-900 mt-12 mb-6">Why Register Your Trademark in Germany?</h2>
 
-        {/* Introduction */}
-        <div className="prose prose-indigo max-w-none mb-10">
-          <p className="text-xl leading-relaxed">
-            Registering a trademark in Germany is a crucial step for businesses looking to protect their brand in
-            Europe's largest economy. Whether you're a startup, small business, or established company, securing
-            trademark protection through the German Patent and Trade Mark Office (DPMA) provides valuable legal rights
-            and benefits that can safeguard your business for years to come.
+          <p className="text-lg text-gray-700 leading-relaxed mb-6">
+            Germany represents Europe's largest economy and one of the world's most important markets for businesses.
+            With over 83 million consumers and a robust legal framework for intellectual property protection, securing
+            trademark rights in Germany is essential for any business operating or planning to operate in the region.
           </p>
 
-          <div className="flex items-start p-4 bg-blue-50 rounded-lg border border-blue-100 my-6">
-            <Lightbulb className="h-6 w-6 text-blue-600 mr-3 flex-shrink-0 mt-1" />
-            <p className="italic text-blue-800 m-0">
-              <strong>Did you know?</strong> Germany is Europe's largest economy and a key market for international
-              brands. With over 80,000 trademark applications filed annually, securing your rights early is essential
-              for businesses with European ambitions.
-            </p>
-          </div>
-        </div>
+          <p className="text-lg text-gray-700 leading-relaxed mb-8">
+            The German Patent and Trade Mark Office (Deutsches Patent- und Markenamt or DPMA) processes more than 80,000
+            trademark applications each year. Here's what trademark registration provides:
+          </p>
 
-        {/* Table of Contents */}
-        <div className="mb-10 p-6 bg-indigo-50 rounded-lg border border-indigo-100 shadow-sm">
-          <h2 className="text-xl font-semibold mb-4 text-indigo-800 flex items-center">
-            <BookOpen className="mr-2 h-5 w-5" />
-            What We'll Cover in This Guide:
-          </h2>
-          <div className="grid gap-4">
+          <div className="grid md:grid-cols-2 gap-6 my-10 not-prose">
             {[
               {
-                section: "Why German Trademark Registration Matters",
-                desc: "The legal benefits and business advantages of DPMA protection",
+                icon: Shield,
+                title: "Exclusive Rights",
+                desc: "Legal monopoly on your brand name or logo throughout Germany",
               },
               {
-                section: "The Complete Registration Process",
-                desc: "A step-by-step breakdown of how to register with the DPMA",
+                icon: AlertTriangle,
+                title: "Legal Protection",
+                desc: "Power to stop competitors from using confusingly similar marks",
               },
               {
-                section: "2024 Application Types and Requirements",
-                desc: "Current DPMA filing options and what you need for each",
+                icon: TrendingUp,
+                title: "Business Asset",
+                desc: "Registered trademarks become valuable, transferable company assets",
               },
               {
-                section: "Common Pitfalls and How to Avoid Them",
-                desc: "Mistakes that lead to rejection and strategies for success",
+                icon: Award,
+                title: "Credibility",
+                desc: "The ® symbol demonstrates professionalism and commitment to your brand",
+              },
+            ].map((benefit, index) => (
+              <div key={index} className="bg-gray-50 p-6 rounded-lg border border-gray-200">
+                <benefit.icon className="w-10 h-10 text-blue-700 mb-3" />
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">{benefit.title}</h3>
+                <p className="text-gray-600 text-base">{benefit.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="bg-blue-50 border-l-4 border-blue-600 p-6 rounded-r-lg my-8">
+            <p className="text-gray-800 mb-0">
+              <strong>Important:</strong> Trademark rights in Germany are territorial. Registration with the DPMA
+              protects you only within German borders. For broader protection, you may need to consider an EU trademark
+              (EUTM) or international registration via the Madrid System.
+            </p>
+          </div>
+
+          <h2 className="text-3xl font-bold text-gray-900 mt-16 mb-6">The German Trademark Registration Process</h2>
+
+          <p className="text-lg text-gray-700 leading-relaxed mb-8">
+            Understanding the process before you begin can help you avoid costly mistakes and delays. Here's how
+            trademark registration works in Germany:
+          </p>
+
+          <div className="space-y-8 my-12 not-prose">
+            {[
+              {
+                num: "1",
+                title: "Preliminary Search",
+                desc: "Before filing, it's critical to search existing trademarks to ensure yours is available. The DPMA maintains a public database (DPMAregister) where you can check for conflicts. However, a comprehensive search should also include pending applications, EU trademarks, and common law marks.",
+                icon: Search,
               },
               {
-                section: "Timeline and What to Expect",
-                desc: "Realistic timeframes and milestones in the registration process",
+                num: "2",
+                title: "Prepare Your Application",
+                desc: "You'll need to provide a clear representation of your mark, specify the goods and services you'll use it for (classified under the Nice Classification system), and ensure all administrative details are correct. Mistakes here are the leading cause of rejections.",
+                icon: FileText,
               },
-            ].map((item, index) => (
-              <div key={index} className="flex items-start bg-white p-3 rounded-lg border border-indigo-100">
-                <div className="bg-indigo-600 text-white rounded-full w-6 h-6 flex items-center justify-center font-bold mr-3 flex-shrink-0 mt-1">
-                  {index + 1}
+              {
+                num: "3",
+                title: "File With the DPMA",
+                desc: "Applications can be submitted online through the DPMA portal, by mail, or in person. You'll receive an application number immediately upon filing. Official fees start at €290 for online filings covering up to 3 classes.",
+                icon: Zap,
+              },
+              {
+                num: "4",
+                title: "Examination Phase",
+                desc: "The DPMA examines your application for absolute grounds for refusal (descriptive marks, generic terms, etc.) but does NOT check for conflicts with existing marks. If issues are found, you'll receive an office action requiring a response.",
+                icon: HelpCircle,
+              },
+              {
+                num: "5",
+                title: "Publication & Opposition",
+                desc: "If accepted, your mark is published in the Trademark Gazette. Third parties have 3 months to file an opposition if they believe your mark infringes their rights.",
+                icon: Calendar,
+              },
+              {
+                num: "6",
+                title: "Registration",
+                desc: "If no oppositions are filed (or you successfully defend against them), your trademark is officially registered. You'll receive a certificate and can use the ® symbol. Protection lasts 10 years and can be renewed indefinitely.",
+                icon: Award,
+              },
+            ].map((step) => (
+              <div key={step.num} className="flex gap-4">
+                <div className="flex-shrink-0">
+                  <div className="w-12 h-12 rounded-full bg-blue-700 text-white flex items-center justify-center text-xl font-bold">
+                    {step.num}
+                  </div>
                 </div>
-                <div>
-                  <p className="font-medium text-indigo-900 m-0">{item.section}</p>
-                  <p className="text-sm text-gray-600 m-0">{item.desc}</p>
+                <div className="flex-1">
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">{step.title}</h3>
+                  <p className="text-gray-700 leading-relaxed">{step.desc}</p>
                 </div>
               </div>
             ))}
           </div>
 
-          {/* Quick Jump Links */}
-          <div className="mt-6 pt-4 border-t border-indigo-200">
-            <p className="font-medium text-indigo-800 mb-2">Jump to a section:</p>
-            <div className="flex flex-wrap gap-2">
-              {[
-                ["Why It Matters", "#why-it-matters"],
-                ["Registration Process", "#registration-process"],
-                ["Application Types", "#application-types"],
-                ["Common Pitfalls", "#common-pitfalls"],
-                ["Timeline", "#timeline"],
-                ["FAQs", "#faqs"],
-              ].map(([label, link], index) => (
-                <a
-                  key={index}
-                  href={link}
-                  className="px-3 py-1 bg-white text-indigo-700 rounded-full text-sm border border-indigo-200 hover:bg-indigo-700 hover:text-white transition-colors"
-                >
-                  {label}
-                </a>
-              ))}
+          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-8 my-12 not-prose border border-blue-200">
+            <h3 className="text-xl font-bold text-gray-900 mb-3">Need Help With Your Application?</h3>
+            <p className="text-gray-700 mb-4 leading-relaxed">
+              Our trademark specialists handle the entire registration process for you - from comprehensive searches to
+              filing and examiner responses. Fixed price of €1,551 includes everything.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <Button asChild className="bg-blue-700 hover:bg-blue-800">
+                <Link href="/verification">Start Your Registration</Link>
+              </Button>
+              <Button asChild variant="outline">
+                <Link href="/free-search">Free Trademark Search</Link>
+              </Button>
             </div>
           </div>
-        </div>
 
-        <div className="prose prose-indigo max-w-none">
-          <h2 id="why-it-matters" className="flex items-center text-2xl font-bold text-indigo-900 mb-4 scroll-mt-20">
-            <Target className="mr-3 h-6 w-6 text-indigo-700" />
-            Why German Trademark Registration Matters in 2024
-          </h2>
+          <h2 className="text-3xl font-bold text-gray-900 mt-16 mb-6">Costs of Trademark Registration in Germany</h2>
 
-          <p>
-            In today's competitive global marketplace, protecting your brand in Germany offers several important
-            benefits:
+          <p className="text-lg text-gray-700 leading-relaxed mb-6">
+            Understanding the full cost breakdown helps you budget appropriately. Here's what you'll need to consider:
           </p>
 
-          <div className="grid md:grid-cols-2 gap-4 my-6">
-            {[
-              ["Exclusive rights to use your mark throughout Germany", "bg-green-50 border-green-200"],
-              ["Legal protection against infringement and counterfeiting", "bg-blue-50 border-blue-200"],
-              ["Foundation for EU-wide trademark protection", "bg-purple-50 border-purple-200"],
-              ["Legal presumption of ownership in court proceedings", "bg-amber-50 border-amber-200"],
-              ["Ability to license your trademark to third parties", "bg-red-50 border-red-200"],
-              ["Protection in Germany's influential digital marketplace", "bg-teal-50 border-teal-200"],
-              ["Asset that can be valued and included in company assets", "bg-indigo-50 border-indigo-200"],
-              [
-                "Ability to register with German Customs to prevent imports of infringing goods",
-                "bg-orange-50 border-orange-200",
-              ],
-            ].map(([benefit, classes], index) => (
-              <div key={index} className={`p-4 rounded-lg ${classes} border`}>
-                <p className="font-medium flex items-center m-0">
-                  <CheckCircle className="h-5 w-5 mr-2 flex-shrink-0" />
-                  {benefit}
+          <div className="my-8 not-prose">
+            <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+              <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
+                <h3 className="font-semibold text-gray-900">DPMA Official Fees</h3>
+              </div>
+              <div className="p-6 space-y-3">
+                <div className="flex justify-between items-center pb-3 border-b border-gray-100">
+                  <span className="text-gray-700">Online filing (up to 3 classes)</span>
+                  <span className="font-semibold text-gray-900">€290</span>
+                </div>
+                <div className="flex justify-between items-center pb-3 border-b border-gray-100">
+                  <span className="text-gray-700">Paper filing (up to 3 classes)</span>
+                  <span className="font-semibold text-gray-900">€300</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-700">Each additional class</span>
+                  <span className="font-semibold text-gray-900">€100</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <p className="text-lg text-gray-700 leading-relaxed mb-6">
+            While these are the minimum official fees, most businesses also need to consider:
+          </p>
+
+          <ul className="space-y-3 my-6">
+            <li className="flex items-start gap-3">
+              <CheckCircle className="w-5 h-5 text-blue-700 flex-shrink-0 mt-1" />
+              <span className="text-gray-700">
+                <strong>Professional search fees:</strong> €200-500 for comprehensive conflict searches
+              </span>
+            </li>
+            <li className="flex items-start gap-3">
+              <CheckCircle className="w-5 h-5 text-blue-700 flex-shrink-0 mt-1" />
+              <span className="text-gray-700">
+                <strong>Legal/specialist assistance:</strong> €800-2,000 for application preparation and filing
+              </span>
+            </li>
+            <li className="flex items-start gap-3">
+              <CheckCircle className="w-5 h-5 text-blue-700 flex-shrink-0 mt-1" />
+              <span className="text-gray-700">
+                <strong>Response to office actions:</strong> €300-800 if the examiner raises objections
+              </span>
+            </li>
+            <li className="flex items-start gap-3">
+              <CheckCircle className="w-5 h-5 text-blue-700 flex-shrink-0 mt-1" />
+              <span className="text-gray-700">
+                <strong>Opposition defense:</strong> €1,000-5,000+ if a third party challenges your mark
+              </span>
+            </li>
+          </ul>
+
+          <div className="bg-amber-50 border-l-4 border-amber-400 p-6 rounded-r-lg my-8">
+            <div className="flex items-start gap-3">
+              <AlertTriangle className="w-6 h-6 text-amber-600 flex-shrink-0 mt-1" />
+              <div>
+                <p className="font-semibold text-amber-900 mb-2">Cost of Mistakes</p>
+                <p className="text-amber-800">
+                  Filing an application incorrectly or without proper searching can result in rejection, requiring you
+                  to pay all fees again. Many first-time applicants underestimate the complexity and end up spending
+                  significantly more fixing errors than they would have spent on professional help initially.
                 </p>
               </div>
+            </div>
+          </div>
+
+          <h2 className="text-3xl font-bold text-gray-900 mt-16 mb-6">Common Reasons for Rejection</h2>
+
+          <p className="text-lg text-gray-700 leading-relaxed mb-8">
+            The DPMA rejects approximately 25% of applications. Understanding the most common reasons can help you avoid
+            these pitfalls:
+          </p>
+
+          <div className="space-y-6 my-8 not-prose">
+            {[
+              {
+                title: "Descriptive Terms",
+                desc: "Marks that simply describe the goods or services (e.g., 'Fast Delivery' for a courier service) cannot be registered.",
+                icon: FileText,
+              },
+              {
+                title: "Generic Names",
+                desc: "Common names for products or services (e.g., 'Bread' for a bakery) lack distinctive character.",
+                icon: AlertTriangle,
+              },
+              {
+                title: "Misleading Marks",
+                desc: "Trademarks that could deceive consumers about the nature, quality, or origin of goods are refused.",
+                icon: HelpCircle,
+              },
+              {
+                title: "Incorrect Classifications",
+                desc: "Failing to properly classify goods and services under the Nice Classification leads to rejections or narrow protection.",
+                icon: Target,
+              },
+              {
+                title: "Conflicts With Existing Rights",
+                desc: "While the DPMA doesn't examine for conflicts, third parties can file oppositions if your mark is too similar to theirs.",
+                icon: Shield,
+              },
+            ].map((reason, index) => (
+              <div key={index} className="flex gap-4 bg-gray-50 p-5 rounded-lg border border-gray-200">
+                <reason.icon className="w-8 h-8 text-blue-700 flex-shrink-0" />
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-1">{reason.title}</h3>
+                  <p className="text-gray-700">{reason.desc}</p>
+                </div>
+              </div>
             ))}
           </div>
 
-          <div className="bg-gradient-to-r from-indigo-50 to-white p-4 border-l-4 border-indigo-500 my-6">
-            <p className="text-indigo-900 font-medium m-0">
-              "Germany remains the economic powerhouse of Europe, with a GDP of over €3.6 trillion. For businesses with
-              European ambitions, securing trademark protection in Germany is often the first and most crucial step." —
-              European Trademark Monitor, 2024
-            </p>
-          </div>
+          <h2 className="text-3xl font-bold text-gray-900 mt-16 mb-6">Timeline: How Long Does It Take?</h2>
 
-          <p>
-            Without proper registration, your brand protection is limited, leaving you vulnerable to competitors who
-            might register similar marks. As e-commerce continues to expand, nationwide protection in key markets like
-            Germany has become essential for businesses of all sizes.
+          <p className="text-lg text-gray-700 leading-relaxed mb-6">
+            The entire registration process typically takes 6-12 months from filing to final registration, though this
+            can vary:
           </p>
 
-          <h2
-            id="registration-process"
-            className="flex items-center text-2xl font-bold text-indigo-900 mb-4 mt-12 scroll-mt-20"
-          >
-            <FileText className="mr-3 h-6 w-6 text-indigo-700" />
-            The Complete Trademark Registration Process
-          </h2>
-
-          <p>
-            Registering a trademark with the DPMA involves several key steps. Understanding this process helps ensure a
-            smoother application experience and improves your chances of successful registration.
-          </p>
-
-          <div className="space-y-8 my-6">
-            {/* Step 1 */}
-            <div className="relative pl-8 border-l-2 border-indigo-200">
-              <div className="absolute left-[-10px] top-0 bg-indigo-600 text-white w-6 h-6 rounded-full flex items-center justify-center font-bold">
-                1
+          <div className="my-8 not-prose">
+            <div className="space-y-4">
+              <div className="flex gap-4 items-start">
+                <div className="flex-shrink-0 w-24 text-sm font-semibold text-blue-700">Months 1-2</div>
+                <div>
+                  <h4 className="font-semibold text-gray-900 mb-1">Initial Examination</h4>
+                  <p className="text-gray-700">
+                    The DPMA reviews your application for formal requirements and absolute grounds for refusal.
+                  </p>
+                </div>
               </div>
-              <h3 className="text-xl font-semibold mb-2 text-indigo-800">Conduct a Comprehensive Trademark Search</h3>
-              <p className="mb-3">
-                Before filing, it's essential to determine if your desired mark is available. A thorough search helps
-                identify potential conflicts with existing trademarks that could lead to rejection.
-              </p>
-              <p className="mb-3">A comprehensive search should include:</p>
-              <ul className="list-disc pl-5 space-y-1">
-                <li>The DPMA's trademark database (DPMAregister)</li>
-                <li>The EU Intellectual Property Office (EUIPO) database</li>
-                <li>Common law (unregistered) trademarks in Germany</li>
-                <li>Business name registrations</li>
-                <li>Domain names and social media handles</li>
-              </ul>
-
-              <div className="bg-amber-50 border-l-4 border-amber-400 p-4 mt-4">
-                <div className="flex">
-                  <AlertTriangle className="h-6 w-6 text-amber-500 mr-2 flex-shrink-0" />
-                  <p className="text-amber-800 m-0">
-                    <strong>Warning:</strong> Approximately 25% of trademark applications in Germany are rejected due to
-                    conflicts with existing marks. Most of these rejections could have been avoided with proper
-                    searching. This step is crucial for saving time and money.
+              <div className="flex gap-4 items-start">
+                <div className="flex-shrink-0 w-24 text-sm font-semibold text-blue-700">Months 2-4</div>
+                <div>
+                  <h4 className="font-semibold text-gray-900 mb-1">Office Actions (if needed)</h4>
+                  <p className="text-gray-700">
+                    If issues are found, you'll receive an office action and have time to respond.
+                  </p>
+                </div>
+              </div>
+              <div className="flex gap-4 items-start">
+                <div className="flex-shrink-0 w-24 text-sm font-semibold text-blue-700">Months 4-5</div>
+                <div>
+                  <h4 className="font-semibold text-gray-900 mb-1">Publication</h4>
+                  <p className="text-gray-700">Approved marks are published in the official gazette.</p>
+                </div>
+              </div>
+              <div className="flex gap-4 items-start">
+                <div className="flex-shrink-0 w-24 text-sm font-semibold text-blue-700">Months 5-8</div>
+                <div>
+                  <h4 className="font-semibold text-gray-900 mb-1">Opposition Period</h4>
+                  <p className="text-gray-700">Third parties have 3 months to file an opposition.</p>
+                </div>
+              </div>
+              <div className="flex gap-4 items-start">
+                <div className="flex-shrink-0 w-24 text-sm font-semibold text-blue-700">Months 8-12</div>
+                <div>
+                  <h4 className="font-semibold text-gray-900 mb-1">Registration</h4>
+                  <p className="text-gray-700">
+                    If no oppositions are filed, your trademark is officially registered and you receive your
+                    certificate.
                   </p>
                 </div>
               </div>
             </div>
-
-            {/* Step 2 */}
-            <div className="relative pl-8 border-l-2 border-indigo-200">
-              <div className="absolute left-[-10px] top-0 bg-indigo-600 text-white w-6 h-6 rounded-full flex items-center justify-center font-bold">
-                2
-              </div>
-              <h3 className="text-xl font-semibold mb-2 text-indigo-800">Prepare Your Application Materials</h3>
-              <p className="mb-3">
-                Gathering the right information and materials before starting your application will streamline the
-                process. You'll need:
-              </p>
-              <ul className="list-disc pl-5 space-y-1">
-                <li>A clear representation of your mark (standard character, stylized, or design)</li>
-                <li>A description of the goods or services associated with your mark</li>
-                <li>The appropriate international class(es) for your goods/services</li>
-                <li>Your business information</li>
-                <li>A German correspondence address (if you're a foreign applicant)</li>
-              </ul>
-
-              <div className="flex items-start p-4 bg-blue-50 rounded-lg border border-blue-100 mt-4">
-                <Search className="h-6 w-6 text-blue-600 mr-3 flex-shrink-0 mt-1" />
-                <p className="italic text-blue-800 m-0">
-                  <strong>Pro tip:</strong> The way you describe your goods and services can significantly impact both
-                  your chances of approval and the scope of your protection. Be specific enough to avoid conflicts but
-                  broad enough to cover your business growth.
-                </p>
-              </div>
-            </div>
-
-            {/* Step 3 */}
-            <div className="relative pl-8 border-l-2 border-indigo-200">
-              <div className="absolute left-[-10px] top-0 bg-indigo-600 text-white w-6 h-6 rounded-full flex items-center justify-center font-bold">
-                3
-              </div>
-              <h3 className="text-xl font-semibold mb-2 text-indigo-800">File Your Application</h3>
-              <p className="mb-3">
-                Applications are filed through the DPMA's electronic filing system (DPMAdirekt). You'll need to:
-              </p>
-              <ul className="list-disc pl-5 space-y-1">
-                <li>Create a DPMA account if you don't already have one</li>
-                <li>Complete the application form with your mark and goods/services information</li>
-                <li>Upload a representation of your mark</li>
-                <li>Pay the filing fees (varies based on number of classes)</li>
-              </ul>
-              <p className="mt-3">
-                After submission, you'll receive a confirmation with your application number, which you'll use to track
-                your application's progress.
-              </p>
-            </div>
-
-            {/* Step 4 */}
-            <div className="relative pl-8 border-l-2 border-indigo-200">
-              <div className="absolute left-[-10px] top-0 bg-indigo-600 text-white w-6 h-6 rounded-full flex items-center justify-center font-bold">
-                4
-              </div>
-              <h3 className="text-xl font-semibold mb-2 text-indigo-800">Respond to DPMA Examination</h3>
-              <p className="mb-3">
-                After filing, your application will be assigned to a DPMA examining attorney who will review it for
-                compliance with trademark laws and regulations. This review typically begins 2-3 months after filing.
-              </p>
-              <p className="mb-3">
-                If the examiner finds issues with your application, they'll issue an "Office Action" requiring your
-                response. Office actions can range from simple administrative requests to substantive refusals based on
-                likelihood of confusion with existing marks.
-              </p>
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                <p className="font-medium text-blue-800 mb-2">Common reasons for Office Actions in 2024:</p>
-                <ul className="list-disc pl-5 space-y-1 text-blue-900 m-0">
-                  <li>Likelihood of confusion with existing marks</li>
-                  <li>Merely descriptive or generic marks</li>
-                  <li>Overly broad descriptions of goods/services</li>
-                  <li>Improper classification of goods/services</li>
-                  <li>Formal deficiencies in the application</li>
-                </ul>
-              </div>
-              <p className="mt-3">
-                You must respond to Office Actions within the specified deadline (typically 1-2 months). Failure to
-                respond will result in abandonment of your application.
-              </p>
-            </div>
-
-            {/* Step 5 */}
-            <div className="relative pl-8 border-l-2 border-indigo-200">
-              <div className="absolute left-[-10px] top-0 bg-indigo-600 text-white w-6 h-6 rounded-full flex items-center justify-center font-bold">
-                5
-              </div>
-              <h3 className="text-xl font-semibold mb-2 text-indigo-800">Registration and Opposition Period</h3>
-              <p className="mb-3">
-                If your application passes examination, it will be registered. Unlike many other countries, Germany does
-                not have a pre-registration opposition period. Instead, third parties who believe they might be damaged
-                by the registration of your mark can file an opposition within three months after registration.
-              </p>
-              <p className="mb-3">
-                If no opposition is filed (or if any opposition is resolved in your favor), your registration will be
-                confirmed.
-              </p>
-            </div>
-
-            {/* Step 6 */}
-            <div className="relative pl-8">
-              <div className="absolute left-[-10px] top-0 bg-indigo-600 text-white w-6 h-6 rounded-full flex items-center justify-center font-bold">
-                6
-              </div>
-              <h3 className="text-xl font-semibold mb-2 text-indigo-800">Maintaining Your Trademark</h3>
-              <p className="mb-3">After registration, you'll need to maintain your trademark:</p>
-              <ul className="list-disc pl-5 space-y-1">
-                <li>Use your mark in commerce to avoid non-use cancellation (after five years)</li>
-                <li>Renew your registration every 10 years</li>
-                <li>Monitor the market for potential infringements</li>
-                <li>Consider recording your trademark with German Customs for border protection</li>
-              </ul>
-            </div>
           </div>
 
-          <h2
-            id="application-types"
-            className="flex items-center text-2xl font-bold text-indigo-900 mb-4 mt-12 scroll-mt-20"
-          >
-            <FileText className="mr-3 h-6 w-6 text-indigo-700" />
-            2024 DPMA Application Types and Requirements
-          </h2>
-
-          <p>
-            The DPMA offers different application options, each with its own requirements and fee structure.
-            Understanding these options helps you choose the most appropriate filing strategy for your situation.
-          </p>
-
-          <div className="grid md:grid-cols-2 gap-6 my-6">
-            <div className="bg-white p-5 rounded-lg border border-gray-200 shadow-sm">
-              <h3 className="font-semibold text-lg mb-2 text-indigo-800">Standard Application</h3>
-              <p className="mb-2">The traditional option for registering your trademark in Germany.</p>
-              <ul className="list-disc pl-5 space-y-1 m-0">
-                <li>Covers one or more classes of goods/services</li>
-                <li>Base fee of €300 for up to three classes</li>
-                <li>Additional fee of €100 per class beyond three</li>
-                <li>Electronic filing recommended for faster processing</li>
-              </ul>
-            </div>
-
-            <div className="bg-white p-5 rounded-lg border border-gray-200 shadow-sm">
-              <h3 className="font-semibold text-lg mb-2 text-indigo-800">Collective Mark</h3>
-              <p className="mb-2">For associations representing multiple businesses.</p>
-              <ul className="list-disc pl-5 space-y-1 m-0">
-                <li>Used by associations to protect marks used by their members</li>
-                <li>Requires regulations governing use of the mark</li>
-                <li>Higher filing fee than standard applications</li>
-                <li>Provides protection for all authorized users</li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="bg-indigo-50 p-5 rounded-lg border border-indigo-100 my-6">
-            <h3 className="font-semibold text-lg mb-2 text-indigo-800">Alternative: EU Trademark (EUTM)</h3>
-            <p className="mb-3">
-              Instead of filing directly with the DPMA, you might consider filing an EU Trademark application, which
-              provides protection across all EU member states, including Germany:
-            </p>
-            <ul className="list-disc pl-5 space-y-1 m-0">
-              <li>Single application covering all 27 EU member states</li>
-              <li>Base fee of €850 for one class (electronic filing)</li>
-              <li>Administered by the European Union Intellectual Property Office (EUIPO)</li>
-              <li>Potential cost savings compared to filing in multiple individual countries</li>
-              <li>Unified protection across the entire EU market</li>
-            </ul>
-            <p className="mt-3 italic">
-              An EU Trademark can be a cost-effective option if you plan to do business in multiple European countries.
+          <div className="bg-blue-50 border-l-4 border-blue-600 p-6 rounded-r-lg my-8">
+            <p className="text-gray-800 mb-0">
+              <strong>Good news:</strong> Your trademark rights begin from the filing date, not the registration date.
+              This means you have legal priority over anyone who files after you, even if their application is processed
+              faster.
             </p>
           </div>
 
-          <div className="flex items-start p-4 bg-amber-50 rounded-lg border border-amber-100 my-6">
-            <AlertTriangle className="h-6 w-6 text-amber-500 mr-3 flex-shrink-0 mt-1" />
-            <div>
-              <p className="font-medium text-amber-800 m-0">Important 2024 Update:</p>
-              <p className="text-amber-700 m-0">
-                The DPMA has implemented stricter examination standards for descriptive marks in 2024. Applications for
-                marks that directly describe characteristics of the goods/services are facing higher rejection rates.
-                Consider choosing more distinctive marks or providing evidence of acquired distinctiveness through use.
-              </p>
-            </div>
-          </div>
+          <h2 className="text-3xl font-bold text-gray-900 mt-16 mb-6">Frequently Asked Questions</h2>
 
-          <h2
-            id="common-pitfalls"
-            className="flex items-center text-2xl font-bold text-indigo-900 mb-4 mt-12 scroll-mt-20"
-          >
-            <AlertTriangle className="mr-3 h-6 w-6 text-indigo-700" />
-            Common Pitfalls and How to Avoid Them
-          </h2>
-
-          <p>
-            Many trademark applications in Germany encounter problems that could have been avoided with proper
-            preparation. Here are the most common pitfalls and strategies to overcome them:
-          </p>
-
-          <div className="space-y-6 my-6">
-            <div className="bg-white p-5 rounded-lg border border-gray-200 shadow-sm">
-              <h3 className="font-semibold text-lg mb-2 text-indigo-800">Inadequate Trademark Search</h3>
-              <p className="mb-3">
-                Many applicants perform only a basic search or skip this step entirely, leading to conflicts with
-                existing marks.
-              </p>
-              <p className="font-medium text-indigo-700">How to avoid:</p>
-              <ul className="list-disc pl-5 space-y-1 m-0">
-                <li>Conduct a comprehensive search across multiple databases</li>
-                <li>Consider similar-sounding and similar-looking marks, not just exact matches</li>
-                <li>Search within your specific industry and related industries</li>
-                <li>Consider professional search services for important marks</li>
-              </ul>
-            </div>
-
-            <div className="bg-white p-5 rounded-lg border border-gray-200 shadow-sm">
-              <h3 className="font-semibold text-lg mb-2 text-indigo-800">Descriptive or Generic Marks</h3>
-              <p className="mb-3">
-                Marks that merely describe your products or services are difficult or impossible to register in Germany.
-              </p>
-              <p className="font-medium text-indigo-700">How to avoid:</p>
-              <ul className="list-disc pl-5 space-y-1 m-0">
-                <li>Choose distinctive, unique marks rather than descriptive terms</li>
-                <li>Consider arbitrary or fanciful marks</li>
-                <li>If using a descriptive term, add distinctive elements</li>
-                <li>
-                  Test your mark with the "competitors test": Would competitors need to use this term to describe their
-                  products?
-                </li>
-              </ul>
-            </div>
-
-            <div className="bg-white p-5 rounded-lg border border-gray-200 shadow-sm">
-              <h3 className="font-semibold text-lg mb-2 text-indigo-800">Incorrect Classification</h3>
-              <p className="mb-3">
-                Selecting the wrong Nice Classification classes for your goods/services can lead to inadequate
-                protection or unnecessary costs.
-              </p>
-              <p className="font-medium text-indigo-700">How to avoid:</p>
-              <ul className="list-disc pl-5 space-y-1 m-0">
-                <li>Carefully review the Nice Classification system</li>
-                <li>Consider both current and future business activities</li>
-                <li>Use the DPMA's classification database for guidance</li>
-                <li>Focus on classes that cover your core business activities</li>
-              </ul>
-            </div>
-
-            <div className="bg-white p-5 rounded-lg border border-gray-200 shadow-sm">
-              <h3 className="font-semibold text-lg mb-2 text-indigo-800">Overly Broad Goods/Services Descriptions</h3>
-              <p className="mb-3">
-                Descriptions that are too vague or broad often trigger office actions and can lead to delays.
-              </p>
-              <p className="font-medium text-indigo-700">How to avoid:</p>
-              <ul className="list-disc pl-5 space-y-1 m-0">
-                <li>Be specific about your actual goods and services</li>
-                <li>Use the DPMA's pre-approved descriptions when possible</li>
-                <li>Avoid catch-all phrases like "and related goods"</li>
-                <li>Consider filing in multiple classes if your business spans different categories</li>
-              </ul>
-            </div>
-
-            <div className="bg-white p-5 rounded-lg border border-gray-200 shadow-sm">
-              <h3 className="font-semibold text-lg mb-2 text-indigo-800">Missing Deadlines</h3>
-              <p className="mb-3">
-                The DPMA has strict deadlines for responses, and missing them can result in abandonment of your
-                application.
-              </p>
-              <p className="font-medium text-indigo-700">How to avoid:</p>
-              <ul className="list-disc pl-5 space-y-1 m-0">
-                <li>Set calendar reminders for all DPMA deadlines</li>
-                <li>Remember that most office actions have a 1-2 month response deadline</li>
-                <li>Consider setting reminders earlier than the actual deadline to allow preparation time</li>
-                <li>If you need more time, request an extension before the deadline expires</li>
-              </ul>
-            </div>
-          </div>
-
-          <h2 id="timeline" className="flex items-center text-2xl font-bold text-indigo-900 mb-4 mt-12 scroll-mt-20">
-            <Calendar className="mr-3 h-6 w-6 text-indigo-700" />
-            Timeline and What to Expect
-          </h2>
-
-          <p>
-            Understanding the typical timeline for trademark registration in Germany helps set realistic expectations
-            and plan your business activities accordingly.
-          </p>
-
-          <div className="relative my-8">
-            {/* Timeline */}
-            <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-indigo-200"></div>
-
-            {/* Filing */}
-            <div className="relative mb-8 pl-12">
-              <div className="absolute left-0 w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center">
-                <FileText className="h-4 w-4" />
-              </div>
-              <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
-                <h3 className="font-semibold text-lg mb-1 text-indigo-800">Application Filing</h3>
-                <p className="text-sm text-gray-500 mb-2">Day 1</p>
-                <p className="m-0">
-                  Your application is submitted to the DPMA and assigned an application number. You can begin using the
-                  ™ symbol (but not the ® symbol yet).
-                </p>
-              </div>
-            </div>
-
-            {/* Initial Processing */}
-            <div className="relative mb-8 pl-12">
-              <div className="absolute left-0 w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center">
-                <CheckCircle className="h-4 w-4" />
-              </div>
-              <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
-                <h3 className="font-semibold text-lg mb-1 text-indigo-800">Initial Processing</h3>
-                <p className="text-sm text-gray-500 mb-2">1-2 months</p>
-                <p className="m-0">
-                  The DPMA processes your application and assigns it to an examining attorney. Your application appears
-                  in the DPMA database but hasn't been reviewed yet.
-                </p>
-              </div>
-            </div>
-
-            {/* Examination */}
-            <div className="relative mb-8 pl-12">
-              <div className="absolute left-0 w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center">
-                <Search className="h-4 w-4" />
-              </div>
-              <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
-                <h3 className="font-semibold text-lg mb-1 text-indigo-800">Substantive Examination</h3>
-                <p className="text-sm text-gray-500 mb-2">2-4 months</p>
-                <p className="m-0">
-                  An examining attorney reviews your application for compliance with trademark laws and regulations.
-                  They may issue an office action if there are issues to address.
-                </p>
-              </div>
-            </div>
-
-            {/* Office Action Response (if applicable) */}
-            <div className="relative mb-8 pl-12">
-              <div className="absolute left-0 w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center">
-                <FileText className="h-4 w-4" />
-              </div>
-              <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
-                <h3 className="font-semibold text-lg mb-1 text-indigo-800">Office Action Response Period</h3>
-                <p className="text-sm text-gray-500 mb-2">1-2 months</p>
-                <p className="m-0">
-                  If you receive an office action, you have 1-2 months to respond (with possible extensions). The
-                  examining attorney will review your response and either approve your application or issue another
-                  office action.
-                </p>
-              </div>
-            </div>
-
-            {/* Registration */}
-            <div className="relative mb-8 pl-12">
-              <div className="absolute left-0 w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center">
-                <Award className="h-4 w-4" />
-              </div>
-              <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
-                <h3 className="font-semibold text-lg mb-1 text-indigo-800">Registration</h3>
-                <p className="text-sm text-gray-500 mb-2">4-8 months after filing</p>
-                <p className="m-0">
-                  If your application is approved, the DPMA will register your trademark. You can now use the ® symbol
-                  with your mark in Germany.
-                </p>
-              </div>
-            </div>
-
-            {/* Opposition Period */}
-            <div className="relative pl-12">
-              <div className="absolute left-0 w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center">
-                <AlertTriangle className="h-4 w-4" />
-              </div>
-              <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
-                <h3 className="font-semibold text-lg mb-1 text-indigo-800">Opposition Period</h3>
-                <p className="text-sm text-gray-500 mb-2">3 months after registration</p>
-                <p className="m-0">
-                  Third parties have 3 months from the date of registration to file an opposition. If no opposition is
-                  filed (or if any opposition is resolved in your favor), your registration is confirmed.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-blue-50 p-5 rounded-lg border border-blue-100 my-6">
-            <h3 className="font-semibold text-lg mb-2 text-blue-800">Total Timeline</h3>
-            <p className="mb-3">The entire process typically takes:</p>
-            <ul className="list-disc pl-5 space-y-1 m-0">
-              <li>
-                <strong>Without office actions:</strong> 4-8 months from filing to registration
-              </li>
-              <li>
-                <strong>With office actions:</strong> Add 2-4 months for each office action response and review
-              </li>
-              <li>
-                <strong>Opposition period:</strong> 3 months after registration
-              </li>
-            </ul>
-            <p className="mt-3 italic text-blue-700">
-              Note: These timelines are estimates based on current DPMA processing times. Actual timelines may vary
-              based on application complexity and DPMA workload.
-            </p>
-          </div>
-
-          <h2 id="faqs" className="flex items-center text-2xl font-bold text-indigo-900 mb-4 mt-12 scroll-mt-20">
-            <HelpCircle className="mr-3 h-6 w-6 text-indigo-700" />
-            Frequently Asked Questions
-          </h2>
-
-          <div className="space-y-6 my-6">
+          <div className="space-y-6 my-8 not-prose">
             {[
               {
-                q: "Can I file a German trademark application myself, or do I need an attorney?",
-                a: "While you can file a trademark application yourself, the DPMA recommends using a qualified trademark attorney, especially for foreign applicants. The application process involves legal complexities, and an attorney can help navigate potential issues, respond to office actions, and improve your chances of successful registration.",
+                q: "Can I file a trademark application myself?",
+                a: "Yes, the DPMA allows individuals and businesses to file applications directly. However, trademark law is complex and errors can be costly. Most businesses benefit from professional guidance to ensure their application is done correctly the first time.",
               },
               {
-                q: "What's the difference between a German national trademark and an EU trademark?",
-                a: "A German national trademark provides protection only within Germany, while an EU trademark (EUTM) provides protection across all 27 EU member states. If you only need protection in Germany, a national filing may be more cost-effective. However, if you plan to do business in multiple EU countries, an EUTM might be more efficient.",
+                q: "Do I need a trademark attorney in Germany?",
+                a: "For German nationals and EU residents, legal representation is optional. For applicants outside the EU, the DPMA requires representation by a German trademark attorney or agent.",
               },
               {
-                q: "How long does German trademark protection last?",
-                a: "German trademark registrations last for 10 years from the filing date and can be renewed indefinitely for additional 10-year periods as long as you continue to use the mark and pay the renewal fees.",
+                q: "What's the difference between ™ and ®?",
+                a: "™ can be used by anyone claiming trademark rights, even without registration. ® can only be used once your trademark is officially registered with the DPMA. Using ® without registration is illegal in Germany.",
               },
               {
-                q: "Can I file for a trademark before I start using it in Germany?",
-                a: "Yes, unlike some countries, Germany does not require proof of use to obtain registration. However, if you don't use your mark in commerce within 5 years of registration, it becomes vulnerable to cancellation for non-use.",
+                q: "Can I register a trademark in multiple countries?",
+                a: "Yes. You can file separate national applications, apply for an EU trademark (covering all 27 EU countries), or use the Madrid System for international registration covering up to 130 countries.",
               },
               {
-                q: "What if someone is already using a similar mark in Germany?",
-                a: "This depends on several factors, including who used it first, whether it's registered, and how similar the goods/services are. In some cases, you might need to modify your mark, limit your goods/services, or consider a different name. In others, coexistence might be possible. This is definitely a situation where professional guidance is valuable.",
+                q: "What happens if someone opposes my trademark?",
+                a: "If a third party files an opposition, you'll need to defend your application by arguing why your mark doesn't infringe their rights. This can involve legal arguments, evidence of use, and negotiation. Professional representation is highly recommended in opposition proceedings.",
               },
               {
-                q: "Do I need separate registrations for different products or services?",
-                a: "Not necessarily. A single trademark application can cover multiple related goods and services, grouped into different 'classes.' Each class requires additional fees, but it's often more cost-effective than filing separate applications. Strategic class selection is important to ensure comprehensive protection for your business activities.",
+                q: "How long does trademark protection last?",
+                a: "German trademarks are valid for 10 years from the filing date. They can be renewed indefinitely in 10-year periods as long as you continue to pay renewal fees and actually use the trademark.",
               },
             ].map((faq, index) => (
-              <div key={index} className="bg-white p-5 rounded-lg border border-gray-200 shadow-sm">
-                <h3 className="font-semibold text-lg mb-2 text-indigo-800">{faq.q}</h3>
-                <p className="text-gray-700 m-0">{faq.a}</p>
+              <div key={index} className="bg-white p-6 rounded-lg border border-gray-200">
+                <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-start gap-2">
+                  <HelpCircle className="w-5 h-5 text-blue-700 flex-shrink-0 mt-1" />
+                  {faq.q}
+                </h3>
+                <p className="text-gray-700 leading-relaxed pl-7">{faq.a}</p>
               </div>
             ))}
           </div>
 
-          <div className="my-12 rounded-lg overflow-hidden shadow-lg">
-            <div className="grid md:grid-cols-2">
-              <div className="bg-gradient-to-br from-blue-600 to-blue-800 p-8 flex flex-col justify-center">
-                <h2 className="text-2xl font-bold mb-4 text-white">Ready to Secure Your Brand in Germany?</h2>
-                <p className="mb-6 text-blue-100">
-                  Let our experts guide you through the complexities of German trademark law and registration.
-                </p>
-                <div className="flex justify-center">
-                  <div className="bg-blue-500/30 p-4 rounded-full">
-                    <Award className="h-16 w-16 text-white/80" />
-                  </div>
-                </div>
-              </div>
-              <div className="p-8 bg-white flex flex-col justify-center">
-                <p className="text-gray-700 mb-6">
-                  Whether you're a German business or looking to expand into the European market, taking action now can
-                  save you from costly disputes in the future.
-                </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white">
-                    <Link href="/verification">Start Registration</Link>
-                  </Button>
-                  <Button asChild variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50">
-                    <Link href="/free-search">Free Trademark Search</Link>
-                  </Button>
-                </div>
-              </div>
+          <div className="bg-gradient-to-r from-gray-900 to-blue-900 rounded-2xl p-10 my-16 not-prose text-center">
+            <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">Ready to Protect Your Brand in Germany?</h3>
+            <p className="text-lg text-blue-100 mb-6 max-w-2xl mx-auto leading-relaxed">
+              Our specialists handle the entire registration process for you - from comprehensive searches to filing and
+              examiner responses. Fixed pricing, no surprises, 24-hour response guarantee.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button asChild size="lg" className="bg-white text-blue-900 hover:bg-blue-50 text-lg">
+                <Link href="/verification">Start Your Registration - €1,551</Link>
+              </Button>
+              <Button
+                asChild
+                size="lg"
+                variant="outline"
+                className="border-2 border-white text-white hover:bg-white/10 text-lg bg-transparent"
+              >
+                <Link href="/free-search">Free Trademark Search</Link>
+              </Button>
             </div>
+            <p className="text-sm text-blue-200 mt-4">Trusted by 10,000+ businesses worldwide</p>
           </div>
 
-          <div className="border-t border-gray-200 pt-8 mt-12">
-            <p className="text-sm text-gray-600 italic">
-              This article was last updated on March 25, 2024, to reflect the latest DPMA procedures and requirements.
-              While we strive to provide accurate and up-to-date information, trademark law is complex and subject to
-              change. For advice specific to your situation, we recommend consulting with a trademark professional.
-            </p>
-          </div>
+          <h2 className="text-3xl font-bold text-gray-900 mt-16 mb-6">Next Steps</h2>
+
+          <p className="text-lg text-gray-700 leading-relaxed mb-6">
+            Whether you decide to file your trademark yourself or work with specialists, the most important step is to
+            start now. Trademark rights are granted on a first-to-file basis in Germany, meaning delays could cost you
+            your brand name if someone else files first.
+          </p>
+
+          <p className="text-lg text-gray-700 leading-relaxed mb-6">
+            If you're ready to move forward, here's what we recommend:
+          </p>
+
+          <ol className="space-y-4 my-6">
+            <li className="flex items-start gap-3">
+              <span className="flex-shrink-0 w-8 h-8 bg-blue-700 text-white rounded-full flex items-center justify-center font-bold text-sm">
+                1
+              </span>
+              <span className="text-gray-700 flex-1">
+                <strong>Conduct a preliminary search</strong> to ensure your desired trademark is available
+              </span>
+            </li>
+            <li className="flex items-start gap-3">
+              <span className="flex-shrink-0 w-8 h-8 bg-blue-700 text-white rounded-full flex items-center justify-center font-bold text-sm">
+                2
+              </span>
+              <span className="text-gray-700 flex-1">
+                <strong>Determine your trademark type</strong> (word mark, logo, combined mark, etc.)
+              </span>
+            </li>
+            <li className="flex items-start gap-3">
+              <span className="flex-shrink-0 w-8 h-8 bg-blue-700 text-white rounded-full flex items-center justify-center font-bold text-sm">
+                3
+              </span>
+              <span className="text-gray-700 flex-1">
+                <strong>Identify the correct classes</strong> for your goods and services
+              </span>
+            </li>
+            <li className="flex items-start gap-3">
+              <span className="flex-shrink-0 w-8 h-8 bg-blue-700 text-white rounded-full flex items-center justify-center font-bold text-sm">
+                4
+              </span>
+              <span className="text-gray-700 flex-1">
+                <strong>Prepare and file your application</strong> with the DPMA
+              </span>
+            </li>
+            <li className="flex items-start gap-3">
+              <span className="flex-shrink-0 w-8 h-8 bg-blue-700 text-white rounded-full flex items-center justify-center font-bold text-sm">
+                5
+              </span>
+              <span className="text-gray-700 flex-1">
+                <strong>Monitor and respond</strong> to any office actions or oppositions
+              </span>
+            </li>
+          </ol>
+
+          <p className="text-lg text-gray-700 leading-relaxed">
+            Have questions about your specific situation? Feel free to reach out to our team at{" "}
+            <a href="mailto:trademarks@justprotected.com" className="text-blue-700 hover:text-blue-800 font-semibold">
+              trademarks@justprotected.com
+            </a>{" "}
+            - we're here to help.
+          </p>
         </div>
       </article>
+
       <Footer />
     </main>
   )

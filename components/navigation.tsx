@@ -33,6 +33,9 @@ export function Navigation() {
           <Link href="/detailed-pricelist" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
             Pricing
           </Link>
+          <Link href="/legal-services" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
+            Legal Services
+          </Link>
           <Link href="/blog" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
             Blog
           </Link>
@@ -68,6 +71,13 @@ export function Navigation() {
                 onClick={() => setIsMenuOpen(false)}
               >
                 Pricing
+              </Link>
+              <Link
+                href="/legal-services"
+                className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Legal Services
               </Link>
               <Link
                 href="/blog"
