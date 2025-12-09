@@ -201,144 +201,81 @@ export default function RegisterTrademarkFranceClientPage() {
               The Trademark Application Process in France
             </h2>
 
-            <h3 className="text-xl font-semibold mb-3" id="step1">
-              Step 1: Prepare Your Application
-            </h3>
-            <p className="mb-6">A complete trademark application to INPI must include:</p>
+            <p className="mb-6">
+              Registering a trademark in France involves a complex multi-step process through INPI (Institut National de
+              la Propriété Industrielle). While it may seem straightforward at first glance, the process requires
+              careful attention to legal requirements, proper classification of goods and services, and strategic
+              decision-making at each stage.
+            </p>
+
+            <p className="mb-6">The registration process typically includes:</p>
 
             <ul className="list-disc pl-6 mb-6">
-              <li className="mb-2">Applicant information (name, address, nationality)</li>
-              <li className="mb-2">A clear representation of the trademark</li>
+              <li className="mb-2">Comprehensive preliminary trademark searches to avoid conflicts</li>
               <li className="mb-2">
-                A list of goods and services for which protection is sought, classified according to the Nice
-                Classification system
+                Proper preparation and classification of goods and services using the Nice Classification system
               </li>
-              <li className="mb-2">Payment of the official fees</li>
-              <li className="mb-2">Power of attorney (if filed through a representative)</li>
-              <li className="mb-2">Priority claim documents (if applicable)</li>
+              <li className="mb-2">
+                Formal application filing with complete documentation and accurate representation of the mark
+              </li>
+              <li className="mb-2">Navigation of the examination process and responding to any office actions</li>
+              <li className="mb-2">Monitoring and managing the opposition period</li>
+              <li className="mb-2">Finalizing registration and maintaining ongoing compliance</li>
             </ul>
 
-            <h3 className="text-xl font-semibold mb-3" id="step2">
-              Step 2: File Your Application
-            </h3>
-            <p className="mb-6">You can file your trademark application:</p>
-
-            <ul className="list-disc pl-6 mb-6">
-              <li className="mb-2">
-                <strong>Online:</strong> Through the{" "}
-                <a
-                  href="https://www.inpi.fr/fr/services-et-prestations/depot-de-marque-en-ligne"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 hover:underline"
-                >
-                  INPI e-filing system
-                </a>{" "}
-                (recommended)
-              </li>
-              <li className="mb-2">
-                <strong>By Mail:</strong> Send your application to INPI's headquarters in Paris
-              </li>
-              <li className="mb-2">
-                <strong>In Person:</strong> At INPI's headquarters or regional offices
-              </li>
-            </ul>
-
-            <p className="mb-6">
-              Non-EU applicants must appoint a representative domiciled in the European Economic Area (EEA) to file and
-              prosecute the application.
-            </p>
-
-            <h3 className="text-xl font-semibold mb-3" id="step3">
-              Step 3: Examination
-            </h3>
-            <p className="mb-6">
-              Once filed, your application will undergo a formal and substantive examination by INPI. The examination
-              process includes:
-            </p>
-
-            <ul className="list-disc pl-6 mb-6">
-              <li className="mb-2">
-                <strong>Formal Examination:</strong> Checking that the application meets all administrative requirements
-              </li>
-              <li className="mb-2">
-                <strong>Substantive Examination:</strong> Assessing the trademark against absolute grounds for refusal
-                (e.g., distinctiveness, descriptiveness, public policy)
-              </li>
-              <li className="mb-2">
-                <strong>Classification Check:</strong> Ensuring goods and services are properly classified
-              </li>
-            </ul>
-
-            <p className="mb-6">
-              INPI does not automatically examine applications for conflicts with earlier rights (relative grounds).
-              Instead, owners of earlier rights can file oppositions during the opposition period.
-            </p>
-
-            <h3 className="text-xl font-semibold mb-3" id="step4">
-              Step 4: Publication and Opposition Period
-            </h3>
-            <p className="mb-6">
-              If the application passes the examination, it will be published in the Official Bulletin of Industrial
-              Property (BOPI). This starts a two-month opposition period during which third parties can file oppositions
-              based on earlier rights.
-            </p>
-
-            <h3 className="text-xl font-semibold mb-3" id="step5">
-              Step 5: Registration
-            </h3>
-            <p className="mb-6">
-              If no oppositions are filed (or if oppositions are resolved in your favor), INPI will register the
-              trademark and issue a registration certificate. The trademark will be valid for 10 years from the filing
-              date and can be renewed indefinitely for additional 10-year periods.
-            </p>
+            <div className="bg-yellow-50 border-l-4 border-yellow-400 p-5 mb-8">
+              <p className="font-semibold">Why Professional Assistance Matters:</p>
+              <p className="mb-2">
+                The French trademark system has many nuances and potential pitfalls. Errors in your application can
+                result in rejection, delays, or inadequate protection. Common issues include:
+              </p>
+              <ul className="list-disc pl-6 mt-2">
+                <li>Improper classification leading to gaps in protection</li>
+                <li>Inadequate searches resulting in conflicts with existing marks</li>
+                <li>Technical errors in application preparation</li>
+                <li>Missing deadlines during the opposition or examination phases</li>
+                <li>Incomplete documentation for non-EU applicants</li>
+              </ul>
+            </div>
 
             <h2 className="text-2xl font-bold mb-4" id="costs">
-              Costs of Trademark Registration in France
+              Understanding the Investment in Trademark Protection
             </h2>
-            <p className="mb-6">The costs of registering a trademark in France include:</p>
 
-            <table className="min-w-full border-collapse mb-6">
-              <thead>
-                <tr className="bg-gray-100">
-                  <th className="border border-gray-300 px-4 py-2 text-left">Fee Type</th>
-                  <th className="border border-gray-300 px-4 py-2 text-right">Cost (EUR)</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td className="border border-gray-300 px-4 py-2">Basic filing fee (up to 3 classes)</td>
-                  <td className="border border-gray-300 px-4 py-2 text-right">€190</td>
-                </tr>
-                <tr>
-                  <td className="border border-gray-300 px-4 py-2">Additional class fee (per class beyond 3)</td>
-                  <td className="border border-gray-300 px-4 py-2 text-right">€40</td>
-                </tr>
-                <tr>
-                  <td className="border border-gray-300 px-4 py-2">Priority claim</td>
-                  <td className="border border-gray-300 px-4 py-2 text-right">€0</td>
-                </tr>
-                <tr>
-                  <td className="border border-gray-300 px-4 py-2">Renewal fee (up to 3 classes)</td>
-                  <td className="border border-gray-300 px-4 py-2 text-right">€290</td>
-                </tr>
-                <tr>
-                  <td className="border border-gray-300 px-4 py-2">
-                    Renewal additional class fee (per class beyond 3)
-                  </td>
-                  <td className="border border-gray-300 px-4 py-2 text-right">€40</td>
-                </tr>
-              </tbody>
-            </table>
-
-            <p className="mb-6">Additional costs may include:</p>
+            <p className="mb-6">
+              Protecting your trademark in France involves various costs that go beyond simple filing fees. The total
+              investment depends on several factors:
+            </p>
 
             <ul className="list-disc pl-6 mb-6">
-              <li className="mb-2">Attorney or agent fees (if using professional services)</li>
-              <li className="mb-2">Trademark search fees</li>
-              <li className="mb-2">Translation costs (if documents are not in French)</li>
-              <li className="mb-2">Opposition or appeal fees (if applicable)</li>
+              <li className="mb-2">The number of classes of goods and services you need to cover</li>
+              <li className="mb-2">Whether you need a local representative (required for non-EU applicants)</li>
+              <li className="mb-2">Comprehensive trademark searches to avoid conflicts</li>
+              <li className="mb-2">Professional preparation and classification of your application</li>
+              <li className="mb-2">Monitoring services during the opposition period</li>
+              <li className="mb-2">Response to any office actions or objections</li>
+              <li className="mb-2">Ongoing maintenance and renewal services</li>
             </ul>
+
+            <p className="mb-6">
+              While DIY filing may seem cost-effective initially, errors or inadequate protection can be far more
+              expensive to correct later. Professional trademark services ensure your application is done right the
+              first time, providing comprehensive protection and avoiding costly mistakes.
+            </p>
+
+            <div className="bg-blue-50 p-6 rounded-lg mb-8">
+              <h3 className="text-xl font-semibold mb-3">Get a Customized Quote</h3>
+              <p className="mb-4">
+                The cost of trademark protection varies based on your specific needs. Our team can provide a detailed
+                quote tailored to your situation, covering all aspects of the registration process.
+              </p>
+              <Link
+                href="/detailed-pricelist"
+                className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors"
+              >
+                View Pricing & Services
+              </Link>
+            </div>
 
             <h2 className="text-2xl font-bold mb-4" id="timeline">
               Timeline for Trademark Registration in France
@@ -417,44 +354,34 @@ export default function RegisterTrademarkFranceClientPage() {
 
             <p className="mb-6">Key considerations for EUTM vs. French national trademark:</p>
 
-            <table className="min-w-full border-collapse mb-6">
-              <thead>
-                <tr className="bg-gray-100">
-                  <th className="border border-gray-300 px-4 py-2">Factor</th>
-                  <th className="border border-gray-300 px-4 py-2">French National Trademark</th>
-                  <th className="border border-gray-300 px-4 py-2">EU Trademark</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td className="border border-gray-300 px-4 py-2">Coverage</td>
-                  <td className="border border-gray-300 px-4 py-2">France only</td>
-                  <td className="border border-gray-300 px-4 py-2">All 27 EU member states</td>
-                </tr>
-                <tr>
-                  <td className="border border-gray-300 px-4 py-2">Basic Filing Fee</td>
-                  <td className="border border-gray-300 px-4 py-2">€190 (up to 3 classes)</td>
-                  <td className="border border-gray-300 px-4 py-2">
-                    €850 (1 class), €50 (2nd class), €150 (each additional class)
-                  </td>
-                </tr>
-                <tr>
-                  <td className="border border-gray-300 px-4 py-2">Examination</td>
-                  <td className="border border-gray-300 px-4 py-2">Generally faster</td>
-                  <td className="border border-gray-300 px-4 py-2">May take longer</td>
-                </tr>
-                <tr>
-                  <td className="border border-gray-300 px-4 py-2">Risk of Rejection</td>
-                  <td className="border border-gray-300 px-4 py-2">Lower (only needs to clear French market)</td>
-                  <td className="border border-gray-300 px-4 py-2">Higher (must clear all EU markets)</td>
-                </tr>
-                <tr>
-                  <td className="border border-gray-300 px-4 py-2">Use Requirement</td>
-                  <td className="border border-gray-300 px-4 py-2">Must be used in France within 5 years</td>
-                  <td className="border border-gray-300 px-4 py-2">Genuine use in one EU country is sufficient</td>
-                </tr>
-              </tbody>
-            </table>
+            <ul className="list-disc pl-6 mb-6">
+              <li className="mb-2">
+                <strong>Coverage:</strong> French national trademark protects only in France, while EUTM covers all 27
+                EU member states
+              </li>
+              <li className="mb-2">
+                <strong>Examination:</strong> French national applications are generally faster and face fewer potential
+                conflicts
+              </li>
+              <li className="mb-2">
+                <strong>Risk Management:</strong> French trademark only needs to clear the French market, while EUTM
+                must clear all EU markets
+              </li>
+              <li className="mb-2">
+                <strong>Use Requirements:</strong> Both require genuine use, but EUTM allows use in any EU country to
+                maintain rights
+              </li>
+              <li className="mb-2">
+                <strong>Cost Efficiency:</strong> For businesses operating in multiple EU countries, EUTM can be more
+                cost-effective
+              </li>
+            </ul>
+
+            <p className="mb-6">
+              Choosing between a French national trademark and an EU trademark depends on your business strategy, target
+              markets, and budget. Our trademark specialists can help you determine the most effective approach for your
+              specific situation.
+            </p>
 
             <h3 className="text-xl font-semibold mb-3">Madrid System</h3>
             <p className="mb-6">
@@ -629,7 +556,7 @@ export default function RegisterTrademarkFranceClientPage() {
                 </li>
                 <li>
                   <a href="#costs" className="text-blue-600 hover:underline">
-                    Costs of Registration
+                    Understanding the Investment
                   </a>
                 </li>
                 <li>
