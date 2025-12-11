@@ -1,13 +1,13 @@
-import Image from "next/image"
 import { NavBar } from "@/components/nav-bar"
 import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import { Shield, AlertTriangle, TrendingUp, Clock } from "lucide-react"
 
 export const metadata = {
-  title: "How to Register a Trademark in Brazil (2024) | Complete Guide",
+  title: "Register a Trademark in Brazil: What You Need to Know (2024)",
   description:
-    "Master the process of trademark registration in Brazil. Learn about local requirements, costs, and strategies for protecting your brand in the Brazilian market.",
+    "Brazil's trademark landscape is complex and competitive. Learn why professional guidance is essential for protecting your brand in South America's largest market.",
   keywords:
     "Brazil trademark registration, Brazilian IP law, INPI, brand protection Brazil, intellectual property Brazil, trademark filing Brazil",
   alternates: {
@@ -17,186 +17,319 @@ export const metadata = {
 
 export default function RegisterTrademarkBrazil() {
   return (
-    <main className="bg-gradient-to-b from-indigo-50 to-white min-h-screen">
+    <main className="bg-gradient-to-b from-blue-50 to-white min-h-screen">
       <NavBar />
-      <article className="container mx-auto px-4 py-16 max-w-3xl">
-        <Image
-          src="https://images.unsplash.com/photo-1483729558449-99ef09a8c325?w=1600&h=800&fit=crop"
-          alt="Rio de Janeiro cityscape representing trademark registration in Brazil"
-          width={1600}
-          height={800}
-          className="w-full h-auto rounded-lg shadow-md mb-8"
-        />
 
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-4 text-yellow-900">
-            Trademark Registration in Brazil: Comprehensive Guide 2024
-          </h1>
-          <p className="text-gray-600">
-            Updated: {new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}
-          </p>
+      {/* Hero Section */}
+      <div className="relative bg-gradient-to-r from-blue-900 to-indigo-900 text-white py-20">
+        <div className="container mx-auto px-4 max-w-4xl">
+          <div className="text-center">
+            <h1 className="text-4xl md:text-5xl font-bold mb-6 text-balance">
+              Registering a Trademark in Brazil: Navigate the Complexity
+            </h1>
+            <p className="text-xl text-blue-100 mb-8 text-pretty">
+              Brazil's trademark system is notoriously complex. Here's what you need to know to protect your brand in
+              South America's largest economy.
+            </p>
+            <p className="text-sm text-blue-200">
+              Updated: {new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}
+            </p>
+          </div>
+        </div>
+      </div>
 
-          <div className="mt-6 p-4 bg-yellow-50 rounded-lg border border-yellow-100">
-            <h2 className="text-lg font-semibold mb-2 text-yellow-800">In this guide, you'll discover:</h2>
-            <ul className="list-disc list-inside space-y-1 text-yellow-700">
-              <li>The intricacies of Brazil's trademark registration system</li>
-              <li>Step-by-step process for filing with INPI (Instituto Nacional da Propriedade Industrial)</li>
-              <li>Unique aspects of Brazilian intellectual property law</li>
-              <li>Cost estimates and expected timelines</li>
-              <li>Strategies for effective brand protection in the Brazilian market</li>
-            </ul>
+      <article className="container mx-auto px-4 py-16 max-w-4xl">
+        {/* Key Stats Section */}
+        <div className="grid md:grid-cols-3 gap-6 mb-16">
+          <div className="bg-white p-6 rounded-lg shadow-md border-t-4 border-blue-600">
+            <div className="text-3xl font-bold text-blue-700 mb-2">24-36 months</div>
+            <div className="text-gray-600">Average processing time</div>
+          </div>
+          <div className="bg-white p-6 rounded-lg shadow-md border-t-4 border-blue-600">
+            <div className="text-3xl font-bold text-blue-700 mb-2">68%</div>
+            <div className="text-gray-600">Applications face objections</div>
+          </div>
+          <div className="bg-white p-6 rounded-lg shadow-md border-t-4 border-blue-600">
+            <div className="text-3xl font-bold text-blue-700 mb-2">220M+</div>
+            <div className="text-gray-600">Consumers in Brazilian market</div>
           </div>
         </div>
 
-        <div className="prose prose-yellow max-w-none">
-          <h2>Understanding Trademark Registration in Brazil</h2>
-          <p>
-            Securing a trademark in Brazil is essential for businesses looking to protect their brand in South America's
-            largest economy. The process is administered by the Brazilian National Institute of Industrial Property
-            (INPI) and offers several key advantages:
-          </p>
-          <ul>
-            <li>Exclusive rights to your mark across Brazil's vast territory</li>
-            <li>Legal recourse against infringement and counterfeiting</li>
-            <li>A strong foundation for expanding your brand throughout South America</li>
-          </ul>
-
-          <h2>Navigating Brazil's Trademark Landscape</h2>
-
-          <h3>1. Comprehensive Trademark Search</h3>
-          <p>Before filing, conducting a thorough search is crucial to avoid conflicts. This involves:</p>
-          <ul>
-            <li>Searching INPI's extensive database</li>
-            <li>Considering both visual and phonetic similarities</li>
-            <li>Evaluating potential conflicts with well-known marks in Brazil</li>
-          </ul>
-
-          <h3>2. Preparing Your Application</h3>
-          <p>A well-prepared Brazilian trademark application typically includes:</p>
-          <ul>
-            <li>A clear representation of your mark (with specific format requirements)</li>
-            <li>A detailed specification of goods or services, following the Nice Classification</li>
-            <li>Applicant information, including a local address for correspondence</li>
-            <li>Power of attorney, if filed through a representative (with specific Brazilian requirements)</li>
-          </ul>
-
-          <h3>3. Filing and Examination Process</h3>
-          <p>The filing process in Brazil has some unique characteristics:</p>
-          <ul>
-            <li>Applications are filed electronically through INPI's e-INPI system</li>
-            <li>INPI conducts both formal and substantive examinations</li>
-            <li>There's a specific opposition period after publication</li>
-            <li>Responses to office actions often require in-depth knowledge of Brazilian trademark law</li>
-          </ul>
-
-          <h2>Costs and Timelines in the Brazilian Context</h2>
-          <div className="bg-white p-6 rounded-lg my-8 shadow-md">
-            <h3 className="text-xl font-semibold mb-4 text-yellow-700">Estimated Fees and Timeframes</h3>
-            <p>Trademark registration costs in Brazil typically include:</p>
-            <ul>
-              <li>Official filing fees (per class)</li>
-              <li>Attorney fees for preparation and prosecution</li>
-              <li>Potential costs for responding to office actions or oppositions</li>
-            </ul>
-
-            <h4 className="text-lg font-semibold mt-6 mb-2 text-yellow-700">Approximate Timeline</h4>
-            <p>The trademark registration process in Brazil generally takes:</p>
-            <ul>
-              <li>12-18 months without objections</li>
-              <li>Up to 24-36 months if oppositions or office actions arise</li>
-            </ul>
-            <p className="mt-4 text-sm text-gray-600">
-              Note: Timelines can vary based on INPI's workload and the complexity of the application.
-            </p>
-          </div>
-
-          <h2>Unique Aspects of Brazilian Trademark Law</h2>
-          <ol>
-            <li>
-              Multi-class Applications: Brazil recently introduced multi-class applications, streamlining the process
-              for many applicants
-            </li>
-            <li>
-              Co-existence Agreements: These are generally accepted by INPI, offering flexibility in resolving potential
-              conflicts
-            </li>
-            <li>
-              Well-known Mark Status: Brazil offers special protection for well-known marks, but the process is complex
-              and requires substantial evidence
-            </li>
-          </ol>
-
-          <h2>Maintaining and Enforcing Your Brazilian Trademark</h2>
-          <p>After registration, protecting your mark in Brazil involves:</p>
-          <ul>
-            <li>Using the mark in commerce to avoid non-use cancellation</li>
-            <li>Renewing the registration every 10 years</li>
-            <li>Actively monitoring the market for infringements</li>
-            <li>Considering recordation with Brazilian customs for border measures</li>
-          </ul>
-
-          <div className="bg-yellow-50 border border-yellow-100 rounded-lg p-6 my-8">
-            <h2 className="text-xl font-semibold mb-4 text-yellow-800">
-              Why Choose Protect.ly for Your Brazilian Trademark Registration?
+        {/* Main Content */}
+        <div className="prose prose-lg max-w-none">
+          {/* Why Brazil Matters */}
+          <section className="mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+              <TrendingUp className="text-blue-600" />
+              Why Brazil Demands Serious Trademark Protection
             </h2>
-            <ul className="space-y-3">
-              <li className="flex items-start">
-                <span className="text-yellow-500 mr-2">✓</span>
-                <span>Deep understanding of Brazil's complex trademark system</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-yellow-500 mr-2">✓</span>
-                <span>Expertise in navigating INPI procedures and local regulations</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-yellow-500 mr-2">✓</span>
-                <span>Comprehensive search capabilities, including regional variations</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-yellow-500 mr-2">✓</span>
-                <span>Strategic advice for long-term brand protection in Brazil</span>
-              </li>
-            </ul>
-          </div>
-
-          <h2>Frequently Asked Questions</h2>
-          <div className="space-y-4">
-            <div>
-              <h3 className="font-semibold text-lg">Is use of a trademark required before registration in Brazil?</h3>
-              <p>
-                No, Brazil follows a first-to-file system. However, use becomes important for maintaining the
-                registration and avoiding non-use cancellation.
-              </p>
-            </div>
-            <div>
-              <h3 className="font-semibold text-lg">Can foreign companies directly register trademarks in Brazil?</h3>
-              <p>
-                Yes, but a local representative is required for companies without a Brazilian presence. This
-                representative will receive official communications from INPI.
-              </p>
-            </div>
-            <div>
-              <h3 className="font-semibold text-lg">How does Brazil handle trademark oppositions?</h3>
-              <p>
-                Brazil has a specific opposition period after the trademark application is published. Third parties have
-                60 days to file an opposition.
-              </p>
-            </div>
-          </div>
-
-          <div className="my-8 p-6 bg-yellow-50 rounded-lg text-center">
-            <h2 className="text-2xl font-bold mb-4 text-yellow-900">Ready to Protect Your Brand in Brazil?</h2>
-            <p className="mb-6 text-lg">
-              Let our experts guide you through the complexities of Brazilian trademark law and registration.
+            <p className="text-lg text-gray-700 leading-relaxed mb-4">
+              Brazil represents one of the world's most dynamic emerging markets, with over 220 million consumers and a
+              rapidly growing e-commerce sector. However, the trademark landscape is uniquely challenging.
             </p>
-            <div className="flex justify-center gap-4">
-              <Button asChild className="bg-yellow-600 hover:bg-yellow-700 text-white">
-                <Link href="/verification">Start Your Brazilian Trademark Journey</Link>
+            <div className="bg-blue-50 border-l-4 border-blue-600 p-6 my-6 rounded-r-lg">
+              <p className="text-gray-800 font-medium mb-2">Brazil operates on a strict first-to-file system:</p>
+              <p className="text-gray-700">
+                Unlike the US where use matters, in Brazil whoever files first owns the trademark—regardless of who used
+                it first. This creates a highly competitive filing environment where trademark squatting is common.
+              </p>
+            </div>
+            <p className="text-lg text-gray-700 leading-relaxed">
+              The Instituto Nacional da Propriedade Industrial (INPI) receives over 180,000 trademark applications
+              annually, making it one of the busiest trademark offices in Latin America. The backlog and complexity mean
+              strategic filing is essential.
+            </p>
+          </section>
+
+          {/* Complexity Section */}
+          <section className="mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+              <AlertTriangle className="text-blue-600" />
+              Why Brazilian Trademark Registration Is Uniquely Complex
+            </h2>
+
+            <div className="space-y-6">
+              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">1. Lengthy Examination Process</h3>
+                <p className="text-gray-700">
+                  INPI's examination process typically takes 24-36 months, one of the longest in the region. During this
+                  time, your application goes through multiple review stages, publications, and potential opposition
+                  periods.
+                </p>
+              </div>
+
+              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">2. High Objection Rate</h3>
+                <p className="text-gray-700">
+                  Approximately 68% of applications receive objections from INPI. These can range from technical
+                  formalities to substantive refusals based on prior rights, descriptiveness, or public policy concerns
+                  unique to Brazilian law.
+                </p>
+              </div>
+
+              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">3. Mandatory Local Representation</h3>
+                <p className="text-gray-700">
+                  Foreign applicants must work through a Brazilian attorney or agent with a local address. All official
+                  communications happen in Portuguese, and responses require knowledge of Brazilian trademark
+                  jurisprudence.
+                </p>
+              </div>
+
+              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">4. Use Requirements and Cancellation Risk</h3>
+                <p className="text-gray-700">
+                  While Brazil is first-to-file, registered trademarks must be used within 5 years or face cancellation.
+                  Proving use requires specific documentation and strategic planning for market entry timing.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          {/* Common Pitfalls */}
+          <section className="mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">Common Pitfalls That Cost Businesses</h2>
+
+            <div className="bg-red-50 border border-red-200 rounded-lg p-6 mb-6">
+              <h3 className="text-xl font-semibold text-red-900 mb-4">Expensive Mistakes to Avoid:</h3>
+              <ul className="space-y-3 text-gray-700">
+                <li className="flex items-start gap-3">
+                  <span className="text-red-600 font-bold">•</span>
+                  <span>
+                    <strong>Inadequate search:</strong> Missing phonetic or visual conflicts specific to Portuguese
+                    language variations can lead to costly refusals or oppositions years into the process.
+                  </span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-red-600 font-bold">•</span>
+                  <span>
+                    <strong>Wrong class selection:</strong> Brazil's interpretation of the Nice Classification differs
+                    in key areas. Incorrect classification means starting over with a new application.
+                  </span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-red-600 font-bold">•</span>
+                  <span>
+                    <strong>Missing deadlines:</strong> INPI has strict deadlines for responding to office actions
+                    (typically 60 days). Missing these means abandonment with no appeal.
+                  </span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-red-600 font-bold">•</span>
+                  <span>
+                    <strong>Trademark squatting:</strong> Competitors and squatters actively monitor foreign brands
+                    entering Brazil. Delayed filing can mean someone else registers your mark first.
+                  </span>
+                </li>
+              </ul>
+            </div>
+          </section>
+
+          {/* Professional Value */}
+          <section className="mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+              <Shield className="text-blue-600" />
+              Why Professional Guidance Matters in Brazil
+            </h2>
+            <p className="text-lg text-gray-700 leading-relaxed mb-6">
+              The Brazilian trademark system requires specialized knowledge that goes far beyond filling out forms.
+              Here's what professional representation provides:
+            </p>
+
+            <div className="grid md:grid-cols-2 gap-6">
+              <div className="bg-blue-50 p-6 rounded-lg">
+                <h4 className="font-semibold text-blue-900 mb-3">Strategic Search & Analysis</h4>
+                <p className="text-gray-700 text-sm">
+                  Comprehensive searching across phonetic Portuguese variations, visual similarities, and translation
+                  conflicts that automated tools miss.
+                </p>
+              </div>
+              <div className="bg-blue-50 p-6 rounded-lg">
+                <h4 className="font-semibold text-blue-900 mb-3">Local Expertise</h4>
+                <p className="text-gray-700 text-sm">
+                  Understanding INPI's examination guidelines, examiner tendencies, and the nuances of Brazilian
+                  trademark jurisprudence.
+                </p>
+              </div>
+              <div className="bg-blue-50 p-6 rounded-lg">
+                <h4 className="font-semibold text-blue-900 mb-3">Response Strategy</h4>
+                <p className="text-gray-700 text-sm">
+                  Crafting persuasive responses to office actions in Portuguese, citing relevant Brazilian case law and
+                  precedents.
+                </p>
+              </div>
+              <div className="bg-blue-50 p-6 rounded-lg">
+                <h4 className="font-semibold text-blue-900 mb-3">Portfolio Management</h4>
+                <p className="text-gray-700 text-sm">
+                  Monitoring use requirements, renewal deadlines, and market surveillance for infringements in Brazil's
+                  complex legal environment.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          {/* Timeline Section */}
+          <section className="mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-6 flex items-center gap-3">
+              <Clock className="text-blue-600" />
+              What to Expect: The Registration Journey
+            </h2>
+            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-8 rounded-lg">
+              <div className="space-y-6">
+                <div className="flex gap-4">
+                  <div className="flex-shrink-0 w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold">
+                    1
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-900 mb-2">Search & Strategy (2-3 weeks)</h4>
+                    <p className="text-gray-700 text-sm">
+                      Comprehensive search and strategic assessment of registrability in Brazil.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex gap-4">
+                  <div className="flex-shrink-0 w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold">
+                    2
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-900 mb-2">Filing & Publication (12-18 months)</h4>
+                    <p className="text-gray-700 text-sm">
+                      Application filed with INPI, formal examination, and publication for opposition.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex gap-4">
+                  <div className="flex-shrink-0 w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold">
+                    3
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-900 mb-2">Substantive Examination (12-18 months)</h4>
+                    <p className="text-gray-700 text-sm">
+                      Detailed review by INPI examiners, potential office actions requiring expert responses.
+                    </p>
+                  </div>
+                </div>
+                <div className="flex gap-4">
+                  <div className="flex-shrink-0 w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center font-bold">
+                    4
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-gray-900 mb-2">Registration & Protection (10 years)</h4>
+                    <p className="text-gray-700 text-sm">
+                      Certificate issued, with ongoing monitoring and use requirements to maintain rights.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* FAQ Section */}
+          <section className="mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">Frequently Asked Questions</h2>
+            <div className="space-y-6">
+              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                <h3 className="font-semibold text-lg text-gray-900 mb-2">
+                  Can I file a trademark in Brazil without using it?
+                </h3>
+                <p className="text-gray-700">
+                  Yes, Brazil is a first-to-file country, so you can file before using the mark. However, you must begin
+                  use within 5 years of registration or face cancellation for non-use.
+                </p>
+              </div>
+              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                <h3 className="font-semibold text-lg text-gray-900 mb-2">
+                  How long does the trademark registration process take in Brazil?
+                </h3>
+                <p className="text-gray-700">
+                  The typical timeline is 24-36 months from filing to registration, though it can take longer if there
+                  are objections, oppositions, or appeals. INPI's backlog means patience is essential.
+                </p>
+              </div>
+              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                <h3 className="font-semibold text-lg text-gray-900 mb-2">
+                  What happens if someone opposes my trademark application?
+                </h3>
+                <p className="text-gray-700">
+                  If an opposition is filed during the 60-day period after publication, you must respond with arguments
+                  and evidence. These proceedings require legal expertise and can add 12+ months to the process.
+                </p>
+              </div>
+              <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                <h3 className="font-semibold text-lg text-gray-900 mb-2">
+                  Do I need a Brazilian attorney to file a trademark?
+                </h3>
+                <p className="text-gray-700">
+                  Foreign applicants are required by law to have a local representative in Brazil. This ensures proper
+                  communication with INPI and compliance with local procedures.
+                </p>
+              </div>
+            </div>
+          </section>
+
+          {/* CTA Section */}
+          <div className="my-12 bg-gradient-to-r from-blue-600 to-indigo-700 text-white p-8 rounded-lg text-center">
+            <h2 className="text-3xl font-bold mb-4">Ready to Protect Your Brand in Brazil?</h2>
+            <p className="text-xl mb-6 text-blue-100">
+              Don't navigate Brazil's complex trademark system alone. Get expert guidance from filing to registration.
+            </p>
+            <div className="flex flex-col sm:flex-row justify-center gap-4">
+              <Button asChild size="lg" className="bg-white text-blue-600 hover:bg-blue-50">
+                <Link href="/verification">Start Your Application</Link>
+              </Button>
+              <Button
+                asChild
+                size="lg"
+                variant="outline"
+                className="border-white text-white hover:bg-blue-700 bg-transparent"
+              >
+                <Link href="/contact">Talk to an Expert</Link>
               </Button>
             </div>
           </div>
         </div>
       </article>
+
       <Footer />
     </main>
   )
