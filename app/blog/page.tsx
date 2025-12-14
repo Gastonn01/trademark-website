@@ -16,6 +16,8 @@ export const metadata: Metadata = {
 function getBlogPosts() {
   // Define all blog post slugs (directories that exist)
   const allSlugs = [
+    "disney-openai-ip-licensing-strategy", // New: Disney's AI IP strategy
+    "argentina-trademark-law-changes-2025", // Featured: Latest Argentina law changes
     "register-trademark-singapore",
     "hermes-metabirkins-trademark-battle",
     "cole-palmer-celebration-trademark",
@@ -77,6 +79,8 @@ function getBlogPosts() {
   // Group articles by category for strategic dating
   const categories = {
     featured: [
+      "disney-openai-ip-licensing-strategy", // New: Disney's AI IP strategy
+      "argentina-trademark-law-changes-2025", // Featured: Latest Argentina law changes
       "register-trademark-singapore",
       "hermes-metabirkins-trademark-battle",
       "cole-palmer-celebration-trademark",
@@ -137,6 +141,9 @@ function getBlogPosts() {
     dateMap[slug] = publishDates[dateIndex++]
   })
 
+  dateMap["argentina-trademark-law-changes-2025"] = new Date() // Set the Argentina article date to today to ensure it appears first
+  dateMap["disney-openai-ip-licensing-strategy"] = new Date() // Set Disney article date to today to feature it
+
   const formatDate = (date: Date): string => {
     return date.toLocaleDateString("en-US", {
       month: "long",
@@ -150,7 +157,7 @@ function getBlogPosts() {
     "register-trademark-singapore": "https://images.unsplash.com/photo-1525625293386-3f8f99389edd?w=600&h=400&fit=crop",
     "register-trademark-usa": "https://images.unsplash.com/photo-1508433957232-3107f5fd5995?w=600&h=400&fit=crop",
     "register-trademark-eu": "https://images.unsplash.com/photo-1519985176271-adb1088fa94c?w=600&h=400&fit=crop",
-    "register-trademark-china": "https://images.unsplash.com/photo-1547981609437-b2863e0ac1ad?w=600&h=400&fit=crop",
+    "register-trademark-china": "https://images.unsplash.com/photo-1547981609437-e706e86654de?w=600&h=400&fit=crop",
     "register-trademark-india": "https://images.unsplash.com/photo-1524492412937-e706e86654de?w=600&h=400&fit=crop",
     "register-trademark-united-kingdom":
       "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=600&h=400&fit=crop",
@@ -187,10 +194,18 @@ function getBlogPosts() {
     "trademark-classification": "https://images.unsplash.com/photo-1568234928966-3f8f99389edd?w=600&h=400&fit=crop",
     "trademark-registration-comparison":
       "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=400&fit=crop",
+    "disney-openai-ip-licensing-strategy":
+      "https://images.unsplash.com/photo-1598520106830-8c45c2035460?w=600&h=400&fit=crop",
   }
 
   // Blog post metadata
   const blogPostsData: Record<string, { title: string; description: string; image: string }> = {
+    "disney-openai-ip-licensing-strategy": {
+      title: "Disney's OpenAI Partnership: The Future of IP Licensing in the AI Era",
+      description:
+        "Disney's $1B strategic arrangement with OpenAI marks a shift from reactive copyright enforcement to proactive AI licensing. Learn what this means for trademark and IP strategy.",
+      image: topicImages["disney-openai-ip-licensing-strategy"],
+    },
     "register-trademark-singapore": {
       title: "Why Trademark Registration Matters in Singapore — And Why Waiting Is the Most Expensive Mistake",
       description:
@@ -245,53 +260,11 @@ function getBlogPosts() {
         "Learn how to register your trademark in France with our comprehensive guide. Understand the INPI process, costs, and essential steps to protect your brand in this key European market.",
       image: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=600&h=400&fit=crop",
     },
-    "cole-palmer-celebration-trademark": {
-      title: "Cole Palmer's Iconic Celebration: The Path to Trademarking It",
+    "argentina-trademark-law-changes-2025": {
+      title: "Argentina's Trademark Law Changes 2025: What You Need to Know",
       description:
-        "Explore how football star Cole Palmer could trademark his iconic goal celebration and the benefits of protecting personal brands in sports.",
-      image: topicImages["cole-palmer-celebration-trademark"],
-    },
-    "five-things-about-trademark-registration": {
-      title: "5 Things You Didn't Know About Trademark Registration",
-      description:
-        "Discover surprising facts about trademark registration that could impact your brand protection strategy. Learn about unusual trademarks, territorial rights, and more.",
-      image: topicImages["five-things-about-trademark-registration"],
-    },
-    "trademark-priority-period": {
-      title: "Understanding the Trademark Priority Period",
-      description:
-        "Learn how the 6-month trademark priority period can help you protect your brand across multiple countries while maintaining your original filing date.",
-      image: topicImages["trademark-priority-period"],
-    },
-    "make-trademark-stand-out": {
-      title: "How to Make Your Trademark Stand Out",
-      description:
-        "Discover practical tips to create a distinctive, memorable trademark that stands out in the marketplace and provides stronger legal protection for your brand.",
-      image: topicImages["make-trademark-stand-out"],
-    },
-    "maximise-successful-trademark-registration": {
-      title: "How to Maximise the Chances of a Successful Trademark Registration",
-      description:
-        "Learn expert strategies to increase your chances of successful trademark registration. Avoid common pitfalls and protect your brand effectively.",
-      image: topicImages["maximise-successful-trademark-registration"],
-    },
-    "importance-of-brand-protection": {
-      title: "The Importance of Brand Protection",
-      description:
-        "Discover why protecting your brand is crucial in today's competitive market and how trademark registration can safeguard your business interests.",
-      image: topicImages["importance-of-brand-protection"],
-    },
-    "trademark-registration-process": {
-      title: "Trademark Registration Process",
-      description:
-        "A step-by-step guide to the trademark registration process, from initial search to final registration and maintenance.",
-      image: topicImages["trademark-registration-process"],
-    },
-    "global-trademark-strategies": {
-      title: "Global Trademark Strategies",
-      description:
-        "Learn how to develop an effective global trademark strategy to protect your brand across international markets.",
-      image: topicImages["global-trademark-strategies"],
+        "Major reforms to Argentina's trademark system starting 2025. Learn how Resolution INPI P-583/25 changes registration, oppositions, and brand protection.",
+      image: "/argentina-buenos-aires-business-law.jpg",
     },
     "register-trademark-usa": {
       title: "Securing Your Brand in America: US Trademark Guide (2024)",
