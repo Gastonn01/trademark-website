@@ -173,7 +173,7 @@ export function TrademarkFAQBot() {
         onClick={() => setIsOpen(true)}
         className={cn(
           "fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg z-50 transition-all",
-          "bg-blue-700 hover:bg-blue-800 text-white",
+          "bg-gray-900 hover:bg-gray-800 text-white",
           isOpen && "hidden",
         )}
         aria-label="Open trademark FAQ chat"
@@ -189,19 +189,19 @@ export function TrademarkFAQBot() {
         )}
       >
         {/* Header */}
-        <div className="bg-blue-700 text-white p-4 rounded-t-lg flex items-center justify-between">
+        <div className="bg-gray-900 text-white p-4 rounded-t-lg flex items-center justify-between">
           <div className="flex items-center gap-2">
             <MessageCircle className="h-5 w-5" />
             <div>
               <h3 className="font-semibold">Trademark FAQ</h3>
-              <p className="text-xs text-blue-100">Ask us anything about trademarks</p>
+              <p className="text-xs text-gray-300">Ask us anything about trademarks</p>
             </div>
           </div>
           <Button
             variant="ghost"
             size="icon"
             onClick={() => setIsOpen(false)}
-            className="text-white hover:bg-blue-600 h-8 w-8"
+            className="text-white hover:bg-gray-800 h-8 w-8"
             aria-label="Close chat"
           >
             <X className="h-5 w-5" />
@@ -215,7 +215,7 @@ export function TrademarkFAQBot() {
               <div
                 className={cn(
                   "max-w-[80%] rounded-lg p-3 text-sm",
-                  message.role === "user" ? "bg-blue-700 text-white" : "bg-gray-100 text-gray-900",
+                  message.role === "user" ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900",
                 )}
               >
                 <p className="whitespace-pre-wrap leading-relaxed">{message.content}</p>
@@ -225,7 +225,7 @@ export function TrademarkFAQBot() {
           {isLoading && (
             <div className="flex justify-start">
               <div className="bg-gray-100 rounded-lg p-3 flex items-center gap-2">
-                <Loader2 className="h-4 w-4 animate-spin text-blue-700" />
+                <Loader2 className="h-4 w-4 animate-spin text-gray-900" />
                 <span className="text-sm text-gray-600">Thinking...</span>
               </div>
             </div>
@@ -267,7 +267,7 @@ export function TrademarkFAQBot() {
                 type="submit"
                 size="sm"
                 disabled={contactSubmitting || !contactForm.name || !contactForm.email}
-                className="flex-1 bg-blue-700 hover:bg-blue-800"
+                className="flex-1 bg-gray-900 hover:bg-gray-800"
               >
                 {contactSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : "Send to Team"}
               </Button>
@@ -284,7 +284,7 @@ export function TrademarkFAQBot() {
                 disabled={isLoading}
                 className="flex-1"
               />
-              <Button type="submit" disabled={isLoading || !input.trim()} className="bg-blue-700 hover:bg-blue-800">
+              <Button type="submit" disabled={isLoading || !input.trim()} className="bg-gray-900 hover:bg-gray-800">
                 <Send className="h-4 w-4" />
               </Button>
             </div>

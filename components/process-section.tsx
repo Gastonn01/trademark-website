@@ -1,121 +1,95 @@
+"use client"
+
 import Link from "next/link"
+import { Search, FileText, Eye, CheckCircle2 } from "lucide-react"
+import { motion } from "framer-motion"
 
 export function ProcessSection() {
   const steps = [
     {
-      step: "1",
-      process: "Free Trademark Search",
-      help: "Instantly check if your brand name is available before investing in registration.",
-      isClickable: true,
+      number: "01",
+      icon: Search,
+      title: "Free Trademark Search",
+      description: "Verify your brand's availability across multiple jurisdictions instantly.",
     },
     {
-      step: "2",
-      process: "Application Filing Done Right",
-      help: "Our experts handle the paperwork and ensure your application meets all legal requirements, reducing the risk of rejection.",
-      isClickable: false,
+      number: "02",
+      icon: FileText,
+      title: "Expert Application",
+      description: "Our legal team prepares and files your application with precision.",
     },
     {
-      step: "3",
-      process: "We Monitor & Guide You",
-      help: "We track the process, provide updates, and help navigate any challenges along the way.",
-      isClickable: false,
+      number: "03",
+      icon: Eye,
+      title: "Monitoring",
+      description: "Track your application status and receive real-time updates.",
     },
     {
-      step: "4",
-      process: "Your Brand is Legally Protected",
-      help: "Once registered, your trademark is secured and renewable as per each country's laws, giving you full ownership and enforcement rights.",
-      isClickable: false,
+      number: "04",
+      icon: CheckCircle2,
+      title: "Protection Secured",
+      description: "Your trademark is registered and protected across selected territories.",
     },
   ]
 
   return (
-    <div className="py-20 bg-white">
+    <section className="py-32 bg-gradient-to-br from-gray-50 via-white to-accent/5">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold text-blue-700 mb-4">The Registration Process</h2>
-          <p className="text-base text-gray-600 max-w-3xl mx-auto">
-            Our streamlined approach makes trademark registration simple and efficient
-          </p>
+        <div className="text-center mb-20 max-w-3xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <h2 className="text-4xl md:text-5xl font-serif font-light text-gray-900 mb-6">How It Works</h2>
+            <p className="text-lg text-gray-600 font-light">
+              A streamlined process designed for efficiency and clarity
+            </p>
+          </motion.div>
         </div>
 
-        {/* Amazon-style progress tracker */}
-        <div className="mb-12 relative">
-          <div className="hidden md:block absolute top-8 left-[calc(12.5%)] right-[calc(12.5%)] h-1 bg-gray-200"></div>
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            {steps.map((step, index) => (
-              <div key={index} className="relative flex flex-col items-center">
-                <div
-                  className={`w-16 h-16 rounded-full flex items-center justify-center text-white font-bold text-xl z-10 ${index === 0 ? "bg-blue-600" : "bg-gray-300"}`}
-                >
-                  {step.step}
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16 max-w-6xl mx-auto">
+          {steps.map((step, index) => (
+            <motion.div
+              key={index}
+              className="relative group"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.1, duration: 0.6 }}
+            >
+              <div className="h-full p-6 rounded-lg border border-gray-100 bg-white hover:border-accent/30 hover:shadow-lg transition-all duration-300">
+                <div className="mb-6">
+                  <div className="text-6xl font-serif font-light text-gray-100 group-hover:text-accent/20 transition-colors duration-300 mb-6">
+                    {step.number}
+                  </div>
+                  <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center group-hover:bg-accent/20 transition-colors duration-300">
+                    <step.icon className="h-6 w-6 text-accent" />
+                  </div>
                 </div>
-                <h3 className="mt-4 text-center font-medium text-gray-900">
-                  {step.isClickable ? (
-                    <Link href="/verification" className="text-blue-600 hover:underline">
-                      {step.process}
-                    </Link>
-                  ) : (
-                    step.process
-                  )}
-                </h3>
-                <p className="mt-2 text-sm text-gray-600 text-center">{step.help}</p>
+                <h3 className="text-xl font-serif font-normal text-gray-900 mb-4">{step.title}</h3>
+                <p className="text-gray-600 leading-relaxed font-light">{step.description}</p>
               </div>
-            ))}
-          </div>
+            </motion.div>
+          ))}
         </div>
 
-        {/* Amazon-style info boxes */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          <div className="border border-gray-300 rounded-lg p-6 bg-gray-50">
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Why register your trademark?</h3>
-            <ul className="space-y-2">
-              <li className="flex items-start">
-                <span className="text-blue-600 mr-2">✓</span>
-                <span className="text-sm text-gray-700">Legal protection against copycats and infringers</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-blue-600 mr-2">✓</span>
-                <span className="text-sm text-gray-700">Exclusive rights to use your brand name and logo</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-blue-600 mr-2">✓</span>
-                <span className="text-sm text-gray-700">Increased brand value and customer trust</span>
-              </li>
-            </ul>
-          </div>
-          <div className="border border-gray-300 rounded-lg p-6 bg-gray-50">
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Our guarantee</h3>
-            <ul className="space-y-2">
-              <li className="flex items-start">
-                <span className="text-blue-600 mr-2">✓</span>
-                <span className="text-sm text-gray-700">Expert legal support throughout the process</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-blue-600 mr-2">✓</span>
-                <span className="text-sm text-gray-700">Transparent pricing with no hidden fees</span>
-              </li>
-              <li className="flex items-start">
-                <span className="text-blue-600 mr-2">✓</span>
-                <span className="text-sm text-gray-700">Regular updates on your application status</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        {/* Amazon-style CTA */}
-        <div className="bg-gray-100 border border-gray-300 rounded-lg p-6 flex flex-col md:flex-row items-center justify-between">
-          <div>
-            <h3 className="text-lg font-medium text-gray-900">Ready to protect your brand?</h3>
-            <p className="text-sm text-gray-600">Start with a free trademark search today.</p>
-          </div>
+        <motion.div
+          className="text-center"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.4, duration: 0.6 }}
+        >
           <Link
             href="/free-search"
-            className="mt-4 md:mt-0 px-6 py-2 bg-yellow-400 border border-yellow-500 rounded-full text-sm font-medium text-gray-900 hover:bg-yellow-500 transition-colors"
+            className="inline-flex items-center justify-center px-10 py-4 text-base font-medium text-white bg-accent hover:bg-accent/90 transition-colors duration-300"
           >
-            Start Free Search
+            Begin Your Application
           </Link>
-        </div>
+        </motion.div>
       </div>
-    </div>
+    </section>
   )
 }

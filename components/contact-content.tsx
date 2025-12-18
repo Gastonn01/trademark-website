@@ -61,11 +61,11 @@ export function ContactContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12">
+    <div className="min-h-screen bg-gradient-to-b from-white to-accent/5 py-12">
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Contact Us</h1>
+          <h1 className="font-serif text-5xl font-bold text-gray-900 mb-4">Contact Us</h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
             Get in touch with our trademark experts. We're here to help protect your brand and answer any questions you
             may have.
@@ -74,24 +74,24 @@ export function ContactContent() {
 
         <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
           {/* Contact Form */}
-          <Card className="shadow-lg">
+          <Card className="shadow-lg hover:shadow-xl transition-shadow">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Send className="h-5 w-5 text-blue-600" />
+                <Send className="h-5 w-5 text-accent" />
                 Send us a Message
               </CardTitle>
               <CardDescription>Fill out the form below and we'll get back to you within 24 hours.</CardDescription>
             </CardHeader>
             <CardContent>
               {submitStatus === "success" && (
-                <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg flex items-center gap-2 text-green-800">
+                <div className="mb-6 p-4 bg-accent border border-border rounded-lg flex items-center gap-2 text-accent-foreground">
                   <CheckCircle className="h-5 w-5" />
                   <span>Thank you! Your message has been sent successfully.</span>
                 </div>
               )}
 
               {submitStatus === "error" && (
-                <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2 text-red-800">
+                <div className="mb-6 p-4 bg-destructive/10 border border-destructive/50 rounded-lg flex items-center gap-2 text-destructive">
                   <AlertCircle className="h-5 w-5" />
                   <span>{errorMessage}</span>
                 </div>
@@ -162,7 +162,7 @@ export function ContactContent() {
                   />
                 </div>
 
-                <Button type="submit" className="w-full" disabled={isSubmitting}>
+                <Button type="submit" className="w-full bg-accent hover:bg-accent/90" disabled={isSubmitting}>
                   {isSubmitting ? (
                     <>
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
@@ -181,14 +181,16 @@ export function ContactContent() {
 
           {/* Contact Information */}
           <div className="space-y-8">
-            <Card className="shadow-lg">
+            <Card className="shadow-lg hover:shadow-xl transition-shadow">
               <CardHeader>
                 <CardTitle>Get in Touch</CardTitle>
                 <CardDescription>Multiple ways to reach our trademark experts</CardDescription>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="flex items-start gap-4">
-                  <Mail className="h-6 w-6 text-blue-600 mt-1" />
+                  <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center flex-shrink-0">
+                    <Mail className="h-6 w-6 text-accent" />
+                  </div>
                   <div>
                     <h3 className="font-semibold text-gray-900">Email</h3>
                     <p className="text-gray-600">trademarks@justprotected.com</p>
@@ -197,7 +199,9 @@ export function ContactContent() {
                 </div>
 
                 <div className="flex items-start gap-4">
-                  <Phone className="h-6 w-6 text-blue-600 mt-1" />
+                  <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center flex-shrink-0">
+                    <Phone className="h-6 w-6 text-accent" />
+                  </div>
                   <div>
                     <h3 className="font-semibold text-gray-900">Phone</h3>
                     <p className="text-gray-600">+1 (555) 123-4567</p>
@@ -206,7 +210,9 @@ export function ContactContent() {
                 </div>
 
                 <div className="flex items-start gap-4">
-                  <MapPin className="h-6 w-6 text-blue-600 mt-1" />
+                  <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center flex-shrink-0">
+                    <MapPin className="h-6 w-6 text-accent" />
+                  </div>
                   <div>
                     <h3 className="font-semibold text-gray-900">Office</h3>
                     <p className="text-gray-600">
@@ -218,7 +224,9 @@ export function ContactContent() {
                 </div>
 
                 <div className="flex items-start gap-4">
-                  <Clock className="h-6 w-6 text-blue-600 mt-1" />
+                  <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center flex-shrink-0">
+                    <Clock className="h-6 w-6 text-accent" />
+                  </div>
                   <div>
                     <h3 className="font-semibold text-gray-900">Business Hours</h3>
                     <p className="text-gray-600">
@@ -233,7 +241,7 @@ export function ContactContent() {
               </CardContent>
             </Card>
 
-            <Card className="shadow-lg">
+            <Card className="shadow-lg hover:shadow-xl transition-shadow">
               <CardHeader>
                 <CardTitle>Frequently Asked Questions</CardTitle>
               </CardHeader>

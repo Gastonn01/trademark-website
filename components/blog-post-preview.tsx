@@ -53,7 +53,7 @@ export function BlogPostPreview({ slug, title, excerpt, date, image }: BlogPostP
         <CardTitle className="text-xl font-semibold">
           <Link
             href={`/blog/${slug}`}
-            className="text-indigo-700 hover:text-indigo-900 transition-colors"
+            className="text-gray-900 hover:text-gray-700 transition-colors"
             onClick={handleClick}
             scroll={true}
           >
@@ -66,7 +66,7 @@ export function BlogPostPreview({ slug, title, excerpt, date, image }: BlogPostP
         <p className="text-gray-700">{excerpt}</p>
         <Link
           href={`/blog/${slug}`}
-          className="mt-4 inline-block text-indigo-600 hover:text-indigo-800 transition-colors"
+          className="mt-4 inline-block text-gray-900 hover:text-gray-700 transition-colors"
           onClick={handleClick}
           scroll={true}
         >

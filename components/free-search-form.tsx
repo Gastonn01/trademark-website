@@ -171,17 +171,38 @@ export function FreeSearchForm() {
   const { currency } = useCurrency() // Use global currency hook
   const [step, setStep] = useState(1)
   const totalSteps = 3
-  const [formData, setFormData] = useState<FormData>({
-    trademarkType: "",
-    trademarkName: "",
-    goodsAndServices: "",
-    countries: [],
-    selectedClasses: [],
-    name: "",
-    surname: "",
-    email: "",
-    marketing: false,
-    acceptTerms: false,
+  const [formData, setFormData] = useState<FormData>(() => {
+    // Check if we're in the browser and read the query parameter
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search)
+      const trademarkFromUrl = params.get("q") || ""
+
+      return {
+        trademarkType: "",
+        trademarkName: trademarkFromUrl,
+        goodsAndServices: "",
+        countries: [],
+        selectedClasses: [],
+        name: "",
+        surname: "",
+        email: "",
+        marketing: false,
+        acceptTerms: false,
+      }
+    }
+
+    return {
+      trademarkType: "",
+      trademarkName: "",
+      goodsAndServices: "",
+      countries: [],
+      selectedClasses: [],
+      name: "",
+      surname: "",
+      email: "",
+      marketing: false,
+      acceptTerms: false,
+    }
   })
 
   const [selectedCountries, setSelectedCountries] = useState<string[]>([])
@@ -487,16 +508,16 @@ export function FreeSearchForm() {
   return (
     <div id="free-search-form" className="max-w-7xl mx-auto px-4 pt-24 pb-16 scroll-mt-16">
       {isPreview && previewModeNotice && (
-        <div className="mb-8 p-5 bg-amber-50 border-l-4 border-amber-400 rounded-r-lg shadow-sm flex items-start gap-4">
-          <AlertCircle className="h-6 w-6 text-amber-600 mt-0.5 flex-shrink-0" />
+        <div className="mb-8 p-5 bg-gray-50 border-l-4 border-gray-400 rounded-r-lg shadow-sm flex items-start gap-4">
+          <AlertCircle className="h-6 w-6 text-gray-600 mt-0.5 flex-shrink-0" />
           <div className="flex-1">
-            <h3 className="font-semibold text-amber-900 mb-1">Preview Mode Active</h3>
-            <p className="text-amber-800 text-sm leading-relaxed">
+            <h3 className="font-semibold text-gray-900 mb-1">Preview Mode Active</h3>
+            <p className="text-gray-800 text-sm leading-relaxed">
               You are viewing this form in preview mode. Form submissions will be simulated and no data will be saved to
               the database.
             </p>
             <button
-              className="mt-2 text-sm font-medium text-amber-900 underline hover:no-underline"
+              className="mt-2 text-sm font-medium text-gray-900 underline hover:no-underline"
               onClick={() => setPreviewModeNotice(false)}
             >
               Dismiss
@@ -508,7 +529,9 @@ export function FreeSearchForm() {
       <div className="grid lg:grid-cols-3 gap-10">
         <div className="lg:col-span-2">
           <div className="mb-10">
-            <h1 className="text-5xl font-bold mb-4 text-indigo-900 tracking-tight">Professional Trademark Search</h1>
+            <h1 className="text-5xl font-bold mb-4 text-gray-900 tracking-tight font-serif">
+              Professional Trademark Search
+            </h1>
             <p className="text-xl text-gray-700 leading-relaxed mb-2">
               Comprehensive trademark analysis delivered by experienced IP professionals within 24 hours.
             </p>
@@ -518,25 +541,25 @@ export function FreeSearchForm() {
 
             <div className="mt-6 flex flex-wrap gap-6 text-sm">
               <div className="flex items-center gap-2 text-gray-700">
-                <Shield className="h-5 w-5 text-indigo-600" />
+                <Shield className="h-5 w-5 text-gray-700" />
                 <span className="font-medium">Secure & Confidential</span>
               </div>
               <div className="flex items-center gap-2 text-gray-700">
-                <Clock className="h-5 w-5 text-indigo-600" />
+                <Clock className="h-5 w-5 text-gray-700" />
                 <span className="font-medium">24-Hour Response</span>
               </div>
               <div className="flex items-center gap-2 text-gray-700">
-                <Award className="h-5 w-5 text-indigo-600" />
+                <Award className="h-5 w-5 text-gray-700" />
                 <span className="font-medium">Expert Analysis</span>
               </div>
             </div>
 
-            <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-l-4 border-green-500 rounded-r-lg p-5 mt-6 shadow-sm">
+            <div className="bg-gray-50 border-l-4 border-gray-700 rounded-r-lg p-5 mt-6 shadow-sm">
               <div className="flex items-start gap-3">
-                <CheckCircle className="h-6 w-6 text-green-600 mt-0.5 flex-shrink-0" />
+                <CheckCircle className="h-6 w-6 text-gray-700 mt-0.5 flex-shrink-0" />
                 <div>
-                  <h3 className="font-semibold text-green-900 mb-1.5">Complimentary Search Service</h3>
-                  <p className="text-green-800 text-sm leading-relaxed">
+                  <h3 className="font-semibold text-gray-900 mb-1.5">Complimentary Search Service</h3>
+                  <p className="text-gray-700 text-sm leading-relaxed">
                     Your trademark search and professional assessment are provided at no cost. Registration fees apply
                     only if you choose to proceed with filing.
                   </p>
@@ -548,36 +571,11 @@ export function FreeSearchForm() {
           {step === 2 && (
             <div className="flex items-center justify-between mb-8 pb-6 border-b border-gray-200">
               <div>
-                <h2 className="text-3xl font-bold text-indigo-900 mb-2">Select Protection Territories</h2>
+                <h2 className="text-3xl font-bold text-gray-900 mb-2 font-serif">Select Protection Territories</h2>
                 <p className="text-gray-600 leading-relaxed">
                   Choose jurisdictions for trademark registration (search remains complimentary)
                 </p>
               </div>
-              {/* Currency toggle buttons REMOVED - now controlled by global selector in nav */}
-              {/* <div className="flex items-center gap-3 bg-white border border-gray-200 rounded-lg p-1.5 shadow-sm">
-                <button
-                  type="button"
-                  onClick={() => handleCurrencyChange("USD")}
-                  className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
-                    currency === "USD"
-                      ? "bg-indigo-600 text-white shadow-sm"
-                      : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
-                  }`}
-                >
-                  USD ($)
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleCurrencyChange("EUR")}
-                  className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
-                    currency === "EUR"
-                      ? "bg-indigo-600 text-white shadow-sm"
-                      : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
-                  }`}
-                >
-                  EUR (€)
-                </button>
-              </div> */}
             </div>
           )}
 
@@ -587,7 +585,7 @@ export function FreeSearchForm() {
                 <span
                   key={label}
                   className={`text-sm font-semibold transition-colors ${
-                    step > index ? "text-indigo-700" : step === index + 1 ? "text-indigo-900" : "text-gray-400"
+                    step > index ? "text-gray-700" : step === index + 1 ? "text-gray-900" : "text-gray-400"
                   }`}
                 >
                   {label}
@@ -596,26 +594,26 @@ export function FreeSearchForm() {
             </div>
             <div className="h-2.5 bg-gray-100 rounded-full overflow-hidden shadow-inner">
               <div
-                className="h-full bg-gradient-to-r from-indigo-600 to-indigo-500 rounded-full transition-all duration-500 ease-out shadow-sm"
+                className="h-full bg-gradient-to-r from-gray-800 to-gray-700 rounded-full transition-all duration-500 ease-out shadow-sm"
                 style={{ width: `${(step / totalSteps) * 100}%` }}
               ></div>
             </div>
           </div>
 
           {successMessage && (
-            <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg flex items-start gap-3">
-              <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
+            <div className="mb-6 p-4 bg-gray-50 border border-gray-300 rounded-lg flex items-start gap-3">
+              <CheckCircle className="h-5 w-5 text-gray-700 mt-0.5 flex-shrink-0" />
               <div>
-                <p className="text-green-700">{successMessage}</p>
+                <p className="text-gray-700">{successMessage}</p>
               </div>
             </div>
           )}
 
           {errorMessage && (
-            <div className="mb-6 p-4 bg-amber-50 border border-amber-200 rounded-lg flex items-start gap-3">
-              <AlertCircle className="h-5 w-5 text-amber-500 mt-0.5 flex-shrink-0" />
+            <div className="mb-6 p-4 bg-gray-50 border border-gray-400 rounded-lg flex items-start gap-3">
+              <AlertCircle className="h-5 w-5 text-gray-700 mt-0.5 flex-shrink-0" />
               <div>
-                <p className="text-amber-700">{errorMessage}</p>
+                <p className="text-gray-700">{errorMessage}</p>
               </div>
             </div>
           )}
@@ -624,7 +622,7 @@ export function FreeSearchForm() {
             {step === 1 && (
               <div className="space-y-10">
                 <div>
-                  <h2 className="text-2xl font-bold mb-6 text-indigo-900">Trademark Classification</h2>
+                  <h2 className="text-2xl font-bold mb-6 text-gray-900 font-serif">Trademark Classification</h2>
                   <RadioGroup
                     value={formData.trademarkType}
                     onValueChange={(value) => setFormData((prev) => ({ ...prev, trademarkType: value }))}
@@ -654,15 +652,15 @@ export function FreeSearchForm() {
                         key={option.value}
                         className={`flex items-center space-x-4 border-2 rounded-xl p-5 transition-all cursor-pointer ${
                           formData.trademarkType === option.value
-                            ? "border-indigo-600 bg-indigo-50 shadow-md"
-                            : "border-gray-200 bg-white hover:border-indigo-300 hover:shadow-sm"
+                            ? "border-gray-700 bg-gray-50 shadow-md"
+                            : "border-gray-200 bg-white hover:border-gray-400 hover:shadow-sm"
                         }`}
                       >
                         <RadioGroupItem value={option.value} id={option.value} className="mt-0.5" />
                         <Label htmlFor={option.value} className="flex items-center gap-4 cursor-pointer flex-1">
                           <div
                             className={`w-12 h-12 rounded-xl flex items-center justify-center text-2xl ${
-                              formData.trademarkType === option.value ? "bg-indigo-100" : "bg-gray-100"
+                              formData.trademarkType === option.value ? "bg-gray-100" : "bg-gray-100"
                             }`}
                           >
                             {option.icon}
@@ -687,7 +685,7 @@ export function FreeSearchForm() {
                       value={formData.trademarkName}
                       onChange={(e) => setFormData((prev) => ({ ...prev, trademarkName: e.target.value }))}
                       placeholder="Enter your trademark name"
-                      className="w-full text-lg p-4 border-2 border-gray-200 focus:border-indigo-500 rounded-lg shadow-sm"
+                      className="w-full text-lg p-4 border-2 border-gray-200 focus:border-gray-700 rounded-lg shadow-sm"
                     />
                   </div>
                 )}
@@ -698,8 +696,8 @@ export function FreeSearchForm() {
                     <div
                       className={`border-2 border-dashed rounded-xl p-10 text-center transition-all ${
                         isDragging
-                          ? "border-indigo-500 bg-indigo-50 shadow-lg"
-                          : "border-gray-300 bg-gray-50 hover:border-indigo-400 hover:bg-indigo-50/50"
+                          ? "border-gray-700 bg-gray-50 shadow-lg"
+                          : "border-gray-300 bg-gray-50 hover:border-gray-500 hover:bg-gray-100/50"
                       }`}
                       onDragOver={(e) => {
                         e.preventDefault()
@@ -729,8 +727,8 @@ export function FreeSearchForm() {
                         }
                       }}
                     >
-                      <Upload className="mx-auto h-14 w-14 text-indigo-500 mb-4" />
-                      <div className="text-indigo-700 font-semibold mb-2 text-lg">Upload or drag and drop</div>
+                      <Upload className="mx-auto h-14 w-14 text-gray-700 mb-4" />
+                      <div className="text-gray-700 font-semibold mb-2 text-lg">Upload or drag and drop</div>
                       <div className="text-sm text-gray-500 mb-4">PNG, JPG, SVG or GIF (maximum 5 MB)</div>
                       <input type="file" className="hidden" accept="image/*" onChange={handleFileUpload} />
                       <Button
@@ -740,12 +738,12 @@ export function FreeSearchForm() {
                           ;(document.querySelector('input[type="file"]') as HTMLInputElement)?.click()
                         }}
                         variant="outline"
-                        className="mt-2 border-2 border-indigo-600 text-indigo-600 hover:bg-indigo-600 hover:text-white font-medium"
+                        className="mt-2 border-2 border-gray-700 text-gray-700 hover:bg-gray-700 hover:text-white font-medium"
                       >
                         Select File
                       </Button>
                       {formData.logo && (
-                        <div className="mt-6 flex items-center justify-center text-green-700 bg-green-50 rounded-lg p-3">
+                        <div className="mt-6 flex items-center justify-center text-gray-700 bg-gray-50 rounded-lg p-3">
                           <CheckCircle className="h-5 w-5 mr-2" />
                           <span className="font-medium">{formData.logo.name}</span>
                         </div>
@@ -763,7 +761,7 @@ export function FreeSearchForm() {
                     value={formData.goodsAndServices}
                     onChange={(e) => setFormData((prev) => ({ ...prev, goodsAndServices: e.target.value }))}
                     placeholder="e.g., Clothing, namely shirts, pants, and hats"
-                    className="w-full text-base p-4 border-2 border-gray-200 focus:border-indigo-500 rounded-lg shadow-sm"
+                    className="w-full text-base p-4 border-2 border-gray-200 focus:border-gray-700 rounded-lg shadow-sm"
                     rows={5}
                   />
                   <p className="text-sm text-gray-500 mt-2">
@@ -772,29 +770,29 @@ export function FreeSearchForm() {
                 </div>
 
                 {!formData.trademarkType && (
-                  <div className="text-red-600 text-sm font-medium bg-red-50 p-3 rounded-lg">
+                  <div className="text-gray-700 text-sm font-medium bg-gray-50 p-3 rounded-lg border border-gray-300">
                     Please select a trademark classification
                   </div>
                 )}
                 {formData.trademarkType !== "figurative" && !formData.trademarkName && (
-                  <div className="text-red-600 text-sm font-medium bg-red-50 p-3 rounded-lg">
+                  <div className="text-gray-700 text-sm font-medium bg-gray-50 p-3 rounded-lg border border-gray-300">
                     Please enter your trademark designation
                   </div>
                 )}
                 {(formData.trademarkType === "logo" || formData.trademarkType === "figurative") && !formData.logo && (
-                  <div className="text-red-600 text-sm font-medium bg-red-50 p-3 rounded-lg">
+                  <div className="text-gray-700 text-sm font-medium bg-gray-50 p-3 rounded-lg border border-gray-300">
                     Please upload your trademark design
                   </div>
                 )}
                 {!formData.goodsAndServices && (
-                  <div className="text-red-600 text-sm font-medium bg-red-50 p-3 rounded-lg">
+                  <div className="text-gray-700 text-sm font-medium bg-gray-50 p-3 rounded-lg border border-gray-300">
                     Please describe your goods and services
                   </div>
                 )}
 
                 <Button
                   type="button"
-                  className="w-full py-4 text-lg font-semibold bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg shadow-lg hover:shadow-xl transition-all"
+                  className="w-full py-4 text-lg font-semibold bg-gray-900 hover:bg-gray-800 text-white rounded-lg shadow-lg hover:shadow-xl transition-all"
                   onClick={() => {
                     window.scrollTo({ top: 0, behavior: "smooth" })
                     setStep(2)
@@ -813,14 +811,14 @@ export function FreeSearchForm() {
 
             {step === 2 && (
               <div className="space-y-8">
-                <div className="bg-gradient-to-r from-green-50 to-emerald-50 border-2 border-green-500 rounded-xl p-6 shadow-md">
+                <div className="bg-gray-50 border-2 border-gray-700 rounded-xl p-6 shadow-md">
                   <div className="flex items-start gap-4">
-                    <div className="bg-green-500 text-white rounded-full p-2 flex-shrink-0">
+                    <div className="bg-gray-700 text-white rounded-full p-2 flex-shrink-0">
                       <CheckCircle className="h-6 w-6" />
                     </div>
                     <div>
-                      <h3 className="text-xl font-bold text-green-900 mb-2">Your Search is 100% FREE</h3>
-                      <p className="text-green-800 leading-relaxed">
+                      <h3 className="text-xl font-bold text-gray-900 mb-2">Your Search is 100% FREE</h3>
+                      <p className="text-gray-700 leading-relaxed">
                         The trademark search and professional analysis are completely free with no obligation. The
                         prices shown below are registration fees that only apply if you decide to proceed with filing
                         after receiving your search results.
@@ -834,13 +832,11 @@ export function FreeSearchForm() {
                 </p>
 
                 {selectedCountries.length > 0 && (
-                  <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-4 mb-6">
+                  <div className="bg-gray-50 border border-gray-300 rounded-lg p-4 mb-6">
                     <div className="flex justify-between items-center">
                       <div>
-                        <h3 className="font-semibold text-indigo-900">
-                          Selected: {selectedCountries.length} countries
-                        </h3>
-                        <p className="text-sm text-indigo-700">
+                        <h3 className="font-semibold text-gray-900">Selected: {selectedCountries.length} countries</h3>
+                        <p className="text-sm text-gray-700">
                           {selectedCountries.slice(0, 3).join(", ")}
                           {selectedCountries.length > 3 && ` and ${selectedCountries.length - 3} more`}
                         </p>
@@ -860,7 +856,7 @@ export function FreeSearchForm() {
                 {/* Search Results */}
                 {searchResults.length > 0 && (
                   <div>
-                    <h3 className="text-xl font-semibold mb-4 text-indigo-700">Search Results</h3>
+                    <h3 className="text-xl font-semibold mb-4 text-gray-900">Search Results</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                       {searchResults.map((country) => {
                         const countryData = countryPricingData[country.name as keyof typeof countryPricingData]
@@ -884,7 +880,7 @@ export function FreeSearchForm() {
                 {/* Top Countries Section - only show if no search */}
                 {!isSearching && (
                   <div>
-                    <h3 className="text-xl font-semibold mb-4 text-indigo-700">Most Requested Countries</h3>
+                    <h3 className="text-xl font-semibold mb-4 text-gray-900">Most Requested Countries</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                       {filteredTopCountries.map((country) => {
                         const countryData = countryPricingData[country.name as keyof typeof countryPricingData]
@@ -912,7 +908,7 @@ export function FreeSearchForm() {
                       <button
                         type="button"
                         onClick={() => toggleRegion(region.name)}
-                        className="flex items-center justify-between w-full text-left text-lg font-semibold mb-2 text-indigo-700 hover:text-indigo-900"
+                        className="flex items-center justify-between w-full text-left text-lg font-semibold mb-2 text-gray-900 hover:text-gray-700"
                       >
                         <span>{region.name}</span>
                         {expandedRegions.includes(region.name) ? (
@@ -948,7 +944,7 @@ export function FreeSearchForm() {
                     type="button"
                     variant="outline"
                     onClick={() => {
-                      window.scrollTo({ top: 0, behavior: "smooth" }) // Scroll to top
+                      window.scrollTo({ top: 0, behavior: "smooth" })
                       setStep(1)
                     }}
                     className="flex-1 py-3 text-lg"
@@ -957,7 +953,7 @@ export function FreeSearchForm() {
                   </Button>
                   <Button
                     type="button"
-                    className="flex-1 py-3 text-lg bg-indigo-600 hover:bg-indigo-700 text-white"
+                    className="flex-1 py-3 text-lg bg-gray-900 hover:bg-gray-800 text-white"
                     onClick={() => {
                       if (selectedCountries.length === 0) {
                         setErrorMessage("Please select at least one country to continue.")
@@ -976,7 +972,9 @@ export function FreeSearchForm() {
 
             {step === 3 && (
               <div className="space-y-8">
-                <h2 className="text-2xl font-bold mb-6 text-indigo-900">Almost there! We just need your details</h2>
+                <h2 className="text-2xl font-bold mb-6 text-gray-900 font-serif">
+                  Almost there! We just need your details
+                </h2>
 
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
@@ -1035,11 +1033,21 @@ export function FreeSearchForm() {
                     />
                     <Label htmlFor="acceptTerms" className="text-sm text-gray-600">
                       I accept the{" "}
-                      <a href="/terms" className="text-indigo-600 hover:underline" target="_blank" rel="noreferrer">
+                      <a
+                        href="/terms"
+                        className="text-gray-700 hover:underline font-medium"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
                         Terms and Conditions
                       </a>{" "}
                       and{" "}
-                      <a href="/privacy" className="text-indigo-600 hover:underline" target="_blank" rel="noreferrer">
+                      <a
+                        href="/privacy"
+                        className="text-gray-700 hover:underline font-medium"
+                        target="_blank"
+                        rel="noreferrer"
+                      >
                         Privacy Policy
                       </a>
                     </Label>
@@ -1097,7 +1105,7 @@ export function FreeSearchForm() {
                   </Button>
                   <Button
                     type="submit"
-                    className="flex-1 py-3 text-lg bg-indigo-600 hover:bg-indigo-700 text-white"
+                    className="flex-1 py-3 text-lg bg-gray-900 hover:bg-gray-800 text-white"
                     disabled={
                       isSubmitting || !formData.name || !formData.surname || !formData.email || !formData.acceptTerms
                     }
@@ -1112,31 +1120,31 @@ export function FreeSearchForm() {
 
         <div className="lg:col-span-1">
           <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-7 shadow-lg border border-gray-200 sticky top-24">
-            <h3 className="text-2xl font-bold mb-6 text-indigo-900">Why Protect Your Trademark?</h3>
+            <h3 className="text-2xl font-bold mb-6 text-gray-900 font-serif">Why Protect Your Trademark?</h3>
             <ul className="space-y-4 text-gray-700">
               <li className="flex items-start gap-3">
-                <CheckCircle className="h-5 w-5 text-indigo-600 mt-0.5 flex-shrink-0" />
+                <CheckCircle className="h-5 w-5 text-gray-700 mt-0.5 flex-shrink-0" />
                 <div>
                   <span className="font-semibold text-gray-900">Legal Protection:</span>
                   <p className="text-sm mt-0.5">Prevents unauthorized use of your brand identity</p>
                 </div>
               </li>
               <li className="flex items-start gap-3">
-                <CheckCircle className="h-5 w-5 text-indigo-600 mt-0.5 flex-shrink-0" />
+                <CheckCircle className="h-5 w-5 text-gray-700 mt-0.5 flex-shrink-0" />
                 <div>
                   <span className="font-semibold text-gray-900">Brand Recognition:</span>
                   <p className="text-sm mt-0.5">Establishes trust and credibility with customers</p>
                 </div>
               </li>
               <li className="flex items-start gap-3">
-                <CheckCircle className="h-5 w-5 text-indigo-600 mt-0.5 flex-shrink-0" />
+                <CheckCircle className="h-5 w-5 text-gray-700 mt-0.5 flex-shrink-0" />
                 <div>
                   <span className="font-semibold text-gray-900">Business Growth:</span>
                   <p className="text-sm mt-0.5">Strengthens market position and brand equity</p>
                 </div>
               </li>
               <li className="flex items-start gap-3">
-                <CheckCircle className="h-5 w-5 text-indigo-600 mt-0.5 flex-shrink-0" />
+                <CheckCircle className="h-5 w-5 text-gray-700 mt-0.5 flex-shrink-0" />
                 <div>
                   <span className="font-semibold text-gray-900">Asset Value:</span>
                   <p className="text-sm mt-0.5">Creates valuable intellectual property for licensing or sale</p>
@@ -1145,10 +1153,10 @@ export function FreeSearchForm() {
             </ul>
 
             <div className="mt-8 pt-6 border-t border-gray-300">
-              <h4 className="text-lg font-bold mb-4 text-indigo-900">Our Process</h4>
+              <h4 className="text-lg font-bold mb-4 text-gray-900">Our Process</h4>
               <div className="space-y-3">
                 <div className="flex items-start gap-3">
-                  <div className="w-7 h-7 rounded-full bg-indigo-600 text-white flex items-center justify-center text-sm font-bold flex-shrink-0">
+                  <div className="w-7 h-7 rounded-full bg-gray-800 text-white flex items-center justify-center text-sm font-bold flex-shrink-0">
                     1
                   </div>
                   <div>
@@ -1157,7 +1165,7 @@ export function FreeSearchForm() {
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="w-7 h-7 rounded-full bg-indigo-600 text-white flex items-center justify-center text-sm font-bold flex-shrink-0">
+                  <div className="w-7 h-7 rounded-full bg-gray-800 text-white flex items-center justify-center text-sm font-bold flex-shrink-0">
                     2
                   </div>
                   <div>
@@ -1166,7 +1174,7 @@ export function FreeSearchForm() {
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="w-7 h-7 rounded-full bg-indigo-500 text-white flex items-center justify-center text-sm font-bold flex-shrink-0">
+                  <div className="w-7 h-7 rounded-full bg-gray-700 text-white flex items-center justify-center text-sm font-bold flex-shrink-0">
                     3
                   </div>
                   <div>

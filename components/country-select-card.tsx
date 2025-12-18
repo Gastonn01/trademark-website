@@ -30,14 +30,14 @@ export function CountrySelectCard({
       onClick={onSelect}
       className={`
         w-full flex items-center justify-between p-4 rounded-lg cursor-pointer
-        ${selected ? "bg-[#1D4ED8] text-white" : "bg-white hover:bg-gray-50 border border-gray-200"}
+        ${selected ? "bg-accent text-white" : "bg-white hover:bg-gray-50 border border-gray-200"}
       `}
     >
       <div className="flex items-center gap-3">
         <Image src={flag || "/placeholder.svg"} alt={`${country} flag`} width={40} height={30} className="rounded" />
         <span className="text-sm font-medium leading-none">{country === "Surinam" ? "Suriname" : country}</span>
       </div>
-      <span className={`text-sm font-semibold ${selected ? "text-white" : "text-indigo-600"}`}>
+      <span className={`text-sm font-semibold ${selected ? "text-white" : "text-accent"}`}>
         {currencySymbol}
         {convertedPrice} {currencyCode}
       </span>

@@ -3,7 +3,7 @@ import Link from "next/link"
 
 export function CTASection() {
   return (
-    <section className="py-20 bg-gradient-to-r from-blue-700 to-blue-800 text-white">
+    <section className="py-20 bg-gradient-to-r from-gray-900 via-gray-800 to-accent text-white">
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto">
           <div className="bg-white/10 backdrop-blur-sm rounded-lg p-8 shadow-xl border border-white/20">
@@ -21,7 +21,7 @@ export function CTASection() {
             <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8">
               <Link
                 href="/free-search"
-                className="w-full md:w-auto px-8 py-3 text-base font-medium text-blue-700 bg-white hover:bg-gray-100 rounded-md shadow-lg transition-all duration-300 flex items-center justify-center"
+                className="w-full md:w-auto px-8 py-3 text-base font-medium text-gray-900 bg-white hover:bg-gray-100 hover:shadow-xl rounded-md shadow-lg transition-all duration-300 flex items-center justify-center"
               >
                 Start Free Search
                 <svg
@@ -40,7 +40,7 @@ export function CTASection() {
 
               <a
                 href="/detailed-pricelist#top"
-                className="w-full md:w-auto px-8 py-3 text-base font-medium text-white border-2 border-white/70 hover:bg-white/10 rounded-md transition-all duration-300 flex items-center justify-center"
+                className="w-full md:w-auto px-8 py-3 text-base font-medium text-white border-2 border-white/70 hover:bg-white/20 hover:border-white rounded-md transition-all duration-300 flex items-center justify-center"
               >
                 See Pricing
               </a>

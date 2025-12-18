@@ -65,6 +65,10 @@ export async function POST(req: Request) {
     // Try to send emails if Resend is available
     if (resend) {
       try {
+        console.log("[v0] Starting email send process...")
+        console.log("[v0] Resend is initialized:", !!resend)
+        console.log("[v0] User email:", searchData.email)
+
         // Customize subject with trademark name
         const trademarkName = searchData.trademarkName || "Unnamed Trademark"
         const customSubject = `New free search request received: ${trademarkName}`
@@ -76,18 +80,29 @@ export async function POST(req: Request) {
         }
 
         // Send notification email
-        await resend.emails
+        console.log("[v0] Sending notification email to admins...")
+        const notificationResult = await resend.emails
           .send({
             from: "Just Protected <noreply@justprotected.com>",
             to: ["lacortgaston@gmail.com", "gflacort@gmail.com"],
             subject: customSubject,
             text: emailBody,
           })
-          .catch((e) => console.error("Error sending notification email:", e))
+          .catch((e) => {
+            console.error("[v0] Error sending notification email:", e)
+            return null
+          })
+
+        if (notificationResult) {
+          console.log("[v0] Notification email sent successfully:", notificationResult)
+        } else {
+          console.error("[v0] Notification email failed to send")
+        }
 
         // Send confirmation email to user if email exists
         if (searchData.email) {
-          await resend.emails
+          console.log("[v0] Sending confirmation email to user...")
+          const confirmationResult = await resend.emails
             .send({
               from: "Just Protected <noreply@justprotected.com>",
               to: searchData.email,
@@ -100,14 +115,14 @@ export async function POST(req: Request) {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Request Confirmation - Just Protected</title>
 </head>
-<body style="margin: 0; padding: 0; font-family: Arial, Helvetica, sans-serif; background-color: #f9fafb; color: #1f2937;">
+<body style="margin: 0; padding: 0; font-family: Arial, Helvetica, sans-serif; background-color: #f9fafb; color: #374151;">
   <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); margin-top: 20px; margin-bottom: 20px;">
     <tr>
       <td style="padding: 0;">
         <!-- Header -->
         <table border="0" cellpadding="0" cellspacing="0" width="100%">
           <tr>
-            <td style="background-color: #1e40af; padding: 30px 40px; text-align: center;">
+            <td style="background-color: #374151; padding: 30px 40px; text-align: center;">
               <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 700;">Just Protected</h1>
             </td>
           </tr>
@@ -117,7 +132,7 @@ export async function POST(req: Request) {
         <table border="0" cellpadding="0" cellspacing="0" width="100%">
           <tr>
             <td style="padding: 40px;">
-              <h2 style="color: #1e40af; margin-top: 0; margin-bottom: 20px; font-size: 20px;">Trademark Search Request Confirmation</h2>
+              <h2 style="color: #14b8a6; margin-top: 0; margin-bottom: 20px; font-size: 20px;">Trademark Search Request Confirmation</h2>
               
               <p style="color: #4b5563; line-height: 1.6; margin-bottom: 20px;">Dear ${searchData.firstName || searchData.name || "Client"},</p>
               
@@ -125,8 +140,8 @@ export async function POST(req: Request) {
               
               <p style="color: #4b5563; line-height: 1.6; margin-bottom: 20px;">Our team of intellectual property experts is already working on your case and will conduct a comprehensive analysis to assess the availability and registerability of your trademark.</p>
               
-              <div style="background-color: #f0f7ff; border-left: 4px solid #1e40af; padding: 15px; margin-bottom: 20px;">
-                <p style="color: #1e3a8a; margin: 0; font-weight: 500;">We will contact you in the coming hours with your search results and personalized recommendations to effectively protect your trademark.</p>
+              <div style="background-color: #f0fdfa; border-left: 4px solid #14b8a6; padding: 15px; margin-bottom: 20px;">
+                <p style="color: #115e59; margin: 0; font-weight: 500;">We will contact you in the coming hours with your search results and personalized recommendations to effectively protect your trademark.</p>
               </div>
               
               <p style="color: #4b5563; line-height: 1.6; margin-bottom: 20px;">If you have any questions or need additional information in the meantime, please don't hesitate to contact our customer service team by replying to this email.</p>
@@ -154,12 +169,25 @@ export async function POST(req: Request) {
 </html>
 `,
             })
-            .catch((e) => console.error("Error sending confirmation email:", e))
+            .catch((e) => {
+              console.error("[v0] Error sending confirmation email:", e)
+              return null
+            })
+
+          if (confirmationResult) {
+            console.log("[v0] Confirmation email sent successfully:", confirmationResult)
+          } else {
+            console.error("[v0] Confirmation email failed to send")
+          }
+        } else {
+          console.log("[v0] No user email provided, skipping confirmation email")
         }
       } catch (emailError) {
-        console.error("Error in email sending process:", emailError)
+        console.error("[v0] Error in email sending process:", emailError)
         // Continue with process even if email fails
       }
+    } else {
+      console.log("[v0] Resend not initialized - emails will not be sent")
     }
 
     return successResponse(searchId)

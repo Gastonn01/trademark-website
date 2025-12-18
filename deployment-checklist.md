@@ -54,7 +54,7 @@
 6. Verify database connections work
 7. Test API routes individually
 8. Check for console errors in browser
-\`\`\`
+```
 
 The most common issues that prevent deployment are:
 

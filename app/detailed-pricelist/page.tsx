@@ -13,11 +13,11 @@ export const metadata: Metadata = {
 
 export default function DetailedPricelistPage() {
   return (
-    <main className="bg-blue-900">
+    <main className="bg-white">
       <div id="top"></div>
       <NavBar />
       <DetailedPricelistHero />
-      <div className="bg-blue-50">
+      <div className="bg-gradient-to-b from-white to-accent/5">
         <DetailedPricelistContent />
         <DetailedPricelistFAQ />
       </div>

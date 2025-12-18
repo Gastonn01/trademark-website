@@ -203,7 +203,7 @@ export function DetailedPricelistContent() {
   return (
     <div className="max-w-6xl mx-auto px-4 py-12">
       <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">Detailed Pricing List</h1>
+        <h1 className="text-4xl font-bold text-gray-700 mb-4">Detailed Pricing List</h1>
         <p className="text-xl text-gray-600 max-w-3xl mx-auto">
           Transparent pricing for trademark registration in countries worldwide. Select your countries to see the total
           cost.
@@ -211,21 +211,21 @@ export function DetailedPricelistContent() {
       </div>
 
       {selectedCountries.length > 0 && (
-        <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-6 mb-8">
+        <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 mb-8">
           <div className="flex justify-between items-center">
             <div>
-              <h3 className="text-lg font-semibold text-indigo-900">Selected Countries: {selectedCountries.length}</h3>
-              <p className="text-indigo-700">{selectedCountries.join(", ")}</p>
+              <h3 className="text-lg font-semibold text-gray-700">Selected Countries: {selectedCountries.length}</h3>
+              <p className="text-gray-700">{selectedCountries.join(", ")}</p>
             </div>
             <div className="text-right">
-              <div className="text-2xl font-bold text-indigo-900">
+              <div className="text-2xl font-bold text-gray-700">
                 {currencySymbol}
                 {Math.floor(totalPrice).toLocaleString()}
               </div>
-              <p className="text-sm text-indigo-700">Total for first class</p>
+              <p className="text-sm text-gray-700">Total for first class</p>
             </div>
           </div>
-          <Button onClick={handleGetFreeSearch} className="w-full mt-4 bg-indigo-600 hover:bg-indigo-700">
+          <Button onClick={handleGetFreeSearch} className="w-full mt-4 bg-accent hover:bg-accent/90 text-white">
             Get Free Search for Selected Countries
           </Button>
         </div>
@@ -234,7 +234,7 @@ export function DetailedPricelistContent() {
       <div className="space-y-12">
         {regions.map((region) => (
           <div key={region.name}>
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">{region.name}</h2>
+            <h2 className="text-2xl font-bold text-gray-700 mb-6">{region.name}</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {region.countries.map((country) => {
                 const countryData = countryPricingData[country]
@@ -259,7 +259,7 @@ export function DetailedPricelistContent() {
       </div>
 
       <div className="mt-12 text-center">
-        <Button onClick={handleGetFreeSearch} size="lg" className="bg-indigo-600 hover:bg-indigo-700">
+        <Button onClick={handleGetFreeSearch} size="lg" className="bg-accent hover:bg-accent/90 text-white">
           Get Free Search
         </Button>
       </div>

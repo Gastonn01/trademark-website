@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function AboutPage() {
   return (
-    <main className="bg-gradient-to-b from-blue-50 to-white min-h-screen pt-24">
+    <main className="bg-white min-h-screen">
       <NavBar />
       <AboutContent />
       <Footer />

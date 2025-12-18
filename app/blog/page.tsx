@@ -16,11 +16,13 @@ export const metadata: Metadata = {
 function getBlogPosts() {
   // Define all blog post slugs (directories that exist)
   const allSlugs = [
-    "disney-openai-ip-licensing-strategy", // New: Disney's AI IP strategy
+    "dupe-defense-knockoff-brand-litigation", // New: Dupe culture litigation
+    "disney-openai-ip-licensing-strategy",
     "argentina-trademark-law-changes-2025", // Featured: Latest Argentina law changes
     "register-trademark-singapore",
     "hermes-metabirkins-trademark-battle",
     "cole-palmer-celebration-trademark",
+    "trademark-registration-age-of-ai", // New: AI era trademark protection
     "five-things-about-trademark-registration",
     "make-trademark-stand-out",
     "meghan-markle-as-ever-trademark-challenges",
@@ -79,8 +81,7 @@ function getBlogPosts() {
   // Group articles by category for strategic dating
   const categories = {
     featured: [
-      "disney-openai-ip-licensing-strategy", // New: Disney's AI IP strategy
-      "argentina-trademark-law-changes-2025", // Featured: Latest Argentina law changes
+      "disney-openai-ip-licensing-strategy",
       "register-trademark-singapore",
       "hermes-metabirkins-trademark-battle",
       "cole-palmer-celebration-trademark",
@@ -143,6 +144,8 @@ function getBlogPosts() {
 
   dateMap["argentina-trademark-law-changes-2025"] = new Date() // Set the Argentina article date to today to ensure it appears first
   dateMap["disney-openai-ip-licensing-strategy"] = new Date() // Set Disney article date to today to feature it
+  dateMap["trademark-registration-age-of-ai"] = new Date() // Set the AI era article date to today to feature it
+  dateMap["dupe-defense-knockoff-brand-litigation"] = new Date() // Set the Dupe defense article date to today to feature it
 
   const formatDate = (date: Date): string => {
     return date.toLocaleDateString("en-US", {
@@ -160,7 +163,7 @@ function getBlogPosts() {
     "register-trademark-china": "https://images.unsplash.com/photo-1547981609437-e706e86654de?w=600&h=400&fit=crop",
     "register-trademark-india": "https://images.unsplash.com/photo-1524492412937-e706e86654de?w=600&h=400&fit=crop",
     "register-trademark-united-kingdom":
-      "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=600&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1513638150340-f706e86654de?w=600&h=400&fit=crop",
     "register-trademark-germany": "https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=600&h=400&fit=crop",
     "register-trademark-spain": "https://images.unsplash.com/photo-1543783207637-e706e86654de?w=600&h=400&fit=crop",
     "register-trademark-new-zealand":
@@ -196,6 +199,10 @@ function getBlogPosts() {
       "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=400&fit=crop",
     "disney-openai-ip-licensing-strategy":
       "https://images.unsplash.com/photo-1598520106830-8c45c2035460?w=600&h=400&fit=crop",
+    "trademark-registration-age-of-ai":
+      "https://images.unsplash.com/photo-1589909202802-8f4aadce1849?w=600&h=400&fit=crop",
+    "dupe-defense-knockoff-brand-litigation":
+      "https://images.unsplash.com/photo-1589909202802-8f4aadce1849?w=600&h=400&fit=crop",
   }
 
   // Blog post metadata
@@ -323,7 +330,7 @@ function getBlogPosts() {
     "register-trademark-mexico": {
       title: "Mexican Trademark Strategy: Safeguarding Your Brand in Latin America",
       description:
-        "Complete guide to trademark registration in Mexico. Learn about the IMPI process, costs, and timeline for protecting your brand.",
+        "Comprehensive guide to trademark registration in Mexico. Learn about the IMPI process, costs, and timeline for protecting your brand.",
       image: countryImages["register-trademark-mexico"],
     },
     "register-trademark-brazil": {
@@ -362,6 +369,18 @@ function getBlogPosts() {
         "Compare trademark registration processes, costs, and timelines across different jurisdictions to make informed decisions.",
       image: topicImages["trademark-registration-comparison"],
     },
+    "trademark-registration-age-of-ai": {
+      title: "Trademark Protection in the Age of AI",
+      description:
+        "Explore the evolving landscape of trademark protection in the AI era. Learn how to protect your brand from AI-related challenges and opportunities.",
+      image: topicImages["trademark-registration-age-of-ai"],
+    },
+    "dupe-defense-knockoff-brand-litigation": {
+      title: "Dupe Defense: Knockoff Brand Litigation Strategies",
+      description:
+        "Learn how to effectively defend your brand against knockoffs and dupes through strategic litigation and legal measures.",
+      image: topicImages["dupe-defense-knockoff-brand-litigation"],
+    },
   }
 
   // Create blog post objects
@@ -394,24 +413,24 @@ export default function BlogPage() {
   return (
     <>
       <NavBar />
-      <main className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-        <div className="container mx-auto px-4 py-16">
-          <div className="max-w-4xl mx-auto mb-16 text-center">
-            <h1 className="text-4xl md:text-5xl font-bold text-blue-900 mb-6">Trademark Registration Blog</h1>
-            <p className="text-xl text-gray-700">
+      <main className="min-h-screen bg-gradient-to-b from-white to-gray-50">
+        <div className="container mx-auto px-4 py-20">
+          <div className="max-w-4xl mx-auto mb-20 text-center">
+            <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-8">Trademark Registration Blog</h1>
+            <p className="text-2xl text-gray-700 font-light">
               Expert insights, guides, and strategies for protecting your brand worldwide
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10 max-w-7xl mx-auto">
             {blogPosts.map((post) => (
               <BlogPostPreview
                 key={post.slug}
                 slug={post.slug}
                 title={post.title}
-                description={post.description}
-                image={post.image}
+                excerpt={post.description}
                 date={post.date}
+                image={post.image}
               />
             ))}
           </div>

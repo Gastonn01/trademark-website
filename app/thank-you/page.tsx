@@ -4,7 +4,7 @@ import { Footer } from "@/components/footer"
 
 export default function ThankYouPage() {
   return (
-    <main className="bg-gradient-to-b from-indigo-50 to-white min-h-screen">
+    <main className="bg-gradient-to-b from-gray-50 to-white min-h-screen">
       <NavBar />
       <ThankYouContent />
       <Footer />

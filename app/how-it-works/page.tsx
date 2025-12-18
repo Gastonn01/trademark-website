@@ -13,9 +13,7 @@ export default function HowItWorksPage() {
   return (
     <main className="bg-white min-h-screen">
       <NavBar />
-      <div className="bg-blue-800 pt-1">
-        <HowItWorksContent />
-      </div>
+      <HowItWorksContent />
       <Footer />
     </main>
   )
