@@ -21,7 +21,7 @@ export default function DupeDefenseBrandLitigation() {
       <NavBar />
 
       <div className="relative bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1600&h=800&fit=crop')] opacity-10 bg-cover bg-center"></div>
+        <div className="absolute inset-0 bg-[url('/images/gemini-generated-image-v11hak.png')] opacity-20 bg-cover bg-center"></div>
         <div className="relative container mx-auto px-4 py-16 md:py-24">
           <div className="max-w-4xl mx-auto">
             <div className="text-sm text-gray-300 mb-4">Brand Protection • Trademark Litigation</div>

@@ -464,7 +464,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
     <div className="container mx-auto px-4 py-12">
       <div className="max-w-7xl mx-auto px-4 py-12">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-indigo-600 mb-4">Complete Your Registration</h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">Complete Your Registration</h1>
           <p className="text-gray-600 mb-2">Your trademark information is ready for registration.</p>
           <p className="text-gray-600">
             Review and complete the details below to proceed with your trademark application.
@@ -481,20 +481,20 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
                     <button
                       onClick={() => setStep(index + 1)}
                       className={`text-sm font-medium ${
-                        step === index + 1 ? "text-indigo-600" : step > index + 1 ? "text-indigo-600" : "text-gray-400"
+                        step === index + 1 ? "text-teal-500" : step > index + 1 ? "text-teal-500" : "text-gray-400"
                       }`}
                     >
                       {title}
                     </button>
                     {index < stepTitles.length - 1 && (
-                      <div className={`h-0.5 w-full mt-2 ${step > index + 1 ? "bg-indigo-600" : "bg-gray-200"}`} />
+                      <div className={`h-0.5 w-full mt-2 ${step > index + 1 ? "bg-teal-500" : "bg-gray-200"}`} />
                     )}
                   </div>
                 ))}
               </div>
               <div className="h-1 bg-gray-200 rounded-full">
                 <div
-                  className="h-full bg-indigo-600 rounded-full transition-all duration-300"
+                  className="h-full bg-teal-500 rounded-full transition-all duration-300"
                   style={{ width: `${(step / totalSteps) * 100}%` }}
                 />
               </div>
@@ -504,7 +504,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
             <Card className="p-8">
               {step === 1 && (
                 <div className="space-y-8">
-                  <h2 className="text-2xl font-semibold text-indigo-600 mb-6">What type of trademark do you have?</h2>
+                  <h2 className="text-2xl font-semibold text-gray-900 mb-6">What type of trademark do you have?</h2>
 
                   <RadioGroup
                     value={formData.trademarkType}
@@ -574,7 +574,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
                         setStep(2)
                       }}
                       disabled={!formData.trademarkType || !formData.goodsAndServices}
-                      className="bg-indigo-600 hover:bg-indigo-700 px-8"
+                      className="bg-teal-500 hover:bg-teal-600 px-8"
                     >
                       Continue
                     </Button>
@@ -585,7 +585,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
               {step === 2 && (
                 <div className="space-y-8">
                   <div>
-                    <h2 className="text-2xl font-semibold text-indigo-600 mb-2">Where do you need protection?</h2>
+                    <h2 className="text-2xl font-semibold text-gray-900 mb-2">Where do you need protection?</h2>
                     <p className="text-gray-600">
                       Select the countries or regions where you want to register your trademark.
                     </p>
@@ -600,7 +600,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
                   />
 
                   <div>
-                    <h3 className="text-xl font-semibold text-indigo-600 mb-4">Most Requested Countries</h3>
+                    <h3 className="text-xl font-semibold text-gray-900 mb-4">Most Requested Countries</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                       {filteredTopCountries.map((country) => {
                         const price = country.prices?.[currency] || 0
@@ -621,7 +621,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
                             onClick={() => toggleCountry(country.name)}
                             className={`p-4 border rounded-lg cursor-pointer transition-colors ${
                               selectedCountries.some((c) => c.name === country.name)
-                                ? "border-indigo-500 bg-indigo-50"
+                                ? "border-teal-500 bg-teal-50"
                                 : "border-gray-200 hover:border-gray-300"
                             }`}
                           >
@@ -653,7 +653,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
                     <div key={region.name}>
                       <button
                         onClick={(e) => toggleRegion(region.name, e)}
-                        className="flex items-center justify-between w-full text-left text-lg font-semibold text-indigo-600 hover:text-indigo-800 mb-4"
+                        className="flex items-center justify-between w-full text-left text-lg font-semibold text-gray-900 hover:text-teal-600 mb-4"
                       >
                         <span>{region.name}</span>
                         {expandedRegions.includes(region.name) ? (
@@ -670,7 +670,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
                               onClick={() => toggleCountry(country.name)}
                               className={`p-4 border rounded-lg cursor-pointer transition-colors ${
                                 selectedCountries.some((c) => c.name === country.name)
-                                  ? "border-indigo-500 bg-indigo-50"
+                                  ? "border-teal-500 bg-teal-50"
                                   : "border-gray-200 hover:border-gray-300"
                               }`}
                             >
@@ -715,7 +715,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
                         setStep(3)
                       }}
                       disabled={selectedCountries.length === 0}
-                      className="bg-indigo-600 hover:bg-indigo-700 px-8"
+                      className="bg-teal-500 hover:bg-teal-600 px-8"
                     >
                       Continue
                     </Button>
@@ -726,7 +726,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
               {step === 3 && (
                 <div className="space-y-8">
                   <div>
-                    <h2 className="text-2xl font-semibold text-indigo-600 mb-2">Which classes do you need?</h2>
+                    <h2 className="text-2xl font-semibold text-gray-900 mb-2">Which classes do you need?</h2>
                     <p className="text-gray-600">Select the classes that apply to your goods and services.</p>
                   </div>
 
@@ -819,7 +819,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
                                   <PopoverTrigger asChild>
                                     <Badge
                                       variant="secondary"
-                                      className="cursor-pointer hover:bg-indigo-100 px-3 py-1.5 text-sm"
+                                      className="cursor-pointer hover:bg-teal-100 px-3 py-1.5 text-sm"
                                     >
                                       Class {classNumber}
                                       <button
@@ -863,7 +863,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
                         setStep(4)
                       }}
                       disabled={formData.selectedClasses.length === 0}
-                      className="bg-indigo-600 hover:bg-indigo-700 px-8"
+                      className="bg-teal-500 hover:bg-teal-600 px-8"
                     >
                       Continue
                     </Button>
@@ -873,7 +873,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
 
               {step === 4 && (
                 <div className="space-y-8">
-                  <h2 className="text-2xl font-semibold text-indigo-600">Your Contact Information</h2>
+                  <h2 className="text-2xl font-semibold text-gray-900">Your Contact Information</h2>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
@@ -960,11 +960,12 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
                       Back
                     </Button>
                     <Button
+                      type="button"
                       onClick={handleSubmit}
                       disabled={
                         !formData.name || !formData.surname || !formData.email || !formData.phone || isSubmitting
                       }
-                      className="bg-green-600 hover:bg-green-700 px-8"
+                      className="bg-teal-500 hover:bg-teal-600 text-white px-8"
                     >
                       {isSubmitting ? "Sending..." : "SEND"}
                     </Button>

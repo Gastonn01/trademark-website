@@ -22,8 +22,8 @@ export default function HermesMetaBirkinsBlogPost() {
           <p className="text-gray-500 mb-4">Published: March 12, 2025</p>
           <div className="w-full h-[400px] bg-gray-200 rounded-lg mb-8 overflow-hidden">
             <img
-              src="https://images.unsplash.com/photo-1584273143981-41c073dfe8f8?w=800&h=400&fit=crop"
-              alt="Digital art and luxury fashion concept"
+              src="/nft-digital-art-luxury-fashion-virtual-handbag-met.jpg"
+              alt="NFT digital art and luxury fashion concept"
               className="w-full h-full object-cover"
             />
           </div>
@@ -182,9 +182,9 @@ export default function HermesMetaBirkinsBlogPost() {
           <p>
             Meanwhile, brand owners worldwide aren't sitting idle. The buzz around the metaverse and NFTs has prompted
             companies to proactively extend their trademark protections into virtual goods and services. In fact, the
-            number of trademark applications for NFT and metaverse-related uses has exploded in the past two years. Over
-            5,800 U.S. trademark applications for NFTs and thousands more for metaverse items were filed in 2022 alone,
-            reflecting a rush by businesses to stake their claims in digital space.
+            number of trademark applications for NFTs and metaverse-related uses has exploded in the past two years.
+            Over 5,800 U.S. trademark applications for NFTs and thousands more for metaverse items were filed in 2022
+            alone, reflecting a rush by businesses to stake their claims in digital space.
           </p>
           <p>
             Even Hermès, after initially hesitating to embrace NFTs, filed a trademark application in 2022 covering

@@ -172,7 +172,6 @@ export function FreeSearchForm() {
   const [step, setStep] = useState(1)
   const totalSteps = 3
   const [formData, setFormData] = useState<FormData>(() => {
-    // Check if we're in the browser and read the query parameter
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search)
       const trademarkFromUrl = params.get("q") || ""
@@ -216,73 +215,12 @@ export function FreeSearchForm() {
   const [initialLoadDone, setInitialLoadDone] = useState(false)
   const [previewModeNotice, setPreviewModeNotice] = useState(true)
   const [isPreview, setIsPreview] = useState(false)
+  const [isSearching, setIsSearching] = useState(false) // Added state for search activity
 
   // Check if we're in preview mode on component mount
   useEffect(() => {
     setIsPreview(isPreviewEnvironment())
   }, [])
-
-  // Load currency from localStorage on mount - REMOVED
-  // useEffect(() => {
-  //   const savedCurrency = localStorage.getItem("selectedCurrency") as "USD" | "EUR"
-  //   if (savedCurrency) {
-  //     setCurrency(savedCurrency)
-  //   }
-  // }, [])
-
-  // Function to handle currency change - REMOVED
-  // const handleCurrencyChange = (newCurrency: "USD" | "EUR") => {
-  //   setCurrency(newCurrency)
-  //   localStorage.setItem("selectedCurrency", newCurrency)
-  // }
-
-  // Function to search countries in all regions
-  const searchCountries = (term: string) => {
-    if (!term.trim()) {
-      setSearchResults([])
-      setIsSearching(false)
-      return
-    }
-
-    setIsSearching(true)
-    const normalizedTerm = term.toLowerCase().trim()
-
-    // Search in all regions
-    const results = regions
-      .flatMap((region) => region.countries)
-      .filter((country) => country.name.toLowerCase().includes(normalizedTerm))
-
-    // Remove duplicates (in case a country appears in multiple regions)
-    const uniqueResults = Array.from(new Map(results.map((item) => [item.name, item])).values())
-
-    setSearchResults(uniqueResults)
-  }
-
-  const [searchResults, setSearchResults] = useState<CountryData[]>([])
-  const [isSearching, setIsSearching] = useState(false)
-
-  useEffect(() => {
-    searchCountries(searchTerm)
-
-    // Automatically expand all regions that contain countries matching the search
-    if (searchTerm.trim()) {
-      const matchingRegions = regions
-        .filter((region) =>
-          region.countries.some((country) => country.name.toLowerCase().includes(searchTerm.toLowerCase())),
-        )
-        .map((region) => region.name)
-
-      setExpandedRegions((prev) => {
-        const newExpanded = [...prev]
-        matchingRegions.forEach((region) => {
-          if (!newExpanded.includes(region)) {
-            newExpanded.push(region)
-          }
-        })
-        return newExpanded
-      })
-    }
-  }, [searchTerm])
 
   // Effect to load countries from URL when component mounts
   useEffect(() => {
@@ -340,6 +278,22 @@ export function FreeSearchForm() {
 
   const filteredTopCountries = useMemo(() => {
     return topCountries.filter((country) => country.name.toLowerCase().includes(searchTerm.toLowerCase()))
+  }, [searchTerm])
+
+  // Simulate search activity
+  useEffect(() => {
+    setIsSearching(!!searchTerm)
+  }, [searchTerm])
+
+  // Filtered search results based on searchTerm
+  const searchResults = useMemo(() => {
+    if (!searchTerm) return []
+
+    const lowerCaseSearchTerm = searchTerm.toLowerCase()
+    const allCountries = regions.flatMap((region) => region.countries).concat(topCountries)
+    const uniqueCountries = Array.from(new Map(allCountries.map((c) => [c.name, c])).values())
+
+    return uniqueCountries.filter((country) => country.name.toLowerCase().includes(lowerCaseSearchTerm))
   }, [searchTerm])
 
   const toggleRegion = (regionName: string) => {

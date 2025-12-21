@@ -1,4 +1,3 @@
-import { NavBar } from "@/components/nav-bar"
 import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
@@ -15,13 +14,11 @@ export const metadata: Metadata = {
   },
 }
 
-export default function DisneyOpenAIIPLicensingStrategy() {
+export default function DisneyOpenAILicensingArticle() {
   return (
-    <main className="bg-white min-h-screen">
-      <NavBar />
-
+    <div className="min-h-screen bg-white">
       <div className="relative bg-gradient-to-br from-blue-700 via-indigo-800 to-purple-900">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1598520106830-8c45c2035460?w=1600&h=800&fit=crop')] opacity-10 bg-cover bg-center"></div>
+        <div className="absolute inset-0 bg-[url('/images/gemini-generated-image-41p8u9.png')] opacity-20 bg-cover bg-center"></div>
         <div className="relative container mx-auto px-4 py-16 md:py-24">
           <div className="max-w-4xl mx-auto">
             <div className="text-sm text-blue-200 mb-4">IP Strategy • AI & Technology</div>
@@ -415,6 +412,6 @@ export default function DisneyOpenAIIPLicensingStrategy() {
       </div>
 
       <Footer />
-    </main>
+    </div>
   )
 }

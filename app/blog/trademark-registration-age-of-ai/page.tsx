@@ -22,7 +22,7 @@ export default function TrademarkRegistrationAgeOfAI() {
       <NavBar />
 
       <div className="relative bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
-        <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1677442136019-21780ecad995?w=1600&h=800&fit=crop')] opacity-10 bg-cover bg-center"></div>
+        <div className="absolute inset-0 bg-[url('/digital-brand-protection-trademark-registration-ai.jpg')] opacity-10 bg-cover bg-center"></div>
         <div className="relative container mx-auto px-4 py-16 md:py-24">
           <div className="max-w-4xl mx-auto">
             <div className="text-sm text-gray-300 mb-4">Brand Protection • AI Era</div>

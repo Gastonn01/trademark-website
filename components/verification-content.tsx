@@ -90,12 +90,12 @@ export function VerificationContent({ searchId }: VerificationContentProps) {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
         <NavBar />
         <div className="container max-w-4xl mx-auto px-4 py-12">
           <div className="flex flex-col items-center justify-center py-20">
-            <Loader2 className="h-12 w-12 animate-spin text-blue-600 mb-4" />
-            <h2 className="text-xl font-semibold mb-2">Loading Your Trademark Analysis</h2>
+            <Loader2 className="h-12 w-12 animate-spin text-teal-500 mb-4" />
+            <h2 className="text-xl font-semibold text-gray-900 mb-2">Loading Your Trademark Analysis</h2>
             <p className="text-gray-600">Please wait while we retrieve your information...</p>
           </div>
         </div>
@@ -106,7 +106,7 @@ export function VerificationContent({ searchId }: VerificationContentProps) {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
         <NavBar />
         <div className="container max-w-4xl mx-auto px-4 py-12">
           <Card className="border-red-200 bg-red-50">
@@ -130,12 +130,12 @@ export function VerificationContent({ searchId }: VerificationContentProps) {
 
   if (!searchId || !searchData) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
         <NavBar />
         <div className="container max-w-6xl mx-auto px-4 py-12">
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-indigo-600 mb-4">Start Your Trademark Registration</h1>
-            <p className="text-xl text-indigo-600">Protect your brand with our comprehensive trademark services</p>
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">Start Your Trademark Registration</h1>
+            <p className="text-xl text-gray-700">Protect your brand with our comprehensive trademark services</p>
           </div>
           <VerificationForm />
         </div>
@@ -151,14 +151,14 @@ export function VerificationContent({ searchId }: VerificationContentProps) {
   const goodsAndServices = results?.goodsAndServices || ""
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
       <NavBar />
 
       <div className="container max-w-6xl mx-auto px-4 py-8">
         {/* Header Section */}
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">Your Trademark Analysis Results</h1>
-          <p className="text-xl text-gray-600">
+          <p className="text-xl text-gray-700">
             Complete your registration for <strong>"{trademarkName}"</strong>
           </p>
         </div>
@@ -299,21 +299,21 @@ export function VerificationContent({ searchId }: VerificationContentProps) {
           {/* Registration Form - Right Column */}
           <div className="lg:col-span-1">
             <div className="sticky top-8">
-              <Card className="border-blue-200 bg-blue-50">
+              <Card className="border-teal-200 bg-teal-50/50 shadow-lg">
                 <CardHeader>
-                  <CardTitle className="text-blue-900">Ready to Register?</CardTitle>
-                  <p className="text-blue-700 text-sm">
+                  <CardTitle className="text-gray-900">Ready to Register?</CardTitle>
+                  <p className="text-gray-700 text-sm">
                     Based on your analysis, proceed with your trademark registration
                   </p>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     <div className="text-center">
-                      <div className="text-2xl font-bold text-blue-900 mb-2">Continue Registration</div>
-                      <p className="text-sm text-blue-700">Your information is pre-filled and ready</p>
+                      <div className="text-2xl font-bold text-gray-900 mb-2">Continue Registration</div>
+                      <p className="text-sm text-gray-700">Your information is pre-filled and ready</p>
                     </div>
 
-                    <div className="bg-white p-4 rounded-lg border border-blue-200">
+                    <div className="bg-white p-4 rounded-lg border border-gray-200">
                       <h4 className="font-semibold text-gray-900 mb-2">What's Included:</h4>
                       <ul className="text-sm text-gray-600 space-y-1">
                         <li>✓ Professional trademark filing</li>
@@ -326,18 +326,17 @@ export function VerificationContent({ searchId }: VerificationContentProps) {
 
                     <button
                       onClick={() => {
-                        // Scroll to the verification form
                         const formElement = document.getElementById("verification-form")
                         if (formElement) {
                           formElement.scrollIntoView({ behavior: "smooth" })
                         }
                       }}
-                      className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
+                      className="w-full bg-teal-500 hover:bg-teal-600 text-white font-semibold py-3 px-4 rounded-lg transition-colors shadow-md hover:shadow-lg"
                     >
                       Start Registration Process
                     </button>
 
-                    <p className="text-xs text-blue-600 text-center">Secure payment • Money-back guarantee</p>
+                    <p className="text-xs text-gray-600 text-center">Secure payment • Money-back guarantee</p>
                   </div>
                 </CardContent>
               </Card>

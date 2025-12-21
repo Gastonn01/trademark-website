@@ -16,6 +16,7 @@ export const metadata: Metadata = {
 function getBlogPosts() {
   // Define all blog post slugs (directories that exist)
   const allSlugs = [
+    "tiktok-shop-counterfeit-violation-appeal", // New: TikTok Shop appeal guide
     "dupe-defense-knockoff-brand-litigation", // New: Dupe culture litigation
     "disney-openai-ip-licensing-strategy",
     "argentina-trademark-law-changes-2025", // Featured: Latest Argentina law changes
@@ -146,6 +147,7 @@ function getBlogPosts() {
   dateMap["disney-openai-ip-licensing-strategy"] = new Date() // Set Disney article date to today to feature it
   dateMap["trademark-registration-age-of-ai"] = new Date() // Set the AI era article date to today to feature it
   dateMap["dupe-defense-knockoff-brand-litigation"] = new Date() // Set the Dupe defense article date to today to feature it
+  dateMap["tiktok-shop-counterfeit-violation-appeal"] = new Date() // Set the TikTok Shop article date to today to feature it
 
   const formatDate = (date: Date): string => {
     return date.toLocaleDateString("en-US", {
@@ -158,7 +160,7 @@ function getBlogPosts() {
   // Country-specific images
   const countryImages: Record<string, string> = {
     "register-trademark-singapore": "https://images.unsplash.com/photo-1525625293386-3f8f99389edd?w=600&h=400&fit=crop",
-    "register-trademark-usa": "https://images.unsplash.com/photo-1508433957232-3107f5fd5995?w=600&h=400&fit=crop",
+    "register-trademark-usa": "https://images.unsplash.com/photo-1508433957232-3f8f99389edd?w=600&h=400&fit=crop",
     "register-trademark-eu": "https://images.unsplash.com/photo-1519985176271-adb1088fa94c?w=600&h=400&fit=crop",
     "register-trademark-china": "https://images.unsplash.com/photo-1547981609437-e706e86654de?w=600&h=400&fit=crop",
     "register-trademark-india": "https://images.unsplash.com/photo-1524492412937-e706e86654de?w=600&h=400&fit=crop",
@@ -197,12 +199,11 @@ function getBlogPosts() {
     "trademark-classification": "https://images.unsplash.com/photo-1568234928966-3f8f99389edd?w=600&h=400&fit=crop",
     "trademark-registration-comparison":
       "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=400&fit=crop",
-    "disney-openai-ip-licensing-strategy":
-      "https://images.unsplash.com/photo-1598520106830-8c45c2035460?w=600&h=400&fit=crop",
+    "disney-openai-ip-licensing-strategy": "/images/gemini-generated-image-41p8u9.png",
     "trademark-registration-age-of-ai":
       "https://images.unsplash.com/photo-1589909202802-8f4aadce1849?w=600&h=400&fit=crop",
-    "dupe-defense-knockoff-brand-litigation":
-      "https://images.unsplash.com/photo-1589909202802-8f4aadce1849?w=600&h=400&fit=crop",
+    "dupe-defense-knockoff-brand-litigation": "/images/gemini-generated-image-v11hak.png",
+    "tiktok-shop-counterfeit-violation-appeal": "/images/gemini-generated-image-lyuw2lyuw2lyuw2l.png",
   }
 
   // Blog post metadata
@@ -318,7 +319,7 @@ function getBlogPosts() {
     "register-trademark-spain": {
       title: "Trademark Registration in Spain: Mediterranean Market Entry Guide",
       description:
-        "Complete guide to registering your trademark in Spain. Learn about the Spanish Patent and Trademark Office process, costs, and timeline.",
+        "Comprehensive guide to registering your trademark in Spain. Learn about the Spanish Patent and Trademark Office process, costs, and timeline.",
       image: countryImages["register-trademark-spain"],
     },
     "register-trademark-new-zealand": {
@@ -380,6 +381,12 @@ function getBlogPosts() {
       description:
         "Learn how to effectively defend your brand against knockoffs and dupes through strategic litigation and legal measures.",
       image: topicImages["dupe-defense-knockoff-brand-litigation"],
+    },
+    "tiktok-shop-counterfeit-violation-appeal": {
+      title: "TikTok Shop Counterfeit Violation Appeal Guide",
+      description:
+        "Learn how to navigate and appeal against counterfeit violations on TikTok Shop, ensuring your brand's integrity and protection.",
+      image: topicImages["tiktok-shop-counterfeit-violation-appeal"],
     },
   }
 
