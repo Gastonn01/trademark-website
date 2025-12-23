@@ -16,8 +16,10 @@ export const metadata: Metadata = {
 function getBlogPosts() {
   // Define all blog post slugs (directories that exist)
   const allSlugs = [
-    "tiktok-shop-counterfeit-violation-appeal", // New: TikTok Shop appeal guide
-    "dupe-defense-knockoff-brand-litigation", // New: Dupe culture litigation
+    "stanley-cup-lawsuits-dupes-trademark-risk", // New: Stanley trade dress lawsuits
+    "gpt-5-trademark-speculation-ai-battleground",
+    "tiktok-shop-counterfeit-violation-appeal",
+    "dupe-defense-knockoff-brand-litigation",
     "disney-openai-ip-licensing-strategy",
     "argentina-trademark-law-changes-2025", // Featured: Latest Argentina law changes
     "register-trademark-singapore",
@@ -148,6 +150,8 @@ function getBlogPosts() {
   dateMap["trademark-registration-age-of-ai"] = new Date() // Set the AI era article date to today to feature it
   dateMap["dupe-defense-knockoff-brand-litigation"] = new Date() // Set the Dupe defense article date to today to feature it
   dateMap["tiktok-shop-counterfeit-violation-appeal"] = new Date() // Set the TikTok Shop article date to today to feature it
+  dateMap["gpt-5-trademark-speculation-ai-battleground"] = new Date() // Set the GPT-5 article date to today to feature it
+  dateMap["stanley-cup-lawsuits-dupes-trademark-risk"] = new Date() // Set the Stanley Cup article date to today to feature it
 
   const formatDate = (date: Date): string => {
     return date.toLocaleDateString("en-US", {
@@ -182,6 +186,7 @@ function getBlogPosts() {
 
   // Topic-specific images
   const topicImages: Record<string, string> = {
+    "stanley-cup-lawsuits-dupes-trademark-risk": "/images/stanley-cup-lawsuit-dupes-trademark.png",
     "hermes-metabirkins-trademark-battle":
       "https://images.unsplash.com/photo-1584273143981-41c073dfe8f8?w=600&h=400&fit=crop",
     "cole-palmer-celebration-trademark":
@@ -204,6 +209,7 @@ function getBlogPosts() {
       "https://images.unsplash.com/photo-1589909202802-8f4aadce1849?w=600&h=400&fit=crop",
     "dupe-defense-knockoff-brand-litigation": "/images/gemini-generated-image-v11hak.png",
     "tiktok-shop-counterfeit-violation-appeal": "/images/gemini-generated-image-lyuw2lyuw2lyuw2l.png",
+    "gpt-5-trademark-speculation-ai-battleground": "/images/gemini-generated-image-gpt5.png",
   }
 
   // Blog post metadata
@@ -387,6 +393,18 @@ function getBlogPosts() {
       description:
         "Learn how to navigate and appeal against counterfeit violations on TikTok Shop, ensuring your brand's integrity and protection.",
       image: topicImages["tiktok-shop-counterfeit-violation-appeal"],
+    },
+    "gpt-5-trademark-speculation-ai-battleground": {
+      title: "GPT-5 Trademark Law and AI Speculation",
+      description:
+        "Explore the potential implications of GPT-5 on trademark law and AI speculation. Learn how to stay ahead of the curve in brand protection.",
+      image: topicImages["gpt-5-trademark-speculation-ai-battleground"],
+    },
+    "stanley-cup-lawsuits-dupes-trademark-risk": {
+      title: "Stanley Cup Trade Dress Lawsuits: The Risks of Duping Your Brand",
+      description:
+        "Explore the legal challenges and risks associated with trade dress lawsuits in the context of the Stanley Cup. Learn how to protect your brand from imitation.",
+      image: topicImages["stanley-cup-lawsuits-dupes-trademark-risk"],
     },
   }
 
