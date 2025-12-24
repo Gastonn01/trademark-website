@@ -21,7 +21,7 @@ export default function GPT5TrademarkSpeculation() {
       <NavBar />
 
       <div className="relative bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
-        <div className="absolute inset-0 bg-[url('/ai-neural-network-trademark-legal-documents-gpt-5-.jpg')] opacity-10 bg-cover bg-center"></div>
+        <div className="absolute inset-0 bg-[url('/images/gpt5-ai-trademark-neural-network.jpg')] opacity-10 bg-cover bg-center"></div>
         <div className="relative container mx-auto px-4 py-16 md:py-24">
           <div className="max-w-4xl mx-auto">
             <div className="text-sm text-teal-400 mb-4">AI Law • Trademark Strategy</div>

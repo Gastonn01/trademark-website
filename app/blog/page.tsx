@@ -16,6 +16,7 @@ export const metadata: Metadata = {
 function getBlogPosts() {
   // Define all blog post slugs (directories that exist)
   const allSlugs = [
+    "ai-voice-cloning-drake-ip-battleground", // New: AI voice cloning and Drake IP battles
     "stanley-cup-lawsuits-dupes-trademark-risk", // New: Stanley trade dress lawsuits
     "gpt-5-trademark-speculation-ai-battleground",
     "tiktok-shop-counterfeit-violation-appeal",
@@ -152,6 +153,7 @@ function getBlogPosts() {
   dateMap["tiktok-shop-counterfeit-violation-appeal"] = new Date() // Set the TikTok Shop article date to today to feature it
   dateMap["gpt-5-trademark-speculation-ai-battleground"] = new Date() // Set the GPT-5 article date to today to feature it
   dateMap["stanley-cup-lawsuits-dupes-trademark-risk"] = new Date() // Set the Stanley Cup article date to today to feature it
+  dateMap["ai-voice-cloning-drake-ip-battleground"] = new Date() // Set the AI voice cloning article date to today to feature it
 
   const formatDate = (date: Date): string => {
     return date.toLocaleDateString("en-US", {
@@ -186,6 +188,7 @@ function getBlogPosts() {
 
   // Topic-specific images
   const topicImages: Record<string, string> = {
+    "ai-voice-cloning-drake-ip-battleground": "/images/ai-voice-cloning-drake.png",
     "stanley-cup-lawsuits-dupes-trademark-risk": "/images/stanley-cup-lawsuit-dupes-trademark.png",
     "hermes-metabirkins-trademark-battle":
       "https://images.unsplash.com/photo-1584273143981-41c073dfe8f8?w=600&h=400&fit=crop",
@@ -209,11 +212,17 @@ function getBlogPosts() {
       "https://images.unsplash.com/photo-1589909202802-8f4aadce1849?w=600&h=400&fit=crop",
     "dupe-defense-knockoff-brand-litigation": "/images/gemini-generated-image-v11hak.png",
     "tiktok-shop-counterfeit-violation-appeal": "/images/gemini-generated-image-lyuw2lyuw2lyuw2l.png",
-    "gpt-5-trademark-speculation-ai-battleground": "/images/gemini-generated-image-gpt5.png",
+    "gpt-5-trademark-speculation-ai-battleground": "/images/gpt5-ai-trademark-neural-network.jpg",
   }
 
   // Blog post metadata
   const blogPostsData: Record<string, { title: string; description: string; image: string }> = {
+    "ai-voice-cloning-drake-ip-battleground": {
+      title: "AI Voice Cloning Drake: The IP Battleground of the Future",
+      description:
+        "Discover the potential of AI voice cloning technology and the legal implications for brand protection. Learn how Drake's IP rights could be challenged.",
+      image: topicImages["ai-voice-cloning-drake-ip-battleground"],
+    },
     "disney-openai-ip-licensing-strategy": {
       title: "Disney's OpenAI Partnership: The Future of IP Licensing in the AI Era",
       description:
