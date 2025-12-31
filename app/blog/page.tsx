@@ -16,8 +16,9 @@ export const metadata: Metadata = {
 function getBlogPosts() {
   // Define all blog post slugs (directories that exist)
   const allSlugs = [
-    "ai-voice-cloning-drake-ip-battleground", // New: AI voice cloning and Drake IP battles
-    "stanley-cup-lawsuits-dupes-trademark-risk", // New: Stanley trade dress lawsuits
+    "ai-generated-logos-brand-names-real-risk", // New: AI logos and brand names risk
+    "ai-voice-cloning-drake-ip-battleground",
+    "stanley-cup-lawsuits-dupes-trademark-risk",
     "gpt-5-trademark-speculation-ai-battleground",
     "tiktok-shop-counterfeit-violation-appeal",
     "dupe-defense-knockoff-brand-litigation",
@@ -154,6 +155,7 @@ function getBlogPosts() {
   dateMap["gpt-5-trademark-speculation-ai-battleground"] = new Date() // Set the GPT-5 article date to today to feature it
   dateMap["stanley-cup-lawsuits-dupes-trademark-risk"] = new Date() // Set the Stanley Cup article date to today to feature it
   dateMap["ai-voice-cloning-drake-ip-battleground"] = new Date() // Set the AI voice cloning article date to today to feature it
+  dateMap["ai-generated-logos-brand-names-real-risk"] = new Date() // Set the AI logos and brand names risk article date to today to feature it
 
   const formatDate = (date: Date): string => {
     return date.toLocaleDateString("en-US", {
@@ -213,6 +215,7 @@ function getBlogPosts() {
     "dupe-defense-knockoff-brand-litigation": "/images/gemini-generated-image-v11hak.png",
     "tiktok-shop-counterfeit-violation-appeal": "/images/gemini-generated-image-lyuw2lyuw2lyuw2l.png",
     "gpt-5-trademark-speculation-ai-battleground": "/images/gpt5-ai-trademark-neural-network.jpg",
+    "ai-generated-logos-brand-names-real-risk": "/images/ai-generated-logos-brand-names-risk.png", // New: AI logos and brand names risk
   }
 
   // Blog post metadata
@@ -414,6 +417,12 @@ function getBlogPosts() {
       description:
         "Explore the legal challenges and risks associated with trade dress lawsuits in the context of the Stanley Cup. Learn how to protect your brand from imitation.",
       image: topicImages["stanley-cup-lawsuits-dupes-trademark-risk"],
+    },
+    "ai-generated-logos-brand-names-real-risk": {
+      title: "AI-Generated Logos and Brand Names: The Real Risk",
+      description:
+        "Learn about the risks associated with AI-generated logos and brand names, including legal challenges and brand protection strategies.",
+      image: topicImages["ai-generated-logos-brand-names-real-risk"],
     },
   }
 
