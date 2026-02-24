@@ -1,43 +1,43 @@
-import { Shield, Globe, Clock, DollarSign, HeadphonesIcon, AlertCircle } from "lucide-react"
+import { Shield, Globe, Clock, DollarSign, HeadphonesIcon, AlertCircle } from 'lucide-react'
 
 export function PricingFeatures() {
   const features = [
     {
       icon: Shield,
-      title: "Comprehensive Protection",
-      description: "Our trademark experts ensure your brand is fully protected across all relevant classes.",
+      title: "Protección Completa",
+      description: "Nuestros expertos en marcas garantizan que su marca esté completamente protegida en todas las clases relevantes.",
     },
     {
       icon: Globe,
-      title: "Global Coverage",
-      description: "Protect your trademark in multiple countries with our international registration services.",
+      title: "Cobertura Global",
+      description: "Proteja su marca en múltiples países con nuestros servicios de registro internacional.",
     },
     {
       icon: Clock,
-      title: "Fast Turnaround",
-      description: "Experience quick registration times with our efficient and streamlined process.",
+      title: "Rápida Gestión",
+      description: "Experimente tiempos de registro rápidos con nuestro proceso eficiente y simplificado.",
     },
     {
       icon: DollarSign,
-      title: "Competitive Pricing",
-      description: "Get top-notch trademark protection at prices that won't break your budget.",
+      title: "Precio Competitivo",
+      description: "Obtenga protección de marcas de alta calidad a precios que no romperán su presupuesto.",
     },
     {
       icon: HeadphonesIcon,
-      title: "Expert Support",
-      description: "Access our team of experienced trademark attorneys for guidance and advice.",
+      title: "Soporte Experto",
+      description: "Acceda a nuestro equipo de abogados especializados en marcas para orientación y asesoramiento.",
     },
     {
       icon: AlertCircle,
-      title: "Ongoing Monitoring",
-      description: "We continuously monitor and protect your trademark from potential infringements.",
+      title: "Monitoreo Continuo",
+      description: "Monitoreamos y protegemos continuamente su marca de posibles infracciones.",
     },
   ]
 
   return (
     <div className="bg-gray-50 py-20">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold text-center mb-12 text-indigo-900">Why Choose Our Trademark Services</h2>
+        <h2 className="text-3xl font-bold text-center mb-12 text-indigo-900">Por Qué Elegir Nuestros Servicios de Marcas</h2>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {features.map((feature, index) => (
             <div key={index} className="flex flex-col items-center text-center bg-white p-6 rounded-lg shadow-md">

@@ -1,295 +1,85 @@
-"use client"
-
 import { Card } from "@/components/ui/card"
-import { Shield, Scale, Globe, FileText, Target, Users } from "lucide-react"
-import Link from "next/link"
+
+const legalServices = [
+  {
+    title: "Ownership transfer",
+    description: "Preparation of an assignment agreement for a trademark ownership transfer",
+    price: "$ 640",
+  },
+  {
+    title: "Cease and desist letter",
+    description: "Preparation of a cease and desist letter to stop trademark infringement",
+    price: "$ 880",
+  },
+  {
+    title: "Co-existence agreement",
+    description: "Negotiation with a counterparty and drafting of a co-existence agreement",
+    price: "$ 880",
+  },
+  {
+    title: "Response to a cease and desist letter",
+    description: "Consultation and response related to a cease & desist request",
+    price: "$ 880",
+  },
+  {
+    title: "Settlement proposal letter",
+    description: "Consultation and drafting of a co-existence agreement",
+    price: "$ 880",
+  },
+  {
+    title: "Office action response",
+    description: "Advice and drafting of a response to an office action",
+    price: "$ 1,360",
+  },
+  {
+    title: "Opposition response",
+    description: "Drafting a response to objections in the trademark registration process",
+    price: "$ 1,920",
+  },
+  {
+    title: "Trademark watch service",
+    description: "Monthly monitoring of similar trademark applications",
+    price: "$ 30/month",
+  },
+  {
+    title: "Trademark infringement analysis",
+    description: "Legal analysis of potential trademark infringement",
+    price: "$ 1,200",
+  },
+  {
+    title: "Trademark license agreement",
+    description: "Drafting a trademark license agreement",
+    price: "$ 1,600",
+  },
+  {
+    title: "Trademark renewal",
+    description: "Preparation and filing of trademark renewal application",
+    price: "$ 480",
+  },
+  {
+    title: "Trademark cancellation",
+    description: "Preparation and filing of trademark cancellation request",
+    price: "$ 1,440",
+  },
+]
 
 export function LegalServicesContent() {
   return (
-    <div className="min-h-screen bg-white">
-      {/* Hero Section */}
-      <section className="bg-gradient-to-br from-gray-900 via-gray-800 to-accent text-white py-20">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <h1 className="font-serif text-5xl md:text-6xl font-bold mb-6 leading-tight">Legal Services</h1>
-            <p className="text-xl md:text-2xl text-gray-300 mb-8">
-              Protection, enforcement & support for your trademark worldwide
-            </p>
-            <p className="text-lg text-gray-400 max-w-3xl mx-auto">
-              Even after your trademark is registered, situations arise where you need professional help — whether it's
-              enforcing your rights, responding to challenges, or navigating legal requirements in specific countries.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Introduction */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
-            <p className="text-xl text-gray-700 leading-relaxed">
-              We provide access to trusted trademark professionals and local partners who can support you wherever your
-              brand is protected. Our goal is simple: give you the help you need to keep your trademark secure and
-              enforceable, without complexity or uncertainty.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Services Grid */}
-      <section className="py-16 bg-gradient-to-b from-accent/5 to-white">
-        <div className="container mx-auto px-4">
-          <h2 className="font-serif text-4xl font-bold text-center text-gray-900 mb-16">What We Can Help With</h2>
-
-          <div className="max-w-6xl mx-auto grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {/* Service 1 */}
-            <Card className="p-8 hover:shadow-xl transition-shadow border-t-4 border-accent">
-              <div className="bg-accent/10 w-14 h-14 rounded-lg flex items-center justify-center mb-6">
-                <Shield className="w-7 h-7 text-accent" />
+    <div className="container mx-auto px-4 py-24">
+      <Card className="max-w-3xl mx-auto p-6 bg-white shadow-sm">
+        <h2 className="text-xl font-light mb-6 text-gray-800">Legal Services Pricing</h2>
+        <div className="space-y-3">
+          {legalServices.map((service, index) => (
+            <div key={index} className="flex justify-between items-start py-2 border-b last:border-b-0 border-gray-100">
+              <div>
+                <h3 className="font-medium text-sm text-gray-700">{service.title}</h3>
+                <p className="text-xs text-gray-500">{service.description}</p>
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">Trademark Enforcement & Dispute Support</h3>
-              <p className="text-gray-600 mb-6">
-                If someone is using your trademark without permission — online, offline, or in another country — we can
-                connect you with the right legal support to take action.
-              </p>
-              <ul className="space-y-2 text-gray-600">
-                <li className="flex items-start">
-                  <span className="text-gray-900 mr-2">•</span>
-                  <span>Unauthorized use investigations</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-gray-900 mr-2">•</span>
-                  <span>Cease and desist letters</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-gray-900 mr-2">•</span>
-                  <span>Marketplace infringement takedowns</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-gray-900 mr-2">•</span>
-                  <span>Domain name disputes (UDRP, cybersquatting)</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-gray-900 mr-2">•</span>
-                  <span>Negotiation support with infringing parties</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-gray-900 mr-2">•</span>
-                  <span>Coordinating local enforcement with attorneys</span>
-                </li>
-              </ul>
-            </Card>
-
-            {/* Service 2 */}
-            <Card className="p-8 hover:shadow-xl transition-shadow border-t-4 border-accent">
-              <div className="bg-accent/10 w-14 h-14 rounded-lg flex items-center justify-center mb-6">
-                <FileText className="w-7 h-7 text-accent" />
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">Office Actions & Oppositions</h3>
-              <p className="text-gray-600 mb-6">
-                Even well-prepared applications sometimes face challenges from trademark offices or other rights
-                holders.
-              </p>
-              <ul className="space-y-2 text-gray-600">
-                <li className="flex items-start">
-                  <span className="text-gray-900 mr-2">•</span>
-                  <span>Responses to trademark office objections</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-gray-900 mr-2">•</span>
-                  <span>Submissions of additional documents or clarifications</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-gray-900 mr-2">•</span>
-                  <span>Handling oppositions from third parties</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-gray-900 mr-2">•</span>
-                  <span>Renewal-related compliance issues</span>
-                </li>
-              </ul>
-              <p className="text-sm text-gray-500 mt-4 italic">
-                Support is available whether you filed through us or elsewhere.
-              </p>
-            </Card>
-
-            {/* Service 3 */}
-            <Card className="p-8 hover:shadow-xl transition-shadow border-t-4 border-accent">
-              <div className="bg-accent/10 w-14 h-14 rounded-lg flex items-center justify-center mb-6">
-                <Globe className="w-7 h-7 text-accent" />
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">International Legal Assistance</h3>
-              <p className="text-gray-600 mb-6">
-                Trademark laws differ widely by country, and working with the right local professionals is essential.
-              </p>
-              <ul className="space-y-2 text-gray-600 mb-4">
-                <li className="flex items-start">
-                  <span className="text-gray-900 mr-2">•</span>
-                  <span>Countries where your trademark is already registered</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-gray-900 mr-2">•</span>
-                  <span>Countries where you plan to expand</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-gray-900 mr-2">•</span>
-                  <span>Countries where infringement may be occurring</span>
-                </li>
-              </ul>
-              <p className="text-sm text-gray-600 italic">
-                You don't need to understand every country's system — we guide the process for you.
-              </p>
-            </Card>
-
-            {/* Service 4 */}
-            <Card className="p-8 hover:shadow-xl transition-shadow border-t-4 border-accent">
-              <div className="bg-accent/10 w-14 h-14 rounded-lg flex items-center justify-center mb-6">
-                <Scale className="w-7 h-7 text-accent" />
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">Trademark Portfolio Management</h3>
-              <p className="text-gray-600 mb-6">
-                As your brand grows, so does the need for organized trademark management.
-              </p>
-              <ul className="space-y-2 text-gray-600">
-                <li className="flex items-start">
-                  <span className="text-gray-900 mr-2">•</span>
-                  <span>Tracking renewal deadlines</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-gray-900 mr-2">•</span>
-                  <span>Monitoring for potential conflicts</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-gray-900 mr-2">•</span>
-                  <span>Evaluating brand expansions into new markets</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-gray-900 mr-2">•</span>
-                  <span>Preparing filings for additional classes or countries</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-gray-900 mr-2">•</span>
-                  <span>Maintaining consistent protection across your portfolio</span>
-                </li>
-              </ul>
-              <p className="text-sm text-gray-600 mt-4 font-medium">All in one place.</p>
-            </Card>
-
-            {/* Service 5 */}
-            <Card className="p-8 hover:shadow-xl transition-shadow border-t-4 border-accent">
-              <div className="bg-accent/10 w-14 h-14 rounded-lg flex items-center justify-center mb-6">
-                <Target className="w-7 h-7 text-accent" />
-              </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">Brand Protection Strategy</h3>
-              <p className="text-gray-600 mb-6">
-                Whether you're a startup or an established business, protecting your brand long-term requires a clear
-                strategy.
-              </p>
-              <ul className="space-y-2 text-gray-600">
-                <li className="flex items-start">
-                  <span className="text-gray-900 mr-2">•</span>
-                  <span>Identify the countries where trademark protection matters most</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-gray-900 mr-2">•</span>
-                  <span>Understand risks and opportunities for expansion</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-gray-900 mr-2">•</span>
-                  <span>Plan renewals and future filings</span>
-                </li>
-                <li className="flex items-start">
-                  <span className="text-gray-900 mr-2">•</span>
-                  <span>Assess threats related to counterfeits or copycats</span>
-                </li>
-              </ul>
-              <p className="text-sm text-gray-600 mt-4 italic">
-                This turns trademark protection from reactive to strategic.
-              </p>
-            </Card>
-
-            {/* Service 6 */}
-            <Card className="p-8 bg-accent/10 border-none flex flex-col justify-center items-center text-center">
-              <Users className="w-12 h-12 text-accent mb-4" />
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">You Always Stay in Control</h3>
-              <p className="text-gray-600">
-                We help you understand your options and next steps at every stage of the process.
-              </p>
-            </Card>
-          </div>
-        </div>
-      </section>
-
-      {/* How We Work */}
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="font-serif text-4xl font-bold text-center text-gray-900 mb-12">How We Work</h2>
-            <p className="text-xl text-gray-700 text-center mb-12">
-              We focus on clarity, transparency, and support at every step:
-            </p>
-
-            <div className="grid md:grid-cols-2 gap-8">
-              <div className="bg-gray-50 p-8 rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                <div className="bg-accent text-white w-10 h-10 rounded-full flex items-center justify-center text-xl font-bold mb-4">
-                  1
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">Tell us what's happening</h3>
-                <p className="text-gray-600">Whether it's infringement, expansion, or a dispute.</p>
-              </div>
-
-              <div className="bg-gray-50 p-8 rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                <div className="bg-accent text-white w-10 h-10 rounded-full flex items-center justify-center text-xl font-bold mb-4">
-                  2
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">We assess the situation</h3>
-                <p className="text-gray-600">And outline your available options clearly.</p>
-              </div>
-
-              <div className="bg-gray-50 p-8 rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                <div className="bg-accent text-white w-10 h-10 rounded-full flex items-center justify-center text-xl font-bold mb-4">
-                  3
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">We coordinate with legal partners</h3>
-                <p className="text-gray-600">In the relevant jurisdictions if needed.</p>
-              </div>
-
-              <div className="bg-gray-50 p-8 rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                <div className="bg-accent text-white w-10 h-10 rounded-full flex items-center justify-center text-xl font-bold mb-4">
-                  4
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">You choose the path forward</h3>
-                <p className="text-gray-600">And we guide the process from start to finish.</p>
-              </div>
+              <span className="font-light text-sm text-gray-700 ml-4">{service.price}</span>
             </div>
-
-            <div className="mt-12 p-6 bg-gray-100 border-l-4 border-accent rounded-r-lg">
-              <p className="text-lg text-gray-800">
-                <strong>No hidden commitments, no unexpected surprises</strong> — just clear support designed to protect
-                your brand.
-              </p>
-            </div>
-          </div>
+          ))}
         </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-br from-gray-900 via-gray-800 to-accent text-white">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="font-serif text-4xl font-bold mb-6">Ready to get help?</h2>
-            <p className="text-xl text-gray-300 mb-8">
-              Whether you're dealing with an infringement issue or expanding internationally, we're here to support you.
-            </p>
-            <Link
-              href="/contact"
-              className="inline-block bg-white text-accent px-8 py-4 rounded-lg text-lg font-semibold hover:bg-gray-100 transition-colors shadow-lg"
-            >
-              Tell us about your situation →
-            </Link>
-          </div>
-        </div>
-      </section>
+      </Card>
     </div>
   )
 }

@@ -1,177 +1,166 @@
-import Image from "next/image"
-import { Card, CardContent, CardTitle } from "@/components/ui/card"
-import { Shield, Users, Globe, Zap, Scale, Search, Clock, ArrowRight } from "lucide-react"
-import Link from "next/link"
+"use client"
+
+import { Card, CardContent } from "@/components/ui/card"
+import { Users, Target, Lightbulb, Shield, TrendingUp, Globe } from 'lucide-react'
 
 export function AboutContent() {
+  const values = [
+    {
+      icon: Shield,
+      title: "Confianza",
+      description: "Verificamos a todos nuestros agentes para garantizar servicios profesionales de calidad"
+    },
+    {
+      icon: Users,
+      title: "Conexión",
+      description: "Facilitamos encuentros entre quienes necesitan proteger su marca y expertos calificados"
+    },
+    {
+      icon: Lightbulb,
+      title: "Simplicidad",
+      description: "Convertimos procesos complejos en experiencias simples y comprensibles"
+    },
+    {
+      icon: TrendingUp,
+      title: "Crecimiento",
+      description: "Ayudamos tanto a emprendedores como a agentes a hacer crecer sus negocios"
+    }
+  ]
+
+  const stats = [
+    { number: "500+", label: "Marcas Conectadas" },
+    { number: "50+", label: "Agentes Verificados" },
+    { number: "95%", label: "Satisfacción Cliente" },
+    { number: "24h", label: "Tiempo Respuesta" }
+  ]
+
   return (
     <div className="container mx-auto px-4 py-16">
       {/* Hero Section */}
-      <section className="mb-16 relative w-full overflow-hidden rounded-2xl shadow-2xl">
-        <div className="w-full h-[500px] relative">
-          <Image
-            src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=1200&h=400&fit=crop"
-            alt="Just Protected team at work"
-            fill
-            style={{ objectFit: "cover" }}
-            className="rounded-2xl"
-          />
-          <div className="absolute inset-0 bg-gradient-to-br from-gray-900/80 via-gray-900/70 to-accent/60 flex items-center justify-center rounded-2xl">
-            <p className="text-white text-3xl md:text-4xl font-semibold text-center max-w-3xl px-4 leading-tight">
-              Empowering businesses to safeguard their intellectual property in the digital age
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Company Overview */}
-      <h2 className="sr-only">Company Overview</h2>
-      <section className="mb-20 text-center bg-gradient-to-b from-white to-gray-50 py-16 rounded-2xl shadow-sm">
-        <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-900">Our Mission</h2>
-        <p className="text-xl mb-12 max-w-3xl mx-auto text-gray-700 leading-relaxed">
-          At Just Protected, we're committed to revolutionizing trademark protection, making it more accessible,
-          efficient, and affordable for businesses of all sizes.
+      <div className="text-center mb-16">
+        <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+          Sobre Trakmar
+        </h1>
+        <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+          Somos el primer marketplace legal de propiedad intelectual que conecta emprendedores, 
+          startups y empresas con agentes de marcas verificados en Argentina.
         </p>
-        <div className="flex justify-center space-x-12 md:space-x-16">
-          <div className="flex flex-col items-center group cursor-pointer">
-            <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-accent/20 to-accent/10 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:shadow-lg transition-all duration-300">
-              <Shield className="w-12 h-12 text-accent" />
-            </div>
-            <span className="text-lg font-semibold text-gray-900">Protect</span>
-          </div>
-          <div className="flex flex-col items-center group cursor-pointer">
-            <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-accent/20 to-accent/10 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:shadow-lg transition-all duration-300">
-              <Zap className="w-12 h-12 text-accent" />
-            </div>
-            <span className="text-lg font-semibold text-gray-900">Innovate</span>
-          </div>
-          <div className="flex flex-col items-center group cursor-pointer">
-            <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-accent/20 to-accent/10 flex items-center justify-center mb-4 group-hover:scale-110 group-hover:shadow-lg transition-all duration-300">
-              <Users className="w-12 h-12 text-accent" />
-            </div>
-            <span className="text-lg font-semibold text-gray-900">Empower</span>
-          </div>
-        </div>
-      </section>
+      </div>
 
-      {/* Company Overview */}
-      <section className="mb-20">
-        <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-900">Who We Are</h2>
-        <div className="grid md:grid-cols-2 gap-12 items-center">
-          <div>
-            <p className="text-lg mb-6 text-gray-700 leading-relaxed">
-              Founded recently, Just Protected is an innovative startup in the online trademark registration space. Our
-              team combines fresh perspectives with legal expertise and cutting-edge technology to streamline the
-              trademark protection process.
-            </p>
-            <p className="text-lg mb-4 text-gray-700 leading-relaxed">
-              As a new player in the field, we're committed to providing top-notch service to businesses of all sizes.
-              From fellow startups to growing e-commerce brands, we're here to help navigate the complex world of
-              trademark law and registration.
-            </p>
+      {/* Mission Section */}
+      <div className="grid md:grid-cols-2 gap-12 items-center mb-20">
+        <div>
+          <div className="flex items-center mb-4">
+            <Target className="w-8 h-8 text-blue-600 mr-3" />
+            <h2 className="text-3xl font-bold text-gray-900">Nuestra Misión</h2>
           </div>
-          <div className="grid grid-cols-2 gap-6">
-            <Card className="text-center p-6 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer border-t-4 border-accent">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-accent/20 to-accent/10 flex items-center justify-center mx-auto mb-4">
-                <Globe className="w-8 h-8 text-accent" />
-              </div>
-              <CardTitle className="text-4xl font-bold mb-2 text-gray-900">75+</CardTitle>
-              <CardContent className="text-gray-600">Countries Covered</CardContent>
-            </Card>
-            <Card className="text-center p-6 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer border-t-4 border-accent">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-accent/20 to-accent/10 flex items-center justify-center mx-auto mb-4">
-                <Users className="w-8 h-8 text-accent" />
-              </div>
-              <CardTitle className="text-4xl font-bold mb-2 text-gray-900">10+</CardTitle>
-              <CardContent className="text-gray-600">Dedicated Team</CardContent>
-            </Card>
-            <Card className="text-center p-6 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer border-t-4 border-accent">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-accent/20 to-accent/10 flex items-center justify-center mx-auto mb-4">
-                <Scale className="w-8 h-8 text-accent" />
-              </div>
-              <CardTitle className="text-4xl font-bold mb-2 text-gray-900">24/7</CardTitle>
-              <CardContent className="text-gray-600">Support</CardContent>
-            </Card>
-            <Card className="text-center p-6 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer border-t-4 border-accent">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-accent/20 to-accent/10 flex items-center justify-center mx-auto mb-4">
-                <Zap className="w-8 h-8 text-accent" />
-              </div>
-              <CardTitle className="text-4xl font-bold mb-2 text-gray-900">100%</CardTitle>
-              <CardContent className="text-gray-600">Excellence</CardContent>
-            </Card>
-          </div>
+          <p className="text-lg text-gray-600 mb-6 leading-relaxed">
+            Democratizar el acceso a servicios de propiedad intelectual de calidad, 
+            conectando a quienes necesitan proteger sus marcas con profesionales especializados 
+            de manera simple, transparente y confiable.
+          </p>
+          <p className="text-lg text-gray-600 leading-relaxed">
+            No prestamos servicios directamente, sino que actuamos como intermediario confiable 
+            entre cliente y profesional, garantizando calidad y transparencia en cada conexión.
+          </p>
         </div>
-      </section>
-
-      {/* Our Approach */}
-      <section className="mb-20 bg-gradient-to-b from-gray-50 to-white py-16 rounded-2xl shadow-sm">
-        <h2 className="text-4xl md:text-5xl font-bold mb-12 text-gray-900 text-center">Our Approach</h2>
-        <div className="grid md:grid-cols-2 gap-10 max-w-5xl mx-auto px-8">
-          <div className="flex items-start space-x-6 group">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-accent/20 to-accent/10 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
-              <Search className="w-8 h-8 text-accent" />
-            </div>
-            <div>
-              <h3 className="text-2xl font-bold mb-3 text-gray-900">Technology-Driven Solutions</h3>
-              <p className="text-lg text-gray-700 leading-relaxed">
-                We're developing innovative AI and machine learning algorithms to enhance our trademark search
-                capabilities, aiming to provide comprehensive protection for our clients' brands.
-              </p>
-            </div>
-          </div>
-          <div className="flex items-start space-x-6 group">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-accent/20 to-accent/10 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
-              <Scale className="w-8 h-8 text-accent" />
-            </div>
-            <div>
-              <h3 className="text-2xl font-bold mb-3 text-gray-900">Expert Human Oversight</h3>
-              <p className="text-lg text-gray-700 leading-relaxed">
-                While we embrace cutting-edge technology, we ensure that every application is carefully reviewed by our
-                knowledgeable team to maximize the chances of successful registration.
-              </p>
-            </div>
-          </div>
-          <div className="flex items-start space-x-6 group">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-accent/20 to-accent/10 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
-              <Globe className="w-8 h-8 text-accent" />
-            </div>
-            <div>
-              <h3 className="text-2xl font-bold mb-3 text-gray-900">Global Perspective</h3>
-              <p className="text-lg text-gray-700 leading-relaxed">
-                In today's interconnected world, we offer international trademark registration services to protect your
-                brand across borders and markets.
-              </p>
-            </div>
-          </div>
-          <div className="flex items-start space-x-6 group">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-accent/20 to-accent/10 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300">
-              <Clock className="w-8 h-8 text-accent" />
-            </div>
-            <div>
-              <h3 className="text-2xl font-bold mb-3 text-gray-900">Efficient Process</h3>
-              <p className="text-lg text-gray-700 leading-relaxed">
-                Our streamlined approach reduces the time and complexity typically associated with trademark
-                registration, allowing you to focus on growing your business.
-              </p>
-            </div>
-          </div>
+        
+        <div className="bg-gradient-to-br from-blue-50 to-indigo-100 rounded-2xl p-8">
+          <Globe className="w-16 h-16 text-blue-600 mb-4" />
+          <h3 className="text-2xl font-bold text-gray-900 mb-4">Visión Global</h3>
+          <p className="text-gray-600 leading-relaxed">
+            Ser la plataforma líder en Latinoamérica para la conexión entre emprendedores 
+            y profesionales de propiedad intelectual, expandiendo oportunidades para todos.
+          </p>
         </div>
-      </section>
+      </div>
 
-      {/* Call to Action */}
-      <section className="text-center bg-gradient-to-br from-gray-900 via-gray-800 to-accent text-white py-16 rounded-2xl shadow-2xl">
-        <h2 className="text-4xl md:text-5xl font-bold mb-6">Ready to Secure Your Brand's Future?</h2>
-        <p className="text-xl mb-8 text-gray-200 max-w-2xl mx-auto">
-          Join the growing number of businesses choosing Just Protected for their trademark needs.
-        </p>
-        <Link
-          href="/free-search"
-          className="inline-flex items-center justify-center px-8 py-4 rounded-lg bg-accent hover:bg-accent/90 text-white font-semibold text-lg transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105"
-        >
-          Get Started Today
-          <ArrowRight className="ml-2 transition-transform duration-200 group-hover:translate-x-1" />
-        </Link>
-      </section>
+      {/* Values Section */}
+      <div className="mb-20">
+        <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
+          Nuestros Valores
+        </h2>
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {values.map((value, index) => {
+            const IconComponent = value.icon
+            return (
+              <Card key={index} className="text-center hover:shadow-lg transition-shadow duration-300">
+                <CardContent className="p-6">
+                  <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <IconComponent className="w-8 h-8 text-blue-600" />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-3">
+                    {value.title}
+                  </h3>
+                  <p className="text-gray-600 leading-relaxed">
+                    {value.description}
+                  </p>
+                </CardContent>
+              </Card>
+            )
+          })}
+        </div>
+      </div>
+
+      {/* Stats Section */}
+      <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-12 text-white text-center">
+        <h2 className="text-3xl font-bold mb-12">Nuestro Impacto</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          {stats.map((stat, index) => (
+            <div key={index}>
+              <div className="text-4xl font-bold mb-2">{stat.number}</div>
+              <div className="text-blue-100">{stat.label}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* How We Work Section */}
+      <div className="mt-20">
+        <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
+          Cómo Trabajamos
+        </h2>
+        <div className="grid md:grid-cols-3 gap-8">
+          <Card className="text-center">
+            <CardContent className="p-8">
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Users className="w-8 h-8 text-green-600" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Para Usuarios</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Formularios guiados que simplifican el proceso. No necesitas conocer de propiedad 
+                intelectual para describir lo que necesitas.
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="text-center">
+            <CardContent className="p-8">
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Shield className="w-8 h-8 text-blue-600" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Verificación</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Todos nuestros agentes pasan por un proceso de verificación para garantizar 
+                su experiencia y profesionalismo.
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className="text-center">
+            <CardContent className="p-8">
+              <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <TrendingUp className="w-8 h-8 text-purple-600" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Para Agentes</h3>
+              <p className="text-gray-600 leading-relaxed">
+                Acceso a clientes pre-calificados, sistema de reputación y herramientas 
+                para hacer crecer su práctica profesional.
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
     </div>
   )
 }

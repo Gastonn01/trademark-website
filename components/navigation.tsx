@@ -8,10 +8,10 @@ export function Navigation() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   return (
-    <header className="w-full bg-white border-b border-gray-200 py-6 relative z-10">
+    <header className="w-full bg-white shadow-sm py-6 relative z-10">
       <div className="container mx-auto px-4 flex justify-between items-center">
-        <Link href="/" className="text-3xl font-bold text-gray-900 hover:text-gray-700 transition-colors">
-          Just Protected
+        <Link href="/" className="text-3xl font-bold text-blue-600 hover:text-blue-700 transition-colors">
+          Trakmar
         </Link>
 
         {/* Mobile menu button */}
@@ -24,26 +24,26 @@ export function Navigation() {
 
         {/* Desktop navigation */}
         <nav className="hidden md:flex items-center space-x-8">
-          <Link href="/how-it-works" className="text-gray-700 hover:text-gray-900 font-medium transition-colors">
-            How it works
+          <Link href="/how-it-works" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
+            Cómo funciona
           </Link>
-          <Link href="/about" className="text-gray-700 hover:text-gray-900 font-medium transition-colors">
-            About
+          <Link href="/about" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
+            Acerca de
           </Link>
-          <Link href="/detailed-pricelist" className="text-gray-700 hover:text-gray-900 font-medium transition-colors">
-            Pricing
+          <Link href="/detailed-pricelist" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
+            Precios
           </Link>
-          <Link href="/legal-services" className="text-gray-700 hover:text-gray-900 font-medium transition-colors">
-            Legal Services
+          <Link href="/para-agentes" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
+            Para Agentes
           </Link>
-          <Link href="/blog" className="text-gray-700 hover:text-gray-900 font-medium transition-colors">
+          <Link href="/blog" className="text-gray-700 hover:text-blue-600 font-medium transition-colors">
             Blog
           </Link>
           <Link
             href="/free-search"
-            className="bg-gray-900 hover:bg-gray-800 text-white px-4 py-2 rounded-md font-medium transition-colors"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium transition-colors"
           >
-            Free Search
+            Búsqueda Gratuita
           </Link>
         </nav>
 
@@ -53,45 +53,45 @@ export function Navigation() {
             <div className="flex flex-col p-4 space-y-4">
               <Link
                 href="/how-it-works"
-                className="text-gray-700 hover:text-gray-900 font-medium transition-colors"
+                className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
-                How it works
+                Cómo funciona
               </Link>
               <Link
                 href="/about"
-                className="text-gray-700 hover:text-gray-900 font-medium transition-colors"
+                className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
-                About
+                Acerca de
               </Link>
               <Link
                 href="/detailed-pricelist"
-                className="text-gray-700 hover:text-gray-900 font-medium transition-colors"
+                className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
-                Pricing
+                Precios
               </Link>
               <Link
-                href="/legal-services"
-                className="text-gray-700 hover:text-gray-900 font-medium transition-colors"
+                href="/para-agentes"
+                className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
-                Legal Services
+                Para Agentes
               </Link>
               <Link
                 href="/blog"
-                className="text-gray-700 hover:text-gray-900 font-medium transition-colors"
+                className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Blog
               </Link>
               <Link
                 href="/free-search"
-                className="bg-gray-900 hover:bg-gray-800 text-white px-4 py-2 rounded-md font-medium transition-colors text-center"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md font-medium transition-colors text-center"
                 onClick={() => setIsMenuOpen(false)}
               >
-                Free Search
+                Búsqueda Gratuita
               </Link>
             </div>
           </div>

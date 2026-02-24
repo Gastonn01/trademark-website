@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { ArrowRight, MessageCircle } from "lucide-react"
 
 interface CTAProps {
   title?: string
@@ -11,36 +12,56 @@ interface CTAProps {
 }
 
 export function CTA({
-  title = "Ready to protect your brand?",
-  description = "Start your trademark registration process today.",
-  primaryButtonText = "Free Search",
-  primaryButtonLink = "/free-search",
-  secondaryButtonText = "View Pricing",
-  secondaryButtonLink = "/detailed-pricelist",
+  title = "¿Listo para proteger tu marca?",
+  description = "Conecta con agentes especializados y comienza el proceso de solicitud hoy mismo.",
+  primaryButtonText = "Comenzar solicitud",
+  primaryButtonLink = "/registro-marca",
+  secondaryButtonText = "Hablar con un experto",
+  secondaryButtonLink = "/contact",
   className = "",
 }: CTAProps) {
   return (
-    <div className={`bg-white py-8 px-4 rounded-lg shadow-sm border border-gray-200 ${className}`}>
-      <div className="text-center">
-        <h2 className="text-2xl font-bold mb-4">{title}</h2>
-        <p className="text-gray-600 mb-6">{description}</p>
-        <div className="flex flex-col sm:flex-row justify-center gap-4">
-          <Link
-            href={primaryButtonLink}
-            className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition-colors"
-            scroll={true}
-          >
-            {primaryButtonText}
-          </Link>
-          <Link
-            href={secondaryButtonLink}
-            className="bg-gray-100 text-gray-800 px-6 py-2 rounded-md hover:bg-gray-200 transition-colors"
-            scroll={true}
-          >
-            {secondaryButtonText}
-          </Link>
+    <section className="py-20 bg-transparent">
+      <div className="container mx-auto px-4">
+        <div
+          className={`relative bg-gradient-to-br from-sky-100 via-sky-200 to-blue-300 py-16 px-8 rounded-2xl overflow-hidden ${className}`}
+        >
+          {/* Subtle background pattern */}
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.15)_1px,transparent_0)] [background-size:24px_24px] opacity-30"></div>
+
+          <div className="relative text-center text-gray-900 max-w-3xl mx-auto">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4 tracking-tight">{title}</h2>
+            <p className="text-gray-700 mb-8 text-lg leading-relaxed">{description}</p>
+
+            <div className="flex flex-col sm:flex-row justify-center gap-4">
+              <Link
+                href={primaryButtonLink}
+                className="group inline-flex items-center justify-center bg-blue-600 text-white px-8 py-4 rounded-lg hover:bg-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl font-semibold"
+                scroll={true}
+              >
+                {primaryButtonText}
+                <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+              </Link>
+              <Link
+                href={secondaryButtonLink}
+                className="inline-flex items-center justify-center bg-white text-blue-700 border-2 border-blue-300 px-8 py-4 rounded-lg hover:bg-blue-50 transition-all duration-200 font-semibold"
+                scroll={true}
+              >
+                <MessageCircle className="w-5 h-5 mr-2" />
+                {secondaryButtonText}
+              </Link>
+            </div>
+
+            {/* Trust indicator */}
+            <div className="mt-8 pt-8 border-t border-blue-300">
+              <p className="text-gray-600 text-sm">
+                Más de <span className="text-gray-900 font-semibold">500 empresas</span> han solicitado sus marcas con
+                nosotros
+              </p>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </section>
   )
 }

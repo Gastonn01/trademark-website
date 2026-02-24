@@ -1,65 +1,56 @@
 import type React from "react"
-import type { Metadata } from "next"
+import "@/app/globals.css"
+import "@/app/fix-top-space.css"
 import { Inter } from "next/font/google"
-import { Toaster } from "@/components/ui/toaster"
-import { Analytics } from "@vercel/analytics/next"
-import { GTMTracker } from "@/components/gtm-tracker"
-import { ScrollToTop } from "@/components/scroll-to-top"
-import { TrademarkFAQBot } from "@/components/trademark-faq-bot"
-import { Suspense } from "react"
 import Script from "next/script"
-import "./globals.css"
+import { Suspense } from "react"
+import { ThemeProvider } from "@/components/theme-provider"
+import { Toaster } from "@/components/ui/toaster"
+import { Analytics } from "@vercel/analytics/react"
+import { TrademarkChatbot } from "@/components/trademark-chatbot"
 
 const inter = Inter({ subsets: ["latin"] })
 
-export const metadata: Metadata = {
-  title: "Just Protected - Trademark Registration Services",
-  description: "Professional trademark registration services worldwide. Protect your brand with our expert legal team.",
-  keywords: "trademark registration, brand protection, intellectual property, legal services",
-  authors: [{ name: "Just Protected" }],
-  creator: "Just Protected",
-  publisher: "Just Protected",
-  formatDetection: {
-    email: false,
-    address: false,
-    telephone: false,
-  },
-  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || "https://justprotected.com"),
-  alternates: {
-    canonical: "/",
-  },
+export const metadata = {
+  title: "Trakmar | Conectamos Emprendedores con Agentes de Marcas",
+  description:
+    "Plataforma que conecta emprendedores y empresas with agentes de marcas verificados en Argentina. Registro de marcas simplificado y transparente.",
+  metadataBase: new URL("https://trakmar.com"),
+  applicationName: "Trakmar",
   openGraph: {
-    title: "Just Protected - Trademark Registration Services",
-    description:
-      "Professional trademark registration services worldwide. Protect your brand with our expert legal team.",
-    url: process.env.NEXT_PUBLIC_BASE_URL || "https://justprotected.com",
-    siteName: "Just Protected",
-    locale: "en_US",
+    title: "Trakmar | Conectamos Emprendedores con Agentes de Marcas",
+    description: "Plataforma que conecta emprendedores y empresas con agentes de marcas verificados en Argentina.",
+    url: "https://trakmar.com",
+    siteName: "Trakmar",
+    images: [
+      {
+        url: "https://trakmar.com/logo.png",
+        width: 512,
+        height: 512,
+        alt: "Trakmar Logo",
+      },
+    ],
+    locale: "es_AR",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Just Protected - Trademark Registration Services",
-    description:
-      "Professional trademark registration services worldwide. Protect your brand with our expert legal team.",
-    creator: "@justprotected",
+    title: "Trakmar | Conectamos Emprendedores con Agentes de Marcas",
+    description: "Plataforma que conecta emprendedores y empresas con agentes de marcas verificados en Argentina.",
+    images: ["https://trakmar.com/logo.png"],
   },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
+  alternates: {
+    canonical: "https://trakmar.com",
   },
-  verification: {
-    google: "your-google-verification-code",
-    yandex: "your-yandex-verification-code",
+  icons: {
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
   },
-    generator: 'v0.app'
+  generator: "Next.js",
 }
 
 export default function RootLayout({
@@ -68,66 +59,67 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="es" className={inter.className}>
       <head>
-        <link rel="icon" href="/favicon.ico" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+        <meta name="google-site-verification" content="6dpN_v4tVuDR1yKD24oiRYmdwt1EdkvfL9rjHBe4dUo" />
+        <meta name="msvalidate.01" content="4F29914D377793189675972516715A23" />
+        <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/site.webmanifest" />
-
-        {/* Consent Mode v2 - Must run before GTM */}
-        <Script
-          id="consent-default"
-          strategy="beforeInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('consent', 'default', {
-                ad_storage: 'denied',
-                ad_user_data: 'denied', 
-                ad_personalization: 'denied',
-                analytics_storage: 'denied'
-              });
-            `,
-          }}
-        />
-
-        {/* Google Tag Manager */}
-        <Script
-          id="gtm-script"
-          strategy="afterInteractive"
-          dangerouslySetInnerHTML={{
-            __html: `
-              (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-              new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-              j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-              'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-              })(window,document,'script','dataLayer','GTM-5DDZ4XHV');
-            `,
-          }}
-        />
       </head>
-      <body className={inter.className}>
-        {/* Google Tag Manager (noscript) */}
-        <noscript>
-          <iframe
-            src="https://www.googletagmanager.com/ns.html?id=GTM-5DDZ4XHV"
-            height="0"
-            width="0"
-            style={{ display: "none", visibility: "hidden" }}
-          />
-        </noscript>
-
-        <Suspense fallback={null}>
-          <ScrollToTop />
-          <GTMTracker />
-          {children}
+      <body>
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} disableTransitionOnChange>
+          <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Cargando...</div>}>
+            {children}
+          </Suspense>
           <Toaster />
-          <Analytics />
-          <TrademarkFAQBot />
-        </Suspense>
+          <TrademarkChatbot />
+        </ThemeProvider>
+        <Script src="https://www.googletagmanager.com/gtag/js?id=AW-17618544334" strategy="afterInteractive" />
+        <Script id="google-ads-config" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'AW-17618544334');
+          `}
+        </Script>
+        <Script id="schema-org" type="application/ld+json">
+          {`
+            {
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "name": "Trakmar",
+              "alternateName": "Trakmar",
+              "url": "https://trakmar.com",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "https://trakmar.com/logo.png",
+                "width": 512,
+                "height": 512,
+                "caption": "Trakmar"
+              },
+              "description": "Plataforma que conecta emprendedores y empresas con agentes de marcas verificados en Argentina. Registro de marcas simplificado y transparente.",
+              "address": {
+                "@type": "PostalAddress",
+                "addressCountry": "AR"
+              }
+            }
+          `}
+        </Script>
+        <Script src="https://www.googletagmanager.com/gtag/js?id=G-4WFT849RER" strategy="afterInteractive" />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-4WFT849RER');
+          `}
+        </Script>
+        <Analytics />
       </body>
     </html>
   )

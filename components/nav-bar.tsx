@@ -1,140 +1,99 @@
 "use client"
 
+import type React from "react"
+
+import { useState } from "react"
 import Link from "next/link"
-import { useState, useEffect } from "react"
-import { Menu, X, Shield } from "lucide-react"
-import { CurrencySelector } from "@/components/currency-selector"
+import { Button } from "@/components/ui/button"
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { Menu } from "lucide-react"
 
 export function NavBar() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [isScrolled, setIsScrolled] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10)
+  const handleProcesoClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault()
+    const procesoSection = document.getElementById("proceso")
+    if (procesoSection) {
+      procesoSection.scrollIntoView({ behavior: "smooth", block: "start" })
     }
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
+    setIsOpen(false)
+  }
+
+  const navItems = [
+    { name: "Inicio", href: "/" },
+    { name: "Proceso", href: "/#proceso", onClick: handleProcesoClick },
+    { name: "Para Agentes", href: "/para-agentes" },
+    { name: "Estudio de Factibilidad", href: "/estudio-factibilidad" },
+    { name: "Contacto", href: "/contact" },
+  ]
 
   return (
-    <header
-      className={`w-full bg-white sticky top-0 z-50 transition-all duration-300 ${
-        isScrolled ? "shadow-lg" : "border-b border-gray-200"
-      }`}
-    >
-      <div className="container mx-auto px-4 lg:px-6">
-        <div className="flex justify-between items-center h-20">
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="flex items-center justify-center w-11 h-11 rounded-lg bg-primary group-hover:bg-accent transition-all duration-300">
-              <Shield className="w-6 h-6 text-white" strokeWidth={2.5} />
-            </div>
-            <span className="text-2xl font-bold text-primary group-hover:text-accent transition-all duration-300">
-              Just Protected
-            </span>
-          </Link>
-
-          <button
-            className="md:hidden p-2.5 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-all duration-200"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            aria-label="Toggle menu"
-          >
-            {isMenuOpen ? <X size={24} strokeWidth={2} /> : <Menu size={24} strokeWidth={2} />}
-          </button>
-
-          <nav className="hidden md:flex items-center gap-1">
-            <Link
-              href="/how-it-works"
-              className="px-4 py-2 text-gray-700 hover:text-primary hover:bg-gray-50 rounded-lg font-medium transition-all duration-200"
-            >
-              How it works
+    <nav className="bg-white shadow-sm border-b sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16">
+          {/* Logo */}
+          <div className="flex-shrink-0">
+            <Link href="/" className="flex items-center">
+              <span className="text-2xl font-bold text-slate-900 tracking-tight">Trakmar</span>
+              <span className="ml-1 text-xs font-medium text-slate-500 tracking-wide">®</span>
             </Link>
-            <Link
-              href="/about"
-              className="px-4 py-2 text-gray-700 hover:text-primary hover:bg-gray-50 rounded-lg font-medium transition-all duration-200"
-            >
-              About
-            </Link>
-            <Link
-              href="/detailed-pricelist"
-              className="px-4 py-2 text-gray-700 hover:text-primary hover:bg-gray-50 rounded-lg font-medium transition-all duration-200"
-            >
-              Pricing
-            </Link>
-            <Link
-              href="/legal-services"
-              className="px-4 py-2 text-gray-700 hover:text-primary hover:bg-gray-50 rounded-lg font-medium transition-all duration-200"
-            >
-              Legal Services
-            </Link>
-            <Link
-              href="/blog"
-              className="px-4 py-2 text-gray-700 hover:text-primary hover:bg-gray-50 rounded-lg font-medium transition-all duration-200"
-            >
-              Blog
-            </Link>
-            <CurrencySelector />
-            <Link
-              href="/free-search"
-              className="ml-3 px-6 py-2.5 bg-accent hover:bg-accent/90 text-white rounded-lg font-bold shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200"
-            >
-              Start Free Search
-            </Link>
-          </nav>
-        </div>
-
-        {isMenuOpen && (
-          <div className="md:hidden border-t border-gray-200 animate-in slide-in-from-top duration-200">
-            <nav className="flex flex-col py-4 space-y-1">
-              <Link
-                href="/how-it-works"
-                className="px-4 py-3 text-gray-700 hover:text-primary hover:bg-gray-100 rounded-lg font-medium transition-all duration-200"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                How it works
-              </Link>
-              <Link
-                href="/about"
-                className="px-4 py-3 text-gray-700 hover:text-primary hover:bg-gray-100 rounded-lg font-medium transition-all duration-200"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                About
-              </Link>
-              <Link
-                href="/detailed-pricelist"
-                className="px-4 py-3 text-gray-700 hover:text-primary hover:bg-gray-100 rounded-lg font-medium transition-all duration-200"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Pricing
-              </Link>
-              <Link
-                href="/legal-services"
-                className="px-4 py-3 text-gray-700 hover:text-primary hover:bg-gray-100 rounded-lg font-medium transition-all duration-200"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Legal Services
-              </Link>
-              <Link
-                href="/blog"
-                className="px-4 py-3 text-gray-700 hover:text-primary hover:bg-gray-100 rounded-lg font-medium transition-all duration-200"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Blog
-              </Link>
-              <div className="px-4 py-3">
-                <CurrencySelector />
-              </div>
-              <Link
-                href="/free-search"
-                className="mx-4 mt-2 px-6 py-3 bg-accent hover:bg-accent/90 text-white rounded-lg font-bold text-center shadow-md hover:shadow-lg transition-all duration-200"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Start Free Search
-              </Link>
-            </nav>
           </div>
-        )}
+
+          {/* Desktop Navigation */}
+          <div className="hidden md:block">
+            <div className="ml-10 flex items-baseline space-x-4">
+              {navItems.map((item) => (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  onClick={item.onClick}
+                  className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                >
+                  {item.name}
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* CTA Button */}
+          <div className="hidden md:block">
+            <Link href="/registro-marca">
+              <Button className="bg-blue-600 hover:bg-blue-700 text-white">Solicitar Marca</Button>
+            </Link>
+          </div>
+
+          {/* Mobile menu button */}
+          <div className="md:hidden">
+            <Sheet open={isOpen} onOpenChange={setIsOpen}>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <Menu className="h-6 w-6" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+                <div className="flex flex-col space-y-4 mt-4">
+                  {navItems.map((item) => (
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      onClick={item.onClick}
+                      className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-base font-medium transition-colors"
+                    >
+                      {item.name}
+                    </Link>
+                  ))}
+                  <div className="pt-4">
+                    <Link href="/registro-marca" onClick={() => setIsOpen(false)}>
+                      <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">Solicitar Marca</Button>
+                    </Link>
+                  </div>
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
+        </div>
       </div>
-    </header>
+    </nav>
   )
 }

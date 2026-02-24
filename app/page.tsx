@@ -1,32 +1,31 @@
-import { NavBar } from "@/components/nav-bar"
 import { HeroSection } from "@/components/hero-section"
-import { ProcessSection } from "@/components/process-section"
-import { WhyChooseUsSection } from "@/components/why-choose-us-section"
-import { TrustBanner } from "@/components/trust-banner"
-import { CTASection } from "@/components/cta-section"
+import { ForAgents } from "@/components/for-agents"
+import { PricingPlansHome } from "@/components/pricing-plans-home"
 import { FAQ } from "@/components/faq"
+import { CTA } from "@/components/cta"
+import { NavBar } from "@/components/nav-bar"
 import { Footer } from "@/components/footer"
-// import { ChatGPTIntegrationSection } from "@/components/chatgpt-integration-section"
-import type { Metadata } from "next"
+import { ScrollToTopOnMount } from "@/components/scroll-to-top-on-mount"
+import { DiscountPopup } from "@/components/discount-popup"
+import { TrademarkProcess } from "@/components/trademark-process"
 
-export const metadata: Metadata = {
-  title: "Just Protected | Global Trademark Registration Services",
-  description:
-    "Secure your brand worldwide with Just Protected's comprehensive trademark registration services. AI-powered trademark search and expert legal support.",
-}
-
-export default function Home() {
+export default function HomePage() {
   return (
-    <main className="bg-white">
+    <div className="min-h-screen bg-sky-50">
+      <ScrollToTopOnMount />
       <NavBar />
-      <HeroSection />
-      <TrustBanner />
-      <ProcessSection />
-      <WhyChooseUsSection />
-      {/* <ChatGPTIntegrationSection /> */}
-      <FAQ />
-      <CTASection />
+      <main>
+        <HeroSection />
+        <div id="proceso">
+          <TrademarkProcess />
+        </div>
+        <PricingPlansHome />
+        <ForAgents />
+        <FAQ />
+        <CTA />
+      </main>
       <Footer />
-    </main>
+      <DiscountPopup />
+    </div>
   )
 }

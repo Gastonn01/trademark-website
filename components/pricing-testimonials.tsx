@@ -1,45 +1,48 @@
-import Image from "next/image"
+import { Card, CardContent } from "@/components/ui/card"
+import { Star } from 'lucide-react'
 
 export function PricingTestimonials() {
   const testimonials = [
     {
-      quote:
-        "Protectly made trademark registration a breeze. Their team was incredibly helpful throughout the process.",
-      author: "Jane Doe",
-      company: "Tech Innovators Inc.",
-      image: "/placeholder.svg?height=100&width=100",
+      name: "María González",
+      company: "Startup Tech",
+      rating: 5,
+      text: "El proceso fue increíblemente fácil y transparente. Registramos nuestra marca en tiempo récord.",
     },
     {
-      quote:
-        "I was amazed at how quickly and efficiently Protectly handled our trademark application. Highly recommended!",
-      author: "John Smith",
-      company: "Global Brands LLC",
-      image: "/placeholder.svg?height=100&width=100",
+      name: "Carlos Rodríguez",
+      company: "Agencia Creativa",
+      rating: 5,
+      text: "Excelente servicio al cliente. Nos guiaron paso a paso durante todo el proceso de registro.",
+    },
+    {
+      name: "Ana Martínez",
+      company: "E-commerce",
+      rating: 5,
+      text: "Precios justos y servicio profesional. Definitivamente recomendaría sus servicios.",
     },
   ]
 
   return (
-    <div className="py-20">
+    <div className="bg-white py-20">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold text-center mb-12 text-indigo-900">What Our Clients Say</h2>
-        <div className="grid md:grid-cols-2 gap-8">
+        <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">Lo Que Dicen Nuestros Clientes</h2>
+        <div className="grid md:grid-cols-3 gap-8">
           {testimonials.map((testimonial, index) => (
-            <div key={index} className="bg-white p-6 rounded-lg shadow-md">
-              <p className="text-gray-600 mb-4 italic">"{testimonial.quote}"</p>
-              <div className="flex items-center">
-                <Image
-                  src={testimonial.image}
-                  alt={testimonial.author}
-                  width={50}
-                  height={50}
-                  className="rounded-full mr-4"
-                />
+            <Card key={index} className="text-center">
+              <CardContent className="p-6">
+                <div className="flex justify-center mb-4">
+                  {[...Array(testimonial.rating)].map((_, i) => (
+                    <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
+                  ))}
+                </div>
+                <p className="text-gray-600 mb-4 italic">"{testimonial.text}"</p>
                 <div>
-                  <p className="font-semibold text-indigo-900">{testimonial.author}</p>
+                  <p className="font-semibold text-gray-900">{testimonial.name}</p>
                   <p className="text-sm text-gray-500">{testimonial.company}</p>
                 </div>
-              </div>
-            </div>
+              </CardContent>
+            </Card>
           ))}
         </div>
       </div>

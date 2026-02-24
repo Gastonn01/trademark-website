@@ -1,273 +1,206 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Mail, Phone, MapPin, Clock, Send, CheckCircle, AlertCircle } from "lucide-react"
+import { Card } from "@/components/ui/card"
+import { useToast } from "@/components/ui/use-toast"
+import { Mail, MapPin, Clock } from "lucide-react"
 
 export function ContactContent() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    subject: "",
-    message: "",
-  })
+  const { toast } = useToast()
+  const router = useRouter()
+  const [name, setName] = useState("")
+  const [email, setEmail] = useState("")
+  const [subject, setSubject] = useState("")
+  const [message, setMessage] = useState("")
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle")
-  const [errorMessage, setErrorMessage] = useState("")
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }))
-  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
-    setSubmitStatus("idle")
-    setErrorMessage("")
 
     try {
-      const response = await fetch("/api/contact", {
+      const response = await fetch("/api/submit-form", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({
+          formType: "contact",
+          name,
+          email,
+          subject,
+          message,
+        }),
       })
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`)
+      }
 
       const result = await response.json()
 
-      if (response.ok) {
-        setSubmitStatus("success")
-        setFormData({ name: "", email: "", subject: "", message: "" })
+      if (result.success) {
+        router.push("/gracias-contacto")
       } else {
-        setSubmitStatus("error")
-        setErrorMessage(result.error || "Failed to send message")
+        throw new Error(result.error || "Error desconocido")
       }
     } catch (error) {
-      setSubmitStatus("error")
-      setErrorMessage("Network error. Please try again.")
+      console.error("❌ Form submission error:", error)
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Error enviando mensaje. Por favor intenta más tarde.",
+        variant: "destructive",
+      })
     } finally {
       setIsSubmitting(false)
     }
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-accent/5 py-12">
-      <div className="container mx-auto px-4">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="font-serif text-5xl font-bold text-gray-900 mb-4">Contact Us</h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Get in touch with our trademark experts. We're here to help protect your brand and answer any questions you
-            may have.
+    <div className="min-h-screen bg-gradient-to-b from-sky-50 to-white">
+      <div className="bg-gradient-to-r from-sky-400 to-blue-500 py-16">
+        <div className="container mx-auto px-4 text-center">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-white">Estamos aquí para ayudarte</h1>
+          <p className="text-xl text-sky-50 max-w-2xl mx-auto">
+            ¿Tienes dudas sobre el registro de marcas? Nuestro equipo de expertos está listo para asesorarte
           </p>
         </div>
+      </div>
 
-        <div className="grid lg:grid-cols-2 gap-12 max-w-6xl mx-auto">
-          {/* Contact Form */}
-          <Card className="shadow-lg hover:shadow-xl transition-shadow">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Send className="h-5 w-5 text-accent" />
-                Send us a Message
-              </CardTitle>
-              <CardDescription>Fill out the form below and we'll get back to you within 24 hours.</CardDescription>
-            </CardHeader>
-            <CardContent>
-              {submitStatus === "success" && (
-                <div className="mb-6 p-4 bg-accent border border-border rounded-lg flex items-center gap-2 text-accent-foreground">
-                  <CheckCircle className="h-5 w-5" />
-                  <span>Thank you! Your message has been sent successfully.</span>
-                </div>
-              )}
+      <div className="container mx-auto px-4 py-16">
+        <div className="grid lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          {/* Contact Information */}
+          <div className="lg:col-span-1 space-y-6">
+            <Card className="p-6 bg-white shadow-md border-sky-100">
+              <h2 className="text-2xl font-bold mb-6 text-gray-900">Información de Contacto</h2>
 
-              {submitStatus === "error" && (
-                <div className="mb-6 p-4 bg-destructive/10 border border-destructive/50 rounded-lg flex items-center gap-2 text-destructive">
-                  <AlertCircle className="h-5 w-5" />
-                  <span>{errorMessage}</span>
-                </div>
-              )}
-
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid md:grid-cols-2 gap-4">
+              <div className="space-y-4">
+                <div className="flex items-start gap-3">
+                  <div className="p-2 bg-sky-100 rounded-lg">
+                    <Mail className="w-5 h-5 text-sky-600" />
+                  </div>
                   <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                      Full Name *
+                    <p className="font-semibold text-gray-900">Email</p>
+                    <a href="mailto:trakmar@proton.me" className="text-sky-600 hover:text-sky-700">
+                      trakmar@proton.me
+                    </a>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <div className="p-2 bg-sky-100 rounded-lg">
+                    <Clock className="w-5 h-5 text-sky-600" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-900">Horario de atención</p>
+                    <p className="text-gray-600 text-sm">Lunes a Viernes</p>
+                    <p className="text-gray-600 text-sm">9:00 AM - 6:00 PM</p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-3">
+                  <div className="p-2 bg-sky-100 rounded-lg">
+                    <MapPin className="w-5 h-5 text-sky-600" />
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-900">Argentina</p>
+                    <p className="text-gray-600 text-sm">Servicio en todo el país</p>
+                  </div>
+                </div>
+              </div>
+            </Card>
+
+            <Card className="p-6 bg-gradient-to-br from-sky-50 to-blue-50 border-sky-200">
+              <h3 className="font-bold text-gray-900 mb-2">Respuesta rápida</h3>
+              <p className="text-sm text-gray-600">
+                Nos esforzamos por responder todas las consultas en menos de 24 horas hábiles
+              </p>
+            </Card>
+          </div>
+
+          {/* Contact Form */}
+          <div className="lg:col-span-2">
+            <Card className="p-8 bg-white shadow-lg border-sky-100">
+              <h2 className="text-2xl font-bold mb-2 text-gray-900">Envíanos un mensaje</h2>
+              <p className="text-gray-600 mb-6">Completa el formulario y nos pondremos en contacto contigo</p>
+
+              <form onSubmit={handleSubmit} className="space-y-5">
+                <div className="grid md:grid-cols-2 gap-5">
+                  <div>
+                    <label htmlFor="name" className="block text-sm font-semibold text-gray-900 mb-2">
+                      Nombre completo *
                     </label>
                     <Input
                       id="name"
-                      name="name"
-                      type="text"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="Juan Pérez"
                       required
-                      value={formData.name}
-                      onChange={handleInputChange}
-                      placeholder="Your full name"
-                      disabled={isSubmitting}
+                      className="border-gray-300 focus:border-sky-500 focus:ring-sky-200 bg-white text-gray-900 h-11"
                     />
                   </div>
                   <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                      Email Address *
+                    <label htmlFor="email" className="block text-sm font-semibold text-gray-900 mb-2">
+                      Email *
                     </label>
                     <Input
                       id="email"
-                      name="email"
                       type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="juan@ejemplo.com"
                       required
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      placeholder="your.email@example.com"
-                      disabled={isSubmitting}
+                      className="border-gray-300 focus:border-sky-500 focus:ring-sky-200 bg-white text-gray-900 h-11"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">
-                    Subject
+                  <label htmlFor="subject" className="block text-sm font-semibold text-gray-900 mb-2">
+                    Asunto *
                   </label>
                   <Input
                     id="subject"
-                    name="subject"
-                    type="text"
-                    value={formData.subject}
-                    onChange={handleInputChange}
-                    placeholder="What is this regarding?"
-                    disabled={isSubmitting}
+                    value={subject}
+                    onChange={(e) => setSubject(e.target.value)}
+                    placeholder="¿En qué podemos ayudarte?"
+                    required
+                    className="border-gray-300 focus:border-sky-500 focus:ring-sky-200 bg-white text-gray-900 h-11"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
-                    Message *
+                  <label htmlFor="message" className="block text-sm font-semibold text-gray-900 mb-2">
+                    Mensaje *
                   </label>
                   <Textarea
                     id="message"
-                    name="message"
-                    required
-                    value={formData.message}
-                    onChange={handleInputChange}
-                    placeholder="Tell us how we can help you..."
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    placeholder="Cuéntanos con detalle tu consulta..."
                     rows={6}
-                    disabled={isSubmitting}
+                    required
+                    className="border-gray-300 focus:border-sky-500 focus:ring-sky-200 bg-white text-gray-900 resize-none"
                   />
                 </div>
 
-                <Button type="submit" className="w-full bg-accent hover:bg-accent/90" disabled={isSubmitting}>
-                  {isSubmitting ? (
-                    <>
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                      Sending...
-                    </>
-                  ) : (
-                    <>
-                      <Send className="h-4 w-4 mr-2" />
-                      Send Message
-                    </>
-                  )}
+                <Button
+                  type="submit"
+                  className="w-full bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white h-12 text-base font-semibold shadow-md"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Enviando..." : "Enviar Mensaje"}
                 </Button>
+
+                <p className="text-xs text-gray-500 text-center">
+                  Al enviar este formulario, aceptas que nos comuniquemos contigo por email
+                </p>
               </form>
-            </CardContent>
-          </Card>
-
-          {/* Contact Information */}
-          <div className="space-y-8">
-            <Card className="shadow-lg hover:shadow-xl transition-shadow">
-              <CardHeader>
-                <CardTitle>Get in Touch</CardTitle>
-                <CardDescription>Multiple ways to reach our trademark experts</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center flex-shrink-0">
-                    <Mail className="h-6 w-6 text-accent" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900">Email</h3>
-                    <p className="text-gray-600">trademarks@justprotected.com</p>
-                    <p className="text-sm text-gray-500">We typically respond within 24 hours</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center flex-shrink-0">
-                    <Phone className="h-6 w-6 text-accent" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900">Phone</h3>
-                    <p className="text-gray-600">+1 (555) 123-4567</p>
-                    <p className="text-sm text-gray-500">Monday - Friday, 9:00 AM - 6:00 PM CET</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center flex-shrink-0">
-                    <MapPin className="h-6 w-6 text-accent" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900">Office</h3>
-                    <p className="text-gray-600">
-                      123 Business District
-                      <br />
-                      Madrid, Spain 28001
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center flex-shrink-0">
-                    <Clock className="h-6 w-6 text-accent" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900">Business Hours</h3>
-                    <p className="text-gray-600">
-                      Monday - Friday: 9:00 AM - 6:00 PM CET
-                      <br />
-                      Saturday: 10:00 AM - 2:00 PM CET
-                      <br />
-                      Sunday: Closed
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="shadow-lg hover:shadow-xl transition-shadow">
-              <CardHeader>
-                <CardTitle>Frequently Asked Questions</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <h4 className="font-semibold text-gray-900 mb-2">How long does trademark registration take?</h4>
-                  <p className="text-gray-600 text-sm">
-                    The trademark registration process typically takes 6-12 months, depending on the jurisdiction and
-                    complexity of your application.
-                  </p>
-                </div>
-                <div>
-                  <h4 className="font-semibold text-gray-900 mb-2">Do you offer international trademark protection?</h4>
-                  <p className="text-gray-600 text-sm">
-                    Yes, we provide trademark registration services in over 180 countries worldwide, including EU, US,
-                    UK, and many others.
-                  </p>
-                </div>
-                <div>
-                  <h4 className="font-semibold text-gray-900 mb-2">What happens after I submit my application?</h4>
-                  <p className="text-gray-600 text-sm">
-                    Our legal team will review your application within 24 hours and guide you through each step of the
-                    registration process.
-                  </p>
-                </div>
-              </CardContent>
             </Card>
           </div>
         </div>

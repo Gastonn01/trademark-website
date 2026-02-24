@@ -1,98 +1,52 @@
 "use client"
+
 import Link from "next/link"
+import { Button } from "@/components/ui/button"
+import { ArrowRight, CheckCircle } from "lucide-react"
 
 export function CTASection() {
   return (
-    <section className="py-20 bg-gradient-to-r from-gray-900 via-gray-800 to-accent text-white">
-      <div className="container mx-auto px-4">
-        <div className="max-w-4xl mx-auto">
-          <div className="bg-white/10 backdrop-blur-sm rounded-lg p-8 shadow-xl border border-white/20">
-            <div className="text-center mb-8">
-              <h2 className="text-2xl md:text-3xl font-bold mb-4">Ready to Protect Your Brand?</h2>
-              <p className="text-base md:text-lg opacity-90 max-w-2xl mx-auto mb-4">
-                Join thousands of businesses who trust us with their trademark protection.
-              </p>
-              <p className="text-sm opacity-80 max-w-2xl mx-auto">
-                Your brand is safe with us. Transparent pricing, expert handling, and constant updates — everything
-                designed to give you total confidence.
-              </p>
-            </div>
+    <section className="bg-gradient-to-r from-blue-600 to-blue-700 py-16 px-4">
+      <div className="container mx-auto max-w-4xl text-center">
+        <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">¿Listo para Proteger Tu Marca?</h2>
+        <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
+          No esperes más. Solicita tu marca hoy y protege tu negocio con nuestro servicio profesional.
+        </p>
 
-            <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8">
-              <Link
-                href="/free-search"
-                className="w-full md:w-auto px-8 py-3 text-base font-medium text-gray-900 bg-white hover:bg-gray-100 hover:shadow-xl rounded-md shadow-lg transition-all duration-300 flex items-center justify-center"
-              >
-                Start Free Search
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 ml-2"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </Link>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
+          <Button
+            asChild
+            size="lg"
+            className="bg-white text-blue-600 hover:bg-gray-100 px-8 py-4 text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
+          >
+            <Link href="/registro-marca">
+              Comenzar Solicitud
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Link>
+          </Button>
 
-              <a
-                href="/detailed-pricelist#top"
-                className="w-full md:w-auto px-8 py-3 text-base font-medium text-white border-2 border-white/70 hover:bg-white/20 hover:border-white rounded-md transition-all duration-300 flex items-center justify-center"
-              >
-                See Pricing
-              </a>
-            </div>
+          <Button
+            asChild
+            variant="outline"
+            size="lg"
+            className="border-2 border-white text-white hover:bg-white hover:text-blue-600 px-8 py-4 text-lg font-semibold transition-all duration-200 bg-transparent"
+          >
+            <Link href="/contacto">Hablar con un Experto</Link>
+          </Button>
+        </div>
 
-            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-6 text-sm opacity-80">
-              <div className="flex items-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 mr-2"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                <span>No hidden fees</span>
-              </div>
-              <div className="flex items-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 mr-2"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                <span>24-hour filing</span>
-              </div>
-              <div className="flex items-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 mr-2"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                <span>Expert legal guidance</span>
-              </div>
-            </div>
+        <div className="flex flex-col sm:flex-row gap-6 justify-center items-center text-blue-100">
+          <div className="flex items-center gap-2">
+            <CheckCircle className="h-5 w-5" />
+            <span>Proceso 100% Online</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <CheckCircle className="h-5 w-5" />
+            <span>Soporte Experto</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <CheckCircle className="h-5 w-5" />
+            <span>Garantía de Satisfacción</span>
           </div>
         </div>
       </div>

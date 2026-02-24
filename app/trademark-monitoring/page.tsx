@@ -3,9 +3,9 @@ import { Footer } from "@/components/footer"
 import { TrademarkMonitoringContent } from "@/components/trademark-monitoring-content"
 
 export const metadata = {
-  title: "Worldwide Trademark Monitoring Services | Just Protected",
+  title: "Servicios de Monitoreo de Marcas Mundial | Just Protected",
   description:
-    "Protect your brand with our comprehensive trademark monitoring service. Track potential infringements across global trademark offices and web domains in real-time.",
+    "Protege tu marca con nuestro servicio integral de monitoreo de marcas. Rastrea posibles infracciones en oficinas de marcas globales y dominios web en tiempo real.",
 }
 
 export default function TrademarkMonitoringPage() {

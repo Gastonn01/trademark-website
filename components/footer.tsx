@@ -1,104 +1,131 @@
+"use client"
+
 import Link from "next/link"
-import { Shield, Mail, Phone } from "lucide-react"
+import { Mail, Phone, MapPin, ExternalLink } from "lucide-react"
 
 export function Footer() {
   return (
-    <footer className="bg-primary text-white py-16 border-t border-primary/20">
-      <div className="container mx-auto px-4">
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
-          <div className="lg:col-span-2">
-            <div className="flex items-center gap-3 mb-6">
-              <div className="flex items-center justify-center w-11 h-11 rounded-lg bg-accent">
-                <Shield className="w-6 h-6 text-white" strokeWidth={2.5} />
-              </div>
-              <span className="text-2xl font-bold text-white">Just Protected</span>
+    <footer className="bg-slate-900 text-white">
+      <div className="container mx-auto px-4 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
+          {/* Company Info */}
+          <div className="col-span-1 md:col-span-2">
+            <div className="flex items-center mb-6">
+              <span className="text-2xl font-semibold text-white tracking-tight">Trakmar</span>
+              <span className="ml-1 text-xs font-medium text-slate-400 tracking-wide">®</span>
             </div>
-            <p className="text-gray-300 mb-6 max-w-md leading-relaxed">
-              Global trademark registration services providing comprehensive intellectual property protection for
-              businesses worldwide. Licensed attorneys with 15+ years of experience.
+            <p className="text-slate-300 mb-8 leading-relaxed max-w-md">
+              Plataforma líder que conecta empresas con agentes especializados en propiedad intelectual. Facilitamos la
+              solicitud de marcas con transparencia y profesionalismo.
             </p>
-            <div className="space-y-3 text-gray-300">
-              <div className="flex items-center gap-3">
-                <Mail className="h-5 w-5 text-accent" />
-                <a href="mailto:contact@justprotected.com" className="hover:text-accent transition-colors">
-                  contact@justprotected.com
-                </a>
+            <div className="space-y-4">
+              <div className="flex items-center text-slate-300 hover:text-white transition-colors group">
+                <div className="w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-center mr-4 group-hover:bg-slate-700 transition-colors">
+                  <Mail className="w-4 h-4" />
+                </div>
+                <div>
+                  <div className="text-sm text-slate-400">Email</div>
+                  <div className="font-medium">trakmar@proton.me</div>
+                </div>
               </div>
-              <div className="flex items-center gap-3">
-                <Phone className="h-5 w-5 text-accent" />
-                <span>Available 24/7</span>
+              <div className="flex items-center text-slate-300 hover:text-white transition-colors group">
+                <div className="w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-center mr-4 group-hover:bg-slate-700 transition-colors">
+                  <Phone className="w-4 h-4" />
+                </div>
+                <div>
+                  <div className="text-sm text-slate-400">Teléfono</div>
+                  <div className="font-medium">+54 11 4000-0000</div>
+                </div>
+              </div>
+              <div className="flex items-center text-slate-300 hover:text-white transition-colors group">
+                <div className="w-10 h-10 bg-slate-800 rounded-lg flex items-center justify-center mr-4 group-hover:bg-slate-700 transition-colors">
+                  <MapPin className="w-4 h-4" />
+                </div>
+                <div>
+                  <div className="text-sm text-slate-400">Ubicación</div>
+                  <div className="font-medium">Buenos Aires, Argentina</div>
+                </div>
               </div>
             </div>
           </div>
 
+          {/* Services */}
           <div>
-            <h4 className="text-lg font-bold mb-4 text-white">Services</h4>
+            <h3 className="text-lg font-semibold mb-6 text-white">Servicios</h3>
             <ul className="space-y-3">
               <li>
-                <Link href="/free-search" className="text-gray-300 hover:text-accent transition-colors">
-                  Free Trademark Search
+                <Link
+                  href="/registro-marca"
+                  className="text-slate-300 hover:text-white transition-colors duration-200 flex items-center group"
+                >
+                  <span>Solicitud de Marcas</span>
+                  <ExternalLink className="w-3 h-3 ml-2 opacity-0 group-hover:opacity-100 transition-opacity" />
                 </Link>
               </li>
               <li>
-                <Link href="/verification" className="text-gray-300 hover:text-accent transition-colors">
-                  Trademark Registration
+                <Link
+                  href="/trademark-process"
+                  className="text-slate-300 hover:text-white transition-colors duration-200 flex items-center group"
+                >
+                  <span>Consultoría Legal</span>
+                  <ExternalLink className="w-3 h-3 ml-2 opacity-0 group-hover:opacity-100 transition-opacity" />
                 </Link>
               </li>
               <li>
-                <Link href="/legal-services" className="text-gray-300 hover:text-accent transition-colors">
-                  Legal Services
+                <Link
+                  href="/para-agentes"
+                  className="text-slate-300 hover:text-white transition-colors duration-200 flex items-center group"
+                >
+                  <span>Red de Agentes</span>
+                  <ExternalLink className="w-3 h-3 ml-2 opacity-0 group-hover:opacity-100 transition-opacity" />
                 </Link>
               </li>
               <li>
-                <Link href="/detailed-pricelist" className="text-gray-300 hover:text-accent transition-colors">
-                  Pricing
+                <Link
+                  href="/trademark-monitoring"
+                  className="text-slate-300 hover:text-white transition-colors duration-200 flex items-center group"
+                >
+                  <span>Monitoreo</span>
+                  <ExternalLink className="w-3 h-3 ml-2 opacity-0 group-hover:opacity-100 transition-opacity" />
                 </Link>
               </li>
             </ul>
           </div>
 
+          {/* Legal */}
           <div>
-            <h4 className="text-lg font-bold mb-4 text-white">Company</h4>
+            <h3 className="text-lg font-semibold mb-6 text-white">Información</h3>
             <ul className="space-y-3">
               <li>
-                <Link href="/about" className="text-gray-300 hover:text-accent transition-colors">
-                  About Us
+                <Link href="/terms" className="text-slate-300 hover:text-white transition-colors duration-200">
+                  Términos de Uso
                 </Link>
               </li>
               <li>
-                <Link href="/blog" className="text-gray-300 hover:text-accent transition-colors">
-                  Blog & Resources
+                <Link href="/privacy" className="text-slate-300 hover:text-white transition-colors duration-200">
+                  Privacidad
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="text-gray-300 hover:text-accent transition-colors">
-                  Contact Us
+                <Link href="/cookies" className="text-slate-300 hover:text-white transition-colors duration-200">
+                  Cookies
                 </Link>
               </li>
               <li>
-                <Link href="/terms" className="text-gray-300 hover:text-accent transition-colors">
-                  Terms of Service
-                </Link>
-              </li>
-              <li>
-                <Link href="/privacy" className="text-gray-300 hover:text-accent transition-colors">
-                  Privacy Policy
+                <Link href="/contact" className="text-slate-300 hover:text-white transition-colors duration-200">
+                  Contacto
                 </Link>
               </li>
             </ul>
           </div>
         </div>
 
-        <div className="pt-8 border-t border-white/10">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-gray-400 text-sm text-center md:text-left">
-              © {new Date().getFullYear()} Just Protected. All rights reserved. Licensed trademark attorneys.
-            </p>
-            <div className="flex items-center gap-6 text-sm text-gray-400">
-              <span>Member: International Trademark Association</span>
-              <span>•</span>
-              <span>Bar Certified</span>
-            </div>
+        {/* Bottom section */}
+        <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center">
+          <p className="text-slate-400 text-sm mb-4 md:mb-0">© 2025 Trakmar. Todos los derechos reservados.</p>
+          <div className="flex items-center space-x-6">
+            <span className="text-slate-400 text-sm">Hecho en Argentina</span>
+            <div className="w-6 h-4 bg-gradient-to-b from-sky-400 via-white to-sky-400 rounded-sm"></div>
           </div>
         </div>
       </div>

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
@@ -9,9 +9,6 @@ import Link from "next/link"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Info } from "lucide-react"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { countryPricingData, type CountryPricing } from "@/lib/pricing-data"
-import { useCurrency } from "@/hooks/use-currency"
-import { formatPrice } from "@/lib/currency-converter"
 
 interface Country {
   name: string
@@ -20,21 +17,56 @@ interface Country {
   additionalClassPrice?: number
 }
 
-const PricingPlans = () => {
+const mostRequestedCountries: Country[] = [
+  { name: "European Union", flag: "https://flagcdn.com/w40/eu.png", price: 1310 },
+  { name: "United States", flag: "https://flagcdn.com/w40/us.png", price: 749 },
+  { name: "Germany", flag: "https://flagcdn.com/w40/de.png", price: 750 },
+  { name: "Spain", flag: "https://flagcdn.com/w40/es.png", price: 490 },
+  { name: "United Kingdom", flag: "https://flagcdn.com/w40/gb.png", price: 790 },
+  { name: "China", flag: "https://flagcdn.com/w40/cn.png", price: 590 },
+]
+
+const northAmericaCountries: Country[] = [
+  { name: "Canada", flag: "https://flagcdn.com/w40/ca.png", price: 490 },
+  { name: "Mexico", flag: "https://flagcdn.com/w40/mx.png", price: 590 },
+]
+
+const europeCountries: Country[] = [
+  { name: "France", flag: "https://flagcdn.com/w40/fr.png", price: 590 },
+  { name: "Italy", flag: "https://flagcdn.com/w40/it.png", price: 690 },
+  { name: "Portugal", flag: "https://flagcdn.com/w40/pt.png", price: 490 },
+  { name: "Greece", flag: "https://flagcdn.com/w40/gr.png", price: 590 },
+]
+
+const southAmericaCountries: Country[] = [
+  { name: "Argentina", flag: "https://flagcdn.com/w40/ar.png", price: 490 },
+  { name: "Brazil", flag: "https://flagcdn.com/w40/br.png", price: 590 },
+  { name: "Chile", flag: "https://flagcdn.com/w40/cl.png", price: 690 },
+  { name: "Colombia", flag: "https://flagcdn.com/w40/co.png", price: 490 },
+  { name: "Peru", flag: "https://flagcdn.com/w40/pe.png", price: 590 },
+  { name: "Venezuela", flag: "https://flagcdn.com/w40/ve.png", price: 490 },
+]
+
+const centralAmericaCountries: Country[] = [
+  { name: "Costa Rica", flag: "https://flagcdn.com/w40/cr.png", price: 490 },
+  { name: "Panama", flag: "https://flagcdn.com/w40/pa.png", price: 590 },
+  { name: "Guatemala", flag: "https://flagcdn.com/w40/gt.png", price: 690 },
+  { name: "Honduras", flag: "https://flagcdn.com/w40/hn.png", price: 490 },
+  { name: "El Salvador", flag: "https://flagcdn.com/w40/sv.png", price: 590 },
+  { name: "Nicaragua", flag: "https://flagcdn.com/w40/ni.png", price: 490 },
+]
+
+export function PricingPlans() {
   const [selectedCountries, setSelectedCountries] = useState<string[]>([])
   const [searchTerm, setSearchTerm] = useState("")
-  const { currency } = useCurrency()
-  const [mounted, setMounted] = useState(false)
 
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  console.log("[v0] Current currency:", currency)
-  console.log("[v0] Mounted:", mounted)
-  console.log("[v0] Sample country data:", countryPricingData["European Union"])
-
-  const allCountries = Object.values(countryPricingData)
+  const allCountries = [
+    ...mostRequestedCountries,
+    ...northAmericaCountries,
+    ...europeCountries,
+    ...southAmericaCountries,
+    ...centralAmericaCountries,
+  ]
 
   const toggleCountry = (countryName: string) => {
     setSelectedCountries((prev) =>
@@ -46,78 +78,71 @@ const PricingPlans = () => {
     country.name.toLowerCase().includes(searchTerm.toLowerCase()),
   )
 
-  const activeCurrency = mounted ? currency : "USD"
   const totalPrice = selectedCountries.reduce((sum, countryName) => {
-    const countryData = countryPricingData[countryName]
-    return sum + (countryData ? countryData.prices[activeCurrency] : 0)
+    const country = allCountries.find((c) => c.name === countryName)
+    return sum + (country?.price || 0)
   }, 0)
 
-  const CountryCard = ({ country }: { country: CountryPricing }) => {
-    const price = country.prices[activeCurrency]
-    console.log(
-      "[v0] Country:",
-      country.name,
-      "Active Currency:",
-      activeCurrency,
-      "Price:",
-      price,
-      "Prices object:",
-      country.prices,
-    )
-    const additionalPrice = country.additionalClassPrice
-
-    return (
-      <div
-        className={`flex items-center justify-between p-4 rounded-lg cursor-pointer ${
-          selectedCountries.includes(country.name) ? "bg-blue-600 text-white" : "bg-white hover:bg-gray-50"
-        }`}
-        onClick={() => toggleCountry(country.name)}
-      >
-        <div className="flex items-center gap-3">
-          <Image
-            src={country.flag || "/placeholder.svg"}
-            alt={`${country.name} flag`}
-            width={40}
-            height={30}
-            className="rounded"
-          />
-          <span className="text-sm font-medium">{country.name}</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="font-semibold">{formatPrice(price, activeCurrency)}</span>
-          {additionalPrice && (
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger>
-                  <Info className="w-4 h-4" />
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>Additional class: {formatPrice(additionalPrice, activeCurrency)}</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          )}
-        </div>
+  const CountryCard = ({ country }: { country: Country }) => (
+    <div
+      className={`flex items-center justify-between p-4 rounded-lg cursor-pointer ${
+        selectedCountries.includes(country.name) ? "bg-blue-600 text-white" : "bg-white hover:bg-blue-50"
+      }`}
+      onClick={() => toggleCountry(country.name)}
+    >
+      <div className="flex items-center gap-3">
+        <Image
+          src={country.flag || "/placeholder.svg"}
+          alt={`${country.name} flag`}
+          width={40}
+          height={30}
+          className="rounded"
+        />
+        <span className="text-sm font-medium">{country.name}</span>
       </div>
-    )
-  }
+      <div className="flex items-center gap-2">
+        <span className="font-semibold">${country.price}</span>
+        {country.additionalClassPrice && (
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className={`h-6 w-6 p-0 ${
+                    selectedCountries.includes(country.name)
+                      ? "text-white hover:text-white/90"
+                      : "text-gray-500 hover:text-gray-900"
+                  }`}
+                >
+                  <Info className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Additional class price: ${country.additionalClassPrice}</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        )}
+      </div>
+    </div>
+  )
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-center mb-2">Select Your Trademark Coverage</h1>
+      <h1 className="text-3xl font-bold text-center mb-2">Selecciona tu Cobertura de Marca</h1>
       <p className="text-center text-gray-600 mb-8">
-        Add additional trademark classes for comprehensive protection. Each additional class costs{" "}
-        {formatPrice(200, activeCurrency)}.
+        Agrega clases de marca adicionales para protección integral. Cada clase adicional cuesta $200.
       </p>
 
       <div className="grid lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">
           <Input
             type="text"
-            placeholder="Search for countries..."
+            placeholder="Buscar países..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="mb-6"
+            className="mb-6 border-gray-300 focus:border-blue-600 focus:ring-blue-200"
           />
 
           {searchTerm ? (
@@ -128,68 +153,49 @@ const PricingPlans = () => {
             </div>
           ) : (
             <>
-              <h2 className="text-xl font-semibold mb-4">Most Requested Countries</h2>
+              <h2 className="text-xl font-semibold mb-4 text-blue-600">Países Más Solicitados</h2>
               <div className="grid gap-4 mb-8">
-                {allCountries
-                  .filter((country) => country.mostRequested)
-                  .map((country) => (
-                    <CountryCard key={country.name} country={country} />
-                  ))}
+                {mostRequestedCountries.map((country) => (
+                  <CountryCard key={country.name} country={country} />
+                ))}
               </div>
 
               <Accordion type="single" collapsible className="space-y-4">
                 <AccordionItem value="north-america">
-                  <AccordionTrigger className="text-xl font-semibold">North America</AccordionTrigger>
+                  <AccordionTrigger className="text-xl font-semibold text-blue-600">América del Norte</AccordionTrigger>
                   <AccordionContent className="grid gap-4 pt-4">
-                    {allCountries
-                      .filter((country) => country.region === "North America")
-                      .map((country) => (
-                        <CountryCard key={country.name} country={country} />
-                      ))}
+                    {northAmericaCountries.map((country) => (
+                      <CountryCard key={country.name} country={country} />
+                    ))}
                   </AccordionContent>
                 </AccordionItem>
 
                 <AccordionItem value="europe">
-                  <AccordionTrigger className="text-xl font-semibold">Europe</AccordionTrigger>
+                  <AccordionTrigger className="text-xl font-semibold text-blue-600">Europa</AccordionTrigger>
                   <AccordionContent className="grid gap-4 pt-4">
-                    {allCountries
-                      .filter((country) => country.region === "Europe")
-                      .map((country) => (
-                        <CountryCard key={country.name} country={country} />
-                      ))}
+                    {europeCountries.map((country) => (
+                      <CountryCard key={country.name} country={country} />
+                    ))}
                   </AccordionContent>
                 </AccordionItem>
 
                 <AccordionItem value="south-america">
-                  <AccordionTrigger className="text-xl font-semibold">South America</AccordionTrigger>
+                  <AccordionTrigger className="text-xl font-semibold text-blue-600">América del Sur</AccordionTrigger>
                   <AccordionContent className="grid gap-4 pt-4">
-                    {allCountries
-                      .filter((country) => country.region === "South America")
-                      .map((country) => (
-                        <CountryCard key={country.name} country={country} />
-                      ))}
+                    {southAmericaCountries.map((country) => (
+                      <CountryCard key={country.name} country={country} />
+                    ))}
                   </AccordionContent>
                 </AccordionItem>
 
                 <AccordionItem value="central-america">
-                  <AccordionTrigger className="text-xl font-semibold">Central America</AccordionTrigger>
+                  <AccordionTrigger className="text-xl font-semibold text-blue-600">
+                    América Central y el Caribe
+                  </AccordionTrigger>
                   <AccordionContent className="grid gap-4 pt-4">
-                    {allCountries
-                      .filter((country) => country.region === "Central America")
-                      .map((country) => (
-                        <CountryCard key={country.name} country={country} />
-                      ))}
-                  </AccordionContent>
-                </AccordionItem>
-
-                <AccordionItem value="caribbean">
-                  <AccordionTrigger className="text-xl font-semibold">Caribbean</AccordionTrigger>
-                  <AccordionContent className="grid gap-4 pt-4">
-                    {allCountries
-                      .filter((country) => country.region === "Caribbean")
-                      .map((country) => (
-                        <CountryCard key={country.name} country={country} />
-                      ))}
+                    {centralAmericaCountries.map((country) => (
+                      <CountryCard key={country.name} country={country} />
+                    ))}
                   </AccordionContent>
                 </AccordionItem>
               </Accordion>
@@ -199,47 +205,48 @@ const PricingPlans = () => {
 
         <div className="lg:col-span-1">
           <Card className="p-6 sticky top-6">
-            <h2 className="text-xl font-bold mb-4">Your Selection</h2>
+            <h2 className="text-xl font-bold mb-4">Tu Selección</h2>
             {selectedCountries.length > 0 ? (
-              <div className="space-y-2 mb-6">
+              <div className="space-y-4 mb-6">
                 {selectedCountries.map((countryName) => {
-                  const countryData = countryPricingData[countryName]
-                  if (!countryData) return null
-                  const price = countryData.prices[activeCurrency]
+                  const country = allCountries.find((c) => c.name === countryName)
+                  if (!country) return null
                   return (
-                    <div key={countryData.name} className="flex items-center justify-between">
+                    <div key={country.name} className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <Image
-                          src={countryData.flag || "/placeholder.svg"}
-                          alt={`${countryData.name} flag`}
+                          src={country.flag || "/placeholder.svg"}
+                          alt={`${country.name} flag`}
                           width={24}
                           height={18}
                           className="rounded"
                         />
-                        <span>{countryData.name}</span>
+                        <span>{country.name}</span>
                       </div>
-                      <span>{formatPrice(price, activeCurrency)}</span>
+                      <span className="font-semibold">${country.price}</span>
                     </div>
                   )
                 })}
+                <div className="border-t pt-4">
+                  <div className="flex justify-between font-bold">
+                    <span>Precio estimado:</span>
+                    <span>${totalPrice}</span>
+                  </div>
+                </div>
               </div>
             ) : (
-              <p className="text-gray-500 mb-6">No countries selected yet</p>
+              <p className="text-gray-500 mb-6">Selecciona países para ver el precio estimado</p>
             )}
-            <div className="border-t pt-4">
-              <div className="flex justify-between items-center mb-4">
-                <span className="text-lg font-bold">Total</span>
-                <span className="text-2xl font-bold text-blue-600">{formatPrice(totalPrice, activeCurrency)}</span>
-              </div>
-              <Button asChild className="w-full bg-blue-600 hover:bg-blue-700 text-white">
-                <Link href="/free-search">Start Free Search</Link>
-              </Button>
-            </div>
+            <Button
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+              asChild
+              disabled={selectedCountries.length === 0}
+            >
+              <Link href="/registro-marca">Iniciar Proceso de Solicitud</Link>
+            </Button>
           </Card>
         </div>
       </div>
     </div>
   )
 }
-
-export default PricingPlans

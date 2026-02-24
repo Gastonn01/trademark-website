@@ -3,36 +3,36 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 export function PricingFAQ() {
   const faqs = [
     {
-      question: "What's included in the trademark registration process?",
+      question: "¿Qué incluye el proceso de registro de marca?",
       answer:
-        "Our trademark registration process includes a comprehensive search, application preparation and filing, responses to office actions, and registration certificate delivery. We handle all the paperwork and communication with the trademark office.",
+        "Nuestro proceso de registro de marca incluye una búsqueda exhaustiva, preparación y presentación de la solicitud, respuestas a las acciones oficiales y entrega del certificado de registro. Manejamos toda la documentación y comunicación con la oficina de marcas.",
     },
     {
-      question: "How long does the trademark registration process take?",
+      question: "¿Cuánto tiempo dura el proceso de registro de marca?",
       answer:
-        "The trademark registration process typically takes 8-12 months. However, this can vary depending on the complexity of your application and any potential office actions or oppositions.",
+        "El proceso de registro de marca generalmente lleva 8-12 meses. Sin embargo, esto puede variar dependiendo de la complejidad de tu solicitud y cualquier posible acción oficial o oposición.",
     },
     {
-      question: "Do you offer refunds if my trademark application is rejected?",
+      question: "¿Ofrecen reembolsos si mi solicitud de marca es rechazada?",
       answer:
-        "We offer a money-back guarantee if your trademark application is rejected due to an error on our part. However, we cannot guarantee approval as final decisions are made by the trademark office.",
+        "Ofrecemos un garantía de reembolso si tu solicitud de marca es rechazada debido a un error por nuestra parte. Sin embargo, no podemos garantizar la aprobación ya que las decisiones finales las toma la oficina de marcas.",
     },
     {
-      question: "Can I upgrade my plan later?",
+      question: "¿Puedo actualizar mi plan más tarde?",
       answer:
-        "Yes, you can upgrade your plan at any time. We offer flexible options to accommodate your growing business needs. Simply contact our support team, and they'll guide you through the upgrade process.",
+        "Sí, puedes actualizar tu plan en cualquier momento. Ofrecemos opciones flexibles para adaptarse a las necesidades crecientes de tu negocio. Simplemente contacta a nuestro equipo de soporte, y te guiarán a través del proceso de actualización.",
     },
     {
-      question: "Do you offer international trademark registration?",
+      question: "¿Ofrecen registro internacional de marca?",
       answer:
-        "Yes, we offer international trademark registration services. Our global network allows us to help you protect your brand in multiple countries. The costs and processes may vary depending on the specific countries you're interested in.",
+        "Sí, ofrecemos servicios de registro internacional de marca. Nuestra red global te permite proteger tu marca en múltiples países. Los costos y procesos pueden variar dependiendo de los países específicos en los que estés interesado.",
     },
   ]
 
   return (
     <div className="bg-gray-50 py-20">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold text-center mb-12 text-indigo-900">Frequently Asked Questions</h2>
+        <h2 className="text-3xl font-bold text-center mb-12 text-indigo-900">Preguntas Frecuentes</h2>
         <Accordion type="single" collapsible className="w-full max-w-3xl mx-auto">
           {faqs.map((faq, index) => (
             <AccordionItem key={index} value={`item-${index}`}>

@@ -1,48 +1,38 @@
-"use client"
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { CheckCircle2, FileCheck, FileSearch, Globe, Scale, ShieldCheck } from "lucide-react"
-import { useCurrency } from "@/hooks/use-currency"
-import { formatPrice } from "@/lib/currency-converter"
+import { CheckCircle2, FileCheck, FileSearch, Globe, Scale, ShieldCheck } from 'lucide-react'
 
 export function PricingSection() {
-  const { currency } = useCurrency()
-
-  const ipLegalServices = { USD: 127, GBP: 95, EUR: 110 }
-  const trademarkRegistration = { USD: 356, GBP: 267, EUR: 306 }
-  const trademarkRenewal = { USD: 541, GBP: 406, EUR: 465 }
-
   return (
     <div className="bg-gray-50 py-20">
       <div className="container mx-auto px-4">
-        <h2 className="text-4xl font-bold text-center mb-16 text-indigo-700">Comprehensive Brand Protection</h2>
+        <h2 className="text-4xl font-bold text-center mb-16 text-indigo-700">Protección Integral de Marca</h2>
         <div className="grid md:grid-cols-3 gap-8 mb-16">
           {[
             {
-              title: "IP Legal Services",
-              prices: ipLegalServices,
-              description: "Expert legal analysis of your trademark",
-              cta: "Learn More",
+              title: "Servicios Legales IP",
+              price: "desde $160.000",
+              description: "Análisis legal experto de tu marca",
+              cta: "Más Información",
               href: "/verification",
-              highlight: "FREE CONSULTATION",
+              highlight: "CONSULTA GRATUITA",
             },
             {
-              title: "Trademark Registration",
-              prices: trademarkRegistration,
-              description: "Register your trademark with expert support",
-              cta: "Start Free Search",
-              href: "/free-search",
-              highlight: "MONEY-BACK GUARANTEE",
+              title: "Registro de Marca",
+              price: "desde $195.000",
+              description: "Registra tu marca con soporte experto",
+              cta: "Comenzar Registro",
+              href: "/registro-marca",
+              highlight: "GARANTÍA DE REEMBOLSO",
             },
             {
-              title: "Trademark Renewal",
-              prices: trademarkRenewal,
-              description: "Renew your trademark before expiration",
-              cta: "Renew Trademark",
-              href: "/services#trademark-renewal",
-              highlight: "10 YEAR VALIDITY",
+              title: "Renovación de Marca",
+              price: "desde $120.000",
+              description: "Renueva tu marca antes del vencimiento",
+              cta: "Renovar Marca",
+              href: "/trademark-process#renovacion",
+              highlight: "VALIDEZ 10 AÑOS",
             },
           ].map((plan, index) => (
             <Card key={index} className="border-2 hover:border-indigo-500 transition-colors">
@@ -51,7 +41,7 @@ export function PricingSection() {
               </CardHeader>
               <CardContent>
                 <div className="mb-4">
-                  <div className="text-3xl font-bold">from {formatPrice(plan.prices[currency], currency)}</div>
+                  <div className="text-3xl font-bold">{plan.price}</div>
                   <div className="text-sm font-semibold text-indigo-600 mt-1">{plan.highlight}</div>
                 </div>
                 <p className="text-gray-600 mb-6">{plan.description}</p>
@@ -66,33 +56,33 @@ export function PricingSection() {
           {[
             {
               icon: FileSearch,
-              title: "Trademark Search",
-              description: "Comprehensive search to ensure your trademark is unique",
+              title: "Búsqueda de Marca",
+              description: "Búsqueda exhaustiva para asegurar que tu marca sea única",
             },
             {
               icon: FileCheck,
-              title: "Application Filing",
-              description: "Expert preparation and filing of your trademark application",
+              title: "Presentación de Solicitud",
+              description: "Preparación y presentación experta de tu solicitud de marca",
             },
             {
               icon: Scale,
-              title: "Office Actions",
-              description: "Professional responses to trademark office objections",
+              title: "Acciones Oficiales",
+              description: "Respuestas profesionales a objeciones de la oficina de marcas",
             },
             {
               icon: CheckCircle2,
-              title: "Registration Certificate",
-              description: "Secure your official trademark registration certificate",
+              title: "Certificado de Registro",
+              description: "Asegura tu certificado oficial de registro de marca",
             },
             {
               icon: Globe,
-              title: "International Protection",
-              description: "Extend your trademark protection globally",
+              title: "Protección Internacional",
+              description: "Extiende la protección de tu marca globalmente",
             },
             {
               icon: ShieldCheck,
-              title: "Ongoing Support",
-              description: "Continuous assistance and monitoring of your trademark",
+              title: "Soporte Continuo",
+              description: "Asistencia continua y monitoreo de tu marca",
             },
           ].map((feature, index) => (
             <div key={index} className="flex flex-col items-center text-center">

@@ -1,22 +1,19 @@
-/* Remove any top space or background color */
-html,
-body,
-#__next,
-main {
-  margin-top: 0 !important;
-  padding-top: 0 !important;
+/* Fix for top spacing issues */
+.pt-safe {
+  padding-top: env(safe-area-inset-top);
 }
 
-/* Ensure no light blue background at the top */
-body::before,
-html::before,
-#__next::before,
-main::before {
-  display: none !important;
-  content: none !important;
+.mt-safe {
+  margin-top: env(safe-area-inset-top);
 }
 
-/* Force white background for the top of the page */
-body {
-  background-color: white !important;
+/* Ensure proper spacing for fixed headers */
+.fixed-header-offset {
+  padding-top: 4rem; /* 64px for typical header height */
+}
+
+@media (max-width: 768px) {
+  .fixed-header-offset {
+    padding-top: 3.5rem; /* 56px for mobile header */
+  }
 }

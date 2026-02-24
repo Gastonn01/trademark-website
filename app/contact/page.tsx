@@ -4,9 +4,9 @@ import { ContactContent } from "@/components/contact-content"
 import { Footer } from "@/components/footer"
 
 export const metadata: Metadata = {
-  title: "Contact Us | Just Protected",
+  title: "Contáctanos | Just Protected",
   description:
-    "Contact Just Protected for expert trademark registration services. Get in touch with our team for a free consultation.",
+    "Contacta a Just Protected para servicios expertos de registro de marcas. Ponte en contacto con nuestro equipo para una consulta gratuita.",
 }
 
 export default function ContactPage() {
