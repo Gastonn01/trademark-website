@@ -55,7 +55,19 @@ export async function POST(req: Request) {
     try {
       console.log("Saving search data to Supabase...")
       // Save data to Supabase using the corrected format
-      const saveResult = await saveSearchData(searchId, searchData, formType as string)
+      const saveResult = await saveSearchData({
+        id: searchId,
+        trademark_name: searchData.trademarkName || null,
+        goods_and_services: searchData.goodsAndServices || null,
+        name: searchData.name || null,
+        surname: searchData.surname || null,
+        email: searchData.email || null,
+        phone: searchData.phone || null,
+        form_type: formType as string,
+        status: "pending",
+        search_data: searchData,
+        search_results: searchData,
+      })
       console.log("Save result:", saveResult)
     } catch (error) {
       console.error("Error saving search data:", error)
