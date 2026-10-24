@@ -33,7 +33,7 @@ export function ThankYouContent() {
             <CardContent className="space-y-6">
               <div className="space-y-4">
                 <div className="flex items-start space-x-4">
-                  <div className="w-10 h-10 bg-accent text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">
+                  <div className="w-10 h-10 bg-accent text-primary rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">
                     1
                   </div>
                   <div>
@@ -45,7 +45,7 @@ export function ThankYouContent() {
                 </div>
 
                 <div className="flex items-start space-x-4">
-                  <div className="w-10 h-10 bg-accent text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">
+                  <div className="w-10 h-10 bg-accent text-primary rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">
                     2
                   </div>
                   <div>
@@ -57,7 +57,7 @@ export function ThankYouContent() {
                 </div>
 
                 <div className="flex items-start space-x-4">
-                  <div className="w-10 h-10 bg-accent text-white rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">
+                  <div className="w-10 h-10 bg-accent text-primary rounded-full flex items-center justify-center text-sm font-bold flex-shrink-0">
                     3
                   </div>
                   <div>
@@ -113,8 +113,8 @@ export function ThankYouContent() {
                     <Mail className="w-5 h-5 text-accent" />
                   </div>
                   <div>
-                    <p className="font-semibold text-gray-700">Email Support</p>
-                    <p className="text-accent font-medium">trademarks@justprotected.com</p>
+                    <p className="font-semibold text-gray-700">Contact form</p>
+                    <a href="/contact" className="text-accent font-medium hover:underline">Send us a message</a>
                   </div>
                 </div>
 
@@ -172,7 +172,7 @@ export function ThankYouContent() {
               secure your brand across multiple jurisdictions.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild size="lg" className="bg-accent text-white hover:bg-accent/90">
+              <Button asChild size="lg" className="bg-accent text-primary hover:bg-accent/90">
                 <Link href="/legal-services">
                   <Shield className="w-4 h-4 mr-2" />
                   View Our Services
@@ -203,10 +203,8 @@ export function ThankYouContent() {
         <div className="text-center mt-8 text-gray-500 text-sm">
           <p>© 2025 Just Protected. All rights reserved.</p>
           <p className="mt-1">
-            Questions? Contact us at{" "}
-            <a href="mailto:trademarks@justprotected.com" className="text-accent hover:underline">
-              trademarks@justprotected.com
-            </a>
+            Questions? Use our{" "}
+            <a href="/contact" className="text-accent hover:underline">our contact form</a>
           </p>
         </div>
       </div>

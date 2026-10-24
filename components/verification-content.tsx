@@ -348,7 +348,7 @@ export function VerificationContent({ searchId }: VerificationContentProps) {
                   <p className="text-sm text-gray-600 mb-3">Our trademark experts are here to assist you</p>
                   <div className="flex items-center gap-2 text-sm text-gray-600">
                     <Mail className="h-4 w-4" />
-                    <span>support@justprotected.com</span>
+                    <span>Contact form at justprotected.com/contact</span>
                   </div>
                 </CardContent>
               </Card>

@@ -14,3 +14,7 @@ Allow: /blog
 
 # No indexar rutas de API
 Disallow: /api/*
+
+# Block URL parameter versions of free-search
+Disallow: /free-search?*
+Disallow: /free-search/?*

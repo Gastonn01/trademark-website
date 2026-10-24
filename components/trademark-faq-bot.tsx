@@ -77,7 +77,7 @@ export function TrademarkFAQBot() {
           ...prev,
           {
             role: "assistant",
-            content: `Thank you, ${contactForm.name}! I've sent your question to our expert team at info@justprotected.com. They typically respond within a few hours and will provide detailed, professional guidance for your specific situation.\n\nIn the meantime, feel free to ask me any other general questions about trademarks!`,
+            content: `Thank you, ${contactForm.name}! I've sent your question to our expert team at justprotected.com/contact. They typically respond within a few hours and will provide detailed, professional guidance for your specific situation.\n\nIn the meantime, feel free to ask me any other general questions about trademarks!`,
           },
         ])
         setCollectingContact(false)
@@ -88,7 +88,7 @@ export function TrademarkFAQBot() {
           {
             role: "assistant",
             content:
-              "I apologize, there was an issue sending your message. Please email us directly at info@justprotected.com and our team will assist you right away!",
+              "I apologize, there was an issue sending your message. Please use our contact form at justprotected.com/contact and our team will assist you right away!",
           },
         ])
       }
@@ -98,7 +98,7 @@ export function TrademarkFAQBot() {
         {
           role: "assistant",
           content:
-            "I apologize, there was an issue sending your message. Please email us directly at info@justprotected.com and our team will assist you right away!",
+            "I apologize, there was an issue sending your message. Please use our contact form at justprotected.com/contact and our team will assist you right away!",
         },
       ])
     } finally {
@@ -156,9 +156,9 @@ export function TrademarkFAQBot() {
         ...prev,
         {
           role: "assistant",
-          content: errorMessage.includes("info@justprotected.com")
+          content: errorMessage.includes("justprotected.com/contact")
             ? errorMessage
-            : "I apologize, but I'm having trouble responding right now. Please try again or contact our team directly at info@justprotected.com for immediate assistance.",
+            : "I apologize, but I'm having trouble responding right now. Please try again or contact our team directly at justprotected.com/contact for immediate assistance.",
         },
       ])
     } finally {

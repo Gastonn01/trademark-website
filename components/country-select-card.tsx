@@ -30,7 +30,7 @@ export function CountrySelectCard({
       onClick={onSelect}
       className={`
         w-full flex items-center justify-between p-4 rounded-lg cursor-pointer
-        ${selected ? "bg-accent text-white" : "bg-white hover:bg-gray-50 border border-gray-200"}
+        ${selected ? "bg-accent text-primary" : "bg-white hover:bg-gray-50 border border-gray-200"}
       `}
     >
       <div className="flex items-center gap-3">

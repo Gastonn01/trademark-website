@@ -113,8 +113,8 @@ export function ThankYouVerificationContent() {
                     <Mail className="w-5 h-5 text-blue-600" />
                   </div>
                   <div>
-                    <p className="font-semibold text-gray-900">Email Support</p>
-                    <p className="text-blue-600 font-medium">trademarks@justprotected.com</p>
+                    <p className="font-semibold text-gray-900">Contact form</p>
+                    <a href="/contact" className="text-blue-600 font-medium hover:underline">Send us a message</a>
                   </div>
                 </div>
 
@@ -214,10 +214,8 @@ export function ThankYouVerificationContent() {
         <div className="text-center mt-8 text-gray-500 text-sm">
           <p>© 2025 Just Protected. All rights reserved.</p>
           <p className="mt-1">
-            Questions? Contact us at{" "}
-            <a href="mailto:trademarks@justprotected.com" className="text-blue-600 hover:underline">
-              trademarks@justprotected.com
-            </a>
+            Questions? Use our{" "}
+            <a href="/contact" className="text-blue-600 hover:underline">our contact form</a>
           </p>
         </div>
       </div>

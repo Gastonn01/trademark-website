@@ -506,9 +506,7 @@ export default function RegisterTrademarkGermany() {
 
           <p className="text-lg text-gray-700 leading-relaxed">
             Have questions about your specific situation? Feel free to reach out to our team at{" "}
-            <a href="mailto:trademarks@justprotected.com" className="text-blue-700 hover:text-blue-800 font-semibold">
-              trademarks@justprotected.com
-            </a>{" "}
+            <a href="/contact" className="text-blue-700 hover:text-blue-800 font-semibold">our contact form</a>{" "}
             - we're here to help.
           </p>
         </div>

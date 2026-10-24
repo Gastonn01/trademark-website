@@ -225,7 +225,7 @@ export function DetailedPricelistContent() {
               <p className="text-sm text-gray-700">Total for first class</p>
             </div>
           </div>
-          <Button onClick={handleGetFreeSearch} className="w-full mt-4 bg-accent hover:bg-accent/90 text-white">
+          <Button onClick={handleGetFreeSearch} className="w-full mt-4 bg-accent hover:bg-accent/90 text-primary">
             Get Free Search for Selected Countries
           </Button>
         </div>
@@ -259,7 +259,7 @@ export function DetailedPricelistContent() {
       </div>
 
       <div className="mt-12 text-center">
-        <Button onClick={handleGetFreeSearch} size="lg" className="bg-accent hover:bg-accent/90 text-white">
+        <Button onClick={handleGetFreeSearch} size="lg" className="bg-accent hover:bg-accent/90 text-primary">
           Get Free Search
         </Button>
       </div>

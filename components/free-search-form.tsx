@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState, useEffect, useMemo } from "react"
+import { useState, useEffect, useMemo, useRef } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -12,26 +12,23 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Textarea } from "@/components/ui/textarea"
 import { CountrySelectCard } from "@/components/country-select-card"
 import { trackLeadSubmission } from "@/components/gtm-tracker"
-import { Upload, CheckCircle, ChevronDown, ChevronUp, AlertCircle, Shield, Clock, Award } from "lucide-react"
+import { Upload, CheckCircle, ChevronDown, ChevronUp, AlertCircle, Shield, Clock, Award, Trophy, Mic, Tv, Building2 } from "lucide-react"
 import { v4 as uuidv4 } from "uuid"
 import { countryPricingData } from "@/lib/pricing-data"
 import { useCurrency } from "@/hooks/use-currency" // Assuming this hook is now available
 import { getCurrencySymbol } from "@/lib/currency-converter" // Use getCurrencySymbol from currency-converter
 
-// More comprehensive check for preview environment
+// Hostname-only check: the production domain must NEVER simulate
+// submissions, regardless of build-time env vars.
 const isPreviewEnvironment = () => {
-  // Check if we're in the browser
   if (typeof window !== "undefined") {
     return (
       window.location.hostname === "localhost" ||
       window.location.hostname.includes("vercel.app") ||
-      window.location.hostname.includes("preview") ||
-      process.env.NEXT_PUBLIC_VERCEL_ENV !== "production"
+      window.location.hostname.includes("preview")
     )
   }
-
-  // Server-side check
-  return process.env.NEXT_PUBLIC_VERCEL_ENV !== "production"
+  return false
 }
 
 interface FormData {
@@ -165,11 +162,90 @@ const regions: RegionData[] = [
   },
 ]
 
+const audienceOptions = [
+  {
+    id: "athlete",
+    icon: Trophy,
+    title: "Athlete",
+    subtitle: "I play sports and want to protect my NIL",
+    color: "from-blue-50 to-blue-100 border-blue-200 hover:border-blue-500",
+    activeColor: "from-blue-100 to-blue-200 border-blue-600 shadow-blue-100",
+    goodsAndServices: "Entertainment services, namely sports events, athletic performances, and personal appearances by a professional athlete; endorsement services",
+  },
+  {
+    id: "creator",
+    icon: Tv,
+    title: "Creator / Influencer",
+    subtitle: "I create content and want to protect my brand",
+    color: "from-purple-50 to-purple-100 border-purple-200 hover:border-purple-500",
+    activeColor: "from-purple-100 to-purple-200 border-purple-600 shadow-purple-100",
+    goodsAndServices: "Entertainment services in the nature of providing online content in the fields of entertainment and lifestyle; influencer services; social media content creation",
+  },
+  {
+    id: "musician",
+    icon: Mic,
+    title: "Musician / Artist",
+    subtitle: "I make music or art and want to protect my name",
+    color: "from-pink-50 to-pink-100 border-pink-200 hover:border-pink-500",
+    activeColor: "from-pink-100 to-pink-200 border-pink-600 shadow-pink-100",
+    goodsAndServices: "Entertainment services in the nature of live musical performances; production and distribution of sound recordings; music streaming services",
+  },
+  {
+    id: "business",
+    icon: Building2,
+    title: "Business Owner",
+    subtitle: "I run a business and want to protect my brand",
+    color: "from-green-50 to-green-100 border-green-200 hover:border-green-500",
+    activeColor: "from-green-100 to-green-200 border-green-600 shadow-green-100",
+    goodsAndServices: "",
+  },
+]
+
+const audienceLabels: Record<string, { heading: string; namePlaceholder: string; nameLabel: string; goodsLabel: string; goodsPlaceholder: string; goodsHelper: string }> = {
+  athlete: {
+    heading: "Check your name is protected",
+    namePlaceholder: "e.g. Your name, nickname, or athlete brand...",
+    nameLabel: "Your name or athlete brand",
+    goodsLabel: "What you do (pre-filled — edit if needed)",
+    goodsPlaceholder: "What services or products are associated with your name?",
+    goodsHelper: "This tells trademark offices what category to protect your name under. We've pre-filled this for athletes.",
+  },
+  creator: {
+    heading: "Check your name or handle is protected",
+    namePlaceholder: "e.g. Your creator name, handle, or catchphrase...",
+    nameLabel: "Your creator name or brand",
+    goodsLabel: "What you do (pre-filled — edit if needed)",
+    goodsPlaceholder: "Describe your content or services...",
+    goodsHelper: "This tells trademark offices what category to protect your name under. We've pre-filled this for creators.",
+  },
+  musician: {
+    heading: "Check your artist name is protected",
+    namePlaceholder: "e.g. Your artist name, band name, or stage name...",
+    nameLabel: "Your artist or stage name",
+    goodsLabel: "What you do (pre-filled — edit if needed)",
+    goodsPlaceholder: "Describe your music or art...",
+    goodsHelper: "This tells trademark offices what category to protect your name under. We've pre-filled this for musicians.",
+  },
+  business: {
+    heading: "Check your brand name is available",
+    namePlaceholder: "e.g. Your company name, product name, or slogan...",
+    nameLabel: "Your brand or business name",
+    goodsLabel: "What your business does",
+    goodsPlaceholder: "e.g. Online retail store selling handmade jewellery...",
+    goodsHelper: "Describe your products or services in plain language — we'll translate it into legal trademark language.",
+  },
+}
+
 export function FreeSearchForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { currency } = useCurrency() // Use global currency hook
-  const [step, setStep] = useState(1)
+  // "defend" = visitor found their own name registered by someone else
+  // (enforcement lead from the instant checker)
+  const intentParam = searchParams?.get("intent") || ""
+  const hpRef = useRef<HTMLInputElement>(null)
+  const [audienceType, setAudienceType] = useState<string>("")
+  const [step, setStep] = useState(0)
   const totalSteps = 3
   const [formData, setFormData] = useState<FormData>(() => {
     if (typeof window !== "undefined") {
@@ -372,6 +448,8 @@ export function FreeSearchForm() {
       const formDataToSend = new FormData()
       formDataToSend.append("formType", "free-search")
       formDataToSend.append("searchId", searchId)
+      formDataToSend.append("hp", hpRef.current?.value || "")
+      if (intentParam) formDataToSend.append("intent", intentParam)
 
       // Add all form fields to formData
       Object.entries(formData).forEach(([key, value]) => {
@@ -483,44 +561,112 @@ export function FreeSearchForm() {
       <div className="grid lg:grid-cols-3 gap-10">
         <div className="lg:col-span-2">
           <div className="mb-10">
-            <h1 className="text-5xl font-bold mb-4 text-gray-900 tracking-tight font-serif">
-              Professional Trademark Search
+            <p className="label-caps text-accent mb-4">Free trademark search</p>
+            <h1 className="font-serif text-4xl md:text-5xl mb-4 text-primary tracking-tight">
+              {intentParam === "defend" && step === 0
+                ? "Let's take your name back."
+                : step === 0
+                ? "First, tell us about yourself"
+                : audienceType
+                ? audienceLabels[audienceType]?.heading
+                : "Check if your name is protected"}
             </h1>
-            <p className="text-xl text-gray-700 leading-relaxed mb-2">
-              Comprehensive trademark analysis delivered by experienced IP professionals within 24 hours.
-            </p>
-            <p className="text-lg text-gray-600 leading-relaxed">
-              Complete the form below to receive your complimentary trademark search and expert assessment.
+            <p className="text-lg text-gray-500 font-light leading-relaxed">
+              {intentParam === "defend" && step === 0
+                ? "If someone registered or is trading on your name, you may be able to oppose, cancel, or out-file them. Tell us who you are and our attorneys will review your case — free."
+                : step === 0
+                ? "We'll explain what protection means for your situation — no legal jargon, just plain English."
+                : "Free check · No credit card required · Results in 24 hours"}
             </p>
 
-            <div className="mt-6 flex flex-wrap gap-6 text-sm">
-              <div className="flex items-center gap-2 text-gray-700">
-                <Shield className="h-5 w-5 text-gray-700" />
-                <span className="font-medium">Secure & Confidential</span>
-              </div>
-              <div className="flex items-center gap-2 text-gray-700">
-                <Clock className="h-5 w-5 text-gray-700" />
-                <span className="font-medium">24-Hour Response</span>
-              </div>
-              <div className="flex items-center gap-2 text-gray-700">
-                <Award className="h-5 w-5 text-gray-700" />
-                <span className="font-medium">Expert Analysis</span>
-              </div>
-            </div>
-
-            <div className="bg-gray-50 border-l-4 border-gray-700 rounded-r-lg p-5 mt-6 shadow-sm">
-              <div className="flex items-start gap-3">
-                <CheckCircle className="h-6 w-6 text-gray-700 mt-0.5 flex-shrink-0" />
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-1.5">Complimentary Search Service</h3>
-                  <p className="text-gray-700 text-sm leading-relaxed">
-                    Your trademark search and professional assessment are provided at no cost. Registration fees apply
-                    only if you choose to proceed with filing.
-                  </p>
+            {step > 0 && (
+              <div className="mt-6 flex flex-wrap gap-6">
+                <div className="flex items-center gap-2">
+                  <Shield className="h-4 w-4 text-accent" />
+                  <span className="label-caps text-[0.65rem] text-gray-400">Secure & confidential</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Clock className="h-4 w-4 text-accent" />
+                  <span className="label-caps text-[0.65rem] text-gray-400">24-hour response</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Award className="h-4 w-4 text-accent" />
+                  <span className="label-caps text-[0.65rem] text-gray-400">Expert analysis</span>
                 </div>
               </div>
-            </div>
+            )}
           </div>
+
+          {/* Step 0: Audience selector */}
+          {step === 0 && (
+            <div className="space-y-6 mb-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {audienceOptions.map((option) => {
+                  const Icon = option.icon
+                  const isActive = audienceType === option.id
+                  return (
+                    <button
+                      key={option.id}
+                      type="button"
+                      onClick={() => setAudienceType(option.id)}
+                      className={`bg-white border rounded-2xl p-6 text-left transition-all duration-200 ${
+                        isActive
+                          ? "border-accent ring-1 ring-accent shadow-md"
+                          : "border-gray-200 hover:border-accent/60 hover:shadow-sm"
+                      }`}
+                    >
+                      <Icon className={`h-7 w-7 mb-3 ${isActive ? "text-accent" : "text-gray-400"}`} />
+                      <div className="font-semibold text-primary text-lg">{option.title}</div>
+                      <div className="text-sm text-gray-500 mt-1">{option.subtitle}</div>
+                    </button>
+                  )
+                })}
+              </div>
+
+              <div className="bg-white border border-gray-200 rounded-2xl p-5">
+                <p className="text-sm font-semibold text-primary mb-1">What happens next?</p>
+                <p className="text-sm text-gray-500 leading-relaxed">
+                  We check if your name is already registered or claimed by someone else — across trademark databases in 170+ countries. It&apos;s completely free and takes less than 5 minutes.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                className={`w-full py-4 text-base font-semibold rounded-full transition-all ${
+                  audienceType
+                    ? "bg-primary hover:bg-primary/90 text-white shadow-lg"
+                    : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                }`}
+                disabled={!audienceType}
+                onClick={() => {
+                  if (!audienceType) return
+                  const selected = audienceOptions.find(o => o.id === audienceType)
+                  if (selected?.goodsAndServices) {
+                    setFormData(prev => ({ ...prev, trademarkType: "word", goodsAndServices: selected.goodsAndServices }))
+                  }
+                  setStep(1)
+                  window.scrollTo({ top: 0, behavior: "smooth" })
+                }}
+              >
+                {audienceType ? `Continue as ${audienceOptions.find(o => o.id === audienceType)?.title} →` : "Select who you are to continue"}
+              </button>
+
+              <p className="text-center text-sm text-gray-500">
+                Not sure which applies to you?{" "}
+                <button
+                  type="button"
+                  className="underline text-gray-700 hover:text-gray-900"
+                  onClick={() => {
+                    setAudienceType("business")
+                    setStep(1)
+                    window.scrollTo({ top: 0, behavior: "smooth" })
+                  }}
+                >
+                  Start here and we&apos;ll guide you
+                </button>
+              </p>
+            </div>
+          )}
 
           {step === 2 && (
             <div className="flex items-center justify-between mb-8 pb-6 border-b border-gray-200">
@@ -533,30 +679,32 @@ export function FreeSearchForm() {
             </div>
           )}
 
-          <div className="mb-12">
-            <div className="flex justify-between mb-3">
-              {["Trademark Details", "Territories", "Contact Information"].map((label, index) => (
-                <span
-                  key={label}
-                  className={`text-sm font-semibold transition-colors ${
-                    step > index ? "text-gray-700" : step === index + 1 ? "text-gray-900" : "text-gray-400"
-                  }`}
-                >
-                  {label}
-                </span>
-              ))}
+          {step > 0 && (
+            <div className="mb-12">
+              <div className="flex justify-between mb-3">
+                {["Who are you?", "What to protect", "Where?", "Your details"].map((label, index) => (
+                  <span
+                    key={label}
+                    className={`text-xs font-semibold transition-colors ${
+                      step > index ? "text-gray-700" : step === index ? "text-gray-900" : "text-gray-400"
+                    }`}
+                  >
+                    {label}
+                  </span>
+                ))}
+              </div>
+              <div className="h-2.5 bg-gray-100 rounded-full overflow-hidden shadow-inner">
+                <div
+                  className="h-full bg-gradient-to-r from-gray-800 to-gray-700 rounded-full transition-all duration-500 ease-out shadow-sm"
+                  style={{ width: `${(step / totalSteps) * 100}%` }}
+                ></div>
+              </div>
             </div>
-            <div className="h-2.5 bg-gray-100 rounded-full overflow-hidden shadow-inner">
-              <div
-                className="h-full bg-gradient-to-r from-gray-800 to-gray-700 rounded-full transition-all duration-500 ease-out shadow-sm"
-                style={{ width: `${(step / totalSteps) * 100}%` }}
-              ></div>
-            </div>
-          </div>
+          )}
 
           {successMessage && (
             <div className="mb-6 p-4 bg-gray-50 border border-gray-300 rounded-lg flex items-start gap-3">
-              <CheckCircle className="h-5 w-5 text-gray-700 mt-0.5 flex-shrink-0" />
+              <CheckCircle className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
               <div>
                 <p className="text-gray-700">{successMessage}</p>
               </div>
@@ -573,10 +721,20 @@ export function FreeSearchForm() {
           )}
 
           <form onSubmit={handleSubmit} className="space-y-8">
+            <input
+              type="text"
+              name="hp"
+              ref={hpRef}
+              tabIndex={-1}
+              autoComplete="off"
+              aria-hidden="true"
+              className="absolute -left-[9999px] w-px h-px opacity-0"
+            />
             {step === 1 && (
               <div className="space-y-10">
                 <div>
-                  <h2 className="text-2xl font-bold mb-6 text-gray-900 font-serif">Trademark Classification</h2>
+                  <h2 className="text-2xl font-bold mb-2 text-gray-900 font-serif">What are you protecting?</h2>
+                  <p className="text-gray-500 mb-6 text-sm">Choose the type of thing you want to register. Most people protecting a name choose the first option.</p>
                   <RadioGroup
                     value={formData.trademarkType}
                     onValueChange={(value) => setFormData((prev) => ({ ...prev, trademarkType: value }))}
@@ -585,20 +743,20 @@ export function FreeSearchForm() {
                     {[
                       {
                         value: "word",
-                        label: "Word Mark",
-                        description: "Text-based trademark (e.g., brand name)",
+                        label: "My name or brand name",
+                        description: "A word or phrase — your name, stage name, brand, or catchphrase",
                         icon: "A",
                       },
                       {
                         value: "logo",
-                        label: "Logo Mark",
-                        description: "Visual trademark with or without text",
+                        label: "My logo or visual brand",
+                        description: "A logo, image, or visual mark (with or without text)",
                         icon: "🖼️",
                       },
                       {
                         value: "figurative",
-                        label: "Figurative Mark",
-                        description: "Stylized design or symbol",
+                        label: "A symbol or design",
+                        description: "A stylised design or symbol with no words",
                         icon: "✨",
                       },
                     ].map((option) => (
@@ -632,13 +790,13 @@ export function FreeSearchForm() {
                 {(formData.trademarkType === "word" || formData.trademarkType === "logo") && (
                   <div>
                     <Label htmlFor="trademarkName" className="block text-lg font-semibold text-gray-900 mb-3">
-                      Trademark Designation
+                      {audienceType && audienceLabels[audienceType] ? audienceLabels[audienceType].nameLabel : "Enter the name you want to protect"}
                     </Label>
                     <Input
                       id="trademarkName"
                       value={formData.trademarkName}
                       onChange={(e) => setFormData((prev) => ({ ...prev, trademarkName: e.target.value }))}
-                      placeholder="Enter your trademark name"
+                      placeholder={audienceType && audienceLabels[audienceType] ? audienceLabels[audienceType].namePlaceholder : "Enter your name or brand..."}
                       className="w-full text-lg p-4 border-2 border-gray-200 focus:border-gray-700 rounded-lg shadow-sm"
                     />
                   </div>
@@ -708,18 +866,18 @@ export function FreeSearchForm() {
 
                 <div>
                   <Label htmlFor="goodsAndServices" className="block text-lg font-semibold text-gray-900 mb-3">
-                    Goods and Services Description
+                    {audienceType && audienceLabels[audienceType] ? audienceLabels[audienceType].goodsLabel : "What do you do?"}
                   </Label>
                   <Textarea
                     id="goodsAndServices"
                     value={formData.goodsAndServices}
                     onChange={(e) => setFormData((prev) => ({ ...prev, goodsAndServices: e.target.value }))}
-                    placeholder="e.g., Clothing, namely shirts, pants, and hats"
+                    placeholder={audienceType && audienceLabels[audienceType] ? audienceLabels[audienceType].goodsPlaceholder : "Describe what you do or sell in plain language..."}
                     className="w-full text-base p-4 border-2 border-gray-200 focus:border-gray-700 rounded-lg shadow-sm"
-                    rows={5}
+                    rows={4}
                   />
                   <p className="text-sm text-gray-500 mt-2">
-                    Provide a detailed description of the products or services associated with your trademark
+                    {audienceType && audienceLabels[audienceType] ? audienceLabels[audienceType].goodsHelper : "Write in plain language — our attorneys will translate this into the correct legal categories."}
                   </p>
                 </div>
 
@@ -744,22 +902,35 @@ export function FreeSearchForm() {
                   </div>
                 )}
 
-                <Button
-                  type="button"
-                  className="w-full py-4 text-lg font-semibold bg-gray-900 hover:bg-gray-800 text-white rounded-lg shadow-lg hover:shadow-xl transition-all"
-                  onClick={() => {
-                    window.scrollTo({ top: 0, behavior: "smooth" })
-                    setStep(2)
-                  }}
-                  disabled={
-                    !formData.trademarkType ||
-                    !formData.goodsAndServices ||
-                    (formData.trademarkType !== "figurative" && !formData.trademarkName) ||
-                    ((formData.trademarkType === "logo" || formData.trademarkType === "figurative") && !formData.logo)
-                  }
-                >
-                  Continue to Territory Selection
-                </Button>
+                <div className="flex gap-4">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => {
+                      window.scrollTo({ top: 0, behavior: "smooth" })
+                      setStep(0)
+                    }}
+                    className="flex-1 py-4 text-lg"
+                  >
+                    ← Back
+                  </Button>
+                  <Button
+                    type="button"
+                    className="flex-[2] py-4 text-lg font-semibold bg-gray-900 hover:bg-gray-800 text-white rounded-lg shadow-lg hover:shadow-xl transition-all"
+                    onClick={() => {
+                      window.scrollTo({ top: 0, behavior: "smooth" })
+                      setStep(2)
+                    }}
+                    disabled={
+                      !formData.trademarkType ||
+                      !formData.goodsAndServices ||
+                      (formData.trademarkType !== "figurative" && !formData.trademarkName) ||
+                      ((formData.trademarkType === "logo" || formData.trademarkType === "figurative") && !formData.logo)
+                    }
+                  >
+                    Continue: Choose countries →
+                  </Button>
+                </div>
               </div>
             )}
 
@@ -1073,35 +1244,35 @@ export function FreeSearchForm() {
         </div>
 
         <div className="lg:col-span-1">
-          <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-7 shadow-lg border border-gray-200 sticky top-24">
-            <h3 className="text-2xl font-bold mb-6 text-gray-900 font-serif">Why Protect Your Trademark?</h3>
+          <div className="bg-white rounded-2xl p-7 border border-gray-200 sticky top-24">
+            <h3 className="font-serif text-2xl mb-6 text-primary">Why register your name?</h3>
             <ul className="space-y-4 text-gray-700">
               <li className="flex items-start gap-3">
-                <CheckCircle className="h-5 w-5 text-gray-700 mt-0.5 flex-shrink-0" />
+                <CheckCircle className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
                 <div>
-                  <span className="font-semibold text-gray-900">Legal Protection:</span>
-                  <p className="text-sm mt-0.5">Prevents unauthorized use of your brand identity</p>
+                  <span className="font-semibold text-gray-900">Stop AI misuse:</span>
+                  <p className="text-sm mt-0.5">A trademark gives you legal grounds to demand takedowns of deepfakes, fake ads, or AI-generated content using your name</p>
                 </div>
               </li>
               <li className="flex items-start gap-3">
-                <CheckCircle className="h-5 w-5 text-gray-700 mt-0.5 flex-shrink-0" />
+                <CheckCircle className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
                 <div>
-                  <span className="font-semibold text-gray-900">Brand Recognition:</span>
-                  <p className="text-sm mt-0.5">Establishes trust and credibility with customers</p>
+                  <span className="font-semibold text-gray-900">Own your NIL:</span>
+                  <p className="text-sm mt-0.5">Athletes: lock in your Name, Image & Likeness before someone else registers your brand</p>
                 </div>
               </li>
               <li className="flex items-start gap-3">
-                <CheckCircle className="h-5 w-5 text-gray-700 mt-0.5 flex-shrink-0" />
+                <CheckCircle className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
                 <div>
-                  <span className="font-semibold text-gray-900">Business Growth:</span>
-                  <p className="text-sm mt-0.5">Strengthens market position and brand equity</p>
+                  <span className="font-semibold text-gray-900">Block copycats:</span>
+                  <p className="text-sm mt-0.5">Prevent others from trading off your name, reputation, or creative work</p>
                 </div>
               </li>
               <li className="flex items-start gap-3">
-                <CheckCircle className="h-5 w-5 text-gray-700 mt-0.5 flex-shrink-0" />
+                <CheckCircle className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
                 <div>
-                  <span className="font-semibold text-gray-900">Asset Value:</span>
-                  <p className="text-sm mt-0.5">Creates valuable intellectual property for licensing or sale</p>
+                  <span className="font-semibold text-gray-900">It&apos;s an asset:</span>
+                  <p className="text-sm mt-0.5">Your registered trademark has real commercial value — for deals, sponsorships, and licensing</p>
                 </div>
               </li>
             </ul>
@@ -1110,7 +1281,7 @@ export function FreeSearchForm() {
               <h4 className="text-lg font-bold mb-4 text-gray-900">Our Process</h4>
               <div className="space-y-3">
                 <div className="flex items-start gap-3">
-                  <div className="w-7 h-7 rounded-full bg-gray-800 text-white flex items-center justify-center text-sm font-bold flex-shrink-0">
+                  <div className="w-7 h-7 rounded-full bg-primary text-white flex items-center justify-center text-sm font-semibold flex-shrink-0">
                     1
                   </div>
                   <div>
@@ -1119,7 +1290,7 @@ export function FreeSearchForm() {
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="w-7 h-7 rounded-full bg-gray-800 text-white flex items-center justify-center text-sm font-bold flex-shrink-0">
+                  <div className="w-7 h-7 rounded-full bg-primary text-white flex items-center justify-center text-sm font-semibold flex-shrink-0">
                     2
                   </div>
                   <div>
@@ -1128,7 +1299,7 @@ export function FreeSearchForm() {
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <div className="w-7 h-7 rounded-full bg-gray-700 text-white flex items-center justify-center text-sm font-bold flex-shrink-0">
+                  <div className="w-7 h-7 rounded-full bg-primary text-white flex items-center justify-center text-sm font-semibold flex-shrink-0">
                     3
                   </div>
                   <div>

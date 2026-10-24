@@ -224,7 +224,7 @@ async function handlePaymentSuccess(paymentIntent: Stripe.PaymentIntent) {
 
         await resend.emails.send({
           from: "JustProtected <noreply@justprotected.com>",
-          to: ["admin@justprotected.com"],
+          to: ["gflacort@gmail.com"],
           subject: `New Payment Received - €${(paymentIntent.amount / 100).toFixed(2)}`,
           html: `
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">

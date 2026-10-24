@@ -4,6 +4,7 @@ import { Inter } from "next/font/google"
 import { Toaster } from "@/components/ui/toaster"
 import { Analytics } from "@vercel/analytics/next"
 import { GTMTracker } from "@/components/gtm-tracker"
+import { CookieConsentBanner } from "@/components/cookie-consent-banner"
 import { ScrollToTop } from "@/components/scroll-to-top"
 import { TrademarkFAQBot } from "@/components/trademark-faq-bot"
 import { Suspense } from "react"
@@ -94,6 +95,33 @@ export default function RootLayout({
           }}
         />
 
+        {/* Blocks the stray Cookiebot tag firing from inside GTM (unauthorized
+            domain group, dead weight) — we have our own consent banner and
+            don't control that GTM account to remove the tag directly. */}
+        <Script
+          id="block-cookiebot"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                function isCookiebot(el) {
+                  return el && el.tagName === 'SCRIPT' && typeof el.src === 'string' && el.src.indexOf('cookiebot.com') !== -1;
+                }
+                var origAppendChild = Node.prototype.appendChild;
+                Node.prototype.appendChild = function(node) {
+                  if (isCookiebot(node)) return node;
+                  return origAppendChild.call(this, node);
+                };
+                var origInsertBefore = Node.prototype.insertBefore;
+                Node.prototype.insertBefore = function(node, ref) {
+                  if (isCookiebot(node)) return node;
+                  return origInsertBefore.call(this, node, ref);
+                };
+              })();
+            `,
+          }}
+        />
+
         {/* Google Tag Manager */}
         <Script
           id="gtm-script"
@@ -128,6 +156,7 @@ export default function RootLayout({
           <Analytics />
           <TrademarkFAQBot />
         </Suspense>
+        <CookieConsentBanner />
       </body>
     </html>
   )

@@ -231,7 +231,7 @@ export function LegalServicesContent() {
 
             <div className="grid md:grid-cols-2 gap-8">
               <div className="bg-gray-50 p-8 rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                <div className="bg-accent text-white w-10 h-10 rounded-full flex items-center justify-center text-xl font-bold mb-4">
+                <div className="bg-accent text-primary w-10 h-10 rounded-full flex items-center justify-center text-xl font-bold mb-4">
                   1
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-3">Tell us what's happening</h3>
@@ -239,7 +239,7 @@ export function LegalServicesContent() {
               </div>
 
               <div className="bg-gray-50 p-8 rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                <div className="bg-accent text-white w-10 h-10 rounded-full flex items-center justify-center text-xl font-bold mb-4">
+                <div className="bg-accent text-primary w-10 h-10 rounded-full flex items-center justify-center text-xl font-bold mb-4">
                   2
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-3">We assess the situation</h3>
@@ -247,7 +247,7 @@ export function LegalServicesContent() {
               </div>
 
               <div className="bg-gray-50 p-8 rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                <div className="bg-accent text-white w-10 h-10 rounded-full flex items-center justify-center text-xl font-bold mb-4">
+                <div className="bg-accent text-primary w-10 h-10 rounded-full flex items-center justify-center text-xl font-bold mb-4">
                   3
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-3">We coordinate with legal partners</h3>
@@ -255,7 +255,7 @@ export function LegalServicesContent() {
               </div>
 
               <div className="bg-gray-50 p-8 rounded-lg shadow-sm hover:shadow-md transition-shadow">
-                <div className="bg-accent text-white w-10 h-10 rounded-full flex items-center justify-center text-xl font-bold mb-4">
+                <div className="bg-accent text-primary w-10 h-10 rounded-full flex items-center justify-center text-xl font-bold mb-4">
                   4
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-3">You choose the path forward</h3>

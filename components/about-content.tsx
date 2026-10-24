@@ -166,7 +166,7 @@ export function AboutContent() {
         </p>
         <Link
           href="/free-search"
-          className="inline-flex items-center justify-center px-8 py-4 rounded-lg bg-accent hover:bg-accent/90 text-white font-semibold text-lg transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105"
+          className="inline-flex items-center justify-center px-8 py-4 rounded-lg bg-accent hover:bg-accent/90 text-primary font-semibold text-lg transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105"
         >
           Get Started Today
           <ArrowRight className="ml-2 transition-transform duration-200 group-hover:translate-x-1" />

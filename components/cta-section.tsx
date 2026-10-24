@@ -1,98 +1,41 @@
 "use client"
 import Link from "next/link"
+import { ArrowRight } from "lucide-react"
 
 export function CTASection() {
   return (
-    <section className="py-20 bg-gradient-to-r from-gray-900 via-gray-800 to-accent text-white">
+    <section className="py-24 md:py-32 bg-[#F7F5F1]">
       <div className="container mx-auto px-4">
-        <div className="max-w-4xl mx-auto">
-          <div className="bg-white/10 backdrop-blur-sm rounded-lg p-8 shadow-xl border border-white/20">
-            <div className="text-center mb-8">
-              <h2 className="text-2xl md:text-3xl font-bold mb-4">Ready to Protect Your Brand?</h2>
-              <p className="text-base md:text-lg opacity-90 max-w-2xl mx-auto mb-4">
-                Join thousands of businesses who trust us with their trademark protection.
-              </p>
-              <p className="text-sm opacity-80 max-w-2xl mx-auto">
-                Your brand is safe with us. Transparent pricing, expert handling, and constant updates — everything
-                designed to give you total confidence.
-              </p>
-            </div>
+        <div className="max-w-5xl mx-auto">
+          <div className="bg-primary rounded-3xl px-8 py-16 md:px-16 md:py-20 text-center">
+            <p className="label-caps text-accent mb-6">Before someone else does</p>
+            <h2 className="font-serif text-4xl md:text-5xl text-white tracking-tight leading-tight mb-6 max-w-2xl mx-auto">
+              Your name is your brand. <span className="italic text-accent">Own it.</span>
+            </h2>
+            <p className="text-white/50 font-light max-w-xl mx-auto mb-10 leading-relaxed">
+              AI doesn&apos;t ask permission. A registered trademark is the legal ground you
+              stand on to stop fakes, copycats and counterfeits.
+            </p>
 
-            <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-10">
               <Link
                 href="/free-search"
-                className="w-full md:w-auto px-8 py-3 text-base font-medium text-gray-900 bg-white hover:bg-gray-100 hover:shadow-xl rounded-md shadow-lg transition-all duration-300 flex items-center justify-center"
+                className="w-full sm:w-auto inline-flex items-center justify-center px-9 py-4 text-sm font-semibold text-primary bg-accent hover:brightness-105 rounded-full transition-all duration-300"
               >
-                Start Free Search
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 ml-2"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z"
-                    clipRule="evenodd"
-                  />
-                </svg>
+                Check if you&apos;re protected
+                <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
-
-              <a
+              <Link
                 href="/detailed-pricelist#top"
-                className="w-full md:w-auto px-8 py-3 text-base font-medium text-white border-2 border-white/70 hover:bg-white/20 hover:border-white rounded-md transition-all duration-300 flex items-center justify-center"
+                className="w-full sm:w-auto inline-flex items-center justify-center px-9 py-4 text-sm font-semibold text-white/80 border border-white/25 hover:border-white/60 hover:text-white rounded-full transition-all duration-300"
               >
-                See Pricing
-              </a>
+                See pricing
+              </Link>
             </div>
 
-            <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-6 text-sm opacity-80">
-              <div className="flex items-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 mr-2"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                <span>No hidden fees</span>
-              </div>
-              <div className="flex items-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 mr-2"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                <span>24-hour filing</span>
-              </div>
-              <div className="flex items-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5 mr-2"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                <span>Expert legal guidance</span>
-              </div>
-            </div>
+            <p className="label-caps text-[0.65rem] text-white/35">
+              Filed in 24 hours&ensp;&middot;&ensp;70+ countries&ensp;&middot;&ensp;Money-back guarantee
+            </p>
           </div>
         </div>
       </div>

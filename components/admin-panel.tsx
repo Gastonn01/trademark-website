@@ -1130,7 +1130,7 @@ sarah@example.com	Apple Logo`}
               <Info className="h-4 w-4 mt-0.5 flex-shrink-0" />
               <div>
                 <p className="font-medium">Email will be signed as Sarah Mitchell, Trademark Specialist</p>
-                <p>Recipients will be instructed to email trademarks@justprotected.com to proceed.</p>
+                <p>Recipients will be instructed to use our contact form at justprotected.com/contact to proceed.</p>
               </div>
             </div>
           </div>
