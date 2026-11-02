@@ -1,15 +1,9 @@
-"use client"
-
-import { useEffect } from "react"
 import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
 import { CTA } from "@/components/cta"
 import { BlogPostHeader } from "@/components/blog-post-header"
 
 export default function MaximiseSuccessfulTrademarkRegistrationClientPage() {
-  useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [])
 
   return (
     <div className="bg-white min-h-screen">

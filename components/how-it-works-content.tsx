@@ -1,5 +1,3 @@
-"use client"
-
 import { Card } from "@/components/ui/card"
 import { Search, FileCheck, Shield, Clock } from "lucide-react"
 import Link from "next/link"
@@ -187,6 +185,7 @@ export function HowItWorksContent() {
         </div>
 
         <div className="mb-12 bg-gradient-to-b from-white to-accent/5 p-8 rounded-lg">
+<script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How long does the trademark registration process take?", "acceptedAnswer": {"@type": "Answer", "text": "The timeline varies by country, but typically ranges from 6-18 months. We'll provide you with specific estimates based on your filing locations."}}, {"@type": "Question", "name": "What happens if my trademark application is rejected?", "acceptedAnswer": {"@type": "Answer", "text": "Our team will analyze the reasons for rejection and develop a strategy to address them, which may include filing a response, modifying your application, or appealing the decision."}}, {"@type": "Question", "name": "Can I trademark my business name in multiple countries?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, we offer international trademark registration services and can help you protect your brand in multiple jurisdictions through individual filings or international systems like the Madrid Protocol."}}]}) }} />
           <h3 className="font-serif text-2xl font-bold text-center text-gray-900 mb-6">Frequently Asked Questions</h3>
           <div className="space-y-4">
             <div className="bg-gray-100 rounded-lg p-4">

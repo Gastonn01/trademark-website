@@ -8,7 +8,22 @@ export const metadata: Metadata = {
   description:
     "Explore our blog for expert insights on trademark registration, brand protection strategies, and intellectual property tips for businesses worldwide.",
   alternates: {
-    canonical: "https://justprotected.com/blog/",
+    canonical: "/blog",
+  },
+
+  openGraph: {
+    title: "Trademark Registration Blog | Expert Insights & Guides",
+    description: "Explore our blog for expert insights on trademark registration, brand protection strategies, and intellectual property tips for businesses worldwide.",
+    url: "/blog",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "website",
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "Trademark Registration Blog | Expert Insights & Guides",
+    description: "Explore our blog for expert insights on trademark registration, brand protection strategies, and intellectual property tips for businesses worldwide.",
   },
 }
 

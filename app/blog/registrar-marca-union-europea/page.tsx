@@ -11,11 +11,26 @@ export const metadata = {
   keywords:
     "registro marca UE, EUIPO, marca comunitaria, registro marca europea, protección marcas UE, marca unión europea",
   alternates: {
-    canonical: "https://justprotected.com/blog/registrar-marca-union-europea/",
+    canonical: "/blog/registrar-marca-union-europea",
     languages: {
       es: "https://justprotected.com/blog/registrar-marca-union-europea/",
       en: "https://justprotected.com/blog/register-trademark-eu/",
     },
+  },
+
+  openGraph: {
+    title: "C\u00f3mo Registrar una Marca en la Uni\u00f3n Europea (2024) | Gu\u00eda Completa",
+    description: "Gu\u00eda definitiva para registrar tu marca en la UE. Aprende el proceso paso a paso, costos, plazos y requisitos para proteger tu marca en los 27 pa\u00edses miembros.",
+    url: "/blog/registrar-marca-union-europea",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "article",
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "C\u00f3mo Registrar una Marca en la Uni\u00f3n Europea (2024) | Gu\u00eda Completa",
+    description: "Gu\u00eda definitiva para registrar tu marca en la UE. Aprende el proceso paso a paso, costos, plazos y requisitos para proteger tu marca en los 27 pa\u00edses miembros.",
   },
 }
 

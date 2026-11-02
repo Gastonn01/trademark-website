@@ -10,7 +10,22 @@ export const metadata: Metadata = {
   keywords:
     "Disney OpenAI, AI IP licensing, generative AI copyright, trademark AI strategy, IP monetization, character licensing AI, brand protection AI",
   alternates: {
-    canonical: "https://justprotected.com/blog/disney-openai-ip-licensing-strategy/",
+    canonical: "/blog/disney-openai-ip-licensing-strategy",
+  },
+
+  openGraph: {
+    title: "Disney's OpenAI Partnership: The Future of IP Licensing in the AI Era | JustProtected",
+    description: "Disney's $1B strategic arrangement with OpenAI marks a shift from reactive copyright enforcement to proactive AI licensing. Learn what this means for trademark and IP strategy.",
+    url: "/blog/disney-openai-ip-licensing-strategy",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "article",
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "Disney's OpenAI Partnership: The Future of IP Licensing in the AI Era | JustProtected",
+    description: "Disney's $1B strategic arrangement with OpenAI marks a shift from reactive copyright enforcement to proactive AI licensing. Learn what this means for trademark and IP strategy.",
   },
 }
 

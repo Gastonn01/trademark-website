@@ -3,7 +3,6 @@
 import type React from "react"
 import { Suspense } from "react"
 import { useState, useEffect, useMemo } from "react"
-import { useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -290,7 +289,6 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
     marketing: false,
   })
 
-  const searchParams = useSearchParams()
   const [selectedCountries, setSelectedCountries] = useState<CountrySelection[]>([])
   const [searchTerm, setSearchTerm] = useState("")
   const [expandedRegions, setExpandedRegions] = useState<string[]>([])

@@ -11,7 +11,22 @@ export const metadata = {
   keywords:
     "Poland trademark registration, Polish IP law, PPO, brand protection Poland, intellectual property Poland, trademark filing Poland",
   alternates: {
-    canonical: "https://justprotected.com/blog/register-trademark-poland/",
+    canonical: "/blog/register-trademark-poland",
+  },
+
+  openGraph: {
+    title: "How to Register a Trademark in Poland (2024) | Complete Guide",
+    description: "Master the process of trademark registration in Poland. Learn about local requirements, costs, and strategies for protecting your brand in the Polish market.",
+    url: "/blog/register-trademark-poland",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "article",
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "How to Register a Trademark in Poland (2024) | Complete Guide",
+    description: "Master the process of trademark registration in Poland. Learn about local requirements, costs, and strategies for protecting your brand in the Polish market.",
   },
 }
 
@@ -150,6 +165,7 @@ export default function RegisterTrademarkPoland() {
             </ul>
           </div>
 
+<script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is a separate Polish trademark necessary if I have an EU trademark?", "acceptedAnswer": {"@type": "Answer", "text": "While EU trademarks are valid in Poland, a national Polish trademark can provide additional benefits and stronger local protection."}}, {"@type": "Question", "name": "Can foreign companies directly register trademarks in Poland?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, but a local address for correspondence is required. Many foreign entities choose to work with local representatives for smoother proceedings."}}, {"@type": "Question", "name": "How does Poland handle trademark oppositions?", "acceptedAnswer": {"@type": "Answer", "text": "Poland has a post-registration opposition system, allowing third parties to file oppositions within 3 months after a trademark's publication."}}]}) }} />
           <h2>Frequently Asked Questions</h2>
           <div className="space-y-4">
             <div>

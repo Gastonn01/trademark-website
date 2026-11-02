@@ -1,16 +1,7 @@
-"use client"
-
 import Link from "next/link"
-import { motion } from "framer-motion"
 import { CheckCircle2, ArrowRight } from "lucide-react"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 
-const fade = {
-  initial: { opacity: 0, y: 20 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true },
-  transition: { duration: 0.6 },
-}
 
 export function BusinessesLanding() {
   return (
@@ -19,7 +10,7 @@ export function BusinessesLanding() {
       <section className="relative bg-primary overflow-hidden">
         <div className="container mx-auto px-4 py-24 md:py-32 relative z-10">
           <div className="max-w-3xl mx-auto text-center">
-            <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}>
+            <div>
               <p className="label-caps text-accent mb-8">Brand Protection for Businesses & Entrepreneurs</p>
 
               <h1 className="font-serif text-white text-5xl md:text-6xl leading-[1.1] tracking-tight mb-8">
@@ -52,7 +43,7 @@ export function BusinessesLanding() {
               <p className="label-caps text-[0.65rem] text-white/40">
                 Free name check&ensp;&middot;&ensp;Filed in 24 hours&ensp;&middot;&ensp;70+ countries&ensp;&middot;&ensp;Licensed attorneys
               </p>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
@@ -60,7 +51,7 @@ export function BusinessesLanding() {
       {/* WHAT'S AT STAKE */}
       <section className="py-24 md:py-32 bg-[#F7F5F1]">
         <div className="container mx-auto px-4 max-w-5xl">
-          <motion.div {...fade} className="text-center mb-16">
+          <div className="text-center mb-16">
             <p className="label-caps text-accent mb-5">Your name is your business</p>
             <h2 className="font-serif text-4xl md:text-5xl text-primary tracking-tight mb-5">
               Here&apos;s what&apos;s at risk
@@ -69,7 +60,7 @@ export function BusinessesLanding() {
               Whatever you sell, your brand name is what customers actually trust. Product listings, ad accounts,
               repeat customers — all of it depends on your name meaning something, and staying yours.
             </p>
-          </motion.div>
+          </div>
 
           <div className="grid md:grid-cols-2 gap-x-10 gap-y-12">
             {[
@@ -98,18 +89,11 @@ export function BusinessesLanding() {
                   "It happens more than people think, and it's usually discovered by accident, months later, by which point the options are worse and more expensive. Filing first costs a fraction of fighting to get a name back.",
               },
             ].map((risk, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.08, duration: 0.6 }}
-                className="pt-6 border-t border-primary/15"
-              >
+              <div className="pt-6 border-t border-primary/15" key={i}>
                 <p className="label-caps text-[0.65rem] text-accent mb-4">{risk.tag}</p>
                 <h3 className="text-lg font-semibold text-primary mb-3">{risk.title}</h3>
                 <p className="text-sm text-gray-500 leading-relaxed">{risk.description}</p>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -118,12 +102,12 @@ export function BusinessesLanding() {
       {/* WHAT YOU CAN TRADEMARK */}
       <section className="py-24 md:py-32 bg-white">
         <div className="container mx-auto px-4 max-w-5xl">
-          <motion.div {...fade} className="text-center mb-16">
+          <div className="text-center mb-16">
             <p className="label-caps text-accent mb-5">More than you think</p>
             <h2 className="font-serif text-4xl md:text-5xl text-primary tracking-tight">
               What can a business trademark?
             </h2>
-          </motion.div>
+          </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-12">
             {[
@@ -134,18 +118,11 @@ export function BusinessesLanding() {
               { tag: "Packaging", title: "Distinctive packaging", desc: "Trade dress — a recognizable shape, color scheme, or packaging design." },
               { tag: "Domain match", title: "Your domain-matching name", desc: "Owning the .com doesn't register the trademark — these are separate, and both matter." },
             ].map((item, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.07, duration: 0.6 }}
-                className="pt-6 border-t border-primary/15"
-              >
+              <div className="pt-6 border-t border-primary/15" key={i}>
                 <p className="label-caps text-[0.65rem] text-accent mb-4">{item.tag}</p>
                 <h3 className="text-lg font-semibold text-primary mb-3">{item.title}</h3>
                 <p className="text-sm text-gray-500 leading-relaxed">{item.desc}</p>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -154,11 +131,11 @@ export function BusinessesLanding() {
       {/* HOW IT WORKS */}
       <section className="py-24 md:py-32 bg-[#F7F5F1]">
         <div className="container mx-auto px-4 max-w-5xl">
-          <motion.div {...fade} className="text-center mb-16">
+          <div className="text-center mb-16">
             <p className="label-caps text-accent mb-5">The process</p>
             <h2 className="font-serif text-4xl md:text-5xl text-primary tracking-tight mb-5">Simple. Fast. Done.</h2>
             <p className="text-gray-500 font-light">You run the business. We handle the legal side.</p>
-          </motion.div>
+          </div>
 
           <div className="grid md:grid-cols-3 gap-x-10 gap-y-12 mb-16">
             {[
@@ -181,29 +158,22 @@ export function BusinessesLanding() {
                   "Legal protection from your filing date. You can now demand takedowns on cloned stores, resolve marketplace disputes, and expand with confidence.",
               },
             ].map((step, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1, duration: 0.6 }}
-                className="pt-6 border-t border-primary/15"
-              >
+              <div className="pt-6 border-t border-primary/15" key={i}>
                 <div className="font-serif italic text-2xl text-accent mb-4">{step.number}</div>
                 <h3 className="text-lg font-semibold text-primary mb-3">{step.title}</h3>
                 <p className="text-sm text-gray-500 leading-relaxed">{step.description}</p>
-              </motion.div>
+              </div>
             ))}
           </div>
 
-          <motion.div {...fade} className="text-center">
+          <div className="text-center">
             <Link
               href="/free-search?audience=business"
               className="inline-flex items-center justify-center px-10 py-4 text-sm font-semibold text-white bg-primary hover:bg-primary/90 rounded-full transition-all duration-300"
             >
               Begin your free name check
             </Link>
-          </motion.div>
+          </div>
         </div>
       </section>
 
@@ -211,7 +181,7 @@ export function BusinessesLanding() {
       <section className="py-24 md:py-32 bg-primary">
         <div className="container mx-auto px-4 max-w-5xl">
           <div className="grid md:grid-cols-2 gap-16 items-start">
-            <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
+            <div>
               <p className="label-caps text-accent mb-5">What&apos;s included</p>
               <h2 className="font-serif text-4xl md:text-5xl text-white tracking-tight leading-tight mb-6">
                 Everything included.
@@ -229,9 +199,9 @@ export function BusinessesLanding() {
                 Start your free name check
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
-            </motion.div>
+            </div>
 
-            <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
+            <div>
               <ul className="space-y-4">
                 {[
                   "Free trademark search across 170+ countries",
@@ -251,7 +221,7 @@ export function BusinessesLanding() {
                   </li>
                 ))}
               </ul>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
@@ -259,16 +229,16 @@ export function BusinessesLanding() {
       {/* REAL CASE */}
       <section className="py-24 md:py-32 bg-white">
         <div className="container mx-auto px-4 max-w-5xl">
-          <motion.div {...fade} className="text-center mb-16">
+          <div className="text-center mb-16">
             <p className="label-caps text-accent mb-5">Not hypothetical</p>
             <h2 className="font-serif text-4xl md:text-5xl text-primary tracking-tight mb-5">
               It&apos;s already happening
             </h2>
             <p className="text-gray-500 font-light">These cases are why business owners are registering now.</p>
-          </motion.div>
+          </div>
 
           <div className="grid md:grid-cols-2 gap-x-10 gap-y-12">
-            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.08, duration: 0.6 }} className="pt-6 border-t border-primary/15">
+            <div className="pt-6 border-t border-primary/15">
               <p className="label-caps text-[0.65rem] text-accent mb-4">Counterfeit listings</p>
               <h3 className="text-lg font-semibold text-primary mb-3">TikTok Shop counterfeits</h3>
               <p className="text-sm text-gray-500 leading-relaxed mb-4">
@@ -279,9 +249,9 @@ export function BusinessesLanding() {
               <Link href="/blog/tiktok-shop-counterfeit-violation-appeal" className="text-accent font-semibold hover:underline text-sm">
                 Read the full case →
               </Link>
-            </motion.div>
+            </div>
 
-            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.16, duration: 0.6 }} className="pt-6 border-t border-primary/15">
+            <div className="pt-6 border-t border-primary/15">
               <p className="label-caps text-[0.65rem] text-accent mb-4">AI-generated brands</p>
               <h3 className="text-lg font-semibold text-primary mb-3">AI-generated logos & fake brands</h3>
               <p className="text-sm text-gray-500 leading-relaxed mb-4">
@@ -292,7 +262,7 @@ export function BusinessesLanding() {
               <Link href="/blog/ai-generated-logos-brand-names-real-risk" className="text-accent font-semibold hover:underline text-sm">
                 Read the full case →
               </Link>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
@@ -300,13 +270,14 @@ export function BusinessesLanding() {
       {/* FAQ */}
       <section className="py-24 md:py-32 bg-[#F7F5F1]">
         <div className="container mx-auto px-4 max-w-3xl">
-          <motion.div {...fade} className="text-center mb-14">
+          <div className="text-center mb-14">
             <p className="label-caps text-accent mb-5">Common questions</p>
             <h2 className="font-serif text-4xl md:text-5xl tracking-tight text-primary">
               Questions business owners ask us
             </h2>
-          </motion.div>
+          </div>
 
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "I already have an LLC. Isn't my business name protected?", "acceptedAnswer": {"@type": "Answer", "text": "No \u2014 registering a business entity (an LLC or corporation) with your state just reserves that legal entity name. It doesn't stop someone else from using a similar name for their products or trademark, or from registering it as a trademark themselves. They're two separate systems."}}, {"@type": "Question", "name": "I own the domain. Doesn't that protect the name?", "acceptedAnswer": {"@type": "Answer", "text": "No. Domain ownership and trademark ownership are unrelated. You can own yourbrand.com and still have someone else register \\\"Yourbrand\\\" as a trademark \u2014 and you'd have no automatic right to stop them."}}, {"@type": "Question", "name": "Someone already cloned my store. Is it too late to register?", "acceptedAnswer": {"@type": "Answer", "text": "No \u2014 register now. A registration doesn't undo what already happened, but it's the single most effective thing you can do to get the clone taken down and to prevent it from happening again with a stronger legal position."}}, {"@type": "Question", "name": "Do I need to register in every country I ship to?", "acceptedAnswer": {"@type": "Answer", "text": "Not necessarily every country, but every country where you meaningfully sell or plan to expand. Trademarks are territorial \u2014 a US registration does nothing for you in the EU or UK. Our attorneys will help you prioritize based on where your actual exposure is."}}, {"@type": "Question", "name": "What's the difference between trademark and copyright for a business?", "acceptedAnswer": {"@type": "Answer", "text": "Copyright protects your creative content \u2014 product photos, descriptions, videos. Trademark protects your brand name and logo as identifiers of your business. A cloned storefront using your name but different photos is a trademark issue, not a copyright one."}}, {"@type": "Question", "name": "How much does it cost?", "acceptedAnswer": {"@type": "Answer", "text": "The US is $65/month over 11 months. EU is $99/month. Most business owners start with 2\u20133 key markets and pay under $200/month total \u2014 with no large upfront cost. The search is completely free. Check our pricing page for full country-by-country details."}}]}) }} />
           <Accordion type="single" collapsible className="w-full">
             {[
               {

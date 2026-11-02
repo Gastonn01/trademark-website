@@ -243,6 +243,7 @@ export function ContactContent() {
 
             <Card className="shadow-lg hover:shadow-xl transition-shadow">
               <CardHeader>
+<script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How long does trademark registration take?", "acceptedAnswer": {"@type": "Answer", "text": "The trademark registration process typically takes 6-12 months, depending on the jurisdiction and complexity of your application."}}, {"@type": "Question", "name": "Do you offer international trademark protection?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, we provide trademark registration services in over 180 countries worldwide, including EU, US, UK, and many others."}}, {"@type": "Question", "name": "What happens after I submit my application?", "acceptedAnswer": {"@type": "Answer", "text": "Our legal team will review your application within 24 hours and guide you through each step of the registration process."}}]}) }} />
                 <CardTitle>Frequently Asked Questions</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">

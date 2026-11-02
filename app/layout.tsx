@@ -25,15 +25,12 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || "https://justprotected.com"),
-  alternates: {
-    canonical: "/",
-  },
+  metadataBase: new URL("https://justprotected.com"),
   openGraph: {
     title: "Just Protected - Trademark Registration Services",
     description:
       "Professional trademark registration services worldwide. Protect your brand with our expert legal team.",
-    url: process.env.NEXT_PUBLIC_BASE_URL || "https://justprotected.com",
+    url: "https://justprotected.com",
     siteName: "Just Protected",
     locale: "en_US",
     type: "website",
@@ -56,11 +53,7 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  verification: {
-    google: "your-google-verification-code",
-    yandex: "your-yandex-verification-code",
-  },
-    generator: 'v0.app'
+  generator: "v0.app",
 }
 
 export default function RootLayout({
@@ -149,13 +142,13 @@ export default function RootLayout({
         </noscript>
 
         <Suspense fallback={null}>
-          <ScrollToTop />
           <GTMTracker />
-          {children}
-          <Toaster />
-          <Analytics />
-          <TrademarkFAQBot />
         </Suspense>
+        <ScrollToTop />
+        {children}
+        <Toaster />
+        <Analytics />
+        <TrademarkFAQBot />
         <CookieConsentBanner />
       </body>
     </html>

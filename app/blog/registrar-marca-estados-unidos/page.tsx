@@ -9,11 +9,26 @@ export const metadata = {
   keywords:
     "registro de marca EE.UU., USPTO, marca estadounidense, protección de marca EE.UU., registro de marca Estados Unidos",
   alternates: {
-    canonical: "https://justprotected.com/blog/registrar-marca-estados-unidos/",
+    canonical: "/blog/registrar-marca-estados-unidos",
     languages: {
       es: "https://justprotected.com/blog/registrar-marca-estados-unidos/",
       en: "https://justprotected.com/blog/register-trademark-usa/",
     },
+  },
+
+  openGraph: {
+    title: "Gu\u00eda Completa: C\u00f3mo Registrar una Marca en Estados Unidos (2024)",
+    description: "Gu\u00eda completa para el registro de marcas en EE.UU. Aprenda el proceso paso a paso, costos, plazos y requisitos para proteger su marca en los Estados Unidos.",
+    url: "/blog/registrar-marca-estados-unidos",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "article",
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "Gu\u00eda Completa: C\u00f3mo Registrar una Marca en Estados Unidos (2024)",
+    description: "Gu\u00eda completa para el registro de marcas en EE.UU. Aprenda el proceso paso a paso, costos, plazos y requisitos para proteger su marca en los Estados Unidos.",
   },
 }
 

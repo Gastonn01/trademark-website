@@ -6,6 +6,23 @@ import { AffiliateSignupForm } from "@/components/affiliate-signup-form"
 export const metadata: Metadata = {
   title: "Affiliate Program for Creators | Just Protected",
   description: "Earn commission recommending Just Protected's trademark registration and brand protection service to your audience.",
+
+  alternates: { canonical: "/affiliates" },
+
+  openGraph: {
+    title: "Affiliate Program for Creators | Just Protected",
+    description: "Earn commission recommending Just Protected's trademark registration and brand protection service to your audience.",
+    url: "/affiliates",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "website",
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "Affiliate Program for Creators | Just Protected",
+    description: "Earn commission recommending Just Protected's trademark registration and brand protection service to your audience.",
+  },
 }
 
 export default function AffiliatesPage() {

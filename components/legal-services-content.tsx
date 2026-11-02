@@ -1,5 +1,3 @@
-"use client"
-
 import { Card } from "@/components/ui/card"
 import { Shield, Scale, Globe, FileText, Target, Users } from "lucide-react"
 import Link from "next/link"

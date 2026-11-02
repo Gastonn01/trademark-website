@@ -1,16 +1,7 @@
-"use client"
-
 import Link from "next/link"
-import { motion } from "framer-motion"
 import { CheckCircle2, ArrowRight } from "lucide-react"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 
-const fade = {
-  initial: { opacity: 0, y: 20 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true },
-  transition: { duration: 0.6 },
-}
 
 export function CreatorsLanding() {
   return (
@@ -19,7 +10,7 @@ export function CreatorsLanding() {
       <section className="relative bg-primary overflow-hidden">
         <div className="container mx-auto px-4 py-24 md:py-32 relative z-10">
           <div className="max-w-3xl mx-auto text-center">
-            <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}>
+            <div>
               <p className="label-caps text-accent mb-8">Brand Protection for Creators & Influencers</p>
 
               <h1 className="font-serif text-white text-5xl md:text-6xl leading-[1.1] tracking-tight mb-8">
@@ -53,7 +44,7 @@ export function CreatorsLanding() {
               <p className="label-caps text-[0.65rem] text-white/40">
                 Free name check&ensp;&middot;&ensp;Filed in 24 hours&ensp;&middot;&ensp;70+ countries&ensp;&middot;&ensp;Licensed attorneys
               </p>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
@@ -61,7 +52,7 @@ export function CreatorsLanding() {
       {/* WHAT'S AT STAKE */}
       <section className="py-24 md:py-32 bg-[#F7F5F1]">
         <div className="container mx-auto px-4 max-w-5xl">
-          <motion.div {...fade} className="text-center mb-16">
+          <div className="text-center mb-16">
             <p className="label-caps text-accent mb-5">Your brand is your business</p>
             <h2 className="font-serif text-4xl md:text-5xl text-primary tracking-tight mb-5">
               Here&apos;s what&apos;s at risk
@@ -70,7 +61,7 @@ export function CreatorsLanding() {
               As a creator, your name, handle, and personal brand are worth real money. Brand deals,
               merchandise, courses, communities — all of it depends on you owning your identity.
             </p>
-          </motion.div>
+          </div>
 
           <div className="grid md:grid-cols-2 gap-x-10 gap-y-12">
             {[
@@ -99,18 +90,11 @@ export function CreatorsLanding() {
                   "Name squatters are real. They register creator names, handles, and catchphrases as trademarks — then demand money to give them back. Filing first costs a fraction of what it costs to fight back.",
               },
             ].map((risk, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.08, duration: 0.6 }}
-                className="pt-6 border-t border-primary/15"
-              >
+              <div className="pt-6 border-t border-primary/15" key={i}>
                 <p className="label-caps text-[0.65rem] text-accent mb-4">{risk.tag}</p>
                 <h3 className="text-lg font-semibold text-primary mb-3">{risk.title}</h3>
                 <p className="text-sm text-gray-500 leading-relaxed">{risk.description}</p>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -119,12 +103,12 @@ export function CreatorsLanding() {
       {/* WHAT YOU CAN TRADEMARK */}
       <section className="py-24 md:py-32 bg-white">
         <div className="container mx-auto px-4 max-w-5xl">
-          <motion.div {...fade} className="text-center mb-16">
+          <div className="text-center mb-16">
             <p className="label-caps text-accent mb-5">More than you think</p>
             <h2 className="font-serif text-4xl md:text-5xl text-primary tracking-tight">
               What can creators trademark?
             </h2>
-          </motion.div>
+          </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-10 gap-y-12">
             {[
@@ -135,18 +119,11 @@ export function CreatorsLanding() {
               { tag: "Show name", title: "Your show or series name", desc: "The name of your podcast, video series, or regular content format." },
               { tag: "Merch brand", title: "Your merch brand", desc: "If you sell merchandise, the brand name on it deserves its own protection." },
             ].map((item, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.07, duration: 0.6 }}
-                className="pt-6 border-t border-primary/15"
-              >
+              <div className="pt-6 border-t border-primary/15" key={i}>
                 <p className="label-caps text-[0.65rem] text-accent mb-4">{item.tag}</p>
                 <h3 className="text-lg font-semibold text-primary mb-3">{item.title}</h3>
                 <p className="text-sm text-gray-500 leading-relaxed">{item.desc}</p>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -155,11 +132,11 @@ export function CreatorsLanding() {
       {/* HOW IT WORKS */}
       <section className="py-24 md:py-32 bg-[#F7F5F1]">
         <div className="container mx-auto px-4 max-w-5xl">
-          <motion.div {...fade} className="text-center mb-16">
+          <div className="text-center mb-16">
             <p className="label-caps text-accent mb-5">The process</p>
             <h2 className="font-serif text-4xl md:text-5xl text-primary tracking-tight mb-5">Simple. Fast. Done.</h2>
             <p className="text-gray-500 font-light">You create content. We handle the legal side.</p>
-          </motion.div>
+          </div>
 
           <div className="grid md:grid-cols-3 gap-x-10 gap-y-12 mb-16">
             {[
@@ -182,29 +159,22 @@ export function CreatorsLanding() {
                   "Legal protection from your filing date. You can now demand takedowns, block fakes, and sign brand deals with confidence.",
               },
             ].map((step, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1, duration: 0.6 }}
-                className="pt-6 border-t border-primary/15"
-              >
+              <div className="pt-6 border-t border-primary/15" key={i}>
                 <div className="font-serif italic text-2xl text-accent mb-4">{step.number}</div>
                 <h3 className="text-lg font-semibold text-primary mb-3">{step.title}</h3>
                 <p className="text-sm text-gray-500 leading-relaxed">{step.description}</p>
-              </motion.div>
+              </div>
             ))}
           </div>
 
-          <motion.div {...fade} className="text-center">
+          <div className="text-center">
             <Link
               href="/free-search?audience=creator"
               className="inline-flex items-center justify-center px-10 py-4 text-sm font-semibold text-white bg-primary hover:bg-primary/90 rounded-full transition-all duration-300"
             >
               Begin your free name check
             </Link>
-          </motion.div>
+          </div>
         </div>
       </section>
 
@@ -212,7 +182,7 @@ export function CreatorsLanding() {
       <section className="py-24 md:py-32 bg-primary">
         <div className="container mx-auto px-4 max-w-5xl">
           <div className="grid md:grid-cols-2 gap-16 items-start">
-            <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
+            <div>
               <p className="label-caps text-accent mb-5">What&apos;s included</p>
               <h2 className="font-serif text-4xl md:text-5xl text-white tracking-tight leading-tight mb-6">
                 Everything included.
@@ -230,9 +200,9 @@ export function CreatorsLanding() {
                 Start your free name check
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
-            </motion.div>
+            </div>
 
-            <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
+            <div>
               <ul className="space-y-4">
                 {[
                   "Free trademark search across 170+ countries",
@@ -252,7 +222,7 @@ export function CreatorsLanding() {
                   </li>
                 ))}
               </ul>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
@@ -260,16 +230,16 @@ export function CreatorsLanding() {
       {/* REAL CASE */}
       <section className="py-24 md:py-32 bg-white">
         <div className="container mx-auto px-4 max-w-5xl">
-          <motion.div {...fade} className="text-center mb-16">
+          <div className="text-center mb-16">
             <p className="label-caps text-accent mb-5">Not hypothetical</p>
             <h2 className="font-serif text-4xl md:text-5xl text-primary tracking-tight mb-5">
               It&apos;s already happening
             </h2>
             <p className="text-gray-500 font-light">These cases are why creators are registering now.</p>
-          </motion.div>
+          </div>
 
           <div className="grid md:grid-cols-2 gap-x-10 gap-y-12">
-            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.08, duration: 0.6 }} className="pt-6 border-t border-primary/15">
+            <div className="pt-6 border-t border-primary/15">
               <p className="label-caps text-[0.65rem] text-accent mb-4">Counterfeit merch</p>
               <h3 className="text-lg font-semibold text-primary mb-3">TikTok Shop counterfeits</h3>
               <p className="text-sm text-gray-500 leading-relaxed mb-4">
@@ -280,9 +250,9 @@ export function CreatorsLanding() {
               <Link href="/blog/tiktok-shop-counterfeit-violation-appeal" className="text-accent font-semibold hover:underline text-sm">
                 Read the full case →
               </Link>
-            </motion.div>
+            </div>
 
-            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.16, duration: 0.6 }} className="pt-6 border-t border-primary/15">
+            <div className="pt-6 border-t border-primary/15">
               <p className="label-caps text-[0.65rem] text-accent mb-4">AI-generated brands</p>
               <h3 className="text-lg font-semibold text-primary mb-3">AI-generated logos & fake brands</h3>
               <p className="text-sm text-gray-500 leading-relaxed mb-4">
@@ -293,7 +263,7 @@ export function CreatorsLanding() {
               <Link href="/blog/ai-generated-logos-brand-names-real-risk" className="text-accent font-semibold hover:underline text-sm">
                 Read the full case →
               </Link>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
@@ -301,13 +271,14 @@ export function CreatorsLanding() {
       {/* FAQ */}
       <section className="py-24 md:py-32 bg-[#F7F5F1]">
         <div className="container mx-auto px-4 max-w-3xl">
-          <motion.div {...fade} className="text-center mb-14">
+          <div className="text-center mb-14">
             <p className="label-caps text-accent mb-5">Common questions</p>
             <h2 className="font-serif text-4xl md:text-5xl tracking-tight text-primary">
               Questions creators ask us
             </h2>
-          </motion.div>
+          </div>
 
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Can I trademark my @handle or username?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, if it functions as a brand identifier. If people know you by your handle and it's associated with your content or business, it's registrable as a trademark. This is one of the most important things creators can do \u2014 handles get copied constantly."}}, {"@type": "Question", "name": "What if AI is already using my face or voice?", "acceptedAnswer": {"@type": "Answer", "text": "A trademark is one of your strongest tools. Combined with platform terms of service and in some jurisdictions, right-of-publicity laws, a registered trademark gives you legal standing to demand immediate takedowns. Without one, your options are far more limited and slower."}}, {"@type": "Question", "name": "Do I need to be a big creator to need this?", "acceptedAnswer": {"@type": "Answer", "text": "No. In fact, smaller creators are more at risk \u2014 they're less likely to have legal protection already in place, and name squatters actively target rising creators before they get big. It's much cheaper and easier to register now than to fight for your name later."}}, {"@type": "Question", "name": "Can I trademark a catchphrase or sign-off?", "acceptedAnswer": {"@type": "Answer", "text": "Yes \u2014 if it's distinctive and associated with your brand. Phrases that are unique to you and that your audience recognises you by are strong candidates. Generic phrases (\\\"Have a great day!\\\") typically aren't registrable, but distinctive ones are."}}, {"@type": "Question", "name": "Which countries should I register in?", "acceptedAnswer": {"@type": "Answer", "text": "Start where your audience and brand deals are. For most creators, that means the US and EU as a minimum. If you have significant audiences in the UK, Australia, or other markets, we can add those. Our attorneys will advise based on your situation."}}, {"@type": "Question", "name": "How much does it cost?", "acceptedAnswer": {"@type": "Answer", "text": "The US is $65/month over 11 months. EU is $99/month. Most creators start with 2\u20133 key markets and pay under $200/month total \u2014 with no large upfront cost. The search is completely free. Check our pricing page for full country-by-country details."}}]}) }} />
           <Accordion type="single" collapsible className="w-full">
             {[
               {

@@ -11,7 +11,22 @@ export const metadata = {
   keywords:
     "Mexico trademark registration, Mexican IP law, IMPI, brand protection Mexico, intellectual property Mexico, trademark filing Mexico",
   alternates: {
-    canonical: "https://justprotected.com/blog/register-trademark-mexico/",
+    canonical: "/blog/register-trademark-mexico",
+  },
+
+  openGraph: {
+    title: "How to Register a Trademark in Mexico (2024) | Complete Guide",
+    description: "Master the process of trademark registration in Mexico. Learn about local requirements, costs, and strategies for protecting your brand in the Mexican market.",
+    url: "/blog/register-trademark-mexico",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "article",
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "How to Register a Trademark in Mexico (2024) | Complete Guide",
+    description: "Master the process of trademark registration in Mexico. Learn about local requirements, costs, and strategies for protecting your brand in the Mexican market.",
   },
 }
 
@@ -154,6 +169,7 @@ export default function RegisterTrademarkMexico() {
             </ul>
           </div>
 
+<script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is use of a trademark required before registration in Mexico?", "acceptedAnswer": {"@type": "Answer", "text": "No, Mexico follows a first-to-file system. However, use becomes important for maintaining the registration."}}, {"@type": "Question", "name": "Can foreign companies directly register trademarks in Mexico?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, but a local address for service is required. Many foreign entities choose to work with local representatives for smoother proceedings."}}, {"@type": "Question", "name": "How does Mexico handle trademark oppositions?", "acceptedAnswer": {"@type": "Answer", "text": "Mexico has a unique system where oppositions don't suspend the registration process but are considered during examination."}}]}) }} />
           <h2>Frequently Asked Questions</h2>
           <div className="space-y-4">
             <div>

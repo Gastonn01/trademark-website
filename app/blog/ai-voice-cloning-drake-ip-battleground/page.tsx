@@ -11,7 +11,22 @@ export const metadata: Metadata = {
   keywords:
     "AI voice cloning, Drake AI, voice intellectual property, right of publicity, trademark voice, AI-generated content, synthetic media, brand identity protection",
   alternates: {
-    canonical: "https://justprotected.com/blog/ai-voice-cloning-drake-ip-battleground/",
+    canonical: "/blog/ai-voice-cloning-drake-ip-battleground",
+  },
+
+  openGraph: {
+    title: "AI Voice Cloning and Drake: The Next Intellectual Property Battleground | JustProtected",
+    description: "AI can replicate a human voice in seconds, but the law is still catching up. Explore how AI voice cloning is reshaping IP protection, brand identity, and trademark law.",
+    url: "/blog/ai-voice-cloning-drake-ip-battleground",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "article",
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "AI Voice Cloning and Drake: The Next Intellectual Property Battleground | JustProtected",
+    description: "AI can replicate a human voice in seconds, but the law is still catching up. Explore how AI voice cloning is reshaping IP protection, brand identity, and trademark law.",
   },
 }
 

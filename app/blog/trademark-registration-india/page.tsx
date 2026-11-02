@@ -10,7 +10,22 @@ export const metadata = {
     "Learn how to register your trademark in India with our step-by-step guide. Understand the process, costs, and timeline for protecting your brand in the Indian market.",
   keywords: "India trademark registration, trademark India, protect brand India, Indian trademark, first-to-file India",
   alternates: {
-    canonical: "https://justprotected.com/blog/trademark-registration-india/",
+    canonical: "/blog/trademark-registration-india",
+  },
+
+  openGraph: {
+    title: "Trademark Registration in India: Complete Guide | 2024",
+    description: "Learn how to register your trademark in India with our step-by-step guide. Understand the process, costs, and timeline for protecting your brand in the Indian market.",
+    url: "/blog/trademark-registration-india",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "article",
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "Trademark Registration in India: Complete Guide | 2024",
+    description: "Learn how to register your trademark in India with our step-by-step guide. Understand the process, costs, and timeline for protecting your brand in the Indian market.",
   },
 }
 

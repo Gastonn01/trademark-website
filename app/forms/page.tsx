@@ -1,14 +1,26 @@
+import { Suspense } from "react"
 import { NavBar } from "@/components/nav-bar"
 import { Footer } from "@/components/footer"
 import { RegistrationInfoForm } from "./components/RegistrationInfoForm"
 
-export default function FormsPage({
+import type { Metadata } from "next"
+import { pageMetadata } from "@/lib/seo"
+
+export const metadata: Metadata = pageMetadata({
+  title: "Trademark Registration Information | Just Protected",
+  description: "Provide the information and documents required for your trademark registration.",
+  path: "/forms",
+  noindex: true,
+})
+
+export default async function FormsPage({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | string[] | undefined }
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
+  const params = await searchParams
   // Get token from URL if available
-  const token = typeof searchParams.token === "string" ? searchParams.token : undefined
+  const token = typeof params.token === "string" ? params.token : undefined
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -21,7 +33,9 @@ export default function FormsPage({
               Please provide the required information and documents for your trademark registration.
             </p>
 
-            <RegistrationInfoForm token={token} />
+            <Suspense fallback={<p className="text-gray-600">Loading the registration form…</p>}>
+              <RegistrationInfoForm token={token} />
+            </Suspense>
           </div>
         </div>
       </main>

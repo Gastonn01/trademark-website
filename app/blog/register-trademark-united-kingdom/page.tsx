@@ -23,10 +23,25 @@ export const metadata = {
   keywords:
     "UK trademark registration 2025, UKIPO, UK trademark, British trademark, UK brand protection, United Kingdom trademark, trademark application, trademark process UK, post-Brexit trademark",
   alternates: {
-    canonical: "https://justprotected.com/blog/register-trademark-united-kingdom/",
+    canonical: "/blog/register-trademark-united-kingdom",
     languages: {
       en: "https://justprotected.com/blog/register-trademark-united-kingdom/",
     },
+  },
+
+  openGraph: {
+    title: "How to Register a Trademark in the United Kingdom (2025) | Complete Guide",
+    description: "Comprehensive guide to UK trademark registration in 2025. Learn the step-by-step process, timelines, and requirements to protect your brand in the United Kingdom post-Brexit.",
+    url: "/blog/register-trademark-united-kingdom",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "article",
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "How to Register a Trademark in the United Kingdom (2025) | Complete Guide",
+    description: "Comprehensive guide to UK trademark registration in 2025. Learn the step-by-step process, timelines, and requirements to protect your brand in the United Kingdom post-Brexit.",
   },
 }
 
@@ -648,6 +663,7 @@ export default function RegisterTrademarkUK() {
 
           <h2 id="faqs" className="flex items-center text-2xl font-bold text-indigo-900 mb-4 mt-12 scroll-mt-20">
             <HelpCircle className="mr-3 h-6 w-6 text-indigo-700" />
+<script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Do I need a UK address to register a trademark in the United Kingdom?", "acceptedAnswer": {"@type": "Answer", "text": "No, you don't need a UK address to register a trademark. However, if you're based outside the UK and the EU, you'll need to appoint a UK address for service. This can be a UK trademark attorney or agent who will receive official communications from the UKIPO on your behalf."}}, {"@type": "Question", "name": "How has Brexit affected EU trademarks in the UK?", "acceptedAnswer": {"@type": "Answer", "text": "Since January 1, 2021, EU trademarks (EUTMs) no longer provide protection in the UK. Existing EUTMs registered before this date were automatically cloned into equivalent UK registrations at no cost. For new protection, separate applications must be filed with both the EUIPO (for EU protection) and the UKIPO (for UK protection)."}}, {"@type": "Question", "name": "How long does UK trademark protection last?", "acceptedAnswer": {"@type": "Answer", "text": "UK trademark registrations last for 10 years from the filing date. They can be renewed indefinitely for additional 10-year periods as long as the mark continues to be used in the UK. Renewal can be done up to 6 months before the expiry date, with a 6-month grace period after expiry (subject to late fees)."}}, {"@type": "Question", "name": "Can I file a UK trademark application based on 'intent to use'?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, unlike some jurisdictions, the UK allows you to apply for trademark registration before you've actually used the mark. There's no requirement to prove use at the application stage. However, after registration, your mark becomes vulnerable to cancellation for non-use if it's not used for a continuous period of 5 years."}}, {"@type": "Question", "name": "What's the difference between the TM symbol and the \u00ae symbol in the UK?", "acceptedAnswer": {"@type": "Answer", "text": "The TM symbol can be used with any trademark, whether registered or not. It indicates that you're claiming rights in the mark. The \u00ae symbol can only be used with trademarks that are registered in the UK. Using the \u00ae symbol with an unregistered mark is a criminal offense in the UK under the Trade Marks Act 1994."}}, {"@type": "Question", "name": "Do I need separate registrations for different products or services?", "acceptedAnswer": {"@type": "Answer", "text": "Not necessarily. A single UK trademark application can cover multiple goods and services, grouped into different 'classes' according to the Nice Classification system. Each additional class requires additional fees, but it's often more cost-effective than filing separate applications. The key is to ensure your specification accurately covers your current and planned business activities."}}]}) }} />
             Frequently Asked Questions
           </h2>
 

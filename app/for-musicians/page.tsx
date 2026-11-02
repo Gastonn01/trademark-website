@@ -8,6 +8,23 @@ export const metadata: Metadata = {
   description:
     "AI is cloning your voice and selling it. Just Protected helps musicians and artists trademark their name, stage name, and brand — filed in 24 hours, 70+ countries.",
   keywords: "musician trademark, artist name trademark, stage name trademark, AI voice cloning protection, band name trademark, protect my artist name, music trademark registration",
+
+  alternates: { canonical: "/for-musicians" },
+
+  openGraph: {
+    title: "Trademark Protection for Musicians & Artists | Just Protected",
+    description: "AI is cloning your voice and selling it. Just Protected helps musicians and artists trademark their name, stage name, and brand \u2014 filed in 24 hours, 70+ countries.",
+    url: "/for-musicians",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "website",
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "Trademark Protection for Musicians & Artists | Just Protected",
+    description: "AI is cloning your voice and selling it. Just Protected helps musicians and artists trademark their name, stage name, and brand \u2014 filed in 24 hours, 70+ countries.",
+  },
 }
 
 export default function ForMusiciansPage() {

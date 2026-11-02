@@ -13,6 +13,8 @@ import {
   timelineForCountry,
 } from "@/lib/country-pages"
 import type { Metadata } from "next"
+import { JsonLd } from "@/components/json-ld"
+import { serviceJsonLd } from "@/lib/seo"
 
 export function generateStaticParams() {
   return getAllCountryNames().map((name) => ({ country: countrySlug(name) }))
@@ -32,7 +34,20 @@ export async function generateMetadata({
     description: `Register your trademark in ${name} from $${data.prices.USD} USD all-inclusive. Licensed attorneys, filed in 24 hours, monthly installments available. Free trademark search included.`,
     keywords: `trademark registration ${name}, register trademark in ${name}, ${name} trademark cost, how to trademark in ${name}, ${name} brand protection`,
     alternates: {
-      canonical: `https://justprotected.com/trademark-registration/${country}`,
+      canonical: `/trademark-registration/${country}`,
+    },
+    openGraph: {
+      title: `Trademark Registration in ${name} (2026): Cost & Process | Just Protected`,
+      description: `Register your trademark in ${name} from $${data.prices.USD} USD all-inclusive. Licensed attorneys, filed in 24 hours, monthly installments available. Free trademark search included.`,
+      url: `/trademark-registration/${country}`,
+      siteName: "Just Protected",
+      locale: "en_US",
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image" as const,
+      title: `Trademark Registration in ${name} (2026): Cost & Process | Just Protected`,
+      description: `Register your trademark in ${name} from $${data.prices.USD} USD all-inclusive. Licensed attorneys, filed in 24 hours, monthly installments available. Free trademark search included.`,
     },
   }
 }
@@ -92,6 +107,14 @@ export default async function CountryPage({
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+      />
+      <JsonLd
+        data={serviceJsonLd({
+          name: `Trademark Registration in ${name}`,
+          description: `Protect your brand in ${name} from $${data.prices.USD} USD all-inclusive. Licensed attorneys, filed within 24 hours, no hidden fees.`,
+          path: `/trademark-registration/${country}`,
+          areaServed: name,
+        })}
       />
 
       {/* HERO */}

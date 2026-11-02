@@ -23,10 +23,25 @@ export const metadata = {
   keywords:
     "China trademark registration 2025, CNIPA, Chinese trademark, China brand protection, intellectual property China, trademark application China, trademark process China",
   alternates: {
-    canonical: "https://justprotected.com/blog/register-trademark-china/",
+    canonical: "/blog/register-trademark-china",
     languages: {
       en: "https://justprotected.com/blog/register-trademark-china/",
     },
+  },
+
+  openGraph: {
+    title: "How to Register a Trademark in China (2025) | Complete Guide",
+    description: "Comprehensive guide to China trademark registration in 2025. Learn the step-by-step process, timelines, and requirements to protect your brand in the world's largest consumer market.",
+    url: "/blog/register-trademark-china",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "article",
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "How to Register a Trademark in China (2025) | Complete Guide",
+    description: "Comprehensive guide to China trademark registration in 2025. Learn the step-by-step process, timelines, and requirements to protect your brand in the world's largest consumer market.",
   },
 }
 
@@ -650,6 +665,7 @@ export default function RegisterTrademarkChina() {
 
           <h2 id="faqs" className="flex items-center text-2xl font-bold text-blue-900 mb-4 mt-12 scroll-mt-20">
             <HelpCircle className="mr-3 h-6 w-6 text-blue-700" />
+<script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Can foreign companies file trademark applications directly with the CNIPA?", "acceptedAnswer": {"@type": "Answer", "text": "No, foreign companies without a business presence in China must file through a licensed Chinese trademark agent. This is a legal requirement, and direct filing by foreign entities is not permitted. Your agent will prepare and submit all necessary documentation and serve as the official contact for communications from the CNIPA."}}, {"@type": "Question", "name": "Why should I register a Chinese character version of my trademark?", "acceptedAnswer": {"@type": "Answer", "text": "Chinese consumers often create Chinese names for foreign brands based on sound (transliteration), meaning (translation), or a combination of both. By proactively creating and registering your own Chinese character mark, you maintain control over your brand identity in China and prevent others from registering Chinese versions of your mark. Chinese character marks are also essential for effective marketing to Chinese consumers."}}, {"@type": "Question", "name": "How long does trademark protection last in China?", "acceptedAnswer": {"@type": "Answer", "text": "Trademark registrations in China are valid for 10 years from the date of registration. They can be renewed indefinitely for additional 10-year periods. Renewal applications can be filed up to 12 months before the expiration date. There is also a 6-month grace period after expiration, though late renewal incurs additional fees."}}, {"@type": "Question", "name": "What is China's subclass system and why is it important?", "acceptedAnswer": {"@type": "Answer", "text": "While China uses the international Nice Classification system with 45 classes, it further divides each class into multiple subclasses. Similar marks may coexist if they're in different subclasses, even within the same class. This means that registering in the correct class alone may not provide comprehensive protection. Strategic selection of relevant subclasses is crucial for effective trademark protection in China."}}, {"@type": "Question", "name": "How can I protect my trademark against counterfeiting in China?", "acceptedAnswer": {"@type": "Answer", "text": "After registration, you should: 1) Record your trademark with Chinese Customs to enable them to seize counterfeit goods at the border; 2) Monitor the market for infringing products; 3) Work with local investigators and legal counsel to gather evidence of infringement; 4) Take enforcement action through administrative complaints, civil litigation, or criminal prosecution depending on the severity of the infringement; 5) Consider joining industry anti-counterfeiting coalitions."}}, {"@type": "Question", "name": "What if someone has already registered my trademark in China?", "acceptedAnswer": {"@type": "Answer", "text": "If someone has registered your trademark in China before you, you have several options: 1) Negotiate to purchase the mark from the current owner; 2) File a non-use cancellation action if the mark has not been used for three consecutive years; 3) File an invalidation action if the registration was obtained in bad faith or violates other provisions of Chinese trademark law; 4) Develop and register an alternative mark for the Chinese market. The best approach depends on specific circumstances and should be determined with expert legal advice."}}]}) }} />
             Frequently Asked Questions
           </h2>
 

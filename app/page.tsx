@@ -9,17 +9,29 @@ import { CTASection } from "@/components/cta-section"
 import { FAQ } from "@/components/faq"
 import { Footer } from "@/components/footer"
 // import { ChatGPTIntegrationSection } from "@/components/chatgpt-integration-section"
-import type { Metadata } from "next"
+import { JsonLd } from "@/components/json-ld"
+import { pageMetadata, SITE_NAME, SITE_URL } from "@/lib/seo"
 
-export const metadata: Metadata = {
+export const metadata = pageMetadata({
   title: "Just Protected | Protect Your Name, Voice & Identity from AI",
   description:
     "AI is using your name, face, and voice without permission. Just Protected helps athletes, creators, and artists trademark their identity and fight back — filed in 24 hours, 70+ countries.",
-}
+  path: "/",
+})
 
 export default function Home() {
   return (
     <main className="bg-white">
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "LegalService",
+          name: SITE_NAME,
+          url: SITE_URL,
+          description:
+            "AI is using your name, face, and voice without permission. Just Protected helps athletes, creators, and artists trademark their identity and fight back — filed in 24 hours, 70+ countries.",
+        }}
+      />
       <NavBar />
       <AffiliateBanner />
       <HeroSection />

@@ -11,7 +11,22 @@ export const metadata = {
   keywords:
     "Czech Republic trademark registration, Czech IP law, IPO CZ, brand protection Czech Republic, intellectual property Czech Republic, trademark filing Czech Republic",
   alternates: {
-    canonical: "https://justprotected.com/blog/register-trademark-czech-republic/",
+    canonical: "/blog/register-trademark-czech-republic",
+  },
+
+  openGraph: {
+    title: "How to Register a Trademark in Czech Republic (2024) | Complete Guide",
+    description: "Master the process of trademark registration in the Czech Republic. Learn about local requirements, costs, and strategies for protecting your brand in the Czech market.",
+    url: "/blog/register-trademark-czech-republic",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "article",
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "How to Register a Trademark in Czech Republic (2024) | Complete Guide",
+    description: "Master the process of trademark registration in the Czech Republic. Learn about local requirements, costs, and strategies for protecting your brand in the Czech market.",
   },
 }
 
@@ -151,6 +166,7 @@ export default function RegisterTrademarkCzechRepublic() {
             </ul>
           </div>
 
+<script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is a separate Czech trademark necessary if I have an EU trademark?", "acceptedAnswer": {"@type": "Answer", "text": "While EU trademarks are valid in the Czech Republic, a national Czech trademark can provide additional benefits and stronger local protection."}}, {"@type": "Question", "name": "Can foreign companies directly register trademarks in the Czech Republic?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, but a local address for correspondence is required. Many foreign entities choose to work with local representatives for smoother proceedings."}}, {"@type": "Question", "name": "How does the Czech Republic handle trademark oppositions?", "acceptedAnswer": {"@type": "Answer", "text": "The Czech Republic has a pre-registration opposition system, allowing third parties to file oppositions within 3 months after a trademark's publication."}}]}) }} />
           <h2>Frequently Asked Questions</h2>
           <div className="space-y-4">
             <div>

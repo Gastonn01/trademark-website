@@ -10,7 +10,22 @@ export const metadata = {
     "Learn how to register your trademark in Germany with our comprehensive guide. Understand the process, costs, and timeline for protecting your brand in Europe's largest economy.",
   keywords: "Germany trademark registration, trademark Germany, protect brand Germany, German trademark, DPMA",
   alternates: {
-    canonical: "https://justprotected.com/blog/trademark-registration-germany/",
+    canonical: "/blog/trademark-registration-germany",
+  },
+
+  openGraph: {
+    title: "Trademark Registration in Germany: Complete Guide | 2024",
+    description: "Learn how to register your trademark in Germany with our comprehensive guide. Understand the process, costs, and timeline for protecting your brand in Europe's largest economy.",
+    url: "/blog/trademark-registration-germany",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "article",
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "Trademark Registration in Germany: Complete Guide | 2024",
+    description: "Learn how to register your trademark in Germany with our comprehensive guide. Understand the process, costs, and timeline for protecting your brand in Europe's largest economy.",
   },
 }
 

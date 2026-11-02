@@ -23,10 +23,25 @@ export const metadata = {
   keywords:
     "US trademark registration 2025, USPTO, US trademark, American trademark, US brand protection, United States trademark, trademark application, trademark process USA",
   alternates: {
-    canonical: "https://justprotected.com/blog/register-trademark-usa/",
+    canonical: "/blog/register-trademark-usa",
     languages: {
       en: "https://justprotected.com/blog/register-trademark-usa/",
     },
+  },
+
+  openGraph: {
+    title: "How to Register a Trademark in the United States (2025) | Complete Guide",
+    description: "Comprehensive guide to US trademark registration in 2025. Learn the step-by-step process, timelines, and requirements to protect your brand in the United States.",
+    url: "/blog/register-trademark-usa",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "article",
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "How to Register a Trademark in the United States (2025) | Complete Guide",
+    description: "Comprehensive guide to US trademark registration in 2025. Learn the step-by-step process, timelines, and requirements to protect your brand in the United States.",
   },
 }
 
@@ -584,6 +599,7 @@ export default function RegisterTrademarkUSA() {
 
           <h2 id="faqs" className="flex items-center text-2xl font-bold text-indigo-900 mb-4 mt-12 scroll-mt-20">
             <HelpCircle className="mr-3 h-6 w-6 text-indigo-700" />
+<script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Should I file a trademark application myself, or work with an attorney?", "acceptedAnswer": {"@type": "Answer", "text": "While you can technically file yourself, the USPTO strongly recommends using a qualified trademark attorney. As of 2025, foreign applicants are required to have U.S.-licensed attorneys. The trademark registration process involves complex legal analysis, strategic decision-making, and potential office action responses that significantly benefit from professional expertise. Applications filed with professional representation have a 75% higher success rate than self-filed applications."}}, {"@type": "Question", "name": "What's the difference between TM, SM, and \u00ae symbols?", "acceptedAnswer": {"@type": "Answer", "text": "The TM symbol can be used with any trademark for goods, whether registered or not. SM is for unregistered service marks. The \u00ae symbol can only be used with federally registered trademarks. Using \u00ae with an unregistered mark is actually a violation that can affect your rights, so be careful about proper symbol usage."}}, {"@type": "Question", "name": "How long does trademark protection last?", "acceptedAnswer": {"@type": "Answer", "text": "Federal trademark registrations can last indefinitely as long as you continue to use the mark and file the required maintenance documents. You must file a Declaration of Use between the 5th and 6th year after registration, and then a combined Declaration of Use and Application for Renewal every 10 years thereafter."}}, {"@type": "Question", "name": "Can I file for a trademark before I start using it?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, you can file an 'Intent to Use' application before you start using the mark in commerce. This is a great way to secure your rights early in the development process. However, you'll need to demonstrate actual use before the registration becomes final. In 2025, you have up to 36 months from the Notice of Allowance to file your Statement of Use showing actual use in commerce."}}, {"@type": "Question", "name": "What if someone is already using a similar mark?", "acceptedAnswer": {"@type": "Answer", "text": "This depends on several factors, including who used it first, whether it's registered, and how similar the goods/services are. A trademark attorney can conduct a comprehensive analysis to determine if your desired mark is available, if modifications are needed, or if coexistence might be possible. This legal analysis is crucial for avoiding costly conflicts down the road."}}, {"@type": "Question", "name": "Do I need separate registrations for different products or services?", "acceptedAnswer": {"@type": "Answer", "text": "Not necessarily. A single trademark application can cover multiple related goods and services, grouped into different 'classes.' Strategic class selection is more important than ever in 2025 as the USPTO has become stricter about enforcing class boundaries. A trademark professional can help you select the optimal classification strategy for your business."}}, {"@type": "Question", "name": "What happens after my trademark is registered?", "acceptedAnswer": {"@type": "Answer", "text": "Registration is just the beginning of trademark protection. You'll need to monitor for potential infringement, file maintenance documents at specific intervals, and enforce your rights when necessary. Professional trademark services typically include ongoing portfolio management to ensure your valuable brand assets remain protected."}}]}) }} />
             Frequently Asked Questions
           </h2>
 

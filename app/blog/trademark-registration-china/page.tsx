@@ -11,7 +11,22 @@ export const metadata = {
   keywords:
     "China trademark registration, trademark China, protect brand China, Chinese trademark, first-to-file China",
   alternates: {
-    canonical: "https://justprotected.com/blog/trademark-registration-china/",
+    canonical: "/blog/trademark-registration-china",
+  },
+
+  openGraph: {
+    title: "Trademark Registration in China: Complete Guide | 2024",
+    description: "Learn how to register your trademark in China with our comprehensive guide. Understand the first-to-file system, costs, and essential steps to protect your brand.",
+    url: "/blog/trademark-registration-china",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "article",
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "Trademark Registration in China: Complete Guide | 2024",
+    description: "Learn how to register your trademark in China with our comprehensive guide. Understand the first-to-file system, costs, and essential steps to protect your brand.",
   },
 }
 

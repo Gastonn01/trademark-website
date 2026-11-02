@@ -10,7 +10,22 @@ export const metadata: Metadata = {
   keywords:
     "trademark registration, international comparison, global intellectual property, trademark registration costs, trademark registration timelines",
   alternates: {
-    canonical: "https://justprotected.com/blog/trademark-registration-comparison/",
+    canonical: "/blog/trademark-registration-comparison",
+  },
+
+  openGraph: {
+    title: "Trademark Registration Comparison by Country | Global Guide 2024",
+    description: "Compare trademark registration processes, costs, and timelines across major global markets. Essential guide for businesses with international vision.",
+    url: "/blog/trademark-registration-comparison",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "article",
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "Trademark Registration Comparison by Country | Global Guide 2024",
+    description: "Compare trademark registration processes, costs, and timelines across major global markets. Essential guide for businesses with international vision.",
   },
 }
 

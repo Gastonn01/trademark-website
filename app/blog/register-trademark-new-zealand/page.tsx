@@ -11,7 +11,22 @@ export const metadata = {
   keywords:
     "New Zealand trademark registration, NZ IP law, IPONZ, brand protection New Zealand, intellectual property New Zealand, trademark filing NZ",
   alternates: {
-    canonical: "https://justprotected.com/blog/register-trademark-new-zealand/",
+    canonical: "/blog/register-trademark-new-zealand",
+  },
+
+  openGraph: {
+    title: "How to Register a Trademark in New Zealand (2024) | Complete Guide",
+    description: "Master the process of trademark registration in New Zealand. Learn about local requirements, costs, and strategies for protecting your brand in the New Zealand market.",
+    url: "/blog/register-trademark-new-zealand",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "article",
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "How to Register a Trademark in New Zealand (2024) | Complete Guide",
+    description: "Master the process of trademark registration in New Zealand. Learn about local requirements, costs, and strategies for protecting your brand in the New Zealand market.",
   },
 }
 
@@ -142,6 +157,7 @@ export default function RegisterTrademarkNewZealand() {
             </ul>
           </div>
 
+<script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How long does trademark protection last in New Zealand?", "acceptedAnswer": {"@type": "Answer", "text": "Trademark registrations in New Zealand are generally valid for 10 years and can be renewed indefinitely."}}, {"@type": "Question", "name": "Can foreign companies register trademarks in New Zealand?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, foreign companies can register trademarks in New Zealand, often with the assistance of a local representative."}}, {"@type": "Question", "name": "Is it necessary to translate my trademark into Maori?", "acceptedAnswer": {"@type": "Answer", "text": "While not always required, it may be beneficial to consider Maori translations or cultural implications of your mark for the local market."}}]}) }} />
           <h2>Frequently Asked Questions</h2>
           <div className="space-y-4">
             <div>

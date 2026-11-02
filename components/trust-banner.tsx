@@ -1,5 +1,3 @@
-"use client"
-
 export function TrustBanner() {
   const trustItems = ["Registered law firm", "Licensed attorneys", "15+ years of practice", "70+ countries"]
 

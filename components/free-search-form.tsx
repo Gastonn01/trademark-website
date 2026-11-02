@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState, useEffect, useMemo, useRef } from "react"
+import { Suspense, useEffect, useMemo, useRef, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -237,8 +237,21 @@ const audienceLabels: Record<string, { heading: string; namePlaceholder: string;
 }
 
 export function FreeSearchForm() {
+  return (
+    <Suspense fallback={<FreeSearchFormBody params={new URLSearchParams()} />}>
+      <FreeSearchFormWithParams />
+    </Suspense>
+  )
+}
+
+function FreeSearchFormWithParams() {
+  const params = useSearchParams()
+  return <FreeSearchFormBody params={params} />
+}
+
+function FreeSearchFormBody({ params }: { params: URLSearchParams }) {
   const router = useRouter()
-  const searchParams = useSearchParams()
+  const searchParams = params
   const { currency } = useCurrency() // Use global currency hook
   // "defend" = visitor found their own name registered by someone else
   // (enforcement lead from the instant checker)

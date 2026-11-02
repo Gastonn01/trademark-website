@@ -1,6 +1,6 @@
-"use client"
-
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../components/ui/accordion"
+import { JsonLd } from "@/components/json-ld"
+import { faqPageJsonLd } from "@/lib/seo"
 
 export function FAQ() {
   const faqItems = [
@@ -28,6 +28,7 @@ export function FAQ() {
 
   return (
     <div className="py-24 md:py-32 bg-white">
+      <JsonLd data={faqPageJsonLd(faqItems)} />
       <div className="container mx-auto px-4">
         <p className="label-caps text-accent text-center mb-5">Common questions</p>
         <h2 className="font-serif text-4xl md:text-5xl tracking-tight text-center mb-5 text-primary">

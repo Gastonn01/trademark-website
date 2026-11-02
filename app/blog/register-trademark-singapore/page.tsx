@@ -11,7 +11,22 @@ export const metadata: Metadata = {
   keywords:
     "Singapore trademark registration, IPOS trademark, register trademark Singapore, Singapore IP protection, trademark filing Singapore, trademark cost Singapore",
   alternates: {
-    canonical: "https://justprotected.com/blog/register-trademark-singapore/",
+    canonical: "/blog/register-trademark-singapore",
+  },
+
+  openGraph: {
+    title: "Why Trademark Registration Matters in Singapore | JustProtected",
+    description: "Singapore's business environment is highly competitive. Learn why trademark registration is crucial for startups, SMEs, and e-commerce businesses, and why waiting is the most expensive mistake you can make.",
+    url: "/blog/register-trademark-singapore",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "article",
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "Why Trademark Registration Matters in Singapore | JustProtected",
+    description: "Singapore's business environment is highly competitive. Learn why trademark registration is crucial for startups, SMEs, and e-commerce businesses, and why waiting is the most expensive mistake you can make.",
   },
 }
 

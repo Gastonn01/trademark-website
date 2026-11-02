@@ -1,6 +1,3 @@
-"use client"
-
-import { useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { ScrollToTopOnMount } from "../ScrollToTopOnMount"
@@ -9,9 +6,6 @@ import { CTA } from "@/components/cta"
 
 export default function RegisterTrademarkFranceClientPage() {
   // Ensure scroll to top on mount
-  useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [])
 
   return (
     <div className="container mx-auto px-4 py-12">

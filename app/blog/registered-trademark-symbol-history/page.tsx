@@ -20,6 +20,14 @@ export const metadata: Metadata = {
       },
     ],
   },
+
+  alternates: { canonical: "/blog/registered-trademark-symbol-history" },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "The Origin of the \u00ae Symbol: How the Lanham Act of 1946 Shaped Trademark History",
+    description: "Discover the history of the registered trademark symbol (\u00ae) and its connection to the Trademark Act of 1946, also known as the Lanham Act.",
+  },
 }
 
 export default function RegisteredTrademarkSymbolHistoryPage() {

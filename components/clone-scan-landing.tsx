@@ -2,17 +2,12 @@
 
 import { useEffect, useState } from "react"
 import type React from "react"
-import { motion } from "framer-motion"
 import { ArrowRight, CheckCircle2 } from "lucide-react"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { BUSINESS_CATEGORIES } from "@/lib/nice-classes"
+import { JsonLd } from "@/components/json-ld"
+import { faqPageJsonLd } from "@/lib/seo"
 
-const fade = {
-  initial: { opacity: 0, y: 20 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true },
-  transition: { duration: 0.6 },
-}
 
 type Lang = "en" | "es"
 
@@ -302,11 +297,7 @@ export function CloneScanLanding({ lang }: { lang: Lang }) {
       <section className="relative bg-primary overflow-hidden">
         <div className="container mx-auto px-4 py-24 md:py-32 relative z-10">
           <div className="max-w-3xl mx-auto text-center">
-            <motion.div
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-            >
+            <div>
               <p className="label-caps text-accent mb-8">{eyebrowText}</p>
 
               <h1 className="font-serif text-white text-5xl md:text-6xl leading-[1.1] tracking-tight mb-8">
@@ -330,7 +321,7 @@ export function CloneScanLanding({ lang }: { lang: Lang }) {
               </div>
 
               <p className="label-caps text-[0.65rem] text-white/40 max-w-xl mx-auto">{t.heroTrust}</p>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
@@ -338,45 +329,42 @@ export function CloneScanLanding({ lang }: { lang: Lang }) {
       {/* PROBLEM */}
       <section className="py-24 md:py-32 bg-[#F7F5F1]">
         <div className="container mx-auto px-4 max-w-5xl">
-          <motion.div {...fade} className="text-center mb-16">
+          <div className="text-center mb-16">
             <p className="label-caps text-accent mb-5">{t.problemKicker}</p>
             <h2 className="font-serif text-4xl md:text-5xl text-primary tracking-tight mb-5 text-balance">
               {t.problemTitle}
             </h2>
-          </motion.div>
+          </div>
 
           <div className="grid md:grid-cols-3 gap-x-10 gap-y-12 mb-16">
             {t.problemItems.map((item) => (
-              <motion.div key={item.tag} {...fade} className="border-t border-primary/15 pt-6">
+              <div className="border-t border-primary/15 pt-6" key={item.tag}>
                 <p className="label-caps text-accent text-[0.65rem] mb-3">{item.tag}</p>
                 <p className="text-gray-600 font-light leading-relaxed">{item.text}</p>
-              </motion.div>
+              </div>
             ))}
           </div>
 
-          <motion.p
-            {...fade}
-            className="font-serif italic text-xl md:text-2xl text-primary/80 text-center max-w-2xl mx-auto leading-relaxed"
-          >
+          <p className="font-serif italic text-xl md:text-2xl text-primary/80 text-center max-w-2xl mx-auto leading-relaxed">
             {t.problemQuote}
-          </motion.p>
+          </p>
         </div>
       </section>
 
       {/* WHAT WE SCAN */}
       <section className="py-24 md:py-32 bg-white">
         <div className="container mx-auto px-4 max-w-4xl">
-          <motion.div {...fade} className="text-center mb-16">
+          <div className="text-center mb-16">
             <p className="label-caps text-accent mb-5">{t.scanKicker}</p>
             <h2 className="font-serif text-4xl md:text-5xl text-primary tracking-tight text-balance">{t.scanTitle}</h2>
-          </motion.div>
+          </div>
 
           <div className="divide-y divide-primary/10 border-y border-primary/10">
             {t.scanRows.map(([where, what]) => (
-              <motion.div key={where} {...fade} className="grid md:grid-cols-[220px_1fr] gap-2 md:gap-8 py-6">
+              <div className="grid md:grid-cols-[220px_1fr] gap-2 md:gap-8 py-6" key={where}>
                 <p className="font-semibold text-primary">{where}</p>
                 <p className="text-gray-600 font-light leading-relaxed">{what}</p>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -385,23 +373,23 @@ export function CloneScanLanding({ lang }: { lang: Lang }) {
       {/* WHAT YOU GET */}
       <section className="py-24 md:py-32 bg-primary">
         <div className="container mx-auto px-4 max-w-4xl">
-          <motion.div {...fade} className="text-center mb-16">
+          <div className="text-center mb-16">
             <p className="label-caps text-accent mb-5">{t.getKicker}</p>
             <h2 className="font-serif text-4xl md:text-5xl text-white tracking-tight mb-5 text-balance">{t.getTitle}</h2>
             <p className="text-white/60 font-light">{t.getIntro}</p>
-          </motion.div>
+          </div>
 
           <div className="grid md:grid-cols-3 gap-x-10 gap-y-12 mb-14">
             {t.getItems.map(([title, desc], i) => (
-              <motion.div key={title} {...fade} className="border-t border-white/20 pt-6">
+              <div className="border-t border-white/20 pt-6" key={title}>
                 <p className="font-serif text-accent text-2xl mb-3">{i + 1}</p>
                 <p className="font-semibold text-white mb-2">{title}</p>
                 <p className="text-white/60 font-light leading-relaxed text-sm">{desc}</p>
-              </motion.div>
+              </div>
             ))}
           </div>
 
-          <motion.div {...fade} className="text-center">
+          <div className="text-center">
             <button
               onClick={scrollToForm}
               className="inline-flex items-center justify-center px-8 py-4 text-sm font-semibold text-primary bg-accent hover:brightness-105 rounded-full transition-all duration-300"
@@ -409,30 +397,33 @@ export function CloneScanLanding({ lang }: { lang: Lang }) {
               {t.heroCta}
               <ArrowRight className="ml-2 h-4 w-4" />
             </button>
-          </motion.div>
+          </div>
         </div>
       </section>
 
       {/* WHO'S BEHIND */}
       <section className="py-24 md:py-32 bg-white">
         <div className="container mx-auto px-4 max-w-3xl text-center">
-          <motion.div {...fade}>
+          <div>
             <p className="label-caps text-accent mb-5">{t.whoKicker}</p>
             <h2 className="font-serif text-4xl md:text-5xl text-primary tracking-tight mb-8">{t.whoTitle}</h2>
             <p className="text-gray-600 font-light leading-relaxed text-lg">{t.whoText}</p>
-          </motion.div>
+          </div>
         </div>
       </section>
 
       {/* FAQ */}
       <section className="py-24 md:py-32 bg-[#F7F5F1]">
         <div className="container mx-auto px-4 max-w-3xl">
-          <motion.div {...fade} className="text-center mb-14">
+          <div className="text-center mb-14">
             <p className="label-caps text-accent mb-5">{t.faqKicker}</p>
             <h2 className="font-serif text-4xl md:text-5xl text-primary tracking-tight">{t.faqTitle}</h2>
-          </motion.div>
+          </div>
 
-          <motion.div {...fade}>
+          <JsonLd
+            data={faqPageJsonLd(t.faq.map(([question, answer]) => ({ question, answer })))}
+          />
+          <div>
             <Accordion type="single" collapsible className="w-full">
               {t.faq.map(([q, a], i) => (
                 <AccordionItem value={`faq-${i}`} key={q}>
@@ -441,31 +432,27 @@ export function CloneScanLanding({ lang }: { lang: Lang }) {
                 </AccordionItem>
               ))}
             </Accordion>
-          </motion.div>
+          </div>
         </div>
       </section>
 
       {/* FORM */}
       <section id="scan-form" className="py-24 md:py-32 bg-white scroll-mt-8">
         <div className="container mx-auto px-4 max-w-2xl">
-          <motion.div {...fade} className="text-center mb-12">
+          <div className="text-center mb-12">
             <p className="label-caps text-accent mb-5">{formKickerText}</p>
             <h2 className="font-serif text-4xl md:text-5xl text-primary tracking-tight mb-5">{t.formTitle}</h2>
             <p className="text-gray-500 font-light max-w-xl mx-auto">{t.formSub}</p>
-          </motion.div>
+          </div>
 
           {status === "done" ? (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="border border-primary/15 rounded-lg p-10 text-center"
-            >
+            <div className="border border-primary/15 rounded-lg p-10 text-center">
               <CheckCircle2 className="h-10 w-10 text-accent mx-auto mb-4" />
               <p className="font-serif text-2xl text-primary mb-2">{t.successTitle}</p>
               <p className="text-gray-600 font-light">{t.successText}</p>
-            </motion.div>
+            </div>
           ) : (
-            <motion.form {...fade} onSubmit={handleSubmit} className="space-y-5">
+            <div className="space-y-5">
               <input
                 type="text"
                 name="hp"
@@ -604,7 +591,7 @@ export function CloneScanLanding({ lang }: { lang: Lang }) {
                 {status === "sending" ? t.fields.sending : t.fields.submit}
                 {status !== "sending" && <ArrowRight className="ml-2 h-4 w-4" />}
               </button>
-            </motion.form>
+            </div>
           )}
 
           <p className="text-xs text-gray-400 font-light leading-relaxed mt-10 text-center">{t.disclaimer}</p>

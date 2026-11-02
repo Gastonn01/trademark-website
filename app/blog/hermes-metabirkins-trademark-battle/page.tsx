@@ -6,7 +6,22 @@ export const metadata = {
   description:
     "Explore how the landmark Hermès vs. MetaBirkins case reshaped trademark law for the digital age, setting crucial precedents for brand protection in NFTs and the metaverse.",
   alternates: {
-    canonical: "https://justprotected.com/blog/hermes-metabirkins-trademark-battle/",
+    canonical: "/blog/hermes-metabirkins-trademark-battle",
+  },
+
+  openGraph: {
+    title: "Virtual Handbags, Real Lawsuits: The Herm\u00e8s MetaBirkins Trademark Battle | Trademark Blog",
+    description: "Explore how the landmark Herm\u00e8s vs. MetaBirkins case reshaped trademark law for the digital age, setting crucial precedents for brand protection in NFTs and the metaverse.",
+    url: "/blog/hermes-metabirkins-trademark-battle",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "article",
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "Virtual Handbags, Real Lawsuits: The Herm\u00e8s MetaBirkins Trademark Battle | Trademark Blog",
+    description: "Explore how the landmark Herm\u00e8s vs. MetaBirkins case reshaped trademark law for the digital age, setting crucial precedents for brand protection in NFTs and the metaverse.",
   },
 }
 

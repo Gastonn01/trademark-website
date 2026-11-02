@@ -8,9 +8,18 @@ export const metadata = {
   description:
     "The real risk with AI-generated brand assets isn't copyright—it's defensibility, scalability, and exit value. Learn what smart founders are doing before this becomes obvious.",
   openGraph: {
+    url: "/blog/ai-generated-logos-brand-names-real-risk",
     title: "AI-Generated Logos And Brand Names: The Real Risk Isn't What You Think",
     description:
       "The real risk with AI-generated brand assets isn't copyright—it's defensibility, scalability, and exit value.",
+  },
+
+  alternates: { canonical: "/blog/ai-generated-logos-brand-names-real-risk" },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "AI-Generated Logos And Brand Names: The Real Risk Isn't What You Think | Just Protected",
+    description: "The real risk with AI-generated brand assets isn't copyright\u2014it's defensibility, scalability, and exit value. Learn what smart founders are doing before this becomes obvious.",
   },
 }
 

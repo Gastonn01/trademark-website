@@ -11,11 +11,26 @@ export const metadata = {
   keywords:
     "EU trademark registration, EUIPO, EU trademark, European trademark, EU brand protection, European Union trademark",
   alternates: {
-    canonical: "https://justprotected.com/blog/register-trademark-eu/",
+    canonical: "/blog/register-trademark-european-union",
     languages: {
       en: "https://justprotected.com/blog/register-trademark-eu/",
       es: "https://justprotected.com/blog/registrar-marca-union-europea/",
     },
+  },
+
+  openGraph: {
+    title: "How to Register a Trademark in the European Union (2024) | Complete Guide",
+    description: "Comprehensive guide to EU trademark registration. Learn the step-by-step process, costs, timelines, and requirements to protect your brand across all 27 member states.",
+    url: "/blog/register-trademark-european-union",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "article",
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "How to Register a Trademark in the European Union (2024) | Complete Guide",
+    description: "Comprehensive guide to EU trademark registration. Learn the step-by-step process, costs, timelines, and requirements to protect your brand across all 27 member states.",
   },
 }
 
@@ -221,6 +236,7 @@ export default function RegisterTrademarkEU() {
             </ul>
           </div>
 
+<script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How long does EU trademark protection last?", "acceptedAnswer": {"@type": "Answer", "text": "Initial protection lasts 10 years from the application date and can be renewed indefinitely for additional 10-year periods."}}, {"@type": "Question", "name": "What happens if my trademark is rejected?", "acceptedAnswer": {"@type": "Answer", "text": "You can respond to objections, modify the application, or appeal the decision. You may also consider individual national registrations."}}, {"@type": "Question", "name": "Do I need a local representative?", "acceptedAnswer": {"@type": "Answer", "text": "If you're outside the European Economic Area, you'll need an authorized representative before the EUIPO."}}]}) }} />
           <h2>Frequently Asked Questions</h2>
           <div className="space-y-4">
             <div>

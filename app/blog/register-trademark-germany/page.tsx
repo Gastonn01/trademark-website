@@ -23,7 +23,22 @@ export const metadata = {
   keywords:
     "Germany trademark registration, DPMA trademark, register trademark Germany, German IP protection, trademark filing Germany, DPMA registration cost",
   alternates: {
-    canonical: "https://justprotected.com/blog/register-trademark-germany/",
+    canonical: "/blog/register-trademark-germany",
+  },
+
+  openGraph: {
+    title: "Register Your Trademark in Germany - Fast, Affordable, Fully Guided | JustProtected",
+    description: "Secure your brand with Germany's official trademark office (DPMA). No legal confusion, no costly mistakes - our specialists handle everything for you. Fixed pricing, 24h response.",
+    url: "/blog/register-trademark-germany",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "article",
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "Register Your Trademark in Germany - Fast, Affordable, Fully Guided | JustProtected",
+    description: "Secure your brand with Germany's official trademark office (DPMA). No legal confusion, no costly mistakes - our specialists handle everything for you. Fixed pricing, 24h response.",
   },
 }
 
@@ -388,6 +403,7 @@ export default function RegisterTrademarkGermany() {
             </p>
           </div>
 
+<script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Can I file a trademark application myself?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, the DPMA allows individuals and businesses to file applications directly. However, trademark law is complex and errors can be costly. Most businesses benefit from professional guidance to ensure their application is done correctly the first time."}}, {"@type": "Question", "name": "Do I need a trademark attorney in Germany?", "acceptedAnswer": {"@type": "Answer", "text": "For German nationals and EU residents, legal representation is optional. For applicants outside the EU, the DPMA requires representation by a German trademark attorney or agent."}}, {"@type": "Question", "name": "What's the difference between \u2122 and \u00ae?", "acceptedAnswer": {"@type": "Answer", "text": "\u2122 can be used by anyone claiming trademark rights, even without registration. \u00ae can only be used once your trademark is officially registered with the DPMA. Using \u00ae without registration is illegal in Germany."}}, {"@type": "Question", "name": "Can I register a trademark in multiple countries?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. You can file separate national applications, apply for an EU trademark (covering all 27 EU countries), or use the Madrid System for international registration covering up to 130 countries."}}, {"@type": "Question", "name": "What happens if someone opposes my trademark?", "acceptedAnswer": {"@type": "Answer", "text": "If a third party files an opposition, you'll need to defend your application by arguing why your mark doesn't infringe their rights. This can involve legal arguments, evidence of use, and negotiation. Professional representation is highly recommended in opposition proceedings."}}, {"@type": "Question", "name": "How long does trademark protection last?", "acceptedAnswer": {"@type": "Answer", "text": "German trademarks are valid for 10 years from the filing date. They can be renewed indefinitely in 10-year periods as long as you continue to pay renewal fees and actually use the trademark."}}]}) }} />
           <h2 className="text-3xl font-bold text-gray-900 mt-16 mb-6">Frequently Asked Questions</h2>
 
           <div className="space-y-6 my-8 not-prose">

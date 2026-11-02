@@ -6,6 +6,23 @@ import { CalendlyWidget } from "@/components/calendly-widget"
 export const metadata: Metadata = {
   title: "Book a Call | Just Protected",
   description: "Talk to a specialist about protecting your brand — free 30-minute consultation, no obligation.",
+
+  alternates: { canonical: "/book-a-call" },
+
+  openGraph: {
+    title: "Book a Call | Just Protected",
+    description: "Talk to a specialist about protecting your brand \u2014 free 30-minute consultation, no obligation.",
+    url: "/book-a-call",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "website",
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "Book a Call | Just Protected",
+    description: "Talk to a specialist about protecting your brand \u2014 free 30-minute consultation, no obligation.",
+  },
 }
 
 export default function BookACallPage() {

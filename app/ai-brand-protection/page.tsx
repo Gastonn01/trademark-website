@@ -9,6 +9,23 @@ export const metadata: Metadata = {
     "AI tools make it trivial to clone a brand name, storefront, voice, or likeness. Here's what actually protects you — a registered trademark, why it works, and how to get one filed in 24 hours across 70+ countries.",
   keywords:
     "protect brand from AI, AI brand impersonation, AI clone trademark, stop AI from using my brand, AI deepfake brand protection, trademark for AI era, brand clone scan",
+
+  alternates: { canonical: "/ai-brand-protection" },
+
+  openGraph: {
+    title: "How to Protect Your Brand From AI Cloning & Impersonation | Just Protected",
+    description: "AI tools make it trivial to clone a brand name, storefront, voice, or likeness. Here's what actually protects you \u2014 a registered trademark, why it works, and how to get one filed in 24 hours across 70+ countries.",
+    url: "/ai-brand-protection",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "website",
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "How to Protect Your Brand From AI Cloning & Impersonation | Just Protected",
+    description: "AI tools make it trivial to clone a brand name, storefront, voice, or likeness. Here's what actually protects you \u2014 a registered trademark, why it works, and how to get one filed in 24 hours across 70+ countries.",
+  },
 }
 
 const faqs = [

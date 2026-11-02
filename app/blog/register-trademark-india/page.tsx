@@ -11,7 +11,22 @@ export const metadata = {
   keywords:
     "India trademark registration, Indian IP law, Indian trademark office, brand protection India, intellectual property India, trademark filing India",
   alternates: {
-    canonical: "https://justprotected.com/blog/register-trademark-india/",
+    canonical: "/blog/register-trademark-india",
+  },
+
+  openGraph: {
+    title: "How to Register a Trademark in India (2025) | Complete Guide",
+    description: "Comprehensive guide to trademark registration in India. Learn about requirements, procedures, and why expert guidance matters in India's complex trademark system.",
+    url: "/blog/register-trademark-india",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "article",
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "How to Register a Trademark in India (2025) | Complete Guide",
+    description: "Comprehensive guide to trademark registration in India. Learn about requirements, procedures, and why expert guidance matters in India's complex trademark system.",
   },
 }
 
