@@ -192,8 +192,8 @@ export function ContactContent() {
                     <Mail className="h-6 w-6 text-accent" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900">Email</h3>
-                    <p className="text-gray-600">trademarks@justprotected.com</p>
+                    <h3 className="font-semibold text-gray-900">Contact form</h3>
+                    <p className="text-gray-600">Send us a message with the form on this page</p>
                     <p className="text-sm text-gray-500">We typically respond within 24 hours</p>
                   </div>
                 </div>
@@ -243,6 +243,7 @@ export function ContactContent() {
 
             <Card className="shadow-lg hover:shadow-xl transition-shadow">
               <CardHeader>
+<script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "How long does trademark registration take?", "acceptedAnswer": {"@type": "Answer", "text": "The trademark registration process typically takes 6-12 months, depending on the jurisdiction and complexity of your application."}}, {"@type": "Question", "name": "Do you offer international trademark protection?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, we provide trademark registration services worldwide, including the EU, US, UK, and many others."}}, {"@type": "Question", "name": "What happens after I submit my application?", "acceptedAnswer": {"@type": "Answer", "text": "Our legal team will review your application within 24 hours and guide you through each step of the registration process."}}]}) }} />
                 <CardTitle>Frequently Asked Questions</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
@@ -256,7 +257,7 @@ export function ContactContent() {
                 <div>
                   <h4 className="font-semibold text-gray-900 mb-2">Do you offer international trademark protection?</h4>
                   <p className="text-gray-600 text-sm">
-                    Yes, we provide trademark registration services in over 180 countries worldwide, including EU, US,
+                    Yes, we provide trademark registration services worldwide, including the EU, US,
                     UK, and many others.
                   </p>
                 </div>

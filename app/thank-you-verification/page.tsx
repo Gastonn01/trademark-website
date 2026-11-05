@@ -2,6 +2,16 @@ import { NavBar } from "@/components/nav-bar"
 import { ThankYouVerificationContent } from "@/components/thank-you-verification-content"
 import { Footer } from "@/components/footer"
 
+import type { Metadata } from "next"
+import { pageMetadata } from "@/lib/seo"
+
+export const metadata: Metadata = pageMetadata({
+  title: "Verification Received | Just Protected",
+  description: "We received your trademark verification request and will review it.",
+  path: "/thank-you-verification",
+  noindex: true,
+})
+
 export default function ThankYouVerificationPage() {
   return (
     <main className="bg-gradient-to-b from-indigo-50 to-white min-h-screen">

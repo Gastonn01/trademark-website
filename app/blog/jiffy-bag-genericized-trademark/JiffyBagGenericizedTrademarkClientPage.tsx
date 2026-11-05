@@ -1,4 +1,3 @@
-"use client"
 import { BlogPostHeader } from "@/components/blog-post-header"
 import { CTA } from "@/components/cta"
 import { ScrollToTopOnMount } from "../ScrollToTopOnMount"

@@ -11,7 +11,22 @@ export const metadata = {
   keywords:
     "Brazil trademark registration, Brazilian IP law, INPI, brand protection Brazil, intellectual property Brazil, trademark filing Brazil",
   alternates: {
-    canonical: "https://justprotected.com/blog/register-trademark-brazil/",
+    canonical: "/blog/register-trademark-brazil",
+  },
+
+  openGraph: {
+    title: "Register a Trademark in Brazil: What You Need to Know (2024)",
+    description: "Brazil's trademark landscape is complex and competitive. Learn why professional guidance is essential for protecting your brand in South America's largest market.",
+    url: "/blog/register-trademark-brazil",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "article",
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "Register a Trademark in Brazil: What You Need to Know (2024)",
+    description: "Brazil's trademark landscape is complex and competitive. Learn why professional guidance is essential for protecting your brand in South America's largest market.",
   },
 }
 
@@ -266,6 +281,7 @@ export default function RegisterTrademarkBrazil() {
 
           {/* FAQ Section */}
           <section className="mb-12">
+<script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Can I file a trademark in Brazil without using it?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, Brazil is a first-to-file country, so you can file before using the mark. However, you must begin use within 5 years of registration or face cancellation for non-use."}}, {"@type": "Question", "name": "How long does the trademark registration process take in Brazil?", "acceptedAnswer": {"@type": "Answer", "text": "The typical timeline is 24-36 months from filing to registration, though it can take longer if there are objections, oppositions, or appeals. INPI's backlog means patience is essential."}}, {"@type": "Question", "name": "What happens if someone opposes my trademark application?", "acceptedAnswer": {"@type": "Answer", "text": "If an opposition is filed during the 60-day period after publication, you must respond with arguments and evidence. These proceedings require legal expertise and can add 12+ months to the process."}}, {"@type": "Question", "name": "Do I need a Brazilian attorney to file a trademark?", "acceptedAnswer": {"@type": "Answer", "text": "Foreign applicants are required by law to have a local representative in Brazil. This ensures proper communication with INPI and compliance with local procedures."}}]}) }} />
             <h2 className="text-3xl font-bold text-gray-900 mb-6">Frequently Asked Questions</h2>
             <div className="space-y-6">
               <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">

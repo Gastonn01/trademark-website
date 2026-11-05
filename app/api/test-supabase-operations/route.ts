@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server"
 import { getAllSearchData, saveSearchData, updateSearchStatus, getSearchData } from "@/lib/supabase"
 
+export const dynamic = "force-dynamic"
+
 export async function GET() {
   try {
     console.log("=== TESTING SUPABASE OPERATIONS ===")

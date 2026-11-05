@@ -21,6 +21,14 @@ export const metadata: Metadata = {
       },
     ],
   },
+
+  alternates: { canonical: "/blog/meghan-markle-as-ever-trademark-challenges" },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "Celebrity Trademark Troubles: Lessons from Meghan Markle\\",
+    description: "Explore the trademark disputes and operational challenges faced by Meghan Markle\\",
+  },
 }
 
 export default function MeghanMarkleAsEverTrademarkChallengesPage() {

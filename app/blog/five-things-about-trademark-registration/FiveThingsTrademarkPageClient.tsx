@@ -1,16 +1,10 @@
-"use client"
-
 import Image from "next/image"
 import { NavBar } from "@/components/nav-bar"
 import { Footer } from "@/components/footer"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { useEffect } from "react"
 
 export default function FiveThingsTrademarkPageClient() {
-  useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [])
 
   return (
     <main className="bg-white min-h-screen">
@@ -230,9 +224,6 @@ export default function FiveThingsTrademarkPageClient() {
                 <Link
                   href="/detailed-pricelist"
                   scroll={true}
-                  onClick={() => {
-                    setTimeout(() => window.scrollTo(0, 0), 100)
-                  }}
                 >
                   Start Registration
                 </Link>
@@ -241,9 +232,6 @@ export default function FiveThingsTrademarkPageClient() {
                 <Link
                   href="/contact"
                   scroll={true}
-                  onClick={() => {
-                    setTimeout(() => window.scrollTo(0, 0), 100)
-                  }}
                 >
                   Free Consultation
                 </Link>

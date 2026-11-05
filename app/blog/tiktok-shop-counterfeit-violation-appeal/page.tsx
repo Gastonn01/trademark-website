@@ -11,7 +11,22 @@ export const metadata: Metadata = {
   keywords:
     "TikTok Shop counterfeit violation, TikTok Shop appeal, trademark authorization, counterfeit appeal documentation, TikTok Shop seller protection",
   alternates: {
-    canonical: "https://justprotected.com/blog/tiktok-shop-counterfeit-violation-appeal/",
+    canonical: "/blog/tiktok-shop-counterfeit-violation-appeal",
+  },
+
+  openGraph: {
+    title: "How to Appeal a TikTok Shop Counterfeit Violation (2025 Guide) | JustProtected",
+    description: "Learn how to successfully appeal TikTok Shop counterfeit violations. Understand what documentation you need, why legitimate sellers get flagged, and how to reduce future violations.",
+    url: "/blog/tiktok-shop-counterfeit-violation-appeal",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "article",
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "How to Appeal a TikTok Shop Counterfeit Violation (2025 Guide) | JustProtected",
+    description: "Learn how to successfully appeal TikTok Shop counterfeit violations. Understand what documentation you need, why legitimate sellers get flagged, and how to reduce future violations.",
   },
 }
 

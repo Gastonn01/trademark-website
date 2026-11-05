@@ -1,5 +1,3 @@
-"use client"
-
 import Image from "next/image"
 import { NavBar } from "@/components/nav-bar"
 import { Footer } from "@/components/footer"
@@ -145,9 +143,6 @@ export default function ColePalmerTrademarkPageClient() {
                 <Link
                   href="/detailed-pricelist"
                   scroll={true}
-                  onClick={() => {
-                    setTimeout(() => window.scrollTo(0, 0), 100)
-                  }}
                 >
                   Start Registration
                 </Link>
@@ -156,9 +151,6 @@ export default function ColePalmerTrademarkPageClient() {
                 <Link
                   href="/contact"
                   scroll={true}
-                  onClick={() => {
-                    setTimeout(() => window.scrollTo(0, 0), 100)
-                  }}
                 >
                   Free Consultation
                 </Link>

@@ -11,7 +11,22 @@ export const metadata: Metadata = {
   keywords:
     "Stanley Cup lawsuits, trade dress infringement, dupes vs counterfeits, tumbler trademark, Pacific Market International, Stanley Quencher, marketplace sellers, trademark risk",
   alternates: {
-    canonical: "https://justprotected.com/blog/stanley-cup-lawsuits-dupes-trademark-risk/",
+    canonical: "/blog/stanley-cup-lawsuits-dupes-trademark-risk",
+  },
+
+  openGraph: {
+    title: "The \"Stanley Cup\" Lawsuits Explained: Are Dupes Legal or a Trademark Risk? | JustProtected",
+    description: "Stanley is suing tumbler sellers for trade dress infringement. Learn the legal difference between dupes and counterfeits, and how to sell inspired products safely.",
+    url: "/blog/stanley-cup-lawsuits-dupes-trademark-risk",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "article",
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "The \"Stanley Cup\" Lawsuits Explained: Are Dupes Legal or a Trademark Risk? | JustProtected",
+    description: "Stanley is suing tumbler sellers for trade dress infringement. Learn the legal difference between dupes and counterfeits, and how to sell inspired products safely.",
   },
 }
 

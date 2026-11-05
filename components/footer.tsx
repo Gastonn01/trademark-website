@@ -1,5 +1,6 @@
 import Link from "next/link"
-import { Shield, Mail, Phone } from "lucide-react"
+import { Mail, Phone } from "lucide-react"
+import { LogoMark } from "@/components/logo-mark"
 
 export function Footer() {
   return (
@@ -8,9 +9,7 @@ export function Footer() {
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
           <div className="lg:col-span-2">
             <div className="flex items-center gap-3 mb-6">
-              <div className="flex items-center justify-center w-11 h-11 rounded-lg bg-accent">
-                <Shield className="w-6 h-6 text-white" strokeWidth={2.5} />
-              </div>
+              <LogoMark badgeClassName="bg-accent" shieldColor="var(--primary)" notchColor="var(--accent)" />
               <span className="text-2xl font-bold text-white">Just Protected</span>
             </div>
             <p className="text-gray-300 mb-6 max-w-md leading-relaxed">
@@ -20,9 +19,7 @@ export function Footer() {
             <div className="space-y-3 text-gray-300">
               <div className="flex items-center gap-3">
                 <Mail className="h-5 w-5 text-accent" />
-                <a href="mailto:contact@justprotected.com" className="hover:text-accent transition-colors">
-                  contact@justprotected.com
-                </a>
+                <a href="/contact" className="hover:text-accent transition-colors">Contact form</a>
               </div>
               <div className="flex items-center gap-3">
                 <Phone className="h-5 w-5 text-accent" />
@@ -40,6 +37,21 @@ export function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/scan" className="text-gray-300 hover:text-accent transition-colors">
+                  Free Brand Clone Scan
+                </Link>
+              </li>
+              <li>
+                <Link href="/book-a-call" className="text-gray-300 hover:text-accent transition-colors">
+                  Book a Call
+                </Link>
+              </li>
+              <li>
+                <Link href="/escaneo" className="text-gray-300 hover:text-accent transition-colors">
+                  Escaneo de Clones (ES)
+                </Link>
+              </li>
+              <li>
                 <Link href="/verification" className="text-gray-300 hover:text-accent transition-colors">
                   Trademark Registration
                 </Link>
@@ -52,6 +64,16 @@ export function Footer() {
               <li>
                 <Link href="/detailed-pricelist" className="text-gray-300 hover:text-accent transition-colors">
                   Pricing
+                </Link>
+              </li>
+              <li>
+                <Link href="/ai-brand-protection" className="text-gray-300 hover:text-accent transition-colors">
+                  AI Brand Protection Guide
+                </Link>
+              </li>
+              <li>
+                <Link href="/affiliates" className="text-gray-300 hover:text-accent transition-colors">
+                  Affiliate Program
                 </Link>
               </li>
             </ul>

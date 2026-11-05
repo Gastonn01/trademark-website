@@ -1,5 +1,3 @@
-"use client"
-
 import Image from "next/image"
 import { NavBar } from "@/components/nav-bar"
 import { Footer } from "@/components/footer"
@@ -41,7 +39,7 @@ export default function TrademarkPriorityPeriodClientPage() {
           <p className="mb-4">
             The priority period is a 6-month window (from the date of your first trademark filing) during which you can
             file for protection in other countries and still claim the original filing date as your priority date. This
-            is governed by the Paris Convention for the Protection of Industrial Property, which over 170 countries
+            is governed by the Paris Convention for the Protection of Industrial Property, which its member countries
             adhere to.
           </p>
 
@@ -161,9 +159,6 @@ export default function TrademarkPriorityPeriodClientPage() {
                 <Link
                   href="/detailed-pricelist"
                   scroll={true}
-                  onClick={() => {
-                    setTimeout(() => window.scrollTo(0, 0), 100)
-                  }}
                 >
                   Start Registration
                 </Link>
@@ -172,9 +167,6 @@ export default function TrademarkPriorityPeriodClientPage() {
                 <Link
                   href="/contact"
                   scroll={true}
-                  onClick={() => {
-                    setTimeout(() => window.scrollTo(0, 0), 100)
-                  }}
                 >
                   Free Consultation
                 </Link>

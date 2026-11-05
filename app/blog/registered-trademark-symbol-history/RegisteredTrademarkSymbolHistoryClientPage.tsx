@@ -1,4 +1,3 @@
-"use client"
 import { BlogPostHeader } from "@/components/blog-post-header"
 import { NavBar } from "@/components/nav-bar"
 import Link from "next/link"

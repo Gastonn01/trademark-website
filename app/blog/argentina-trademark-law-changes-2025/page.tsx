@@ -11,7 +11,22 @@ export const metadata: Metadata = {
   keywords:
     "Argentina trademark law, INPI Argentina, trademark changes 2025, Argentina intellectual property, trademark opposition Argentina, INPI P-583/25",
   alternates: {
-    canonical: "https://justprotected.com/blog/argentina-trademark-law-changes-2025/",
+    canonical: "/blog/argentina-trademark-law-changes-2025",
+  },
+
+  openGraph: {
+    title: "Argentina's New Trademark Law Changes 2025: What Businesses Need to Know | JustProtected",
+    description: "Major changes to Argentina's trademark system starting 2025. Learn how Resolution INPI P-583/25 affects trademark registration, oppositions, and brand protection strategies.",
+    url: "/blog/argentina-trademark-law-changes-2025",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "article",
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "Argentina's New Trademark Law Changes 2025: What Businesses Need to Know | JustProtected",
+    description: "Major changes to Argentina's trademark system starting 2025. Learn how Resolution INPI P-583/25 affects trademark registration, oppositions, and brand protection strategies.",
   },
 }
 

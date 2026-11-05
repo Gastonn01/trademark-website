@@ -60,12 +60,12 @@ export function AboutContent() {
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div>
             <p className="text-lg mb-6 text-gray-700 leading-relaxed">
-              Founded recently, Just Protected is an innovative startup in the online trademark registration space. Our
+              Just Protected is an innovative startup in the online trademark registration space. Our
               team combines fresh perspectives with legal expertise and cutting-edge technology to streamline the
               trademark protection process.
             </p>
             <p className="text-lg mb-4 text-gray-700 leading-relaxed">
-              As a new player in the field, we're committed to providing top-notch service to businesses of all sizes.
+              We're committed to providing top-notch service to businesses of all sizes.
               From fellow startups to growing e-commerce brands, we're here to help navigate the complex world of
               trademark law and registration.
             </p>
@@ -75,8 +75,8 @@ export function AboutContent() {
               <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-accent/20 to-accent/10 flex items-center justify-center mx-auto mb-4">
                 <Globe className="w-8 h-8 text-accent" />
               </div>
-              <CardTitle className="text-4xl font-bold mb-2 text-gray-900">75+</CardTitle>
-              <CardContent className="text-gray-600">Countries Covered</CardContent>
+              <CardTitle className="text-3xl font-bold mb-2 text-gray-900">Worldwide</CardTitle>
+              <CardContent className="text-gray-600">Coverage</CardContent>
             </Card>
             <Card className="text-center p-6 hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer border-t-4 border-accent">
               <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-accent/20 to-accent/10 flex items-center justify-center mx-auto mb-4">
@@ -166,7 +166,7 @@ export function AboutContent() {
         </p>
         <Link
           href="/free-search"
-          className="inline-flex items-center justify-center px-8 py-4 rounded-lg bg-accent hover:bg-accent/90 text-white font-semibold text-lg transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105"
+          className="inline-flex items-center justify-center px-8 py-4 rounded-lg bg-accent hover:bg-accent/90 text-primary font-semibold text-lg transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105"
         >
           Get Started Today
           <ArrowRight className="ml-2 transition-transform duration-200 group-hover:translate-x-1" />

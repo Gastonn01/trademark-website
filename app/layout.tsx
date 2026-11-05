@@ -4,6 +4,7 @@ import { Inter } from "next/font/google"
 import { Toaster } from "@/components/ui/toaster"
 import { Analytics } from "@vercel/analytics/next"
 import { GTMTracker } from "@/components/gtm-tracker"
+import { CookieConsentBanner } from "@/components/cookie-consent-banner"
 import { ScrollToTop } from "@/components/scroll-to-top"
 import { TrademarkFAQBot } from "@/components/trademark-faq-bot"
 import { Suspense } from "react"
@@ -24,15 +25,12 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || "https://justprotected.com"),
-  alternates: {
-    canonical: "/",
-  },
+  metadataBase: new URL("https://justprotected.com"),
   openGraph: {
     title: "Just Protected - Trademark Registration Services",
     description:
       "Professional trademark registration services worldwide. Protect your brand with our expert legal team.",
-    url: process.env.NEXT_PUBLIC_BASE_URL || "https://justprotected.com",
+    url: "https://justprotected.com",
     siteName: "Just Protected",
     locale: "en_US",
     type: "website",
@@ -55,11 +53,7 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  verification: {
-    google: "your-google-verification-code",
-    yandex: "your-yandex-verification-code",
-  },
-    generator: 'v0.app'
+  generator: "v0.app",
 }
 
 export default function RootLayout({
@@ -94,6 +88,33 @@ export default function RootLayout({
           }}
         />
 
+        {/* Blocks the stray Cookiebot tag firing from inside GTM (unauthorized
+            domain group, dead weight) — we have our own consent banner and
+            don't control that GTM account to remove the tag directly. */}
+        <Script
+          id="block-cookiebot"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                function isCookiebot(el) {
+                  return el && el.tagName === 'SCRIPT' && typeof el.src === 'string' && el.src.indexOf('cookiebot.com') !== -1;
+                }
+                var origAppendChild = Node.prototype.appendChild;
+                Node.prototype.appendChild = function(node) {
+                  if (isCookiebot(node)) return node;
+                  return origAppendChild.call(this, node);
+                };
+                var origInsertBefore = Node.prototype.insertBefore;
+                Node.prototype.insertBefore = function(node, ref) {
+                  if (isCookiebot(node)) return node;
+                  return origInsertBefore.call(this, node, ref);
+                };
+              })();
+            `,
+          }}
+        />
+
         {/* Google Tag Manager */}
         <Script
           id="gtm-script"
@@ -121,13 +142,14 @@ export default function RootLayout({
         </noscript>
 
         <Suspense fallback={null}>
-          <ScrollToTop />
           <GTMTracker />
-          {children}
-          <Toaster />
-          <Analytics />
-          <TrademarkFAQBot />
         </Suspense>
+        <ScrollToTop />
+        {children}
+        <Toaster />
+        <Analytics />
+        <TrademarkFAQBot />
+        <CookieConsentBanner />
       </body>
     </html>
   )

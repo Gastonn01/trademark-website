@@ -1,15 +1,9 @@
-"use client"
-
-import { useEffect } from "react"
 import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
 import { CTA } from "@/components/cta"
 import { BlogPostHeader } from "@/components/blog-post-header"
 
 export default function GlobalTrademarkStrategiesClientPage() {
-  useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [])
 
   return (
     <div className="bg-white min-h-screen">
@@ -64,7 +58,7 @@ export default function GlobalTrademarkStrategiesClientPage() {
           </p>
           <ul className="list-disc pl-6 space-y-2 mb-4">
             <li>
-              <strong>Madrid System:</strong> Allows filing in up to 128 countries with a single application
+              <strong>Madrid System:</strong> Allows filing in multiple countries with a single application
             </li>
             <li>
               <strong>European Union Trademark (EUTM):</strong> Provides protection across all EU member states

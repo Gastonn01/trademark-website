@@ -63,7 +63,7 @@ async function sendEmailWithRetry(recipient: any, maxRetries = 3) {
             
             <p><strong>Check pricing:</strong> <a href="https://justprotected.com/detailed-pricelist" style="color: #0066cc;">https://justprotected.com/detailed-pricelist</a></p>
             
-            <p>To proceed, email <a href="mailto:trademarks@justprotected.com" style="color: #0066cc;">trademarks@justprotected.com</a> and we'll send your filing summary and next steps today.</p>
+            <p>To proceed, use <a href="https://justprotected.com/contact" style="color: #0066cc;">our contact form</a> and we'll send your filing summary and next steps today.</p>
             
             <p>— JustProtected</p>
           </div>

@@ -11,7 +11,22 @@ export const metadata: Metadata = {
   keywords:
     "GPT-5 trademark, AI trademark law, emerging tech trademarks, trademark speculation, AI model names, trademark strategy",
   alternates: {
-    canonical: "https://justprotected.com/blog/gpt-5-trademark-speculation-ai-battleground/",
+    canonical: "/blog/gpt-5-trademark-speculation-ai-battleground",
+  },
+
+  openGraph: {
+    title: "GPT-5 Trademark Speculation: The Next IP Battleground? | JustProtected",
+    description: "Explore how AI model names like GPT-5 intersect with trademark law, and why speculation-driven filings in emerging tech require careful trademark strategy.",
+    url: "/blog/gpt-5-trademark-speculation-ai-battleground",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "article",
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "GPT-5 Trademark Speculation: The Next IP Battleground? | JustProtected",
+    description: "Explore how AI model names like GPT-5 intersect with trademark law, and why speculation-driven filings in emerging tech require careful trademark strategy.",
   },
 }
 

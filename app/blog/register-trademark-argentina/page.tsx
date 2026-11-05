@@ -11,7 +11,22 @@ export const metadata = {
   keywords:
     "Argentina trademark registration, Argentine IP law, INPI, brand protection Argentina, intellectual property Argentina, trademark filing Argentina",
   alternates: {
-    canonical: "https://justprotected.com/blog/register-trademark-argentina/",
+    canonical: "/blog/register-trademark-argentina",
+  },
+
+  openGraph: {
+    title: "How to Register a Trademark in Argentina (2024) | Complete Guide",
+    description: "Master the process of trademark registration in Argentina. Learn about local requirements, costs, and strategies for protecting your brand in the Argentine market.",
+    url: "/blog/register-trademark-argentina",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "article",
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "How to Register a Trademark in Argentina (2024) | Complete Guide",
+    description: "Master the process of trademark registration in Argentina. Learn about local requirements, costs, and strategies for protecting your brand in the Argentine market.",
   },
 }
 
@@ -155,6 +170,7 @@ export default function RegisterTrademarkArgentina() {
             </ul>
           </div>
 
+<script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "Is use of a trademark required before registration in Argentina?", "acceptedAnswer": {"@type": "Answer", "text": "No, Argentina follows a first-to-file system. Use is not required for registration but becomes important for maintaining the registration."}}, {"@type": "Question", "name": "Can foreign companies directly register trademarks in Argentina?", "acceptedAnswer": {"@type": "Answer", "text": "Yes, but a local address for notifications is required. Many foreign entities choose to work with local representatives for smoother proceedings."}}, {"@type": "Question", "name": "How does Argentina handle trademark oppositions?", "acceptedAnswer": {"@type": "Answer", "text": "Argentina has a unique opposition system where parties are encouraged to resolve disputes through negotiation or mediation before formal proceedings."}}]}) }} />
           <h2>Frequently Asked Questions</h2>
           <div className="space-y-4">
             <div>

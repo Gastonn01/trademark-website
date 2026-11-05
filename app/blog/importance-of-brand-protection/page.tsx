@@ -2,6 +2,15 @@ import Image from "next/image"
 import { NavBar } from "@/components/nav-bar"
 import { Footer } from "@/components/footer"
 
+import type { Metadata } from "next"
+import { pageMetadata } from "@/lib/seo"
+
+export const metadata: Metadata = pageMetadata({
+  title: "The Crucial Importance of Brand Protection | Just Protected",
+  description: "Why brand protection matters for trademark infringement, customer trust, and the value of a business identity.",
+  path: "/blog/importance-of-brand-protection",
+})
+
 export default function ImportanceOfBrandProtectionPage() {
   return (
     <main className="bg-gradient-to-b from-indigo-50 to-white min-h-screen">

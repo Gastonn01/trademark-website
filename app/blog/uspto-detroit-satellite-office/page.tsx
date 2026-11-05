@@ -14,6 +14,14 @@ export const metadata: Metadata = {
     type: "article",
     url: "https://yourdomain.com/blog/uspto-detroit-satellite-office",
   },
+
+  alternates: { canonical: "/blog/uspto-detroit-satellite-office" },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "USPTO's Historic Expansion: The Opening of Detroit's Satellite Office | Trademark Expert",
+    description: "Learn about the USPTO's first satellite office in Detroit, opened in 2012, and how it has impacted patent and trademark services across the United States.",
+  },
 }
 
 export default function USPTODetroitSatelliteOfficePage() {

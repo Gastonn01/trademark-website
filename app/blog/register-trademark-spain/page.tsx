@@ -11,7 +11,22 @@ export const metadata = {
   keywords:
     "Spain trademark registration, Spanish IP law, OEPM, brand protection Spain, intellectual property Spain, trademark filing Spain",
   alternates: {
-    canonical: "https://justprotected.com/blog/register-trademark-spain/",
+    canonical: "/blog/register-trademark-spain",
+  },
+
+  openGraph: {
+    title: "How to Register a Trademark in Spain (2025) | Complete Guide",
+    description: "Comprehensive guide to trademark registration in Spain. Learn about OEPM procedures, requirements, and how to protect your brand in the Spanish market.",
+    url: "/blog/register-trademark-spain",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "article",
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "How to Register a Trademark in Spain (2025) | Complete Guide",
+    description: "Comprehensive guide to trademark registration in Spain. Learn about OEPM procedures, requirements, and how to protect your brand in the Spanish market.",
   },
 }
 
