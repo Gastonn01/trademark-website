@@ -23,8 +23,8 @@ export function HowItWorksContent() {
             <div className="text-gray-300 group-hover:text-white text-sm transition-colors">Legal Experts</div>
           </div>
           <div className="bg-gradient-to-br from-gray-900 to-gray-800 hover:from-accent hover:to-accent/90 transition-all duration-300 rounded-2xl p-6 text-center cursor-pointer group shadow-lg hover:shadow-xl hover:-translate-y-1">
-            <div className="text-4xl font-bold text-white mb-2">50+</div>
-            <div className="text-gray-300 group-hover:text-white text-sm transition-colors">Countries Covered</div>
+            <div className="text-4xl font-bold text-white mb-2">Global</div>
+            <div className="text-gray-300 group-hover:text-white text-sm transition-colors">Coverage</div>
           </div>
           <div className="bg-gradient-to-br from-gray-900 to-gray-800 hover:from-accent hover:to-accent/90 transition-all duration-300 rounded-2xl p-6 text-center cursor-pointer group shadow-lg hover:shadow-xl hover:-translate-y-1">
             <div className="text-4xl font-bold text-white mb-2">24h</div>

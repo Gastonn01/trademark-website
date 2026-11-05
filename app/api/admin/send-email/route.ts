@@ -282,7 +282,7 @@ export async function POST(req: Request) {
                 <h3>🏆 Why Register Your Trademark with Just Protected?</h3>
                 <ul>
                     <li><strong>Legal Protection:</strong> Exclusive rights to your brand name and logo</li>
-                    <li><strong>Global Coverage:</strong> Protection available in 180+ countries worldwide</li>
+                    <li><strong>Global Coverage:</strong> Protection available worldwide</li>
                     <li><strong>Brand Value:</strong> Significantly increase your business value and credibility</li>
                     <li><strong>Prevent Infringement:</strong> Stop competitors from using your brand</li>
                     <li><strong>Expert Support:</strong> Qualified trademark attorneys handle everything</li>
@@ -346,7 +346,7 @@ Based on your analysis results, we recommend proceeding with your trademark regi
 
 🏆 WHY REGISTER YOUR TRADEMARK WITH JUST PROTECTED?
 ✓ Legal Protection: Exclusive rights to your brand name and logo
-✓ Global Coverage: Protection available in 180+ countries worldwide
+✓ Global Coverage: Protection available worldwide
 ✓ Brand Value: Significantly increase your business value and credibility
 ✓ Prevent Infringement: Stop competitors from using your brand
 ✓ Expert Support: Qualified trademark attorneys handle everything

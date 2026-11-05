@@ -41,7 +41,7 @@ export function BusinessesLanding() {
               </div>
 
               <p className="label-caps text-[0.65rem] text-white/40">
-                Free name check&ensp;&middot;&ensp;Filed in 24 hours&ensp;&middot;&ensp;70+ countries&ensp;&middot;&ensp;Licensed attorneys
+                Free name check&ensp;&middot;&ensp;Filed in 24 hours&ensp;&middot;&ensp;Licensed attorneys
               </p>
             </div>
           </div>
@@ -143,7 +143,7 @@ export function BusinessesLanding() {
                 number: "01",
                 title: "Free name check",
                 description:
-                  "We search trademark databases across 170+ countries. Find out instantly if your name is already claimed — or at risk of being taken.",
+                  "We search trademark databases. Find out instantly if your name is already claimed — or at risk of being taken.",
               },
               {
                 number: "02",
@@ -204,10 +204,10 @@ export function BusinessesLanding() {
             <div>
               <ul className="space-y-4">
                 {[
-                  "Free trademark search across 170+ countries",
+                  "Free trademark search",
                   "Licensed attorney review",
                   "Filing within 24 hours",
-                  "Coverage in 70+ countries",
+                  "Coverage where you choose to file",
                   "Business-specific goods & services classification",
                   "1 year of monitoring included",
                   "Alerts if someone files something similar",

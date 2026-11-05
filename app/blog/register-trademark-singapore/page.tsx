@@ -202,7 +202,7 @@ export default function RegisterTrademarkSingapore() {
             <li>Europe</li>
             <li>China</li>
             <li>Australia</li>
-            <li>Over 120 countries</li>
+            <li>Other countries</li>
           </ul>
 
           <p className="text-gray-700 mb-8">

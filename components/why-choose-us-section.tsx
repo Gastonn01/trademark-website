@@ -20,10 +20,10 @@ export function WhyChooseUsSection() {
         "AI voice cloning and deepfakes are exploding. A registered trademark gives you legal standing to fight back — and win.",
     },
     {
-      stat: "70+ countries",
+      stat: "Worldwide",
       title: "Global coverage",
       description:
-        "Register your name, catchphrase, or brand in over 70 countries with one streamlined process managed by licensed attorneys.",
+        "Register your name, catchphrase, or brand with one streamlined process managed by licensed attorneys.",
     },
     {
       stat: "Same-day service",

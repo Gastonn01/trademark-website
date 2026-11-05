@@ -336,8 +336,8 @@ export function TrademarkClassificationGuide() {
         <h2 className="text-2xl font-semibold mb-4 text-blue-700">What is the Nice Classification System?</h2>
         <p className="mb-4">
           The Nice Classification System is an international classification of goods and services applied to the
-          registration of trademarks. Established by the Nice Agreement in 1957, this system is used in over 150
-          countries to categorize goods and services for trademark registration purposes.
+          registration of trademarks. Established by the Nice Agreement in 1957, this system is used internationally
+          to categorize goods and services for trademark registration purposes.
         </p>
         <p className="mb-4">
           The system consists of 45 classes: classes 1-34 are for goods, and classes 35-45 are for services. Each class

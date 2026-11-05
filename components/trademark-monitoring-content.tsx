@@ -45,7 +45,7 @@ export function TrademarkMonitoringContent() {
                     <div className="bg-amber-500 p-2 rounded-full">
                       <Globe className="h-6 w-6 text-white" />
                     </div>
-                    <p className="font-medium">180+ countries monitored</p>
+                    <p className="font-medium">International monitoring</p>
                   </div>
                   <div className="flex items-center gap-3 bg-white/10 p-3 rounded-lg">
                     <div className="bg-amber-500 p-2 rounded-full">
@@ -237,7 +237,7 @@ export function TrademarkMonitoringContent() {
                   </li>
                   <li className="flex items-start gap-2">
                     <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                    <span className="text-gray-700">10 countries covered</span>
+                    <span className="text-gray-700">Core markets covered</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
@@ -275,7 +275,7 @@ export function TrademarkMonitoringContent() {
                   </li>
                   <li className="flex items-start gap-2">
                     <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                    <span className="text-gray-700">30 countries covered</span>
+                    <span className="text-gray-700">Wider market coverage</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
@@ -314,7 +314,7 @@ export function TrademarkMonitoringContent() {
                   </li>
                   <li className="flex items-start gap-2">
                     <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                    <span className="text-gray-700">Global coverage (180+ countries)</span>
+                    <span className="text-gray-700">Global coverage</span>
                   </li>
                   <li className="flex items-start gap-2">
                     <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />

@@ -639,7 +639,7 @@ function FreeSearchFormBody({ params }: { params: URLSearchParams }) {
               <div className="bg-white border border-gray-200 rounded-2xl p-5">
                 <p className="text-sm font-semibold text-primary mb-1">What happens next?</p>
                 <p className="text-sm text-gray-500 leading-relaxed">
-                  We check if your name is already registered or claimed by someone else — across trademark databases in 170+ countries. It&apos;s completely free and takes less than 5 minutes.
+                  We check if your name is already registered or claimed by someone else — across trademark databases. It&apos;s completely free and takes less than 5 minutes.
                 </p>
               </div>
 

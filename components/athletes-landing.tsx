@@ -42,7 +42,7 @@ export function AthletesLanding() {
               </div>
 
               <p className="label-caps text-[0.65rem] text-white/40">
-                Free name check&ensp;&middot;&ensp;Filed in 24 hours&ensp;&middot;&ensp;70+ countries&ensp;&middot;&ensp;Licensed attorneys
+                Free name check&ensp;&middot;&ensp;Filed in 24 hours&ensp;&middot;&ensp;Licensed attorneys
               </p>
             </div>
           </div>
@@ -168,7 +168,7 @@ export function AthletesLanding() {
                 number: "01",
                 title: "Free name check",
                 description:
-                  "We search trademark databases in 170+ countries to see if your name is already registered — or at risk. Takes seconds. Completely free.",
+                  "We search trademark databases to see if your name is already registered — or at risk. Takes seconds. Completely free.",
               },
               {
                 number: "02",
@@ -229,10 +229,10 @@ export function AthletesLanding() {
             <div>
               <ul className="space-y-4">
                 {[
-                  "Free trademark search across 170+ countries",
+                  "Free trademark search",
                   "Licensed attorney review of your application",
                   "Filing within 24 hours",
-                  "Coverage in 70+ countries (your choice)",
+                  "Coverage where you choose to file",
                   "1 year of trademark monitoring included",
                   "Alerts if someone tries to register something similar",
                   "Office action support if issues arise",
