@@ -1,9 +1,19 @@
 import { NextResponse } from "next/server"
 import { Resend } from "resend"
-import { createClient } from "@supabase/supabase-js"
+import { createClient, type SupabaseClient } from "@supabase/supabase-js"
+
+export const dynamic = "force-dynamic"
 
 const resend = new Resend(process.env.RESEND_API_KEY)
-const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!)
+
+function getSupabase(): SupabaseClient {
+  const supabaseUrl = process.env.SUPABASE_URL
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+  if (!supabaseUrl || !supabaseKey) {
+    throw new Error("supabaseUrl is required")
+  }
+  return createClient(supabaseUrl, supabaseKey)
+}
 
 export async function POST(req: Request) {
   try {
@@ -15,6 +25,7 @@ export async function POST(req: Request) {
     }
 
     // Get search data from Supabase
+    const supabase = getSupabase()
     const { data: searchData, error: fetchError } = await supabase
       .from("trademark_searches")
       .select("*")

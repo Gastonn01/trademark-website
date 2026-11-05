@@ -8,6 +8,8 @@ import { classesForCategory } from "@/lib/nice-classes"
 import { checkContentSimilarity } from "@/lib/content-similarity"
 import { isHoneypotTripped, looksLikeGibberish, withinSubmissionRateLimit } from "@/lib/spam-guard"
 
+export const dynamic = "force-dynamic"
+
 export const runtime = "nodejs"
 export const maxDuration = 45 // EUIPO/USPTO/Gemini/Apify/YouTube-transcript checks can take several seconds combined
 

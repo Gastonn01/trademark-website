@@ -4,6 +4,8 @@ import { put } from "@vercel/blob"
 import { v4 as uuidv4 } from "uuid"
 import { saveSearchData } from "@/lib/supabase"
 
+export const dynamic = "force-dynamic"
+
 const resend = new Resend(process.env.RESEND_API_KEY)
 
 export async function POST(request: NextRequest) {

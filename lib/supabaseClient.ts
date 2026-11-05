@@ -1,15 +1,36 @@
-import { createClient } from "@supabase/supabase-js"
+import { createClient, type SupabaseClient } from "@supabase/supabase-js"
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+function lazyClient(create: () => SupabaseClient): SupabaseClient {
+  let client: SupabaseClient | null = null
+  return new Proxy({} as SupabaseClient, {
+    get(_target, prop) {
+      if (!client) client = create()
+      const value = Reflect.get(client, prop, client)
+      return typeof value === "function" ? value.bind(client) : value
+    },
+  })
+}
 
-// Client-side Supabase client (uses anon key)
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+// Created on first use so importing this module does not require env at build time.
+export const supabase = lazyClient(() => {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  if (!supabaseUrl || !supabaseAnonKey) {
+    throw new Error("supabaseUrl is required")
+  }
+  return createClient(supabaseUrl, supabaseAnonKey)
+})
 
-// Server-side Supabase client (uses service role key for admin operations)
-export const supabaseAdmin = createClient(supabaseUrl, process.env.SUPABASE_SERVICE_ROLE_KEY!, {
-  auth: {
-    autoRefreshToken: false,
-    persistSession: false,
-  },
+export const supabaseAdmin = lazyClient(() => {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+  if (!supabaseUrl || !serviceKey) {
+    throw new Error("supabaseUrl is required")
+  }
+  return createClient(supabaseUrl, serviceKey, {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
+    },
+  })
 })

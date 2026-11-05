@@ -1,12 +1,31 @@
-import { createClient } from "@supabase/supabase-js"
+import { createClient, type SupabaseClient } from "@supabase/supabase-js"
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+let supabaseClient: SupabaseClient | null = null
 
-export const supabase = createClient(supabaseUrl, supabaseKey)
+function getSupabase(): SupabaseClient {
+  if (!supabaseClient) {
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    if (!supabaseUrl || !supabaseKey) {
+      throw new Error("supabaseUrl is required")
+    }
+    supabaseClient = createClient(supabaseUrl, supabaseKey)
+  }
+  return supabaseClient
+}
+
+// Lazy so `next build` can import this module without Supabase env vars.
+// The client is created on first use, same singleton as a module-level client.
+export const supabase = new Proxy({} as SupabaseClient, {
+  get(_target, prop) {
+    const client = getSupabase()
+    const value = Reflect.get(client, prop, client)
+    return typeof value === "function" ? value.bind(client) : value
+  },
+})
 
 export function getSupabaseClient() {
-  return supabase
+  return getSupabase()
 }
 
 // Non-fatal existence check — table creation is a one-time step run via

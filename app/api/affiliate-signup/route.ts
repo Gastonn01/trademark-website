@@ -2,6 +2,8 @@ import { NextResponse } from "next/server"
 import { v4 as uuidv4 } from "uuid"
 import { getSupabaseClient } from "@/lib/supabase"
 
+export const dynamic = "force-dynamic"
+
 export async function POST(req: Request) {
   try {
     const body = await req.json()
