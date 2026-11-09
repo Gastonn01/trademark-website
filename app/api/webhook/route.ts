@@ -1,11 +1,9 @@
-import Stripe from "stripe"
 import { headers } from "next/headers"
 import { Resend } from "resend"
+import { stripeClient } from "@/lib/runtime-clients"
 
-// Initialize Stripe
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
-  apiVersion: "2024-06-20",
-})
+// Created on first use so preview builds do not require Stripe env vars.
+const stripe = stripeClient("2024-06-20")
 
 // Initialize Resend
 let resend: Resend | null = null

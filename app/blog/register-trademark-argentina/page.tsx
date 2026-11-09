@@ -5,13 +5,26 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
 export const metadata = {
-  title: "How to Register a Trademark in Argentina (2024) | Complete Guide",
+  openGraph: {
+    title: "How to Register a Trademark in Argentina (2026) | Complete Guide",
+    description: "Master the process of trademark registration in Argentina. Learn about local requirements, costs, and strategies for protecting your brand in the Argentine market.",
+    url: "/blog/register-trademark-argentina",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "How to Register a Trademark in Argentina (2026) | Complete Guide",
+    description: "Master the process of trademark registration in Argentina. Learn about local requirements, costs, and strategies for protecting your brand in the Argentine market.",
+  },
+  title: "How to Register a Trademark in Argentina (2026) | Complete Guide",
   description:
     "Master the process of trademark registration in Argentina. Learn about local requirements, costs, and strategies for protecting your brand in the Argentine market.",
   keywords:
     "Argentina trademark registration, Argentine IP law, INPI, brand protection Argentina, intellectual property Argentina, trademark filing Argentina",
   alternates: {
-    canonical: "https://justprotected.com/blog/register-trademark-argentina/",
+    canonical: "/blog/register-trademark-argentina",
   },
 }
 
@@ -30,7 +43,7 @@ export default function RegisterTrademarkArgentina() {
 
         <div className="mb-8">
           <h1 className="text-4xl font-bold mb-4 text-blue-900">
-            How to Register a Trademark in Argentina: Expert Guide 2024
+            How to Register a Trademark in Argentina: Expert Guide 2026
           </h1>
           <p className="text-gray-600">
             Updated: {new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}

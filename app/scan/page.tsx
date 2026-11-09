@@ -4,13 +4,26 @@ import { CloneScanLanding } from "@/components/clone-scan-landing"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
+  openGraph: {
+    title: "Free Brand Clone Scan | Just Protected",
+    description: "Fake shops, cloned accounts, and AI-generated ads impersonating your brand — we scan every major platform and send you a lawyer-reviewed report. Free for 20 brands this month.",
+    url: "/scan",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Free Brand Clone Scan | Just Protected",
+    description: "Fake shops, cloned accounts, and AI-generated ads impersonating your brand — we scan every major platform and send you a lawyer-reviewed report. Free for 20 brands this month.",
+  },
   title: "Free Brand Clone Scan | Just Protected",
   description:
     "Fake shops, cloned accounts, and AI-generated ads impersonating your brand — we scan every major platform and send you a lawyer-reviewed report. Free for 20 brands this month.",
   keywords:
     "brand impersonation, fake instagram account selling, brand clone, counterfeit listing removal, AI deepfake ad, trademark monitoring, brand protection scan",
   alternates: {
-    canonical: "https://justprotected.com/scan",
+    canonical: "/scan",
     languages: { es: "https://justprotected.com/escaneo" },
   },
 }

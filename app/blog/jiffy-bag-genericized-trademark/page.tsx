@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   description:
     "Explore how 'Jiffy Bag' became a genericized trademark for padded envelopes, especially in British English, and what this means for trademark protection.",
   alternates: {
-    canonical: "https://justprotected.com/blog/jiffy-bag-genericized-trademark/",
+    canonical: "/blog/jiffy-bag-genericized-trademark",
   },
   openGraph: {
     title: "When Brands Become Generic: The Case of Jiffy Bag | Trademark Protection",

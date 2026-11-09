@@ -5,13 +5,26 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
 export const metadata = {
-  title: "How to Register a Trademark in New Zealand (2024) | Complete Guide",
+  openGraph: {
+    title: "How to Register a Trademark in New Zealand (2026) | Complete Guide",
+    description: "Master the process of trademark registration in New Zealand. Learn about local requirements, costs, and strategies for protecting your brand in the New Zealand market.",
+    url: "/blog/register-trademark-new-zealand",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "How to Register a Trademark in New Zealand (2026) | Complete Guide",
+    description: "Master the process of trademark registration in New Zealand. Learn about local requirements, costs, and strategies for protecting your brand in the New Zealand market.",
+  },
+  title: "How to Register a Trademark in New Zealand (2026) | Complete Guide",
   description:
     "Master the process of trademark registration in New Zealand. Learn about local requirements, costs, and strategies for protecting your brand in the New Zealand market.",
   keywords:
     "New Zealand trademark registration, NZ IP law, IPONZ, brand protection New Zealand, intellectual property New Zealand, trademark filing NZ",
   alternates: {
-    canonical: "https://justprotected.com/blog/register-trademark-new-zealand/",
+    canonical: "/blog/register-trademark-new-zealand",
   },
 }
 
@@ -30,7 +43,7 @@ export default function RegisterTrademarkNewZealand() {
 
         <div className="mb-8">
           <h1 className="text-4xl font-bold mb-4 text-indigo-900">
-            Registering a Trademark in New Zealand: Expert Guide 2024
+            Registering a Trademark in New Zealand: Expert Guide 2026
           </h1>
           <p className="text-gray-600">
             Updated: {new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}

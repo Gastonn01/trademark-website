@@ -5,6 +5,19 @@ import Link from "next/link"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
+  openGraph: {
+    title: "Trademark Registration in the Age of AI: Why Protecting Your Brand Early Is No Longer Optional | JustProtected",
+    description: "Trademark registration is now essential for businesses, creators, and online brands. Learn why early trademark protection matters and how to secure your brand online.",
+    url: "/blog/trademark-registration-age-of-ai",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Trademark Registration in the Age of AI: Why Protecting Your Brand Early Is No Longer Optional | JustProtected",
+    description: "Trademark registration is now essential for businesses, creators, and online brands. Learn why early trademark protection matters and how to secure your brand online.",
+  },
   title:
     "Trademark Registration in the Age of AI: Why Protecting Your Brand Early Is No Longer Optional | JustProtected",
   description:
@@ -12,7 +25,7 @@ export const metadata: Metadata = {
   keywords:
     "AI trademark registration, brand protection AI era, online trademark registration, trademark squatting, trademark early registration, AI brand conflicts",
   alternates: {
-    canonical: "https://justprotected.com/blog/trademark-registration-age-of-ai/",
+    canonical: "/blog/trademark-registration-age-of-ai",
   },
 }
 

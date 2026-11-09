@@ -51,7 +51,7 @@ export function MusiciansLanding() {
               </div>
 
               <p className="label-caps text-[0.65rem] text-white/40">
-                Free name check&ensp;&middot;&ensp;Filed in 24 hours&ensp;&middot;&ensp;70+ countries&ensp;&middot;&ensp;Licensed attorneys
+                Free name check&ensp;&middot;&ensp;Filed in 24 hours&ensp;&middot;&ensp;Licensed attorneys&ensp;&middot;&ensp;15+ years of experience
               </p>
             </motion.div>
           </div>
@@ -126,7 +126,7 @@ export function MusiciansLanding() {
             </blockquote>
             <p className="text-white/50 font-light mb-8 leading-relaxed">
               A trademark doesn&apos;t solve every AI problem. But it gives you the legal standing to act —
-              immediately, in 70+ countries.
+              immediately, by licensed attorneys.
             </p>
             <Link
               href="/blog/ai-voice-cloning-drake-ip-battleground"
@@ -192,7 +192,7 @@ export function MusiciansLanding() {
                 number: "01",
                 title: "Free name check",
                 description:
-                  "We search trademark databases in 170+ countries for your artist name, band name, or brand. Instant results, completely free.",
+                  "We search trademark databases for your artist name, band name, or brand. Instant results, completely free.",
               },
               {
                 number: "02",
@@ -260,10 +260,10 @@ export function MusiciansLanding() {
             <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
               <ul className="space-y-4">
                 {[
-                  "Free trademark search across 170+ countries",
+                  "Free trademark search",
                   "Licensed attorney review",
                   "Filing within 24 hours",
-                  "Coverage in 70+ countries",
+                  "Coverage in the countries you choose",
                   "Music & entertainment-specific classification",
                   "1 year of monitoring included",
                   "Alerts if someone files a similar name",

@@ -51,7 +51,7 @@ export function CreatorsLanding() {
               </div>
 
               <p className="label-caps text-[0.65rem] text-white/40">
-                Free name check&ensp;&middot;&ensp;Filed in 24 hours&ensp;&middot;&ensp;70+ countries&ensp;&middot;&ensp;Licensed attorneys
+                Free name check&ensp;&middot;&ensp;Filed in 24 hours&ensp;&middot;&ensp;Licensed attorneys&ensp;&middot;&ensp;15+ years of experience
               </p>
             </motion.div>
           </div>
@@ -167,7 +167,7 @@ export function CreatorsLanding() {
                 number: "01",
                 title: "Free name check",
                 description:
-                  "We search trademark databases across 170+ countries. Find out instantly if your name or handle is already claimed — or at risk.",
+                  "We search trademark databases for your name or handle. Find out instantly if it is already claimed — or at risk.",
               },
               {
                 number: "02",
@@ -235,10 +235,10 @@ export function CreatorsLanding() {
             <motion.div initial={{ opacity: 0, x: 20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
               <ul className="space-y-4">
                 {[
-                  "Free trademark search across 170+ countries",
+                  "Free trademark search",
                   "Licensed attorney review",
                   "Filing within 24 hours",
-                  "Coverage in 70+ countries",
+                  "Coverage in the countries you choose",
                   "Creator-specific goods & services classification",
                   "1 year of monitoring included",
                   "Alerts if someone files something similar",

@@ -1,7 +1,7 @@
 "use client"
 
 export function TrustBanner() {
-  const trustItems = ["Registered law firm", "Licensed attorneys", "15+ years of practice", "70+ countries"]
+  const trustItems = ["Registered law firm", "Licensed attorneys", "15+ years of experience", "Worldwide coverage"]
 
   return (
     <section className="py-8 bg-white border-y border-gray-100">

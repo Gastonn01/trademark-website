@@ -34,7 +34,7 @@ export function CTASection() {
             </div>
 
             <p className="label-caps text-[0.65rem] text-white/35">
-              Filed in 24 hours&ensp;&middot;&ensp;70+ countries&ensp;&middot;&ensp;Money-back guarantee
+              Filed in 24 hours&ensp;&middot;&ensp;Licensed attorneys&ensp;&middot;&ensp;Money-back guarantee
             </p>
           </div>
         </div>

@@ -18,7 +18,7 @@ export default function RegisterTrademarkFranceClientPage() {
       <ScrollToTopOnMount />
 
       <BlogPostHeader
-        title="How to Register a Trademark in France (2025) | Complete Guide"
+        title="How to Register a Trademark in France (2026) | Complete Guide"
         date="April 5, 2025"
         category="International Trademark Registration"
       />

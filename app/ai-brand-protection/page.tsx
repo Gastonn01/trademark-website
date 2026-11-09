@@ -4,9 +4,23 @@ import { NavBar } from "@/components/nav-bar"
 import { Footer } from "@/components/footer"
 
 export const metadata: Metadata = {
+  openGraph: {
+    title: "How to Protect Your Brand From AI Cloning & Impersonation | Just Protected",
+    description: "AI tools make it trivial to clone a brand name, storefront, voice, or likeness. Here's what actually protects you — a registered trademark, why it works, and how to get one filed in 24 hours.",
+    url: "/ai-brand-protection",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "How to Protect Your Brand From AI Cloning & Impersonation | Just Protected",
+    description: "AI tools make it trivial to clone a brand name, storefront, voice, or likeness. Here's what actually protects you — a registered trademark, why it works, and how to get one filed in 24 hours.",
+  },
+  alternates: { canonical: "/ai-brand-protection" },
   title: "How to Protect Your Brand From AI Cloning & Impersonation | Just Protected",
   description:
-    "AI tools make it trivial to clone a brand name, storefront, voice, or likeness. Here's what actually protects you — a registered trademark, why it works, and how to get one filed in 24 hours across 70+ countries.",
+    "AI tools make it trivial to clone a brand name, storefront, voice, or likeness. Here's what actually protects you — a registered trademark, why it works, and how to get one filed in 24 hours.",
   keywords:
     "protect brand from AI, AI brand impersonation, AI clone trademark, stop AI from using my brand, AI deepfake brand protection, trademark for AI era, brand clone scan",
 }
@@ -30,7 +44,7 @@ const faqs = [
   },
   {
     q: "What's the fastest way to register a trademark?",
-    a: "Filing directly with a licensed IP attorney who specializes in fast turnaround is the quickest route — Just Protected files within 24 hours of submission across 70+ countries. DIY filing through a national trademark office is cheaper but typically takes longer and carries higher rejection risk if the application isn't filed correctly.",
+    a: "Filing directly with a licensed IP attorney who specializes in fast turnaround is the quickest route — Just Protected files within 24 hours of submission. DIY filing through a national trademark office is cheaper but typically takes longer and carries higher rejection risk if the application isn't filed correctly.",
   },
 ]
 
@@ -115,7 +129,7 @@ export default function AiBrandProtectionPage() {
                   <td className="py-3 pr-4">Bundling with other legal paperwork, single-country filing</td>
                 </tr>
                 <tr className="border-b border-gray-100">
-                  <td className="py-3 pr-4">Just Protected (licensed IP attorneys, 70+ countries)</td>
+                  <td className="py-3 pr-4">Just Protected (licensed IP attorneys)</td>
                   <td className="py-3 pr-4">Filed within 24 hours</td>
                   <td className="py-3 pr-4">
                     Need speed, need multi-country coverage, or want a free scan first to see existing exposure

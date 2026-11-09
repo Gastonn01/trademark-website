@@ -30,7 +30,7 @@ export function HeroSection() {
             <p className="text-base md:text-lg text-white/60 mb-12 max-w-2xl mx-auto leading-relaxed font-light">
               Deepfakes. Voice cloning. Fake sponsorships. A registered trademark gives you
               the legal power to demand takedowns and own your identity — filed in 24 hours,
-              in 70+ countries.
+              by licensed attorneys.
             </p>
 
             <div className="max-w-xl mx-auto mb-6">
@@ -74,10 +74,10 @@ export function HeroSection() {
             transition={{ delay: 0.35, duration: 0.7 }}
           >
             {[
-              { label: "Countries covered", value: "70+" },
+              { label: "Coverage", value: "Worldwide" },
               { label: "Identities protected", value: "10,000+" },
               { label: "Approval rate", value: "95%" },
-              { label: "Years of practice", value: "15+" },
+              { label: "Years of experience", value: "15+" },
             ].map((stat, index) => (
               <div key={index} className="text-center">
                 <div className="font-serif text-3xl md:text-4xl text-white mb-2">{stat.value}</div>

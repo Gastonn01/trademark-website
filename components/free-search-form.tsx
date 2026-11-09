@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState, useEffect, useMemo, useRef } from "react"
+import { Suspense, useState, useEffect, useMemo, useRef } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -236,9 +236,12 @@ const audienceLabels: Record<string, { heading: string; namePlaceholder: string;
   },
 }
 
-export function FreeSearchForm() {
+function FreeSearchFormBody({
+  searchParams,
+}: {
+  searchParams: { get: (key: string) => string | null }
+}) {
   const router = useRouter()
-  const searchParams = useSearchParams()
   const { currency } = useCurrency() // Use global currency hook
   // "defend" = visitor found their own name registered by someone else
   // (enforcement lead from the instant checker)
@@ -626,7 +629,7 @@ export function FreeSearchForm() {
               <div className="bg-white border border-gray-200 rounded-2xl p-5">
                 <p className="text-sm font-semibold text-primary mb-1">What happens next?</p>
                 <p className="text-sm text-gray-500 leading-relaxed">
-                  We check if your name is already registered or claimed by someone else — across trademark databases in 170+ countries. It&apos;s completely free and takes less than 5 minutes.
+                  We check if your name is already registered or claimed by someone else — across trademark databases. It&apos;s completely free and takes less than 5 minutes.
                 </p>
               </div>
 
@@ -1313,5 +1316,18 @@ export function FreeSearchForm() {
         </div>
       </div>
     </div>
+  )
+}
+
+function FreeSearchFormWithParams() {
+  const searchParams = useSearchParams()
+  return <FreeSearchFormBody searchParams={searchParams} />
+}
+
+export function FreeSearchForm() {
+  return (
+    <Suspense fallback={<FreeSearchFormBody searchParams={new URLSearchParams()} />}>
+      <FreeSearchFormWithParams />
+    </Suspense>
   )
 }

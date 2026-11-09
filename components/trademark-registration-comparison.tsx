@@ -36,7 +36,7 @@ const countries = [
     cost: "€850 for the first class, €50 for the second class, €150 for each additional class",
     time: "4-6 months without opposition",
     uniqueFeatures: [
-      "Single application covers all 27 member states",
+      "Single application covers all EU member states",
       "No proof of use required for initial registration",
     ],
   },

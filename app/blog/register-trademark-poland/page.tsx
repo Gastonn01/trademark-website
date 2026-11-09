@@ -5,13 +5,26 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
 export const metadata = {
-  title: "How to Register a Trademark in Poland (2024) | Complete Guide",
+  openGraph: {
+    title: "How to Register a Trademark in Poland (2026) | Complete Guide",
+    description: "Master the process of trademark registration in Poland. Learn about local requirements, costs, and strategies for protecting your brand in the Polish market.",
+    url: "/blog/register-trademark-poland",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "How to Register a Trademark in Poland (2026) | Complete Guide",
+    description: "Master the process of trademark registration in Poland. Learn about local requirements, costs, and strategies for protecting your brand in the Polish market.",
+  },
+  title: "How to Register a Trademark in Poland (2026) | Complete Guide",
   description:
     "Master the process of trademark registration in Poland. Learn about local requirements, costs, and strategies for protecting your brand in the Polish market.",
   keywords:
     "Poland trademark registration, Polish IP law, PPO, brand protection Poland, intellectual property Poland, trademark filing Poland",
   alternates: {
-    canonical: "https://justprotected.com/blog/register-trademark-poland/",
+    canonical: "/blog/register-trademark-poland",
   },
 }
 
@@ -30,7 +43,7 @@ export default function RegisterTrademarkPoland() {
 
         <div className="mb-8">
           <h1 className="text-4xl font-bold mb-4 text-red-900">
-            How to Register a Trademark in Poland: Expert Guide 2024
+            How to Register a Trademark in Poland: Expert Guide 2026
           </h1>
           <p className="text-gray-600">
             Updated: {new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}

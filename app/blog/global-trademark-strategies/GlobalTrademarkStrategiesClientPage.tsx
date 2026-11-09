@@ -64,7 +64,7 @@ export default function GlobalTrademarkStrategiesClientPage() {
           </p>
           <ul className="list-disc pl-6 space-y-2 mb-4">
             <li>
-              <strong>Madrid System:</strong> Allows filing in up to 128 countries with a single application
+              <strong>Madrid System:</strong> Allows filing in multiple countries with a single application
             </li>
             <li>
               <strong>European Union Trademark (EUTM):</strong> Provides protection across all EU member states

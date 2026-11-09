@@ -1,3 +1,24 @@
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "The Importance of Brand Protection | Just Protected",
+  description: "Why brand protection matters, and how trademark registration helps you keep a distinctive identity.",
+  alternates: { canonical: "/blog/importance-of-brand-protection" },
+  openGraph: {
+    title: "The Importance of Brand Protection | Just Protected",
+    description: "Why brand protection matters, and how trademark registration helps you keep a distinctive identity.",
+    url: "/blog/importance-of-brand-protection",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "The Importance of Brand Protection | Just Protected",
+    description: "Why brand protection matters, and how trademark registration helps you keep a distinctive identity.",
+  },
+}
+
 import Image from "next/image"
 import { NavBar } from "@/components/nav-bar"
 import { Footer } from "@/components/footer"

@@ -4,6 +4,7 @@ import Link from "next/link"
 import { AlertTriangle, TrendingUp, Shield } from "lucide-react"
 
 export const metadata = {
+  alternates: { canonical: "/blog/ai-generated-logos-brand-names-real-risk" },
   title: "AI-Generated Logos And Brand Names: The Real Risk Isn't What You Think | Just Protected",
   description:
     "The real risk with AI-generated brand assets isn't copyright—it's defensibility, scalability, and exit value. Learn what smart founders are doing before this becomes obvious.",

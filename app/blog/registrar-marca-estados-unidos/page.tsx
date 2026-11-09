@@ -3,13 +3,26 @@ import { NavBar } from "@/components/nav-bar"
 import { Footer } from "@/components/footer"
 
 export const metadata = {
-  title: "Guía Completa: Cómo Registrar una Marca en Estados Unidos (2024)",
+  openGraph: {
+    title: "Guía Completa: Cómo Registrar una Marca en Estados Unidos (2026)",
+    description: "Guía completa para el registro de marcas en EE.UU. Aprenda el proceso paso a paso, costos, plazos y requisitos para proteger su marca en los Estados Unidos.",
+    url: "/blog/registrar-marca-estados-unidos",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Guía Completa: Cómo Registrar una Marca en Estados Unidos (2026)",
+    description: "Guía completa para el registro de marcas en EE.UU. Aprenda el proceso paso a paso, costos, plazos y requisitos para proteger su marca en los Estados Unidos.",
+  },
+  title: "Guía Completa: Cómo Registrar una Marca en Estados Unidos (2026)",
   description:
     "Guía completa para el registro de marcas en EE.UU. Aprenda el proceso paso a paso, costos, plazos y requisitos para proteger su marca en los Estados Unidos.",
   keywords:
     "registro de marca EE.UU., USPTO, marca estadounidense, protección de marca EE.UU., registro de marca Estados Unidos",
   alternates: {
-    canonical: "https://justprotected.com/blog/registrar-marca-estados-unidos/",
+    canonical: "/blog/registrar-marca-estados-unidos",
     languages: {
       es: "https://justprotected.com/blog/registrar-marca-estados-unidos/",
       en: "https://justprotected.com/blog/register-trademark-usa/",

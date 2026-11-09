@@ -5,13 +5,26 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
 export const metadata = {
-  title: "How to Register a Trademark in the European Union (2024) | Complete Guide",
+  openGraph: {
+    title: "How to Register a Trademark in the European Union (2026) | Complete Guide",
+    description: "Comprehensive guide to EU trademark registration. Learn the step-by-step process, costs, timelines, and requirements to protect your brand across all EU member states.",
+    url: "/blog/register-trademark-eu",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "How to Register a Trademark in the European Union (2026) | Complete Guide",
+    description: "Comprehensive guide to EU trademark registration. Learn the step-by-step process, costs, timelines, and requirements to protect your brand across all EU member states.",
+  },
+  title: "How to Register a Trademark in the European Union (2026) | Complete Guide",
   description:
-    "Comprehensive guide to EU trademark registration. Learn the step-by-step process, costs, timelines, and requirements to protect your brand across all 27 member states.",
+    "Comprehensive guide to EU trademark registration. Learn the step-by-step process, costs, timelines, and requirements to protect your brand across all EU member states.",
   keywords:
     "EU trademark registration, EUIPO, EU trademark, European trademark, EU brand protection, European Union trademark",
   alternates: {
-    canonical: "https://justprotected.com/blog/register-trademark-eu/",
+    canonical: "/blog/register-trademark-eu",
     languages: {
       en: "https://justprotected.com/blog/register-trademark-eu/",
       es: "https://justprotected.com/blog/registrar-marca-union-europea/",
@@ -34,7 +47,7 @@ export default function RegisterTrademarkEU() {
 
         <div className="mb-8">
           <h1 className="text-4xl font-bold mb-4 text-indigo-900">
-            How to Register a Trademark in the European Union: Complete Guide 2024
+            How to Register a Trademark in the European Union: Complete Guide 2026
           </h1>
           <p className="text-gray-600">
             Updated: {new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}
@@ -55,7 +68,7 @@ export default function RegisterTrademarkEU() {
         <div className="prose prose-indigo max-w-none">
           <h2>What is a European Union Trademark (EUTM)?</h2>
           <p>
-            A European Union Trademark (EUTM) provides uniform protection across all 27 EU member states through a
+            A European Union Trademark (EUTM) provides uniform protection across all EU member states through a
             single registration procedure. This system, managed by the European Union Intellectual Property Office
             (EUIPO), allows businesses to protect their trademarks throughout the entire EU single market with just one
             application.
@@ -65,7 +78,7 @@ export default function RegisterTrademarkEU() {
           <div className="grid md:grid-cols-2 gap-6 my-8">
             <div className="bg-white p-6 rounded-lg shadow-md">
               <h3 className="text-xl font-semibold mb-3 text-indigo-700">Uniform Protection</h3>
-              <p>Simultaneous coverage in all 27 EU member states with a single application and fee.</p>
+              <p>Simultaneous coverage in all EU member states with a single application and fee.</p>
             </div>
             <div className="bg-white p-6 rounded-lg shadow-md">
               <h3 className="text-xl font-semibold mb-3 text-indigo-700">Simple Renewal</h3>

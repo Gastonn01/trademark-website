@@ -5,6 +5,19 @@ import { Footer } from "@/components/footer"
 import { AmazonBrandCheckForm } from "@/components/amazon-brand-check-form"
 
 export const metadata: Metadata = {
+  openGraph: {
+    title: "Trademark Help for Amazon Sellers | Just Protected",
+    description: "Launching a product brand on Amazon? Request a preliminary trademark review for your name, products, and target market before committing to packaging and inventory.",
+    url: "/for-amazon-sellers",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Trademark Help for Amazon Sellers | Just Protected",
+    description: "Launching a product brand on Amazon? Request a preliminary trademark review for your name, products, and target market before committing to packaging and inventory.",
+  },
   title: "Trademark Help for Amazon Sellers | Just Protected",
   description: "Launching a product brand on Amazon? Request a preliminary trademark review for your name, products, and target market before committing to packaging and inventory.",
   alternates: { canonical: "/for-amazon-sellers" },

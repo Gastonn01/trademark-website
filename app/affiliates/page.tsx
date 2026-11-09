@@ -4,6 +4,20 @@ import { Footer } from "@/components/footer"
 import { AffiliateSignupForm } from "@/components/affiliate-signup-form"
 
 export const metadata: Metadata = {
+  openGraph: {
+    title: "Affiliate Program for Creators | Just Protected",
+    description: "Earn commission recommending Just Protected's trademark registration and brand protection service to your audience.",
+    url: "/affiliates",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Affiliate Program for Creators | Just Protected",
+    description: "Earn commission recommending Just Protected's trademark registration and brand protection service to your audience.",
+  },
+  alternates: { canonical: "/affiliates" },
   title: "Affiliate Program for Creators | Just Protected",
   description: "Earn commission recommending Just Protected's trademark registration and brand protection service to your audience.",
 }

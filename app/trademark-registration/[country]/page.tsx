@@ -32,7 +32,15 @@ export async function generateMetadata({
     description: `Register your trademark in ${name} from $${data.prices.USD} USD all-inclusive. Licensed attorneys, filed in 24 hours, monthly installments available. Free trademark search included.`,
     keywords: `trademark registration ${name}, register trademark in ${name}, ${name} trademark cost, how to trademark in ${name}, ${name} brand protection`,
     alternates: {
-      canonical: `https://justprotected.com/trademark-registration/${country}`,
+      canonical: `/trademark-registration/${country}`,
+    },
+    openGraph: {
+      title: `Trademark Registration in ${name} (2026): Cost & Process | Just Protected`,
+      description: `Register your trademark in ${name} from $${data.prices.USD} USD all-inclusive. Licensed attorneys, filed in 24 hours, monthly installments available. Free trademark search included.`,
+      url: `/trademark-registration/${country}`,
+      siteName: "Just Protected",
+      locale: "en_US",
+      type: "website",
     },
   }
 }

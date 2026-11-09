@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { Mail, Phone } from "lucide-react"
 import { LogoMark } from "@/components/logo-mark"
+import { BlogContextualLinks } from "@/components/blog-contextual-links"
 
 export function Footer() {
   return (
@@ -73,6 +74,8 @@ export function Footer() {
             </ul>
           </div>
         </div>
+
+        <BlogContextualLinks />
 
         <div className="pt-8 border-t border-white/10">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">

@@ -17,13 +17,26 @@ import {
 } from "lucide-react"
 
 export const metadata = {
+  openGraph: {
+    title: "Register Your Trademark in Germany - Fast, Affordable, Fully Guided | JustProtected",
+    description: "Secure your brand with Germany's official trademark office (DPMA). No legal confusion, no costly mistakes - our specialists handle everything for you. Fixed pricing, 24h response.",
+    url: "/blog/register-trademark-germany",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Register Your Trademark in Germany - Fast, Affordable, Fully Guided | JustProtected",
+    description: "Secure your brand with Germany's official trademark office (DPMA). No legal confusion, no costly mistakes - our specialists handle everything for you. Fixed pricing, 24h response.",
+  },
   title: "Register Your Trademark in Germany - Fast, Affordable, Fully Guided | JustProtected",
   description:
     "Secure your brand with Germany's official trademark office (DPMA). No legal confusion, no costly mistakes - our specialists handle everything for you. Fixed pricing, 24h response.",
   keywords:
     "Germany trademark registration, DPMA trademark, register trademark Germany, German IP protection, trademark filing Germany, DPMA registration cost",
   alternates: {
-    canonical: "https://justprotected.com/blog/register-trademark-germany/",
+    canonical: "/blog/register-trademark-germany",
   },
 }
 
@@ -38,7 +51,7 @@ export default function RegisterTrademarkGermany() {
           <div className="max-w-4xl mx-auto">
             <div className="text-sm text-blue-200 mb-4">Trademark Guide</div>
             <h1 className="text-4xl md:text-5xl font-bold mb-6 text-white leading-tight">
-              How to Register a Trademark in Germany: Complete Guide for 2025
+              How to Register a Trademark in Germany: Complete Guide for 2026
             </h1>
             <p className="text-xl text-blue-100 mb-8 leading-relaxed">
               Everything you need to know about protecting your brand with the German Patent and Trade Mark Office
@@ -406,7 +419,7 @@ export default function RegisterTrademarkGermany() {
               },
               {
                 q: "Can I register a trademark in multiple countries?",
-                a: "Yes. You can file separate national applications, apply for an EU trademark (covering all 27 EU countries), or use the Madrid System for international registration covering up to 130 countries.",
+                a: "Yes. You can file separate national applications, apply for an EU trademark (covering the European Union), or use the Madrid System for international registration.",
               },
               {
                 q: "What happens if someone opposes my trademark?",

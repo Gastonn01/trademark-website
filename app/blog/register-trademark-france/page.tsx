@@ -4,14 +4,14 @@ import { Footer } from "@/components/footer"
 import RegisterTrademarkFranceClientPage from "./RegisterTrademarkFranceClientPage"
 
 export const metadata: Metadata = {
-  title: "How to Register a Trademark in France (2025) | Complete Guide",
+  title: "How to Register a Trademark in France (2026) | Complete Guide",
   description:
     "Learn how to register a trademark in France with our comprehensive guide. Understand the INPI process, costs, timeline, and requirements for protecting your brand in the French market.",
   alternates: {
-    canonical: "https://justprotected.com/blog/register-trademark-france/",
+    canonical: "/blog/register-trademark-france",
   },
   openGraph: {
-    title: "How to Register a Trademark in France (2025) | Complete Guide",
+    title: "How to Register a Trademark in France (2026) | Complete Guide",
     description:
       "Learn how to register a trademark in France with our comprehensive guide. Understand the INPI process, costs, timeline, and requirements for protecting your brand in the French market.",
     url: "https://justprotected.com/blog/register-trademark-france/",

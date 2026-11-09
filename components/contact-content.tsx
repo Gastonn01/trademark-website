@@ -256,7 +256,7 @@ export function ContactContent() {
                 <div>
                   <h4 className="font-semibold text-gray-900 mb-2">Do you offer international trademark protection?</h4>
                   <p className="text-gray-600 text-sm">
-                    Yes, we provide trademark registration services in over 180 countries worldwide, including EU, US,
+                    Yes, we provide trademark registration services worldwide, including the EU, the US,
                     UK, and many others.
                   </p>
                 </div>

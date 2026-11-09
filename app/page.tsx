@@ -12,9 +12,23 @@ import { Footer } from "@/components/footer"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
+  openGraph: {
+    title: "Just Protected | Protect Your Name, Voice & Identity from AI",
+    description: "AI is using your name, face, and voice without permission. Just Protected helps athletes, creators, and artists trademark their identity and fight back — filed in 24 hours.",
+    url: "/",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Just Protected | Protect Your Name, Voice & Identity from AI",
+    description: "AI is using your name, face, and voice without permission. Just Protected helps athletes, creators, and artists trademark their identity and fight back — filed in 24 hours.",
+  },
+  alternates: { canonical: "/" },
   title: "Just Protected | Protect Your Name, Voice & Identity from AI",
   description:
-    "AI is using your name, face, and voice without permission. Just Protected helps athletes, creators, and artists trademark their identity and fight back — filed in 24 hours, 70+ countries.",
+    "AI is using your name, face, and voice without permission. Just Protected helps athletes, creators, and artists trademark their identity and fight back — filed in 24 hours.",
 }
 
 export default function Home() {

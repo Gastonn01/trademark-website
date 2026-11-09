@@ -5,13 +5,26 @@ import Link from "next/link"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
+  openGraph: {
+    title: "Dupe Defense: Why Knockoff Culture Is Triggering a New Wave of Brand Litigation | JustProtected",
+    description: "Brands are pushing back against viral dupe culture. Learn why knockoff litigation is surging, how influencers are being sued, and what this means for trademarks and enforcement.",
+    url: "/blog/dupe-defense-knockoff-brand-litigation",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Dupe Defense: Why Knockoff Culture Is Triggering a New Wave of Brand Litigation | JustProtected",
+    description: "Brands are pushing back against viral dupe culture. Learn why knockoff litigation is surging, how influencers are being sued, and what this means for trademarks and enforcement.",
+  },
   title: "Dupe Defense: Why Knockoff Culture Is Triggering a New Wave of Brand Litigation | JustProtected",
   description:
     "Brands are pushing back against viral dupe culture. Learn why knockoff litigation is surging, how influencers are being sued, and what this means for trademarks and enforcement.",
   keywords:
     "dupe culture, knockoff litigation, trademark infringement, influencer lawsuits, brand protection, trademark dilution, dupe defense",
   alternates: {
-    canonical: "https://justprotected.com/blog/dupe-defense-knockoff-brand-litigation/",
+    canonical: "/blog/dupe-defense-knockoff-brand-litigation",
   },
 }
 

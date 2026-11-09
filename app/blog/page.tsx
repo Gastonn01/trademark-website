@@ -4,11 +4,24 @@ import { BlogPostPreview } from "@/components/blog-post-preview"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
+  openGraph: {
+    title: "Trademark Registration Blog | Expert Insights & Guides",
+    description: "Explore our blog for expert insights on trademark registration, brand protection strategies, and intellectual property tips for businesses worldwide.",
+    url: "/blog",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Trademark Registration Blog | Expert Insights & Guides",
+    description: "Explore our blog for expert insights on trademark registration, brand protection strategies, and intellectual property tips for businesses worldwide.",
+  },
   title: "Trademark Registration Blog | Expert Insights & Guides",
   description:
     "Explore our blog for expert insights on trademark registration, brand protection strategies, and intellectual property tips for businesses worldwide.",
   alternates: {
-    canonical: "https://justprotected.com/blog/",
+    canonical: "/blog",
   },
 }
 
@@ -56,6 +69,9 @@ function getBlogPosts() {
     "register-trademark-argentina",
     "register-trademark-poland",
     "register-trademark-czech-republic",
+    "registrar-marca-estados-unidos",
+    "registrar-marca-union-europea",
+    "uspto-detroit-satellite-office",
   ]
 
   // Generate consistent publishing dates (Tuesdays and Thursdays)
@@ -125,6 +141,9 @@ function getBlogPosts() {
       "register-trademark-argentina",
       "register-trademark-poland",
       "register-trademark-czech-republic",
+      "registrar-marca-estados-unidos",
+      "registrar-marca-union-europea",
+      "uspto-detroit-satellite-office",
     ],
   }
 
@@ -300,13 +319,13 @@ function getBlogPosts() {
       image: "/argentina-buenos-aires-business-law.jpg",
     },
     "register-trademark-usa": {
-      title: "Securing Your Brand in America: US Trademark Guide (2024)",
+      title: "Securing Your Brand in America: US Trademark Guide (2026)",
       description:
         "Comprehensive guide to US trademark registration. Learn the step-by-step process, costs, timelines, and requirements to protect your brand in the United States.",
       image: countryImages["register-trademark-usa"],
     },
     "register-trademark-california": {
-      title: "How to Register a Trademark in California (2024) | Complete Guide",
+      title: "How to Register a Trademark in California (2026) | Complete Guide",
       description:
         "Complete guide to California trademark registration. Learn about state vs federal registration, costs, and the process.",
       image: countryImages["register-trademark-california"],
@@ -314,7 +333,7 @@ function getBlogPosts() {
     "register-trademark-eu": {
       title: "Protecting Brands Across Europe: EU Trademark Essentials",
       description:
-        "Complete guide to EU trademark registration through the EUIPO. Learn about the process, costs, and protection across all 27 member states.",
+        "Complete guide to EU trademark registration through the EUIPO. Learn about the process, costs, and protection across all EU member states.",
       image: countryImages["register-trademark-eu"],
     },
     "register-trademark-china": {
@@ -425,6 +444,24 @@ function getBlogPosts() {
         "Explore the legal challenges and risks associated with trade dress lawsuits in the context of the Stanley Cup. Learn how to protect your brand from imitation.",
       image: topicImages["stanley-cup-lawsuits-dupes-trademark-risk"],
     },
+    "registrar-marca-estados-unidos": {
+      title: "Cómo Registrar una Marca en Estados Unidos",
+      description:
+        "Guía para registrar una marca en Estados Unidos: proceso ante la USPTO, plazos y qué preparar antes de presentar la solicitud.",
+      image: "https://images.unsplash.com/photo-1508433957232-31048a1857a4?w=600&h=400&fit=crop",
+    },
+    "registrar-marca-union-europea": {
+      title: "Cómo Registrar una Marca en la Unión Europea",
+      description:
+        "Guía para registrar una marca de la Unión Europea ante la EUIPO y proteger el nombre en el mercado europeo.",
+      image: "https://images.unsplash.com/photo-1519985176271-adb1088fa94c?w=600&h=400&fit=crop",
+    },
+    "uspto-detroit-satellite-office": {
+      title: "USPTO Detroit Satellite Office",
+      description:
+        "How the USPTO's Detroit satellite office expanded patent and trademark services in the United States.",
+      image: "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?w=600&h=400&fit=crop",
+    },
     "ai-generated-logos-brand-names-real-risk": {
       title: "AI-Generated Logos and Brand Names: The Real Risk",
       description:
@@ -471,6 +508,19 @@ export default function BlogPage() {
               Expert insights, guides, and strategies for protecting your brand worldwide
             </p>
           </div>
+
+          <nav aria-label="All articles" className="max-w-3xl mx-auto mb-16 text-left">
+            <h2 className="text-2xl font-semibold text-gray-900 mb-4">All articles</h2>
+            <ul className="space-y-2">
+              {blogPosts.map((post) => (
+                <li key={`index-${post.slug}`}>
+                  <a href={`/blog/${post.slug}`} className="text-gray-900 underline underline-offset-4 hover:text-gray-600">
+                    {post.title}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10 max-w-7xl mx-auto">
             {blogPosts.map((post) => (

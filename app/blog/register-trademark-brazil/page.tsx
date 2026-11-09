@@ -5,13 +5,26 @@ import Link from "next/link"
 import { Shield, AlertTriangle, TrendingUp, Clock } from "lucide-react"
 
 export const metadata = {
-  title: "Register a Trademark in Brazil: What You Need to Know (2024)",
+  openGraph: {
+    title: "Register a Trademark in Brazil: What You Need to Know (2026)",
+    description: "Brazil's trademark landscape is complex and competitive. Learn why professional guidance is essential for protecting your brand in South America's largest market.",
+    url: "/blog/register-trademark-brazil",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Register a Trademark in Brazil: What You Need to Know (2026)",
+    description: "Brazil's trademark landscape is complex and competitive. Learn why professional guidance is essential for protecting your brand in South America's largest market.",
+  },
+  title: "Register a Trademark in Brazil: What You Need to Know (2026)",
   description:
     "Brazil's trademark landscape is complex and competitive. Learn why professional guidance is essential for protecting your brand in South America's largest market.",
   keywords:
     "Brazil trademark registration, Brazilian IP law, INPI, brand protection Brazil, intellectual property Brazil, trademark filing Brazil",
   alternates: {
-    canonical: "https://justprotected.com/blog/register-trademark-brazil/",
+    canonical: "/blog/register-trademark-brazil",
   },
 }
 

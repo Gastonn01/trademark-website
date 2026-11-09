@@ -5,13 +5,26 @@ import Link from "next/link"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
+  openGraph: {
+    title: "Why Trademark Registration Matters in Singapore | JustProtected",
+    description: "Singapore's business environment is highly competitive. Learn why trademark registration is crucial for startups, SMEs, and e-commerce businesses, and why waiting is the most expensive mistake you can make.",
+    url: "/blog/register-trademark-singapore",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Why Trademark Registration Matters in Singapore | JustProtected",
+    description: "Singapore's business environment is highly competitive. Learn why trademark registration is crucial for startups, SMEs, and e-commerce businesses, and why waiting is the most expensive mistake you can make.",
+  },
   title: "Why Trademark Registration Matters in Singapore | JustProtected",
   description:
     "Singapore's business environment is highly competitive. Learn why trademark registration is crucial for startups, SMEs, and e-commerce businesses, and why waiting is the most expensive mistake you can make.",
   keywords:
     "Singapore trademark registration, IPOS trademark, register trademark Singapore, Singapore IP protection, trademark filing Singapore, trademark cost Singapore",
   alternates: {
-    canonical: "https://justprotected.com/blog/register-trademark-singapore/",
+    canonical: "/blog/register-trademark-singapore",
   },
 }
 
@@ -187,7 +200,7 @@ export default function RegisterTrademarkSingapore() {
             <li>Europe</li>
             <li>China</li>
             <li>Australia</li>
-            <li>Over 120 countries</li>
+            <li>Other countries</li>
           </ul>
 
           <p className="text-gray-700 mb-8">

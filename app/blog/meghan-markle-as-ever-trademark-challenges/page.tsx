@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { MeghanMarkleAsEverTrademarkChallengesClientPage } from "./MeghanMarkleAsEverTrademarkChallengesClientPage"
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/blog/meghan-markle-as-ever-trademark-challenges" },
   title: 'Celebrity Trademark Troubles: Lessons from Meghan Markle\'s "As Ever" Brand Challenges',
   description:
     'Explore the trademark disputes and operational challenges faced by Meghan Markle\'s "As Ever" lifestyle brand, and the valuable lessons for business owners.',

@@ -1,16 +1,7 @@
 import { NextResponse } from "next/server"
-import Stripe from "stripe"
-import { Resend } from "resend"
+import { resend, stripeClient } from "@/lib/runtime-clients"
 
-if (!process.env.STRIPE_SECRET_KEY) {
-  throw new Error("STRIPE_SECRET_KEY is not set")
-}
-
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string, {
-  apiVersion: "2023-08-16",
-})
-
-const resend = new Resend(process.env.RESEND_API_KEY)
+const stripe = stripeClient("2023-08-16")
 
 export async function POST(req: Request) {
   try {

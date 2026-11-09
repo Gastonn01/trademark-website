@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import RegisteredTrademarkSymbolHistoryClientPage from "./RegisteredTrademarkSymbolHistoryClientPage"
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/blog/registered-trademark-symbol-history" },
   title: "The Origin of the ® Symbol: How the Lanham Act of 1946 Shaped Trademark History",
   description:
     "Discover the history of the registered trademark symbol (®) and its connection to the Trademark Act of 1946, also known as the Lanham Act.",

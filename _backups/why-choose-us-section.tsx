@@ -9,8 +9,8 @@ export function WhyChooseUsSection() {
       icon: Globe2,
       title: "Global Coverage",
       description:
-        "Register your trademark in over 70 countries with a single streamlined application process managed by experienced attorneys.",
-      stat: "70+ Countries",
+        "Register your trademark in the countries you choose, with a single streamlined application process managed by experienced attorneys.",
+      stat: "Worldwide",
     },
     {
       icon: Clock,

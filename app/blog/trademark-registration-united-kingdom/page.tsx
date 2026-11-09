@@ -5,12 +5,25 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
 export const metadata = {
-  title: "Trademark Registration in the United Kingdom: Complete Guide | 2024",
+  openGraph: {
+    title: "Trademark Registration in the United Kingdom: Complete Guide | 2026",
+    description: "Learn how to register your trademark in the UK with our comprehensive guide. Understand the process, costs, and timeline for protecting your brand in the British market.",
+    url: "/blog/trademark-registration-united-kingdom",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Trademark Registration in the United Kingdom: Complete Guide | 2026",
+    description: "Learn how to register your trademark in the UK with our comprehensive guide. Understand the process, costs, and timeline for protecting your brand in the British market.",
+  },
+  title: "Trademark Registration in the United Kingdom: Complete Guide | 2026",
   description:
     "Learn how to register your trademark in the UK with our comprehensive guide. Understand the process, costs, and timeline for protecting your brand in the British market.",
   keywords: "UK trademark registration, trademark United Kingdom, protect brand UK, British trademark, IPO UK",
   alternates: {
-    canonical: "https://justprotected.com/blog/trademark-registration-united-kingdom/",
+    canonical: "/blog/trademark-registration-united-kingdom",
   },
 }
 

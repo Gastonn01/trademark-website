@@ -1,9 +1,17 @@
 import { NextResponse } from "next/server"
-import { Resend } from "resend"
-import { createClient } from "@supabase/supabase-js"
+import { createClient, type SupabaseClient } from "@supabase/supabase-js"
+import { resend } from "@/lib/runtime-clients"
 
-const resend = new Resend(process.env.RESEND_API_KEY)
-const supabase = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!)
+export const dynamic = "force-dynamic"
+
+function getSupabase(): SupabaseClient {
+  const supabaseUrl = process.env.SUPABASE_URL
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+  if (!supabaseUrl || !supabaseKey) {
+    throw new Error("supabaseUrl is required")
+  }
+  return createClient(supabaseUrl, supabaseKey)
+}
 
 export async function POST(req: Request) {
   try {
@@ -15,6 +23,7 @@ export async function POST(req: Request) {
     }
 
     // Get search data from Supabase
+    const supabase = getSupabase()
     const { data: searchData, error: fetchError } = await supabase
       .from("trademark_searches")
       .select("*")
@@ -282,7 +291,7 @@ export async function POST(req: Request) {
                 <h3>🏆 Why Register Your Trademark with Just Protected?</h3>
                 <ul>
                     <li><strong>Legal Protection:</strong> Exclusive rights to your brand name and logo</li>
-                    <li><strong>Global Coverage:</strong> Protection available in 180+ countries worldwide</li>
+                    <li><strong>Global Coverage:</strong> Protection available worldwide</li>
                     <li><strong>Brand Value:</strong> Significantly increase your business value and credibility</li>
                     <li><strong>Prevent Infringement:</strong> Stop competitors from using your brand</li>
                     <li><strong>Expert Support:</strong> Qualified trademark attorneys handle everything</li>
@@ -346,7 +355,7 @@ Based on your analysis results, we recommend proceeding with your trademark regi
 
 🏆 WHY REGISTER YOUR TRADEMARK WITH JUST PROTECTED?
 ✓ Legal Protection: Exclusive rights to your brand name and logo
-✓ Global Coverage: Protection available in 180+ countries worldwide
+✓ Global Coverage: Protection available worldwide
 ✓ Brand Value: Significantly increase your business value and credibility
 ✓ Prevent Infringement: Stop competitors from using your brand
 ✓ Expert Support: Qualified trademark attorneys handle everything

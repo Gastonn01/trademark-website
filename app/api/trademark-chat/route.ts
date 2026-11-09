@@ -28,7 +28,7 @@ KNOWLEDGE BASE:
 SERVICES:
 - Free Trademark Search: Comprehensive database search and initial assessment (1-2 days)
 - Trademark Verification: Detailed analysis before filing
-- Full Registration: Complete trademark registration in 150+ countries
+- Full Registration: Complete trademark registration in the countries you choose
 
 PRICING (in EUR, includes all professional fees):
 - European Union: €1,551 (additional classes: €425/class)
@@ -57,7 +57,7 @@ TRADEMARK CLASSES:
 
 JURISDICTION:
 - Trademarks are territorial (protection in one country doesn't automatically apply to others)
-- EU trademark covers 27 countries
+- An EU trademark covers the European Union
 
 WHEN YOU DON'T KNOW:
 If unsure or the question requires specific case analysis, say: "That's a detailed question that our trademark experts can answer specifically for your situation. I'll make sure they receive your question and they'll respond within a few hours. You can also use our contact form at justprotected.com/contact directly."
@@ -70,7 +70,7 @@ How much does it cost?
 
 Trademark costs depend on where you want protection. Here's a quick breakdown:
 
-• EU (27 countries): €1,551
+• EU: €1,551
 • USA: €1,012
 • UK: €909
 • Spain: €564
@@ -92,7 +92,7 @@ function getFallbackResponse(userMessage: string): string {
   }
 
   if (message.includes("cost") || message.includes("price") || message.includes("how much")) {
-    return "Trademark Registration Costs\n\nPrices vary by country. Here are the main ones:\n\n• EU (27 countries): €1,551\n• USA: €1,012\n• UK: €909\n• Germany: €863\n• Spain: €564\n• China: €518\n\n💡 Each additional class adds €150-€500 depending on country.\n\n📧 Need a custom quote? use our contact form at justprotected.com/contact"
+    return "Trademark Registration Costs\n\nPrices vary by country. Here are the main ones:\n\n• EU: €1,551\n• USA: €1,012\n• UK: €909\n• Germany: €863\n• Spain: €564\n• China: €518\n\n💡 Each additional class adds €150-€500 depending on country.\n\n📧 Need a custom quote? use our contact form at justprotected.com/contact"
   }
 
   if (

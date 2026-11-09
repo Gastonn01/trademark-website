@@ -5,13 +5,26 @@ import Link from "next/link"
 import { CTA } from "@/components/cta"
 
 export const metadata = {
-  title: "How to Register a Trademark in India (2025) | Complete Guide",
+  openGraph: {
+    title: "How to Register a Trademark in India (2026) | Complete Guide",
+    description: "Comprehensive guide to trademark registration in India. Learn about requirements, procedures, and why expert guidance matters in India's complex trademark system.",
+    url: "/blog/register-trademark-india",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "How to Register a Trademark in India (2026) | Complete Guide",
+    description: "Comprehensive guide to trademark registration in India. Learn about requirements, procedures, and why expert guidance matters in India's complex trademark system.",
+  },
+  title: "How to Register a Trademark in India (2026) | Complete Guide",
   description:
     "Comprehensive guide to trademark registration in India. Learn about requirements, procedures, and why expert guidance matters in India's complex trademark system.",
   keywords:
     "India trademark registration, Indian IP law, Indian trademark office, brand protection India, intellectual property India, trademark filing India",
   alternates: {
-    canonical: "https://justprotected.com/blog/register-trademark-india/",
+    canonical: "/blog/register-trademark-india",
   },
 }
 
@@ -26,7 +39,7 @@ export default function RegisterTrademarkIndia() {
           <div className="max-w-4xl mx-auto">
             <div className="text-sm text-blue-200 mb-4">Trademark Guide</div>
             <h1 className="text-4xl md:text-5xl font-bold mb-6 text-white leading-tight">
-              How to Register a Trademark in India: Complete Guide for 2025
+              How to Register a Trademark in India: Complete Guide for 2026
             </h1>
             <p className="text-xl text-blue-100 mb-8 leading-relaxed">
               Protect your brand in one of the world's fastest-growing economies. Understand India's unique trademark

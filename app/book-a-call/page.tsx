@@ -4,6 +4,20 @@ import { Footer } from "@/components/footer"
 import { CalendlyWidget } from "@/components/calendly-widget"
 
 export const metadata: Metadata = {
+  openGraph: {
+    title: "Book a Call | Just Protected",
+    description: "Talk to a specialist about protecting your brand — free 30-minute consultation, no obligation.",
+    url: "/book-a-call",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Book a Call | Just Protected",
+    description: "Talk to a specialist about protecting your brand — free 30-minute consultation, no obligation.",
+  },
+  alternates: { canonical: "/book-a-call" },
   title: "Book a Call | Just Protected",
   description: "Talk to a specialist about protecting your brand — free 30-minute consultation, no obligation.",
 }

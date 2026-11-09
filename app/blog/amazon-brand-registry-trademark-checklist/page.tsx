@@ -4,6 +4,19 @@ import { NavBar } from "@/components/nav-bar"
 import { Footer } from "@/components/footer"
 
 export const metadata: Metadata = {
+  openGraph: {
+    title: "Amazon Brand Registry: Trademark Checks Before You Launch | Just Protected",
+    description: "Understand the trademark questions behind an Amazon launch: pending applications, brand names, product classes, and checks before packaging and inventory.",
+    url: "/blog/amazon-brand-registry-trademark-checklist",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Amazon Brand Registry: Trademark Checks Before You Launch | Just Protected",
+    description: "Understand the trademark questions behind an Amazon launch: pending applications, brand names, product classes, and checks before packaging and inventory.",
+  },
   title: "Amazon Brand Registry: Trademark Checks Before You Launch | Just Protected",
   description: "Understand the trademark questions behind an Amazon launch: pending applications, brand names, product classes, and checks before packaging and inventory.",
   alternates: { canonical: "/blog/amazon-brand-registry-trademark-checklist" },

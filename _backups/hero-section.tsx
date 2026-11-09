@@ -32,7 +32,7 @@ export function HeroSection() {
             </h1>
 
             <p className="text-lg md:text-xl text-gray-300 mb-10 max-w-3xl mx-auto leading-relaxed">
-              Expert trademark registration in 70+ countries. Filed within 24 hours by licensed attorneys with a 95%
+              Expert trademark registration by licensed attorneys. Filed within 24 hours by licensed attorneys with a 95%
               success rate.
             </p>
 
@@ -78,7 +78,7 @@ export function HeroSection() {
             transition={{ delay: 0.3, duration: 0.6 }}
           >
             {[
-              { label: "Countries Covered", value: "70+" },
+              { label: "Coverage", value: "Worldwide" },
               { label: "Trademarks Filed", value: "10,000+" },
               { label: "Success Rate", value: "95%" },
               { label: "Years Experience", value: "15+" },
