@@ -29,6 +29,12 @@ export const metadata: Metadata = {
 function getBlogPosts() {
   // Define all blog post slugs (directories that exist)
   const allSlugs = [
+    "elvis-eminem-suno-ai-music-lawsuits",
+    "lebron-james-bron-ai-likeness-cease-and-desist",
+    "how-creators-protect-name-brand-and-likeness",
+    "athlete-nil-name-image-likeness-protection",
+    "protect-voice-and-likeness-from-ai-deepfakes",
+    "how-to-trademark-a-username-or-brand-name",
     "amazon-brand-registry-trademark-checklist",
     "ai-generated-logos-brand-names-real-risk", // New: AI logos and brand names risk
     "ai-voice-cloning-drake-ip-battleground",
@@ -177,6 +183,12 @@ function getBlogPosts() {
   dateMap["stanley-cup-lawsuits-dupes-trademark-risk"] = new Date() // Set the Stanley Cup article date to today to feature it
   dateMap["ai-voice-cloning-drake-ip-battleground"] = new Date() // Set the AI voice cloning article date to today to feature it
   dateMap["ai-generated-logos-brand-names-real-risk"] = new Date() // Set the AI logos and brand names risk article date to today to feature it
+  dateMap["how-to-trademark-a-username-or-brand-name"] = new Date()
+  dateMap["protect-voice-and-likeness-from-ai-deepfakes"] = new Date()
+  dateMap["athlete-nil-name-image-likeness-protection"] = new Date()
+  dateMap["how-creators-protect-name-brand-and-likeness"] = new Date()
+  dateMap["lebron-james-bron-ai-likeness-cease-and-desist"] = new Date()
+  dateMap["elvis-eminem-suno-ai-music-lawsuits"] = new Date()
 
   const formatDate = (date: Date): string => {
     return date.toLocaleDateString("en-US", {
@@ -241,6 +253,42 @@ function getBlogPosts() {
 
   // Blog post metadata
   const blogPostsData: Record<string, { title: string; description: string; image: string }> = {
+    "how-creators-protect-name-brand-and-likeness": {
+      title: "How Creators Protect Their Name, Brand, and Likeness",
+      description:
+        "How creators and influencers trademark a name or handle, what a trademark covers, publicity rights, deepfakes, and when to file.",
+      image: "/images/ai-generated-logos-brand-names-risk.png",
+    },
+    "athlete-nil-name-image-likeness-protection": {
+      title: "Athlete NIL Protection: Name, Image, and Likeness",
+      description:
+        "How athletes protect a name, nickname, and logo, how NIL deals differ from a trademark, and what AI or deepfake misuse changes.",
+      image: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=600&h=400&fit=crop",
+    },
+    "how-to-trademark-a-username-or-brand-name": {
+      title: "How to Trademark a Username or Brand Name",
+      description:
+        "A social handle is not a trademark. Eligibility, classes, the US process, and this site’s published US prices.",
+      image: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=600&h=400&fit=crop",
+    },
+    "protect-voice-and-likeness-from-ai-deepfakes": {
+      title: "Protecting Your Voice and Likeness From AI Deepfakes",
+      description:
+        "US voice and likeness rules, including Tennessee’s ELVIS Act and the proposed federal NO FAKES Act, plus takedowns and trademarks.",
+      image: "/images/ai-voice-cloning-drake.png",
+    },
+    "lebron-james-bron-ai-likeness-cease-and-desist": {
+      title: "LeBron James’s Team Told Bron AI to Stop Using His Likeness",
+      description:
+        "Front Office Sports reported cease-and-desist letters from LeBron James’s team and Luka Dončić’s camp to the AI betting app Bron AI.",
+      image: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=600&h=400&fit=crop",
+    },
+    "elvis-eminem-suno-ai-music-lawsuits": {
+      title: "Elvis and Eminem Rightsholders Sue the AI Music Generator Suno",
+      description:
+        "Variety reported that Elvis Presley rightsholders and Eminem publisher Eight Mile Style sued Suno in federal court.",
+      image: "/images/ai-voice-cloning-drake.png",
+    },
     "amazon-brand-registry-trademark-checklist": {
       title: "Amazon Brand Registry: Trademark Checks Before You Launch",
       description: "What to check about a product brand before packaging, inventory, and Amazon enrollment. Includes official Amazon and USPTO sources.",

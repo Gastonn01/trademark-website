@@ -128,12 +128,32 @@ export function MusiciansLanding() {
               A trademark doesn&apos;t solve every AI problem. But it gives you the legal standing to act —
               immediately, by licensed attorneys.
             </p>
-            <Link
-              href="/blog/ai-voice-cloning-drake-ip-battleground"
-              className="inline-flex items-center gap-2 text-accent hover:brightness-110 font-semibold transition-all text-sm"
-            >
-              Read the full breakdown of the Drake AI case →
-            </Link>
+            <div className="flex flex-col items-center gap-3">
+              <Link
+                href="/blog/ai-voice-cloning-drake-ip-battleground"
+                className="inline-flex items-center gap-2 text-accent hover:brightness-110 font-semibold transition-all text-sm"
+              >
+                Read the full breakdown of the Drake AI case →
+              </Link>
+              <Link
+                href="/blog/protect-voice-and-likeness-from-ai-deepfakes"
+                className="inline-flex items-center gap-2 text-accent hover:brightness-110 font-semibold transition-all text-sm"
+              >
+                How voice and likeness rules work, including the ELVIS Act →
+              </Link>
+              <Link
+                href="/blog/elvis-eminem-suno-ai-music-lawsuits"
+                className="inline-flex items-center gap-2 text-accent hover:brightness-110 font-semibold transition-all text-sm"
+              >
+                Elvis and Eminem rightsholders sue Suno →
+              </Link>
+              <Link
+                href="/blog/how-to-trademark-a-username-or-brand-name"
+                className="inline-flex items-center gap-2 text-accent hover:brightness-110 font-semibold transition-all text-sm"
+              >
+                How to trademark a stage name or brand name →
+              </Link>
+            </div>
           </motion.div>
         </div>
       </section>
