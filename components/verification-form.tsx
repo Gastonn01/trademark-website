@@ -1,9 +1,7 @@
 "use client"
 
 import type React from "react"
-import { Suspense } from "react"
 import { useState, useEffect, useMemo } from "react"
-import { useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -290,7 +288,6 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
     marketing: false,
   })
 
-  const searchParams = useSearchParams()
   const [selectedCountries, setSelectedCountries] = useState<CountrySelection[]>([])
   const [searchTerm, setSearchTerm] = useState("")
   const [expandedRegions, setExpandedRegions] = useState<string[]>([])
@@ -1043,11 +1040,7 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
 }
 
 export function VerificationForm({ initialData, isLoading = false }: VerificationFormProps) {
-  return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <VerificationFormContent isLoading={isLoading} initialData={initialData} />
-    </Suspense>
-  )
+  return <VerificationFormContent isLoading={isLoading} initialData={initialData} />
 }
 
 export default VerificationForm

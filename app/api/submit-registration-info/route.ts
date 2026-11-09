@@ -4,10 +4,7 @@ import { put } from "@vercel/blob"
 import { createClient } from "@supabase/supabase-js"
 import { ensureTableExists, saveSearchData } from "@/lib/supabase"
 
-// Initialize Supabase client
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ""
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || ""
-const supabase = createClient(supabaseUrl, supabaseServiceKey)
+export const dynamic = "force-dynamic"
 
 export async function POST(request: NextRequest) {
   try {
@@ -106,6 +103,9 @@ export async function POST(request: NextRequest) {
         await ensureTableExists()
 
         // Check if registration_info table exists, if not create it
+        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ""
+        const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || ""
+        const supabase = createClient(supabaseUrl, supabaseServiceKey)
         const { error: tableCheckError } = await supabase.from("registration_info").select("id").limit(1)
 
         if (tableCheckError) {

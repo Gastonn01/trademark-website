@@ -2,6 +2,7 @@
 
 import { useEffect } from "react"
 import { usePathname, useSearchParams } from "next/navigation"
+import { isAnalyticsExcluded } from "@/lib/analytics-preference"
 
 declare global {
   interface Window {
@@ -15,7 +16,7 @@ export function GTMTracker() {
   const searchParams = useSearchParams()
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
+    if (typeof window !== "undefined" && !isAnalyticsExcluded()) {
       const url = pathname + (searchParams.toString() ? `?${searchParams.toString()}` : "")
 
       window.dataLayer = window.dataLayer || []
@@ -31,7 +32,7 @@ export function GTMTracker() {
 
 // Utility function to grant consent
 export function grantConsent() {
-  if (typeof window !== "undefined" && window.gtag) {
+  if (typeof window !== "undefined" && !isAnalyticsExcluded() && window.gtag) {
     window.gtag("consent", "update", {
       ad_storage: "granted",
       ad_user_data: "granted",
@@ -43,7 +44,7 @@ export function grantConsent() {
 
 // Utility function to track lead conversion
 export function trackLeadSubmission(source = "free_search") {
-  if (typeof window !== "undefined") {
+  if (typeof window !== "undefined" && !isAnalyticsExcluded()) {
     window.dataLayer = window.dataLayer || []
     window.dataLayer.push({
       event: "lead_submitted",

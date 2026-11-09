@@ -1,8 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { Resend } from "resend"
 import { saveSearchData } from "@/lib/supabase"
-
-const resend = new Resend(process.env.RESEND_API_KEY)
+import { resend } from "@/lib/runtime-clients"
 
 export async function POST(request: NextRequest) {
   try {
@@ -63,7 +61,7 @@ export async function POST(request: NextRequest) {
     const emailPromises = []
 
     // Send to both notification emails
-    const notificationEmails = ["lacortgaston@gmail.com", "gflacort@gmail.com"]
+    const notificationEmails = ["gflacort@gmail.com"]
 
     for (const email of notificationEmails) {
       emailPromises.push(

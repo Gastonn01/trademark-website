@@ -5,13 +5,26 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
 export const metadata = {
-  title: "Cómo Registrar una Marca en la Unión Europea (2024) | Guía Completa",
+  openGraph: {
+    title: "Cómo Registrar una Marca en la Unión Europea (2026) | Guía Completa",
+    description: "Guía definitiva para registrar tu marca en la UE. Aprende el proceso paso a paso, costos, plazos y requisitos para proteger tu marca en los 27 países miembros.",
+    url: "/blog/registrar-marca-union-europea",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Cómo Registrar una Marca en la Unión Europea (2026) | Guía Completa",
+    description: "Guía definitiva para registrar tu marca en la UE. Aprende el proceso paso a paso, costos, plazos y requisitos para proteger tu marca en los 27 países miembros.",
+  },
+  title: "Cómo Registrar una Marca en la Unión Europea (2026) | Guía Completa",
   description:
     "Guía definitiva para registrar tu marca en la UE. Aprende el proceso paso a paso, costos, plazos y requisitos para proteger tu marca en los 27 países miembros.",
   keywords:
     "registro marca UE, EUIPO, marca comunitaria, registro marca europea, protección marcas UE, marca unión europea",
   alternates: {
-    canonical: "https://justprotected.com/blog/registrar-marca-union-europea/",
+    canonical: "/blog/registrar-marca-union-europea",
     languages: {
       es: "https://justprotected.com/blog/registrar-marca-union-europea/",
       en: "https://justprotected.com/blog/register-trademark-eu/",

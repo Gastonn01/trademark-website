@@ -17,13 +17,26 @@ import {
 } from "lucide-react"
 
 export const metadata = {
-  title: "How to Register a Trademark in the United Kingdom (2025) | Complete Guide",
+  openGraph: {
+    title: "How to Register a Trademark in the United Kingdom (2026) | Complete Guide",
+    description: "Comprehensive guide to UK trademark registration in 2025. Learn the step-by-step process, timelines, and requirements to protect your brand in the United Kingdom post-Brexit.",
+    url: "/blog/register-trademark-united-kingdom",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "How to Register a Trademark in the United Kingdom (2026) | Complete Guide",
+    description: "Comprehensive guide to UK trademark registration in 2025. Learn the step-by-step process, timelines, and requirements to protect your brand in the United Kingdom post-Brexit.",
+  },
+  title: "How to Register a Trademark in the United Kingdom (2026) | Complete Guide",
   description:
     "Comprehensive guide to UK trademark registration in 2025. Learn the step-by-step process, timelines, and requirements to protect your brand in the United Kingdom post-Brexit.",
   keywords:
     "UK trademark registration 2025, UKIPO, UK trademark, British trademark, UK brand protection, United Kingdom trademark, trademark application, trademark process UK, post-Brexit trademark",
   alternates: {
-    canonical: "https://justprotected.com/blog/register-trademark-united-kingdom/",
+    canonical: "/blog/register-trademark-united-kingdom",
     languages: {
       en: "https://justprotected.com/blog/register-trademark-united-kingdom/",
     },

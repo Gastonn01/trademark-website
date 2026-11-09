@@ -5,30 +5,37 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "..
 export function FAQ() {
   const faqItems = [
     {
-      question: "What is a trademark?",
+      question: "Can I trademark my name as an influencer or athlete?",
       answer:
-        "A trademark is a recognizable sign, design, or expression that identifies products or services from a particular source.",
+        "Yes — and you should do it as early as possible. Your name is your most valuable asset. Trademarking it gives you exclusive rights to use it commercially, prevents others from registering it first, and gives you legal standing to demand takedowns of AI-generated content, fake sponsorships, or anyone using your name without permission.",
     },
     {
-      question: "How long does trademark registration take?",
-      answer: "The process typically takes 6-12 months, depending on the country and complexity of the application.",
+      question: "What can I do if AI is using my voice or face without my permission?",
+      answer:
+        "A registered trademark is one of your strongest legal tools. It gives you grounds to file DMCA takedowns, demand platform removals, and pursue legal action against anyone commercially exploiting your identity. Without a trademark, your options are much more limited. We file within 24 hours so you're protected fast.",
     },
     {
-      question: "What can I trademark?",
+      question: "What is NIL and why do athletes need trademark protection?",
       answer:
-        "You can trademark various elements of your brand, including company names, product names, logos, slogans, and in some cases, sounds, colors, or packaging designs. The key requirement is that the mark must be distinctive and not confusingly similar to existing trademarks.",
+        "NIL stands for Name, Image & Likeness — the right to profit from your own identity. Since the NCAA changed its rules in 2021, college athletes can sign sponsorship deals, but those deals are only as strong as your legal protection. Trademarking your name means no one else can register it, monetize it, or use AI to fake endorsements in your name.",
     },
     {
-      question: "How much does trademark registration cost?",
+      question: "How does trademark registration protect me from AI deepfakes?",
       answer:
-        "The cost varies depending on factors such as the number of classes, countries, and whether you face any objections. Basic registration starts from $199 for one class in one country. View our detailed pricing page for specific costs in different jurisdictions.",
+        "When your name or brand is trademarked, any commercial use of it — including AI-generated videos, voice clones, or fake endorsements — constitutes trademark infringement. This gives you the legal basis to issue cease and desist letters, demand platform takedowns, and sue for damages. It's not a perfect shield, but it's the strongest legal tool available right now.",
     },
   ]
 
   return (
-    <div className="py-20 bg-gray-100">
+    <div className="py-24 md:py-32 bg-white">
       <div className="container mx-auto px-4">
-        <h2 className="text-2xl font-bold text-center mb-12 text-blue-700">Frequently Asked Questions</h2>
+        <p className="label-caps text-accent text-center mb-5">Common questions</p>
+        <h2 className="font-serif text-4xl md:text-5xl tracking-tight text-center mb-5 text-primary">
+          Questions, answered.
+        </h2>
+        <p className="text-center text-gray-500 font-light mb-14 max-w-xl mx-auto">
+          Everything creators, athletes, and artists need to know about protecting their identity.
+        </p>
         <Accordion type="single" collapsible className="w-full max-w-2xl mx-auto">
           {faqItems.map((item, index) => (
             <AccordionItem key={index} value={`item-${index}`}>

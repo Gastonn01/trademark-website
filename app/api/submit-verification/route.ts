@@ -1,10 +1,8 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { Resend } from "resend"
 import { put } from "@vercel/blob"
 import { v4 as uuidv4 } from "uuid"
 import { saveSearchData } from "@/lib/supabase"
-
-const resend = new Resend(process.env.RESEND_API_KEY)
+import { resend } from "@/lib/runtime-clients"
 
 export async function POST(request: NextRequest) {
   try {
@@ -68,21 +66,11 @@ export async function POST(request: NextRequest) {
     // Generate reference ID
     const referenceId = `TM-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`
 
+    // Save to database - using only basic fields that likely exist
     const searchData = {
       trademark_name: trademarkName,
-      goods_and_services: goodsAndServices,
-      name,
-      surname,
-      email,
-      phone,
-      countries,
-      classes: selectedClasses,
-      selected_countries: countries,
-      form_type: "verification",
+      email: email,
       status: "pending",
-      notes: referenceId,
-      search_data: { trademarkName, trademarkType, goodsAndServices, name, surname, email, phone, marketing, countries, selectedClasses, files, referenceId },
-      search_results: { trademarkName, name, surname, email },
     }
 
     try {
@@ -249,7 +237,7 @@ export async function POST(request: NextRequest) {
 
       await resend.emails.send({
         from: "Just Protected <noreply@justprotected.com>",
-        to: ["gflacort@gmail.com", "lacortgaston@gmail.com"],
+        to: ["gflacort@gmail.com"],
         subject: `🚨 New Trademark Verification Request - ${referenceId}`,
         html: adminEmailHtml,
       })

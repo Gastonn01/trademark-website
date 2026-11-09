@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   keywords:
     "Stanley Cup lawsuits, trade dress infringement, dupes vs counterfeits, tumbler trademark, Pacific Market International, Stanley Quencher, marketplace sellers, trademark risk",
   alternates: {
-    canonical: "https://justprotected.com/blog/stanley-cup-lawsuits-dupes-trademark-risk/",
+    canonical: "/blog/stanley-cup-lawsuits-dupes-trademark-risk",
   },
 }
 

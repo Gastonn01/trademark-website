@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { USPTODetroitSatelliteOfficeClientPage } from "./USPTODetroitSatelliteOfficeClientPage"
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/blog/uspto-detroit-satellite-office" },
   title: "USPTO's Historic Expansion: The Opening of Detroit's Satellite Office | Trademark Expert",
   description:
     "Learn about the USPTO's first satellite office in Detroit, opened in 2012, and how it has impacted patent and trademark services across the United States.",
@@ -12,7 +13,7 @@ export const metadata: Metadata = {
     description:
       "Learn about the USPTO's first satellite office in Detroit, opened in 2012, and how it has impacted patent and trademark services across the United States.",
     type: "article",
-    url: "https://yourdomain.com/blog/uspto-detroit-satellite-office",
+    url: "/blog/uspto-detroit-satellite-office",
   },
 }
 

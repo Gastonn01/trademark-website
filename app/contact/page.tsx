@@ -4,6 +4,20 @@ import { ContactContent } from "@/components/contact-content"
 import { Footer } from "@/components/footer"
 
 export const metadata: Metadata = {
+  openGraph: {
+    title: "Contact Us | Just Protected",
+    description: "Contact Just Protected for expert trademark registration services. Get in touch with our team for a free consultation.",
+    url: "/contact",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Contact Us | Just Protected",
+    description: "Contact Just Protected for expert trademark registration services. Get in touch with our team for a free consultation.",
+  },
+  alternates: { canonical: "/contact" },
   title: "Contact Us | Just Protected",
   description:
     "Contact Just Protected for expert trademark registration services. Get in touch with our team for a free consultation.",

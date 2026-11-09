@@ -5,13 +5,26 @@ import Link from "next/link"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "How to Appeal a TikTok Shop Counterfeit Violation (2025 Guide) | JustProtected",
+  openGraph: {
+    title: "How to Appeal a TikTok Shop Counterfeit Violation (2026 Guide) | JustProtected",
+    description: "Learn how to successfully appeal TikTok Shop counterfeit violations. Understand what documentation you need, why legitimate sellers get flagged, and how to reduce future violations.",
+    url: "/blog/tiktok-shop-counterfeit-violation-appeal",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "How to Appeal a TikTok Shop Counterfeit Violation (2026 Guide) | JustProtected",
+    description: "Learn how to successfully appeal TikTok Shop counterfeit violations. Understand what documentation you need, why legitimate sellers get flagged, and how to reduce future violations.",
+  },
+  title: "How to Appeal a TikTok Shop Counterfeit Violation (2026 Guide) | JustProtected",
   description:
     "Learn how to successfully appeal TikTok Shop counterfeit violations. Understand what documentation you need, why legitimate sellers get flagged, and how to reduce future violations.",
   keywords:
     "TikTok Shop counterfeit violation, TikTok Shop appeal, trademark authorization, counterfeit appeal documentation, TikTok Shop seller protection",
   alternates: {
-    canonical: "https://justprotected.com/blog/tiktok-shop-counterfeit-violation-appeal/",
+    canonical: "/blog/tiktok-shop-counterfeit-violation-appeal",
   },
 }
 
@@ -26,7 +39,7 @@ export default function TikTokShopCounterfeitAppeal() {
           <div className="max-w-4xl mx-auto">
             <div className="text-sm text-gray-300 mb-4">TikTok Shop • IP Enforcement</div>
             <h1 className="font-serif text-4xl md:text-5xl font-bold mb-6 text-white leading-tight">
-              How to Appeal a TikTok Shop Counterfeit Violation (2025 Guide)
+              How to Appeal a TikTok Shop Counterfeit Violation (2026 Guide)
             </h1>
             <p className="text-xl text-gray-200 mb-8 leading-relaxed">
               TikTok Shop's automated enforcement systems often flag legitimate sellers for counterfeiting. Learn how to

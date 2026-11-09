@@ -1,3 +1,25 @@
+import type { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Trademark Registration Details | Just Protected",
+  description: "Submit the information needed to prepare your trademark filing.",
+  alternates: { canonical: "/forms" },
+  openGraph: {
+    title: "Trademark Registration Details | Just Protected",
+    description: "Submit the information needed to prepare your trademark filing.",
+    url: "/forms",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Trademark Registration Details | Just Protected",
+    description: "Submit the information needed to prepare your trademark filing.",
+  },
+  robots: { index: false, follow: false },
+}
+
 import { NavBar } from "@/components/nav-bar"
 import { Footer } from "@/components/footer"
 import { RegistrationInfoForm } from "./components/RegistrationInfoForm"

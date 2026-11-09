@@ -1,9 +1,6 @@
 import { NextResponse } from "next/server"
 import { getSearchData } from "@/lib/supabase"
-import { Resend } from "resend"
-
-// Initialize Resend with the API key
-const resend = new Resend(process.env.RESEND_API_KEY)
+import { resend } from "@/lib/runtime-clients"
 
 export async function POST(req: Request) {
   try {

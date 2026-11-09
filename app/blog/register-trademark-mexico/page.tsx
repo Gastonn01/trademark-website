@@ -5,13 +5,26 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
 export const metadata = {
-  title: "How to Register a Trademark in Mexico (2024) | Complete Guide",
+  openGraph: {
+    title: "How to Register a Trademark in Mexico (2026) | Complete Guide",
+    description: "Master the process of trademark registration in Mexico. Learn about local requirements, costs, and strategies for protecting your brand in the Mexican market.",
+    url: "/blog/register-trademark-mexico",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "How to Register a Trademark in Mexico (2026) | Complete Guide",
+    description: "Master the process of trademark registration in Mexico. Learn about local requirements, costs, and strategies for protecting your brand in the Mexican market.",
+  },
+  title: "How to Register a Trademark in Mexico (2026) | Complete Guide",
   description:
     "Master the process of trademark registration in Mexico. Learn about local requirements, costs, and strategies for protecting your brand in the Mexican market.",
   keywords:
     "Mexico trademark registration, Mexican IP law, IMPI, brand protection Mexico, intellectual property Mexico, trademark filing Mexico",
   alternates: {
-    canonical: "https://justprotected.com/blog/register-trademark-mexico/",
+    canonical: "/blog/register-trademark-mexico",
   },
 }
 
@@ -30,7 +43,7 @@ export default function RegisterTrademarkMexico() {
 
         <div className="mb-8">
           <h1 className="text-4xl font-bold mb-4 text-green-900">
-            How to Register a Trademark in Mexico: Insider's Guide 2024
+            How to Register a Trademark in Mexico: Insider's Guide 2026
           </h1>
           <p className="text-gray-600">
             Updated: {new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}

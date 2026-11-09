@@ -41,7 +41,7 @@ export default function TrademarkPriorityPeriodClientPage() {
           <p className="mb-4">
             The priority period is a 6-month window (from the date of your first trademark filing) during which you can
             file for protection in other countries and still claim the original filing date as your priority date. This
-            is governed by the Paris Convention for the Protection of Industrial Property, which over 170 countries
+            is governed by the Paris Convention for the Protection of Industrial Property, which its member countries
             adhere to.
           </p>
 

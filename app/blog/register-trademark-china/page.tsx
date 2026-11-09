@@ -17,13 +17,26 @@ import {
 } from "lucide-react"
 
 export const metadata = {
-  title: "How to Register a Trademark in China (2025) | Complete Guide",
+  openGraph: {
+    title: "How to Register a Trademark in China (2026) | Complete Guide",
+    description: "Comprehensive guide to China trademark registration in 2025. Learn the step-by-step process, timelines, and requirements to protect your brand in the world's largest consumer market.",
+    url: "/blog/register-trademark-china",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "How to Register a Trademark in China (2026) | Complete Guide",
+    description: "Comprehensive guide to China trademark registration in 2025. Learn the step-by-step process, timelines, and requirements to protect your brand in the world's largest consumer market.",
+  },
+  title: "How to Register a Trademark in China (2026) | Complete Guide",
   description:
     "Comprehensive guide to China trademark registration in 2025. Learn the step-by-step process, timelines, and requirements to protect your brand in the world's largest consumer market.",
   keywords:
     "China trademark registration 2025, CNIPA, Chinese trademark, China brand protection, intellectual property China, trademark application China, trademark process China",
   alternates: {
-    canonical: "https://justprotected.com/blog/register-trademark-china/",
+    canonical: "/blog/register-trademark-china",
     languages: {
       en: "https://justprotected.com/blog/register-trademark-china/",
     },

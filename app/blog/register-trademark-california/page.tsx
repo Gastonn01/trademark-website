@@ -3,11 +3,24 @@ import { Footer } from "@/components/footer"
 import Image from "next/image"
 
 export const metadata = {
-  title: "How to Register a Trademark in California (2025) | Complete Guide",
+  openGraph: {
+    title: "How to Register a Trademark in California (2026) | Complete Guide",
+    description: "Learn about trademark registration for California businesses. Understand the federal process, requirements, and benefits of protecting your brand in the competitive California market.",
+    url: "/blog/register-trademark-california",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "How to Register a Trademark in California (2026) | Complete Guide",
+    description: "Learn about trademark registration for California businesses. Understand the federal process, requirements, and benefits of protecting your brand in the competitive California market.",
+  },
+  title: "How to Register a Trademark in California (2026) | Complete Guide",
   description:
     "Learn about trademark registration for California businesses. Understand the federal process, requirements, and benefits of protecting your brand in the competitive California market.",
   alternates: {
-    canonical: "https://justprotected.com/blog/register-trademark-california/",
+    canonical: "/blog/register-trademark-california",
   },
 }
 

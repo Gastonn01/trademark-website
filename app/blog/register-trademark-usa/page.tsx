@@ -17,13 +17,26 @@ import {
 } from "lucide-react"
 
 export const metadata = {
-  title: "How to Register a Trademark in the United States (2025) | Complete Guide",
+  openGraph: {
+    title: "How to Register a Trademark in the United States (2026) | Complete Guide",
+    description: "Comprehensive guide to US trademark registration in 2025. Learn the step-by-step process, timelines, and requirements to protect your brand in the United States.",
+    url: "/blog/register-trademark-usa",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "How to Register a Trademark in the United States (2026) | Complete Guide",
+    description: "Comprehensive guide to US trademark registration in 2025. Learn the step-by-step process, timelines, and requirements to protect your brand in the United States.",
+  },
+  title: "How to Register a Trademark in the United States (2026) | Complete Guide",
   description:
     "Comprehensive guide to US trademark registration in 2025. Learn the step-by-step process, timelines, and requirements to protect your brand in the United States.",
   keywords:
     "US trademark registration 2025, USPTO, US trademark, American trademark, US brand protection, United States trademark, trademark application, trademark process USA",
   alternates: {
-    canonical: "https://justprotected.com/blog/register-trademark-usa/",
+    canonical: "/blog/register-trademark-usa",
     languages: {
       en: "https://justprotected.com/blog/register-trademark-usa/",
     },

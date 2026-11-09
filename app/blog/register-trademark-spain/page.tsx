@@ -5,13 +5,26 @@ import Link from "next/link"
 import { CTA } from "@/components/cta"
 
 export const metadata = {
-  title: "How to Register a Trademark in Spain (2025) | Complete Guide",
+  openGraph: {
+    title: "How to Register a Trademark in Spain (2026) | Complete Guide",
+    description: "Comprehensive guide to trademark registration in Spain. Learn about OEPM procedures, requirements, and how to protect your brand in the Spanish market.",
+    url: "/blog/register-trademark-spain",
+    siteName: "Just Protected",
+    locale: "en_US",
+    type: "article",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "How to Register a Trademark in Spain (2026) | Complete Guide",
+    description: "Comprehensive guide to trademark registration in Spain. Learn about OEPM procedures, requirements, and how to protect your brand in the Spanish market.",
+  },
+  title: "How to Register a Trademark in Spain (2026) | Complete Guide",
   description:
     "Comprehensive guide to trademark registration in Spain. Learn about OEPM procedures, requirements, and how to protect your brand in the Spanish market.",
   keywords:
     "Spain trademark registration, Spanish IP law, OEPM, brand protection Spain, intellectual property Spain, trademark filing Spain",
   alternates: {
-    canonical: "https://justprotected.com/blog/register-trademark-spain/",
+    canonical: "/blog/register-trademark-spain",
   },
 }
 
@@ -26,7 +39,7 @@ export default function RegisterTrademarkSpain() {
           <div className="max-w-4xl mx-auto">
             <div className="text-sm text-blue-200 mb-4">Trademark Guide</div>
             <h1 className="text-4xl md:text-5xl font-bold mb-6 text-white leading-tight">
-              How to Register a Trademark in Spain: Complete Guide for 2025
+              How to Register a Trademark in Spain: Complete Guide for 2026
             </h1>
             <p className="text-xl text-blue-100 mb-8 leading-relaxed">
               Navigate Spain's trademark system with confidence. Learn about OEPM procedures, requirements, and why
@@ -137,7 +150,7 @@ export default function RegisterTrademarkSpain() {
                   <strong>National Spanish Trademark:</strong> Protection limited to Spain, processed by OEPM
                 </li>
                 <li className="mb-2">
-                  <strong>European Union Trademark (EUTM):</strong> Protection across all 27 EU member states, including
+                  <strong>European Union Trademark (EUTM):</strong> Protection across all EU member states, including
                   Spain
                 </li>
               </ul>
