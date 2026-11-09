@@ -68,6 +68,32 @@ export function faqPageJsonLd(items: FaqItem[]) {
   }
 }
 
+export function articleJsonLd({
+  headline,
+  description,
+  path,
+  datePublished,
+}: {
+  headline: string
+  description: string
+  path: string
+  datePublished: string
+}) {
+  const url = `${SITE_URL}${path}`
+  return {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline,
+    description,
+    datePublished,
+    dateModified: datePublished,
+    mainEntityOfPage: url,
+    url,
+    author: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+    publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
+  }
+}
+
 export function serviceJsonLd({
   name,
   description,

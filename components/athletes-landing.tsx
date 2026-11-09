@@ -319,6 +319,27 @@ export function AthletesLanding() {
               </Link>
             </motion.div>
           </div>
+          <div className="mt-12 pt-8 border-t border-primary/15">
+            <p className="label-caps text-[0.65rem] text-accent mb-3">Guides</p>
+            <h3 className="text-lg font-semibold text-primary mb-3">Read the full guides</h3>
+            <ul className="space-y-2 text-sm">
+              <li>
+                <Link href="/blog/athlete-nil-name-image-likeness-protection" className="text-accent font-semibold hover:underline">
+                  Athlete NIL protection: name, image, and likeness →
+                </Link>
+              </li>
+              <li>
+                <Link href="/blog/protect-voice-and-likeness-from-ai-deepfakes" className="text-accent font-semibold hover:underline">
+                  Protecting your voice and likeness from AI deepfakes →
+                </Link>
+              </li>
+              <li>
+                <Link href="/blog/lebron-james-bron-ai-likeness-cease-and-desist" className="text-accent font-semibold hover:underline">
+                  LeBron James’s team told Bron AI to stop using his likeness →
+                </Link>
+              </li>
+            </ul>
+          </div>
         </div>
       </section>
 

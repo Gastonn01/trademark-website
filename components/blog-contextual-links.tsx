@@ -39,12 +39,25 @@ const FREE_SEARCH: InternalLink = { href: "/free-search", label: "Free trademark
 const AUDIENCES: { test: (slug: string) => boolean; href: string; label: string }[] = [
   { test: (s) => s.includes("amazon"), href: "/for-amazon-sellers", label: "Trademark help for Amazon sellers" },
   {
-    test: (s) => s.includes("athlete") || s.includes("palmer") || s.includes("sport") || s.includes("nil"),
+    test: (s) =>
+      s.includes("athlete") ||
+      s.includes("palmer") ||
+      s.includes("sport") ||
+      s.includes("nil") ||
+      s.includes("lebron") ||
+      s.includes("doncic"),
     href: "/for-athletes",
     label: "Trademark protection for athletes",
   },
   {
-    test: (s) => s.includes("music") || s.includes("drake") || s.includes("artist"),
+    test: (s) =>
+      s.includes("music") ||
+      s.includes("drake") ||
+      s.includes("artist") ||
+      s.includes("elvis") ||
+      s.includes("suno") ||
+      s.includes("eminem") ||
+      s.includes("deepfake"),
     href: "/for-musicians",
     label: "Trademark protection for musicians",
   },
@@ -56,7 +69,11 @@ const AUDIENCES: { test: (slug: string) => boolean; href: string; label: string 
       s.includes("logo") ||
       s.includes("voice") ||
       s.includes("disney") ||
-      s.includes("ai"),
+      s.includes("ai") ||
+      s.includes("username") ||
+      s.includes("handle") ||
+      s.includes("deepfake") ||
+      s.includes("likeness"),
     href: "/for-creators",
     label: "Trademark protection for creators",
   },
