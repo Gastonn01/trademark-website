@@ -223,7 +223,7 @@ export function HowItWorksContent() {
           <div className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-12">
             <Link
               href="/detailed-pricelist#top"
-              className="bg-accent hover:bg-accent/90 text-white px-12 py-5 rounded-xl text-xl font-semibold flex items-center shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
+              className="bg-accent hover:bg-accent/90 text-primary px-12 py-5 rounded-xl text-xl font-semibold flex items-center shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
             >
               Start Registration <span className="ml-2">→</span>
             </Link>

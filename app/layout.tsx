@@ -2,8 +2,9 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import { Toaster } from "@/components/ui/toaster"
-import { Analytics } from "@vercel/analytics/next"
+import { SiteAnalytics } from "@/components/site-analytics"
 import { GTMTracker } from "@/components/gtm-tracker"
+import { CookieConsentBanner } from "@/components/cookie-consent-banner"
 import { ScrollToTop } from "@/components/scroll-to-top"
 import { TrademarkFAQBot } from "@/components/trademark-faq-bot"
 import { Suspense } from "react"
@@ -94,13 +95,40 @@ export default function RootLayout({
           }}
         />
 
+        {/* Blocks the stray Cookiebot tag firing from inside GTM (unauthorized
+            domain group, dead weight) — we have our own consent banner and
+            don't control that GTM account to remove the tag directly. */}
+        <Script
+          id="block-cookiebot"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                function isCookiebot(el) {
+                  return el && el.tagName === 'SCRIPT' && typeof el.src === 'string' && el.src.indexOf('cookiebot.com') !== -1;
+                }
+                var origAppendChild = Node.prototype.appendChild;
+                Node.prototype.appendChild = function(node) {
+                  if (isCookiebot(node)) return node;
+                  return origAppendChild.call(this, node);
+                };
+                var origInsertBefore = Node.prototype.insertBefore;
+                Node.prototype.insertBefore = function(node, ref) {
+                  if (isCookiebot(node)) return node;
+                  return origInsertBefore.call(this, node, ref);
+                };
+              })();
+            `,
+          }}
+        />
+
         {/* Google Tag Manager */}
         <Script
           id="gtm-script"
           strategy="afterInteractive"
           dangerouslySetInnerHTML={{
             __html: `
-              (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+              (function(w,d,s,l,i){if(d.cookie.split(';').some(function(c){return c.trim()==='jp_exclude_analytics=1';})){w['ga-disable-G-ZHE1N7PH51']=true;return;}w[l]=w[l]||[];w[l].push({'gtm.start':
               new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
               j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
               'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
@@ -113,7 +141,7 @@ export default function RootLayout({
         {/* Google Tag Manager (noscript) */}
         <noscript>
           <iframe
-            src="https://www.googletagmanager.com/ns.html?id=GTM-5DDZ4XHV"
+            src="/analytics/tag-manager"
             height="0"
             width="0"
             style={{ display: "none", visibility: "hidden" }}
@@ -125,9 +153,10 @@ export default function RootLayout({
           <GTMTracker />
           {children}
           <Toaster />
-          <Analytics />
+          <SiteAnalytics />
           <TrademarkFAQBot />
         </Suspense>
+        <CookieConsentBanner />
       </body>
     </html>
   )

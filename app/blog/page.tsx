@@ -16,6 +16,7 @@ export const metadata: Metadata = {
 function getBlogPosts() {
   // Define all blog post slugs (directories that exist)
   const allSlugs = [
+    "amazon-brand-registry-trademark-checklist",
     "ai-generated-logos-brand-names-real-risk", // New: AI logos and brand names risk
     "ai-voice-cloning-drake-ip-battleground",
     "stanley-cup-lawsuits-dupes-trademark-risk",
@@ -130,6 +131,7 @@ function getBlogPosts() {
   // Assign dates strategically
   let dateIndex = 0
   const dateMap: Record<string, Date> = {}
+  dateMap["amazon-brand-registry-trademark-checklist"] = new Date("2026-10-25T12:00:00Z")
 
   categories.featured.forEach((slug) => {
     dateMap[slug] = publishDates[dateIndex++]
@@ -220,6 +222,11 @@ function getBlogPosts() {
 
   // Blog post metadata
   const blogPostsData: Record<string, { title: string; description: string; image: string }> = {
+    "amazon-brand-registry-trademark-checklist": {
+      title: "Amazon Brand Registry: Trademark Checks Before You Launch",
+      description: "What to check about a product brand before packaging, inventory, and Amazon enrollment. Includes official Amazon and USPTO sources.",
+      image: "/campaign-assets/amazon-packaging-01.png",
+    },
     "ai-voice-cloning-drake-ip-battleground": {
       title: "AI Voice Cloning Drake: The IP Battleground of the Future",
       description:

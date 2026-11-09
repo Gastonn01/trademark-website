@@ -24,7 +24,7 @@ export async function POST(request: Request) {
     // Send chat transcript to team
     await resend.emails.send({
       from: "JustProtected Chatbot <noreply@justprotected.com>",
-      to: ["trademarks@justprotected.com"],
+      to: ["gflacort@gmail.com"],
       subject: `Chat Transcript - ${new Date(timestamp).toLocaleString()}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 700px; margin: 0 auto;">

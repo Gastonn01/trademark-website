@@ -30,7 +30,7 @@ export async function POST(request: Request) {
 
     await resend.emails.send({
       from: "JustProtected Chatbot <noreply@justprotected.com>",
-      to: ["trademarks@justprotected.com"],
+      to: ["gflacort@gmail.com"],
       subject: `Chatbot Inquiry from ${name}`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">

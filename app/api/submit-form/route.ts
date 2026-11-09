@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
     const emailPromises = []
 
     // Send to both notification emails
-    const notificationEmails = ["lacortgaston@gmail.com", "gflacort@gmail.com"]
+    const notificationEmails = ["gflacort@gmail.com"]
 
     for (const email of notificationEmails) {
       emailPromises.push(

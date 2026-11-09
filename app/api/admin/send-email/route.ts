@@ -295,7 +295,7 @@ export async function POST(req: Request) {
                 <p>Our trademark specialists are here to answer your questions and provide personalized guidance.</p>
                 <p>
                     <strong>Contact Information:</strong><br>
-                    📧 Email: <a href="mailto:support@justprotected.com" style="color: #3b82f6;">support@justprotected.com</a><br>
+                    📧 Email: <a href="https://justprotected.com/contact" style="color: #3b82f6;">justprotected.com/contact</a><br>
                     🌐 Website: <a href="https://justprotected.com" style="color: #3b82f6;">justprotected.com</a><br>
                     ⏰ Response Time: Within 24 hours<br>
                     💬 Live Chat: Available on our website
@@ -359,7 +359,7 @@ Based on your analysis results, we recommend proceeding with your trademark regi
 Our trademark specialists are here to answer your questions and provide personalized guidance.
 
 Contact Information:
-📧 Email: support@justprotected.com
+📧 Contact form: justprotected.com/contact
 🌐 Website: justprotected.com
 ⏰ Response Time: Within 24 hours
 💬 Live Chat: Available on our website
@@ -381,13 +381,12 @@ This email complies with CAN-SPAM Act requirements.
     // Send the email with enhanced deliverability settings
     try {
       const { data, error } = await resend.emails.send({
-        from: "Just Protected <hello@justprotected.com>",
+        from: "Just Protected <noreply@justprotected.com>",
         to: [email],
         subject: `🎉 Your Trademark Analysis Results - "${trademark_name}"`,
         html: htmlContent,
         text: plainTextContent,
-        reply_to: "support@justprotected.com",
-        headers: {
+                headers: {
           "List-Unsubscribe": `<https://justprotected.com/unsubscribe?email=${encodeURIComponent(email)}>`,
           "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
           "X-Entity-Ref-ID": `analysis-${searchId}`,
