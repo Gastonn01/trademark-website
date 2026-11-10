@@ -26,6 +26,24 @@ export function Footer() {
                 <Phone className="h-5 w-5 text-accent" />
                 <span>Available 24/7</span>
               </div>
+              <div className="flex items-center gap-4 pt-2 text-sm">
+                <a
+                  href="https://www.instagram.com/just_protected/"
+                  className="hover:text-accent transition-colors"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Instagram
+                </a>
+                <a
+                  href="https://www.tiktok.com/@just_protected"
+                  className="hover:text-accent transition-colors"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  TikTok
+                </a>
+              </div>
             </div>
           </div>
 
@@ -77,17 +95,11 @@ export function Footer() {
 
         <BlogContextualLinks />
 
-        <div className="pt-8 border-t border-white/10">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-gray-400 text-sm text-center md:text-left">
-              © {new Date().getFullYear()} Just Protected. All rights reserved. Licensed trademark attorneys.
-            </p>
-            <div className="flex items-center gap-6 text-sm text-gray-400">
-              <span>Member: International Trademark Association</span>
-              <span>•</span>
-              <span>Bar Certified</span>
-            </div>
-          </div>
+        <div className="pt-8 border-t border-white/10 space-y-3">
+          <p className="text-gray-400 text-sm text-center md:text-left">
+            © {new Date().getFullYear()} Just Protected. All rights reserved. Licensed trademark attorneys.
+          </p>
+          <p className="text-gray-500 text-xs text-center md:text-left">General information, not legal advice.</p>
         </div>
       </div>
     </footer>

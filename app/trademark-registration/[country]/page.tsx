@@ -13,6 +13,7 @@ import {
   timelineForCountry,
 } from "@/lib/country-pages"
 import type { Metadata } from "next"
+import { OG_IMAGE } from "@/lib/seo"
 
 export function generateStaticParams() {
   return getAllCountryNames().map((name) => ({ country: countrySlug(name) }))
@@ -29,18 +30,25 @@ export async function generateMetadata({
   const data = countryPricingData[name]
   return {
     title: `Trademark Registration in ${name} (2026): Cost & Process | Just Protected`,
-    description: `Register your trademark in ${name} from $${data.prices.USD} USD all-inclusive. Licensed attorneys, filed in 24 hours, monthly installments available. Free trademark search included.`,
+    description: `Register your trademark in ${name} from $${data.prices.USD} USD all-inclusive. Licensed attorneys usually file within 24 hours. Monthly installments are available on this page. Free trademark search included.`,
     keywords: `trademark registration ${name}, register trademark in ${name}, ${name} trademark cost, how to trademark in ${name}, ${name} brand protection`,
     alternates: {
       canonical: `/trademark-registration/${country}`,
     },
     openGraph: {
       title: `Trademark Registration in ${name} (2026): Cost & Process | Just Protected`,
-      description: `Register your trademark in ${name} from $${data.prices.USD} USD all-inclusive. Licensed attorneys, filed in 24 hours, monthly installments available. Free trademark search included.`,
+      description: `Register your trademark in ${name} from $${data.prices.USD} USD all-inclusive. Licensed attorneys usually file within 24 hours. Monthly installments are available on this page. Free trademark search included.`,
       url: `/trademark-registration/${country}`,
       siteName: "Just Protected",
       locale: "en_US",
       type: "website",
+      images: [OG_IMAGE],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `Trademark Registration in ${name} (2026): Cost & Process | Just Protected`,
+      description: `Register your trademark in ${name} from $${data.prices.USD} USD all-inclusive. Licensed attorneys usually file within 24 hours. Monthly installments are available on this page. Free trademark search included.`,
+      images: [OG_IMAGE.url],
     },
   }
 }
@@ -68,7 +76,7 @@ export default async function CountryPage({
     },
     {
       q: `How long does trademark registration take in ${name}?`,
-      a: `The full registration process in ${name} typically takes ${timeline} from filing to certificate. However, your legal protection starts from the filing date — we file within 24 hours of receiving your application, so you're protected almost immediately.`,
+      a: `The full registration process in ${name} typically takes ${timeline} from filing to certificate. Your rights date from the filing date. Licensed attorneys usually file within 24 hours of receiving your application. Registration still takes the time the office needs.`,
     },
     {
       q: `Do I need a local attorney to register a trademark in ${name}?`,
@@ -119,8 +127,8 @@ export default async function CountryPage({
               Trademark Registration in {name}
             </h1>
             <p className="text-lg md:text-xl text-gray-300 mb-8 max-w-2xl mx-auto leading-relaxed">
-              Protect your brand in {name} from ${data.prices.USD} USD all-inclusive. Licensed attorneys, filed within
-              24 hours, no hidden fees.
+              Protect your brand in {name} from ${data.prices.USD} USD all-inclusive. Licensed attorneys usually file
+              within 24 hours. Registration takes months. No hidden fees.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
               <Link
@@ -132,7 +140,7 @@ export default async function CountryPage({
               </Link>
             </div>
             <div className="flex flex-wrap justify-center gap-6 text-sm text-gray-300">
-              {["Free search included", "Filed in 24 hours", "Local agents included", "Money-back guarantee"].map(
+              {["Free search included", "Usually filed within 24 hours", "Local agents included", "1 year of monitoring"].map(
                 (item, i) => (
                   <div key={i} className="flex items-center gap-2">
                     <CheckCircle2 className="h-4 w-4 text-accent" />
@@ -222,7 +230,7 @@ export default async function CountryPage({
               {
                 icon: FileText,
                 title: "2. Attorney filing",
-                desc: `Our attorneys and local agents in ${name} prepare and file your application within 24 hours.`,
+                desc: `Our attorneys and local agents in ${name} prepare and file your application, usually within 24 hours.`,
               },
               {
                 icon: Clock,

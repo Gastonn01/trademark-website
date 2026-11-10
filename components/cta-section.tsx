@@ -10,11 +10,11 @@ export function CTASection() {
           <div className="bg-primary rounded-3xl px-8 py-16 md:px-16 md:py-20 text-center">
             <p className="label-caps text-accent mb-6">Before someone else does</p>
             <h2 className="font-serif text-4xl md:text-5xl text-white tracking-tight leading-tight mb-6 max-w-2xl mx-auto">
-              Your name is your brand. <span className="italic text-accent">Own it.</span>
+              Your name is your brand. <span className="italic text-accent">File it.</span>
             </h2>
             <p className="text-white/50 font-light max-w-xl mx-auto mb-10 leading-relaxed">
-              AI doesn&apos;t ask permission. A registered trademark is the legal ground you
-              stand on to stop fakes, copycats and counterfeits.
+              AI doesn&apos;t ask permission. A trademark is the claim to that name as a brand.
+              Attorneys usually file within 24 hours. Registration takes months.
             </p>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-10">
@@ -34,8 +34,9 @@ export function CTASection() {
             </div>
 
             <p className="label-caps text-[0.65rem] text-white/35">
-              Filed in 24 hours&ensp;&middot;&ensp;Licensed attorneys&ensp;&middot;&ensp;Money-back guarantee
+              Usually filed within 24 hours&ensp;&middot;&ensp;Licensed attorneys&ensp;&middot;&ensp;15+ years of experience
             </p>
+            <p className="text-xs text-white/40 mt-4">General information, not legal advice.</p>
           </div>
         </div>
       </div>

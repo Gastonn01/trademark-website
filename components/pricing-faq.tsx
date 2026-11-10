@@ -15,7 +15,7 @@ export function PricingFAQ() {
     {
       question: "Do you offer refunds if my trademark application is rejected?",
       answer:
-        "We offer a money-back guarantee if your trademark application is rejected due to an error on our part. However, we cannot guarantee approval as final decisions are made by the trademark office.",
+        "We cannot guarantee approval. Final decisions are made by the trademark office.",
     },
     {
       question: "Can I upgrade my plan later?",

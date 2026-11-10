@@ -7,7 +7,7 @@ export function CookiePolicy() {
       <h1 className="text-4xl font-bold mb-8 text-center">Cookie Policy</h1>
       <div className="max-w-3xl mx-auto">
         <p className="mb-4">
-          This Cookie Policy explains how Protectly ("we", "us", and "our") uses cookies and similar technologies to
+          This Cookie Policy explains how Just Protected ("we", "us", and "our") uses cookies and similar technologies to
           recognize you when you visit our website. It explains what these technologies are and why we use them, as well
           as your rights to control our use of them.
         </p>

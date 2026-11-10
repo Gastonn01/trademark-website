@@ -19,6 +19,7 @@ const EXCLUDED = new Set([
   "/blog/trademark-registration-united-kingdom",
   "/blog/trademark-registration-germany",
   "/blog/trademark-registration-india",
+  "/trademark-process",
 ])
 
 function fileMtime(filePath: string): Date {

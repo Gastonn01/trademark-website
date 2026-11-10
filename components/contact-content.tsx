@@ -7,7 +7,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Mail, Phone, MapPin, Clock, Send, CheckCircle, AlertCircle } from "lucide-react"
+import Link from "next/link"
+import { Mail, Clock, Send, CheckCircle, AlertCircle, Calendar } from "lucide-react"
 
 export function ContactContent() {
   const [formData, setFormData] = useState({
@@ -200,26 +201,16 @@ export function ContactContent() {
 
                 <div className="flex items-start gap-4">
                   <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center flex-shrink-0">
-                    <Phone className="h-6 w-6 text-accent" />
+                    <Calendar className="h-6 w-6 text-accent" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900">Phone</h3>
-                    <p className="text-gray-600">+1 (555) 123-4567</p>
-                    <p className="text-sm text-gray-500">Monday - Friday, 9:00 AM - 6:00 PM CET</p>
-                  </div>
-                </div>
-
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 rounded-full bg-accent/10 flex items-center justify-center flex-shrink-0">
-                    <MapPin className="h-6 w-6 text-accent" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900">Office</h3>
+                    <h3 className="font-semibold text-gray-900">Book a call</h3>
                     <p className="text-gray-600">
-                      123 Business District
-                      <br />
-                      Madrid, Spain 28001
+                      <Link href="/book-a-call" className="text-accent hover:underline">
+                        Schedule a 30-minute call
+                      </Link>
                     </p>
+                    <p className="text-sm text-gray-500">Calendly booking on the call page</p>
                   </div>
                 </div>
 

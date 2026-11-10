@@ -28,9 +28,9 @@ export function HeroSection() {
             </h1>
 
             <p className="text-base md:text-lg text-white/60 mb-12 max-w-2xl mx-auto leading-relaxed font-light">
-              Deepfakes. Voice cloning. Fake sponsorships. A registered trademark gives you
-              the legal power to demand takedowns and own your identity — filed in 24 hours,
-              by licensed attorneys.
+              Deepfakes. Voice cloning. Fake sponsorships. Licensed attorneys usually file
+              within 24 hours. That filing claims your name as a brand — not your face or
+              voice. Registration still takes months.
             </p>
 
             <div className="max-w-xl mx-auto mb-6">
@@ -68,18 +68,16 @@ export function HeroSection() {
           </motion.div>
 
           <motion.div
-            className="grid grid-cols-2 md:grid-cols-4 gap-10 pt-14 mt-16 border-t border-white/10"
+            className="flex flex-wrap items-start justify-center gap-x-20 gap-y-8 pt-14 mt-16 border-t border-white/10"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.35, duration: 0.7 }}
           >
             {[
               { label: "Coverage", value: "Worldwide" },
-              { label: "Identities protected", value: "10,000+" },
-              { label: "Approval rate", value: "95%" },
               { label: "Years of experience", value: "15+" },
-            ].map((stat, index) => (
-              <div key={index} className="text-center">
+            ].map((stat) => (
+              <div key={stat.label} className="text-center min-w-[8rem]">
                 <div className="font-serif text-3xl md:text-4xl text-white mb-2">{stat.value}</div>
                 <div className="label-caps text-[0.65rem] text-white/40">{stat.label}</div>
               </div>

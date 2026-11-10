@@ -40,7 +40,11 @@ export function RouteJsonLd() {
       name: SITE_NAME,
       url: SITE_URL,
       description:
-        "Trademark and name, image, and likeness protection for athletes, creators, and musicians. Licensed attorneys with 15+ years of experience.",
+        "Trademark filing for athletes, creators, and musicians. A trademark protects a name as a brand used in commerce. Licensed attorneys with 15+ years of experience.",
+      sameAs: [
+        "https://www.instagram.com/just_protected/",
+        "https://www.tiktok.com/@just_protected",
+      ],
     },
     {
       "@type": "WebSite",

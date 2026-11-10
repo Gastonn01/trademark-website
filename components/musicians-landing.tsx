@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { CheckCircle2, ArrowRight } from "lucide-react"
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import { PublishedFaq } from "@/components/published-faq"
 
 const fade = {
   initial: { opacity: 0, y: 20 },
@@ -29,9 +29,9 @@ export function MusiciansLanding() {
               </h1>
 
               <p className="text-base md:text-lg text-white/60 mb-12 max-w-2xl mx-auto leading-relaxed font-light">
-                Fake AI songs, cloned vocals, counterfeit merch, fake collaborations. The music industry has
-                never faced threats like this — and the law hasn&apos;t caught up yet. But a trademark gives
-                you real legal power to fight back today.
+                Fake AI songs. Cloned vocals. Counterfeit merch. A trademark protects your name as a brand and
+                helps against fake merch and impersonation. A cloned voice is a separate right. Attorneys
+                usually file within 24 hours. Registration takes months.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
@@ -51,7 +51,7 @@ export function MusiciansLanding() {
               </div>
 
               <p className="label-caps text-[0.65rem] text-white/40">
-                Free name check&ensp;&middot;&ensp;Filed in 24 hours&ensp;&middot;&ensp;Licensed attorneys&ensp;&middot;&ensp;15+ years of experience
+                Free name check&ensp;&middot;&ensp;Usually filed within 24 hours&ensp;&middot;&ensp;Licensed attorneys&ensp;&middot;&ensp;15+ years of experience
               </p>
             </motion.div>
           </div>
@@ -83,19 +83,19 @@ export function MusiciansLanding() {
                 tag: "Fake collaborations",
                 title: "Fake AI collaborations",
                 description:
-                  "AI-generated \"duets\" and \"features\" with your voice appear online without your consent. Streaming platforms struggle to take them down — but a trademark gives you a clear legal basis to demand it.",
+                  "AI-generated duets and features with your voice appear online without your consent. A cloned voice is mainly a publicity right. A trademark helps when the listing uses your name as a brand.",
               },
               {
                 tag: "Counterfeit merch",
                 title: "Counterfeit merchandise",
                 description:
-                  "Fake merch using your name, face, or likeness floods markets — from bootleg shirts to online stores that look official. Trademark registration is the fastest path to getting them taken down and stopped.",
+                  "Fake merch using your name shows up in shops and online stores. A trademark in that country can help against copies that use the name as a brand. It does not cover your face or voice by itself.",
               },
               {
                 tag: "Name theft",
                 title: "Name and band name theft",
                 description:
-                  "Solo artists and bands alike face others registering their name first — especially when going international. Someone in another country can legally own your name if you don't file there first.",
+                  "Someone else can file your artist or band name as a brand in a country where you have not filed. Trademarks are territorial. Filing there claims the name as a brand. It does not mean you own the person.",
               },
             ].map((threat, i) => (
               <motion.div
@@ -222,9 +222,9 @@ export function MusiciansLanding() {
               },
               {
                 number: "03",
-                title: "Legal protection worldwide",
+                title: "Filing date secured",
                 description:
-                  "Registered in the countries you choose. You now have grounds to demand takedowns of fake AI content, fake merch, and copycat names.",
+                  "We file in the countries you choose. Rights date from that filing. Registration typically takes months. The mark protects your name as a brand. A cloned voice is a separate publicity right.",
               },
             ].map((step, i) => (
               <motion.div
@@ -260,13 +260,22 @@ export function MusiciansLanding() {
             <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
               <p className="label-caps text-accent mb-5">What&apos;s included</p>
               <h2 className="font-serif text-4xl md:text-5xl text-white tracking-tight leading-tight mb-6">
-                Everything included.
+                Priced per country.
                 <br />
-                <span className="italic text-accent">No surprises.</span>
+                <span className="italic text-accent">Per class.</span>
               </h2>
               <p className="text-white/50 font-light mb-10 leading-relaxed">
-                One plan covers filing, monitoring, and support. No hidden attorney fees. No per-hour billing.
-                Just your name, protected.
+                There is no single monthly plan. Each filing is priced for one country and one class, with a
+                separate published fee for each extra class.{" "}
+                <Link href="/detailed-pricelist" className="text-accent underline underline-offset-2">
+                  See the price list
+                </Link>{" "}
+                and the{" "}
+                <Link href="/trademark-registration/united-states" className="text-accent underline underline-offset-2">
+                  United States page
+                </Link>
+                , which lists $1,010 USD for one class and $499 USD for each extra class. That page also offers
+                instalments — a split of the same filing fee, not a subscription.
               </p>
               <Link
                 href="/free-search?audience=musician"
@@ -282,14 +291,13 @@ export function MusiciansLanding() {
                 {[
                   "Free trademark search",
                   "Licensed attorney review",
-                  "Filing within 24 hours",
+                  "Filing, usually within 24 hours",
                   "Coverage in the countries you choose",
                   "Music & entertainment-specific classification",
                   "1 year of monitoring included",
                   "Alerts if someone files a similar name",
                   "AI content takedown support",
                   "Counterfeit merch removal support",
-                  "Money-back guarantee",
                 ].map((item, i) => (
                   <li key={i} className="flex items-start gap-3">
                     <CheckCircle2 className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
@@ -312,39 +320,40 @@ export function MusiciansLanding() {
             </h2>
           </motion.div>
 
-          <Accordion type="single" collapsible className="w-full">
-            {[
+          <PublishedFaq
+            items={[
               {
-                q: "Can I trademark my artist name or stage name?",
-                a: "Yes — and it's one of the most important things an artist can do. Your stage name is your brand. Registering it as a trademark means you own it commercially, can stop others from using it, and have legal grounds to demand takedowns of AI content made in your name.",
+                question: "Can I trademark my artist name or stage name?",
+                answer:
+                  "Yes, if the name identifies your music, merch, or other services as a brand. A trademark protects that name in the classes you file. It does not mean you own the word in general, and it does not own your voice.",
               },
               {
-                q: "What can I do about AI songs that use my voice?",
-                a: "A trademark gives you one of the strongest legal tools available right now. Combined with copyright claims and platform terms of service, a registered trademark allows you to issue formal takedown demands that platforms must act on. Without registration, enforcement is much harder and slower.",
+                question: "What can I do about AI songs that use my voice?",
+                answer:
+                  "A cloned voice is mainly a publicity and copyright question, plus whatever the platform's rules allow. A trademark helps when the track or the listing uses your name as a brand. It does not make every AI song trademark infringement, and platforms are not required to remove one just because you ask.",
               },
               {
-                q: "Can I trademark a band name?",
-                a: "Absolutely. Band names are trademarked all the time — it's essential when touring internationally, signing licensing deals, or selling merchandise. We register band names in the music, entertainment, and merchandise categories to give you broad protection.",
+                question: "Can I trademark a band name?",
+                answer:
+                  "Yes, if the band name functions as a brand for music, entertainment, or merchandise. Each class is its own filing. Touring in another country does not extend a registration there.",
               },
               {
-                q: "What if another artist already has my name?",
-                a: "Our free search will tell you immediately. If there's a conflict, our attorneys will advise on the options: different geographic territories, different goods and services categories, or a formal opposition if the existing registration is weak. Many conflicts are more manageable than they appear.",
+                question: "What if another artist already has my name?",
+                answer:
+                  "Our free search will tell you immediately. If there's a conflict, our attorneys will advise on the options: different geographic territories, different goods and services categories, or a formal opposition if the existing registration is weak. Many conflicts are more manageable than they appear.",
               },
               {
-                q: "Do I need to register in every country I tour in?",
-                a: "Ideally, yes — but you don't have to do it all at once. We recommend starting with your home country and the biggest markets for your music. Our installment pricing makes multi-country registration affordable, and you can add countries as your career grows.",
+                question: "Do I need to register in every country I tour in?",
+                answer:
+                  "A trademark covers the country where it is filed. You do not have to file everywhere at once. Start with your home country and the markets that matter for your music. Pricing is per country and per class. The United States page offers instalments on that filing fee.",
               },
               {
-                q: "How much does it cost?",
-                a: "The US is $65/month, EU is $99/month — both spread over 11 months with no large upfront cost. Most artists start with 2–3 key markets for under $200/month total. The name check is completely free. See our pricing page for full details by country.",
+                question: "How much does it cost?",
+                answer:
+                  "It depends on the country and the number of classes. The United States page lists $1,010 USD for one class and $499 USD for each extra class, and it offers instalments on that fee. Other countries are on the price list. The name check is free.",
               },
-            ].map((item, i) => (
-              <AccordionItem key={i} value={`item-${i}`}>
-                <AccordionTrigger className="text-left font-semibold text-primary">{item.q}</AccordionTrigger>
-                <AccordionContent className="text-gray-500 leading-relaxed">{item.a}</AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
+            ]}
+          />
         </div>
       </section>
 
@@ -379,8 +388,9 @@ export function MusiciansLanding() {
               </div>
 
               <p className="label-caps text-[0.65rem] text-white/35">
-                No credit card required&ensp;&middot;&ensp;Results in 24 hours&ensp;&middot;&ensp;Money-back guarantee
+                No credit card required&ensp;&middot;&ensp;Usually filed within 24 hours&ensp;&middot;&ensp;15+ years of experience
               </p>
+              <p className="text-xs text-white/40 mt-4">General information, not legal advice.</p>
             </div>
           </div>
         </div>
