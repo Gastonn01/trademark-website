@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { CheckCircle2, ArrowRight } from "lucide-react"
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import { PublishedFaq } from "@/components/published-faq"
 
 const fade = {
   initial: { opacity: 0, y: 20 },
@@ -29,8 +29,8 @@ export function BusinessesLanding() {
               </h1>
 
               <p className="text-base md:text-lg text-white/60 mb-12 max-w-2xl mx-auto leading-relaxed font-light">
-                AI made copying a storefront, product photos, or a brand name trivial. A registered trademark is
-                the one document that gets a fake store taken down fast — instead of never.
+                AI made copying a storefront or a brand name trivial. A trademark application — usually filed
+                within 24 hours — claims that name as a brand. Registration takes months. Rights date from the filing.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
@@ -50,7 +50,7 @@ export function BusinessesLanding() {
               </div>
 
               <p className="label-caps text-[0.65rem] text-white/40">
-                Free name check&ensp;&middot;&ensp;Filed in 24 hours&ensp;&middot;&ensp;Licensed attorneys&ensp;&middot;&ensp;15+ years of experience
+                Free name check&ensp;&middot;&ensp;Usually filed within 24 hours&ensp;&middot;&ensp;Licensed attorneys&ensp;&middot;&ensp;15+ years of experience
               </p>
             </motion.div>
           </div>
@@ -176,9 +176,9 @@ export function BusinessesLanding() {
               },
               {
                 number: "03",
-                title: "You're covered",
+                title: "Filing date secured",
                 description:
-                  "Legal protection from your filing date. You can now demand takedowns on cloned stores, resolve marketplace disputes, and expand with confidence.",
+                  "We file in the countries you choose. Rights date from that filing. Registration typically takes months. A registration helps platforms act when someone uses the name as a brand.",
               },
             ].map((step, i) => (
               <motion.div
@@ -214,13 +214,22 @@ export function BusinessesLanding() {
             <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
               <p className="label-caps text-accent mb-5">What&apos;s included</p>
               <h2 className="font-serif text-4xl md:text-5xl text-white tracking-tight leading-tight mb-6">
-                Everything included.
+                Priced per country.
                 <br />
-                <span className="italic text-accent">One monthly plan.</span>
+                <span className="italic text-accent">Per class.</span>
               </h2>
               <p className="text-white/50 font-light mb-10 leading-relaxed">
-                From filing to monitoring — covered. No surprise legal invoices. No hidden fees. Just protection
-                that works.
+                There is no single monthly plan. Each filing is priced for one country and one class, with a
+                separate published fee for each extra class.{" "}
+                <Link href="/detailed-pricelist" className="text-accent underline underline-offset-2">
+                  See the price list
+                </Link>{" "}
+                and the{" "}
+                <Link href="/trademark-registration/united-states" className="text-accent underline underline-offset-2">
+                  United States page
+                </Link>
+                , which lists $1,010 USD for one class and $499 USD for each extra class. That page also offers
+                instalments — a split of the same filing fee, not a subscription.
               </p>
               <Link
                 href="/free-search?audience=business"
@@ -236,14 +245,13 @@ export function BusinessesLanding() {
                 {[
                   "Free trademark search",
                   "Licensed attorney review",
-                  "Filing within 24 hours",
+                  "Filing, usually within 24 hours",
                   "Coverage in the countries you choose",
                   "Business-specific goods & services classification",
                   "1 year of monitoring included",
                   "Alerts if someone files something similar",
                   "Marketplace & platform takedown support",
                   "Office action support if issues arise",
-                  "Money-back guarantee",
                 ].map((item, i) => (
                   <li key={i} className="flex items-start gap-3">
                     <CheckCircle2 className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
@@ -307,39 +315,40 @@ export function BusinessesLanding() {
             </h2>
           </motion.div>
 
-          <Accordion type="single" collapsible className="w-full">
-            {[
+          <PublishedFaq
+            items={[
               {
-                q: "I already have an LLC. Isn't my business name protected?",
-                a: "No — registering a business entity (an LLC or corporation) with your state just reserves that legal entity name. It doesn't stop someone else from using a similar name for their products or trademark, or from registering it as a trademark themselves. They're two separate systems.",
+                question: "I already have an LLC. Isn't my business name protected?",
+                answer:
+                  "No. Registering a company reserves that entity name. It does not stop someone else from using a similar name as a trademark, or from filing the name themselves. They are two separate systems.",
               },
               {
-                q: "I own the domain. Doesn't that protect the name?",
-                a: "No. Domain ownership and trademark ownership are unrelated. You can own yourbrand.com and still have someone else register \"Yourbrand\" as a trademark — and you'd have no automatic right to stop them.",
+                question: "I own the domain. Doesn't that protect the name?",
+                answer:
+                  "No. Domain ownership and trademark rights are unrelated. You can own yourbrand.com and still have someone else file \"Yourbrand\" as a trademark.",
               },
               {
-                q: "Someone already cloned my store. Is it too late to register?",
-                a: "No — register now. A registration doesn't undo what already happened, but it's the single most effective thing you can do to get the clone taken down and to prevent it from happening again with a stronger legal position.",
+                question: "Someone already cloned my store. Is it too late to file?",
+                answer:
+                  "No. A filing does not undo what already happened. It gives you a filing date, and a later registration can help platforms act when the clone uses your name as a brand. Registration typically takes months.",
               },
               {
-                q: "Do I need to register in every country I ship to?",
-                a: "Not necessarily every country, but every country where you meaningfully sell or plan to expand. Trademarks are territorial — a US registration does nothing for you in the EU or UK. Our attorneys will help you prioritize based on where your actual exposure is.",
+                question: "Do I need to register in every country I ship to?",
+                answer:
+                  "Not necessarily every country, but trademarks are territorial — a US registration does nothing for you in the EU or UK. Price each country and class on the price list. The United States page offers instalments on that filing fee.",
               },
               {
-                q: "What's the difference between trademark and copyright for a business?",
-                a: "Copyright protects your creative content — product photos, descriptions, videos. Trademark protects your brand name and logo as identifiers of your business. A cloned storefront using your name but different photos is a trademark issue, not a copyright one.",
+                question: "What's the difference between trademark and copyright for a business?",
+                answer:
+                  "Copyright protects creative content — product photos, descriptions, videos. A trademark protects your brand name and logo as identifiers of your business. A cloned storefront using your name but different photos is a trademark question, not a copyright one.",
               },
               {
-                q: "How much does it cost?",
-                a: "The US is $65/month over 11 months. EU is $99/month. Most business owners start with 2–3 key markets and pay under $200/month total — with no large upfront cost. The search is completely free. Check our pricing page for full country-by-country details.",
+                question: "How much does it cost?",
+                answer:
+                  "It depends on the country and the number of classes. The United States page lists $1,010 USD for one class and $499 USD for each extra class, and it offers instalments on that fee. Other countries are on the price list. The name check is free.",
               },
-            ].map((item, i) => (
-              <AccordionItem key={i} value={`item-${i}`}>
-                <AccordionTrigger className="text-left font-semibold text-primary">{item.q}</AccordionTrigger>
-                <AccordionContent className="text-gray-500 leading-relaxed">{item.a}</AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
+            ]}
+          />
         </div>
       </section>
 
@@ -374,8 +383,9 @@ export function BusinessesLanding() {
               </div>
 
               <p className="label-caps text-[0.65rem] text-white/35">
-                No credit card required&ensp;&middot;&ensp;Results in 24 hours&ensp;&middot;&ensp;Money-back guarantee
+                No credit card required&ensp;&middot;&ensp;Usually filed within 24 hours&ensp;&middot;&ensp;15+ years of experience
               </p>
+              <p className="text-xs text-white/40 mt-4">General information, not legal advice.</p>
             </div>
           </div>
         </div>

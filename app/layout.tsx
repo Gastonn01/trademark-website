@@ -8,6 +8,7 @@ import { CookieConsentBanner } from "@/components/cookie-consent-banner"
 import { ScrollToTop } from "@/components/scroll-to-top"
 import { TrademarkFAQBot } from "@/components/trademark-faq-bot"
 import { RouteJsonLd } from "@/components/route-json-ld"
+import { OG_IMAGE } from "@/lib/seo"
 import { Suspense } from "react"
 import Script from "next/script"
 import "./globals.css"
@@ -35,13 +36,14 @@ export const metadata: Metadata = {
     siteName: "Just Protected",
     locale: "en_US",
     type: "website",
+    images: [OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
     title: "Just Protected - Trademark Registration Services",
     description:
       "Professional trademark registration services worldwide. Protect your brand with our expert legal team.",
-    creator: "@justprotected",
+    images: [OG_IMAGE.url],
   },
   robots: {
     index: true,
@@ -70,6 +72,13 @@ export default function RootLayout({
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
         <link rel="manifest" href="/site.webmanifest" />
+        {/* Kept in the document head so pages that replace openGraph still expose a share image. */}
+        <meta property="og:image" content="https://justprotected.com/og-image.png" />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta property="og:image:alt" content="Just Protected. AI is using your name. Time to fight back." />
+        <meta name="twitter:image" content="https://justprotected.com/og-image.png" />
+        <meta name="twitter:card" content="summary_large_image" />
 
         {/* Consent Mode v2 - Must run before GTM */}
         <Script

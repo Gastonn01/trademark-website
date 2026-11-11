@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { CheckCircle2, ArrowRight } from "lucide-react"
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import { PublishedFaq } from "@/components/published-faq"
 
 const fade = {
   initial: { opacity: 0, y: 20 },
@@ -25,13 +25,13 @@ export function AthletesLanding() {
               <h1 className="font-serif text-white text-5xl md:text-6xl leading-[1.1] tracking-tight mb-8">
                 Your name is worth money.
                 <br />
-                <span className="italic text-accent">Make sure it&apos;s yours.</span>
+                <span className="italic text-accent">Don&apos;t let someone else file it.</span>
               </h1>
 
               <p className="text-base md:text-lg text-white/60 mb-12 max-w-2xl mx-auto leading-relaxed font-light">
-                Since NIL rights opened up, your name, image, and likeness can earn you real money —
-                sponsorships, deals, appearances. But if your name isn&apos;t trademarked, someone else can
-                register it, use it, or fake endorsements in your name. We fix that in 24 hours.
+                Since NIL rights opened up, your name can earn you real money — sponsorships, deals,
+                appearances. A trademark protects that name as a brand used in commerce. It is not ownership
+                of your face or voice. We search for free, then licensed attorneys usually file within 24 hours.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
@@ -51,7 +51,7 @@ export function AthletesLanding() {
               </div>
 
               <p className="label-caps text-[0.65rem] text-white/40">
-                Free name check&ensp;&middot;&ensp;Filed in 24 hours&ensp;&middot;&ensp;Licensed attorneys&ensp;&middot;&ensp;15+ years of experience
+                Free name check&ensp;&middot;&ensp;Usually filed within 24 hours&ensp;&middot;&ensp;Licensed attorneys&ensp;&middot;&ensp;15+ years of experience
               </p>
             </motion.div>
           </div>
@@ -109,9 +109,9 @@ export function AthletesLanding() {
               In 2021, the NCAA changed its rules. For the first time, college athletes can earn money from
               their NIL — sponsorships, social media deals, appearances, merchandise.{" "}
               <strong className="text-primary font-semibold">
-                But without a trademark, your NIL is unprotected.
+                A trademark protects your name as a brand. It does not replace publicity or likeness rights.
               </strong>{" "}
-              Anyone can register your name before you do.
+              Someone else can still file the name before you do.
             </p>
           </motion.div>
         </div>
@@ -201,9 +201,9 @@ export function AthletesLanding() {
               },
               {
                 number: "03",
-                title: "You're protected",
+                title: "Filing date secured",
                 description:
-                  "Your name is registered in the countries you choose. You get legal standing to stop fakes, demand takedowns, and sign deals with confidence.",
+                  "We file in the countries you choose. Rights date from that filing. Registration typically takes months — about 8–12 months in the United States. The mark protects your name as a brand, not your face or voice.",
               },
             ].map((step, i) => (
               <motion.div
@@ -239,13 +239,22 @@ export function AthletesLanding() {
             <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
               <p className="label-caps text-accent mb-5">What&apos;s included</p>
               <h2 className="font-serif text-4xl md:text-5xl text-white tracking-tight leading-tight mb-6">
-                Everything included.
+                Priced per country.
                 <br />
-                <span className="italic text-accent">No surprises.</span>
+                <span className="italic text-accent">Per class.</span>
               </h2>
               <p className="text-white/50 font-light mb-10 leading-relaxed">
-                One monthly plan covers everything from filing to monitoring. No hidden legal fees, no surprise
-                invoices.
+                There is no single monthly plan. Each filing is priced for one country and one class, with a
+                separate published fee for each extra class.{" "}
+                <Link href="/detailed-pricelist" className="text-accent underline underline-offset-2">
+                  See the price list
+                </Link>{" "}
+                and the{" "}
+                <Link href="/trademark-registration/united-states" className="text-accent underline underline-offset-2">
+                  United States page
+                </Link>
+                , which lists $1,010 USD for one class and $499 USD for each extra class. That page also offers
+                instalments — a split of the same filing fee, not a subscription.
               </p>
               <Link
                 href="/free-search?audience=athlete"
@@ -261,14 +270,13 @@ export function AthletesLanding() {
                 {[
                   "Free trademark search",
                   "Licensed attorney review of your application",
-                  "Filing within 24 hours",
+                  "Filing, usually within 24 hours",
                   "Coverage in the countries you choose",
                   "1 year of trademark monitoring included",
                   "Alerts if someone tries to register something similar",
                   "Office action support if issues arise",
                   "Digital certificate of registration",
                   "NIL-specific goods & services classification",
-                  "Money-back guarantee",
                 ].map((item, i) => (
                   <li key={i} className="flex items-start gap-3">
                     <CheckCircle2 className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
@@ -353,39 +361,40 @@ export function AthletesLanding() {
             </h2>
           </motion.div>
 
-          <Accordion type="single" collapsible className="w-full">
-            {[
+          <PublishedFaq
+            items={[
               {
-                q: "Can college athletes trademark their name?",
-                a: "Yes. Since the NCAA changed its NIL rules in 2021, college athletes can fully monetise their Name, Image & Likeness — and trademarking your name is the single most important legal step to do that safely. There are no restrictions on college athletes registering trademarks.",
+                question: "Can college athletes trademark their name?",
+                answer:
+                  "Yes, if the name functions as a brand for goods or services such as merch, a camp, or media. An NIL deal is a contract that pays you for your identity. A trademark is a separate brand right. School and league rules can add limits. A trademark does not replace publicity rights.",
               },
               {
-                q: "What exactly does a trademark protect for an athlete?",
-                a: "A trademark gives you exclusive rights to use your name (or other mark) commercially in the categories you register. That means you can stop others from: selling merchandise with your name, running fake sponsorship ads, registering your name as a domain or brand, and using AI to fake endorsements in your name.",
+                question: "What exactly does a trademark protect for an athlete?",
+                answer:
+                  "A trademark protects your name as a brand in the classes you file — often merch, camps, or media. It can help against merch and fake sponsorships that use the name as a brand. It does not give you ownership of your face or voice, and it does not automatically stop every domain or every AI clip.",
               },
               {
-                q: "How long does it take to file?",
-                a: "We file your application within 24 hours of receiving your information. The official registration process with trademark offices takes 6–18 months depending on the country — but you have legal protection from the filing date, not the registration date. So the sooner you file, the sooner you're protected.",
+                question: "How long does it take to file?",
+                answer:
+                  "Licensed attorneys usually file within 24 hours of receiving your information. Registration typically takes months — the United States page says 8–12 months. Your rights date from the filing date, not from the registration certificate.",
               },
               {
-                q: "Do I need to trademark in every country?",
-                a: "No — but you should register in the countries where your deals and audience are. Most athletes start with the US, EU, and UK. If you have a global fanbase or international sponsorship deals, we can expand from there. Our monthly installment plan makes multi-country registration affordable.",
+                question: "Do I need to trademark in every country?",
+                answer:
+                  "No. Register where your deals and audience are. Trademarks are territorial, so a filing in one country does not cover the others. Pricing is per country and per class on the price list. The United States page offers instalments on that country's filing fee.",
               },
               {
-                q: "What if someone already registered my name?",
-                a: "Don't panic — it happens. Our free search will tell you immediately if there's a conflict. Depending on the situation, there may be options: oppositions, challenges, or registration in different categories. Our attorneys will advise you on the best path forward.",
+                question: "What if someone already registered my name?",
+                answer:
+                  "Don't panic — it happens. Our free search will tell you immediately if there's a conflict. Depending on the situation, there may be options: oppositions, challenges, or registration in different categories. Our attorneys will advise you on the best path forward.",
               },
               {
-                q: "How much does it cost?",
-                a: "It depends on which countries you want protection in. The US is $65/month over 11 months. EU is $99/month. Most athletes start with 2–3 key markets for under $200/month total — with no large upfront fee. Check our pricing page for full details.",
+                question: "How much does it cost?",
+                answer:
+                  "It depends on the country and the number of classes. The United States page lists $1,010 USD for one class and $499 USD for each extra class, and it offers instalments on that fee. Other countries are on the price list. The name check is free.",
               },
-            ].map((item, i) => (
-              <AccordionItem key={i} value={`item-${i}`}>
-                <AccordionTrigger className="text-left font-semibold text-primary">{item.q}</AccordionTrigger>
-                <AccordionContent className="text-gray-500 leading-relaxed">{item.a}</AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
+            ]}
+          />
         </div>
       </section>
 
@@ -420,8 +429,9 @@ export function AthletesLanding() {
               </div>
 
               <p className="label-caps text-[0.65rem] text-white/35">
-                No credit card required&ensp;&middot;&ensp;Results in 24 hours&ensp;&middot;&ensp;Money-back guarantee
+                No credit card required&ensp;&middot;&ensp;Usually filed within 24 hours&ensp;&middot;&ensp;15+ years of experience
               </p>
+              <p className="text-xs text-white/40 mt-4">General information, not legal advice.</p>
             </div>
           </div>
         </div>

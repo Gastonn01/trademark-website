@@ -7,7 +7,7 @@ export function PrivacyPolicy() {
       <h1 className="text-4xl font-bold mb-8 text-center">Privacy Policy</h1>
       <div className="max-w-3xl mx-auto">
         <p className="mb-4">
-          At Protectly, we take your privacy seriously. This Privacy Policy explains how we collect, use, disclose, and
+          At Just Protected, we take your privacy seriously. This Privacy Policy explains how we collect, use, disclose, and
           safeguard your information when you visit our website or use our services.
         </p>
         <h2 className="text-2xl font-semibold mt-8 mb-4">Information We Collect</h2>

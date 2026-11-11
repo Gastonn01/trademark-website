@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { CheckCircle2, ArrowRight } from "lucide-react"
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import { PublishedFaq } from "@/components/published-faq"
 
 const fade = {
   initial: { opacity: 0, y: 20 },
@@ -29,9 +29,9 @@ export function CreatorsLanding() {
               </h1>
 
               <p className="text-base md:text-lg text-white/60 mb-12 max-w-2xl mx-auto leading-relaxed font-light">
-                Deepfake ads. Fake sponsorship posts. AI accounts impersonating you. Your name and face are
-                being used to make money — without your permission. A trademark gives you the legal power to
-                stop it.
+                Deepfake ads. Fake sponsorships. Impersonation accounts. A trademark is your name as a brand —
+                the document platforms ask for. It is not ownership of your face or voice. Attorneys usually
+                file within 24 hours. Registration takes months.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
@@ -51,7 +51,7 @@ export function CreatorsLanding() {
               </div>
 
               <p className="label-caps text-[0.65rem] text-white/40">
-                Free name check&ensp;&middot;&ensp;Filed in 24 hours&ensp;&middot;&ensp;Licensed attorneys&ensp;&middot;&ensp;15+ years of experience
+                Free name check&ensp;&middot;&ensp;Usually filed within 24 hours&ensp;&middot;&ensp;Licensed attorneys&ensp;&middot;&ensp;15+ years of experience
               </p>
             </motion.div>
           </div>
@@ -68,7 +68,7 @@ export function CreatorsLanding() {
             </h2>
             <p className="text-gray-500 font-light max-w-2xl mx-auto">
               As a creator, your name, handle, and personal brand are worth real money. Brand deals,
-              merchandise, courses, communities — all of it depends on you owning your identity.
+              merchandise, courses, communities — a trademark protects that name as a brand. It does not own your face or voice.
             </p>
           </motion.div>
 
@@ -78,13 +78,13 @@ export function CreatorsLanding() {
                 tag: "AI deepfakes",
                 title: "AI deepfake ads",
                 description:
-                  "Someone generates a video of you promoting a product you've never heard of. Your followers see it. Brands see it. Your reputation takes the hit — and without a trademark, your legal options are limited.",
+                  "Someone generates a video of you promoting a product you've never heard of. A trademark helps when it uses your name as a brand. Your face and voice are separate publicity rights.",
               },
               {
                 tag: "Impersonation",
                 title: "Fake accounts & impersonation",
                 description:
-                  "Copycat accounts use your name and likeness to sell products, run scams, or poach your audience. A registered trademark makes it far easier to get them removed — from any platform, in any country.",
+                  "Copycat accounts use your name and likeness to sell products or run scams. A trademark can help a platform act when the account uses your name as a brand. It does not cover every country, and it does not remove every lookalike.",
               },
               {
                 tag: "Deal diligence",
@@ -177,9 +177,9 @@ export function CreatorsLanding() {
               },
               {
                 number: "03",
-                title: "You're covered",
+                title: "Filing date secured",
                 description:
-                  "Legal protection from your filing date. You can now demand takedowns, block fakes, and sign brand deals with confidence.",
+                  "We file in the countries you choose. Rights date from that filing. Registration typically takes months. The mark helps platforms act when your name is used as a brand. It does not own your face or voice.",
               },
             ].map((step, i) => (
               <motion.div
@@ -215,13 +215,22 @@ export function CreatorsLanding() {
             <motion.div initial={{ opacity: 0, x: -20 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
               <p className="label-caps text-accent mb-5">What&apos;s included</p>
               <h2 className="font-serif text-4xl md:text-5xl text-white tracking-tight leading-tight mb-6">
-                Everything included.
+                Priced per country.
                 <br />
-                <span className="italic text-accent">One monthly plan.</span>
+                <span className="italic text-accent">Per class.</span>
               </h2>
               <p className="text-white/50 font-light mb-10 leading-relaxed">
-                From filing to monitoring — covered. No surprise legal invoices. No hidden fees. Just protection
-                that works.
+                There is no single monthly plan. Each filing is priced for one country and one class, with a
+                separate published fee for each extra class.{" "}
+                <Link href="/detailed-pricelist" className="text-accent underline underline-offset-2">
+                  See the price list
+                </Link>{" "}
+                and the{" "}
+                <Link href="/trademark-registration/united-states" className="text-accent underline underline-offset-2">
+                  United States page
+                </Link>
+                , which lists $1,010 USD for one class and $499 USD for each extra class. That page also offers
+                instalments — a split of the same filing fee, not a subscription.
               </p>
               <Link
                 href="/free-search?audience=creator"
@@ -237,14 +246,13 @@ export function CreatorsLanding() {
                 {[
                   "Free trademark search",
                   "Licensed attorney review",
-                  "Filing within 24 hours",
+                  "Filing, usually within 24 hours",
                   "Coverage in the countries you choose",
                   "Creator-specific goods & services classification",
                   "1 year of monitoring included",
                   "Alerts if someone files something similar",
                   "Platform takedown support (Instagram, TikTok, YouTube)",
                   "Office action support if issues arise",
-                  "Money-back guarantee",
                 ].map((item, i) => (
                   <li key={i} className="flex items-start gap-3">
                     <CheckCircle2 className="h-5 w-5 text-accent mt-0.5 flex-shrink-0" />
@@ -329,39 +337,40 @@ export function CreatorsLanding() {
             </h2>
           </motion.div>
 
-          <Accordion type="single" collapsible className="w-full">
-            {[
+          <PublishedFaq
+            items={[
               {
-                q: "Can I trademark my @handle or username?",
-                a: "Yes, if it functions as a brand identifier. If people know you by your handle and it's associated with your content or business, it's registrable as a trademark. This is one of the most important things creators can do — handles get copied constantly.",
+                question: "Can I trademark my @handle or username?",
+                answer:
+                  "A handle is an account the platform controls. The word in that handle can be filed as a trademark if it identifies goods or services you actually offer. Owning the @ does not own the trademark, and a trademark does not control every lookalike account.",
               },
               {
-                q: "What if AI is already using my face or voice?",
-                a: "A trademark is one of your strongest tools. Combined with platform terms of service and in some jurisdictions, right-of-publicity laws, a registered trademark gives you legal standing to demand immediate takedowns. Without one, your options are far more limited and slower.",
+                question: "What if AI is already using my face or voice?",
+                answer:
+                  "A trademark helps when the misuse uses your name as a brand or implies you endorse a product. Your face and voice are mainly publicity and likeness rights, which are separate, plus whatever the platform's rules allow. A filing can help platforms act. It does not own your face or voice, and it is not an instant takedown of every deepfake.",
               },
               {
-                q: "Do I need to be a big creator to need this?",
-                a: "No. In fact, smaller creators are more at risk — they're less likely to have legal protection already in place, and name squatters actively target rising creators before they get big. It's much cheaper and easier to register now than to fight for your name later.",
+                question: "Do I need to be a big creator to need this?",
+                answer:
+                  "No. Filing earlier can matter because rights date from the filing date, and registration typically takes months. It is easier to file a name that is still available than to fight over it later.",
               },
               {
-                q: "Can I trademark a catchphrase or sign-off?",
-                a: "Yes — if it's distinctive and associated with your brand. Phrases that are unique to you and that your audience recognises you by are strong candidates. Generic phrases (\"Have a great day!\") typically aren't registrable, but distinctive ones are.",
+                question: "Can I trademark a catchphrase or sign-off?",
+                answer:
+                  "Yes — if it's distinctive and used as a brand. Phrases that your audience recognises as yours are stronger candidates. Generic phrases (\"Have a great day!\") typically aren't registrable.",
               },
               {
-                q: "Which countries should I register in?",
-                a: "Start where your audience and brand deals are. For most creators, that means the US and EU as a minimum. If you have significant audiences in the UK, Australia, or other markets, we can add those. Our attorneys will advise based on your situation.",
+                question: "Which countries should I register in?",
+                answer:
+                  "Start where your audience and brand deals are. A filing covers that country only. Pricing is per country and per class on the price list. The United States page offers instalments on that country's filing fee.",
               },
               {
-                q: "How much does it cost?",
-                a: "The US is $65/month over 11 months. EU is $99/month. Most creators start with 2–3 key markets and pay under $200/month total — with no large upfront cost. The search is completely free. Check our pricing page for full country-by-country details.",
+                question: "How much does it cost?",
+                answer:
+                  "It depends on the country and the number of classes. The United States page lists $1,010 USD for one class and $499 USD for each extra class, and it offers instalments on that fee. Other countries are on the price list. The name check is free.",
               },
-            ].map((item, i) => (
-              <AccordionItem key={i} value={`item-${i}`}>
-                <AccordionTrigger className="text-left font-semibold text-primary">{item.q}</AccordionTrigger>
-                <AccordionContent className="text-gray-500 leading-relaxed">{item.a}</AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
+            ]}
+          />
         </div>
       </section>
 
@@ -396,8 +405,9 @@ export function CreatorsLanding() {
               </div>
 
               <p className="label-caps text-[0.65rem] text-white/35">
-                No credit card required&ensp;&middot;&ensp;Results in 24 hours&ensp;&middot;&ensp;Money-back guarantee
+                No credit card required&ensp;&middot;&ensp;Usually filed within 24 hours&ensp;&middot;&ensp;15+ years of experience
               </p>
+              <p className="text-xs text-white/40 mt-4">General information, not legal advice.</p>
             </div>
           </div>
         </div>

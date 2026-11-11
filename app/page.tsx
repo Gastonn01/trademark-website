@@ -10,25 +10,28 @@ import { FAQ } from "@/components/faq"
 import { Footer } from "@/components/footer"
 // import { ChatGPTIntegrationSection } from "@/components/chatgpt-integration-section"
 import type { Metadata } from "next"
+import { OG_IMAGE } from "@/lib/seo"
 
 export const metadata: Metadata = {
   openGraph: {
-    title: "Just Protected | Protect Your Name, Voice & Identity from AI",
-    description: "AI is using your name, face, and voice without permission. Just Protected helps athletes, creators, and artists trademark their identity and fight back — filed in 24 hours.",
+    title: "Just Protected | AI is using your name. Time to fight back.",
+    description: "AI is using your name. Licensed attorneys usually file a trademark for that name as a brand within 24 hours. Registration takes months. It is not ownership of your face or voice.",
     url: "/",
     siteName: "Just Protected",
     locale: "en_US",
     type: "website",
+    images: [OG_IMAGE],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Just Protected | Protect Your Name, Voice & Identity from AI",
-    description: "AI is using your name, face, and voice without permission. Just Protected helps athletes, creators, and artists trademark their identity and fight back — filed in 24 hours.",
+    title: "Just Protected | AI is using your name. Time to fight back.",
+    description: "AI is using your name. Licensed attorneys usually file a trademark for that name as a brand within 24 hours. Registration takes months. It is not ownership of your face or voice.",
+    images: [OG_IMAGE.url],
   },
   alternates: { canonical: "/" },
-  title: "Just Protected | Protect Your Name, Voice & Identity from AI",
+  title: "Just Protected | AI is using your name. Time to fight back.",
   description:
-    "AI is using your name, face, and voice without permission. Just Protected helps athletes, creators, and artists trademark their identity and fight back — filed in 24 hours.",
+    "AI is using your name. Licensed attorneys usually file a trademark for that name as a brand within 24 hours. Registration takes months. It is not ownership of your face or voice.",
 }
 
 export default function Home() {

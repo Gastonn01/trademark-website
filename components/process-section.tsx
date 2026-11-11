@@ -18,12 +18,13 @@ export function ProcessSection() {
     {
       number: "03",
       title: "We monitor",
-      description: "Track your application in real time while we watch for conflicts and AI misuse of your identity.",
+      description: "Track the application while we watch for conflicts and for use of your name as a brand.",
     },
     {
       number: "04",
-      title: "You own it",
-      description: "Your name is registered. You now hold the legal power to remove fakes, copycats and counterfeits.",
+      title: "Filing date secured",
+      description:
+        "Registration typically takes months — about 8–12 months in the United States. Your rights date from the day we file. The mark protects your name as a brand, not your face or voice.",
     },
   ]
 
@@ -40,7 +41,7 @@ export function ProcessSection() {
           >
             <p className="label-caps text-accent mb-5">The process</p>
             <h2 className="font-serif text-4xl md:text-5xl text-primary tracking-tight">
-              Four steps. Then it&apos;s yours.
+              Four steps to a filed application.
             </h2>
           </motion.div>
 

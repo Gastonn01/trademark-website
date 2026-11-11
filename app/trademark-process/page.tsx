@@ -17,6 +17,7 @@ export const metadata: Metadata = {
     title: "Trademark Filing Process | Just Protected",
     description: "How trademark filing works, from a free name check through registration.",
   },
+  robots: { index: false, follow: true },
 }
 
 import { NavBar } from "@/components/nav-bar"

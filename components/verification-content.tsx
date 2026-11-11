@@ -336,7 +336,7 @@ export function VerificationContent({ searchId }: VerificationContentProps) {
                       Start Registration Process
                     </button>
 
-                    <p className="text-xs text-gray-600 text-center">Secure payment • Money-back guarantee</p>
+                    <p className="text-xs text-gray-600 text-center">Secure payment</p>
                   </div>
                 </CardContent>
               </Card>

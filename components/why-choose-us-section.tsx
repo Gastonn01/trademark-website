@@ -20,25 +20,19 @@ export function WhyChooseUsSection() {
       stat: "Anti-deepfake",
       title: "Voice & likeness defense",
       description:
-        "AI voice cloning and deepfakes are exploding. A registered trademark gives you legal standing to fight back — and win.",
+        "AI voice cloning and deepfakes are exploding. A trademark helps when your name is used as a brand. It does not own your face or voice — publicity rights are separate.",
     },
     {
       stat: "Worldwide",
       title: "Global coverage",
       description:
-        "Register your name, catchphrase, or brand in the countries you choose, with one streamlined process managed by licensed attorneys.",
+        "File your name, catchphrase, or brand in the countries you choose, with one process managed by licensed attorneys.",
     },
     {
-      stat: "Same-day service",
+      stat: "Usually 24 hours",
       title: "24-hour filing",
       description:
-        "Our licensed trademark attorneys file your application within 24 hours. Every day unprotected is a day someone else can claim your identity.",
-    },
-    {
-      stat: "95% approval",
-      title: "Proven success",
-      description:
-        "A 95% approval rate backed by thousands of clients. Athletes, creators, musicians — we've protected them all.",
+        "Licensed attorneys usually file within 24 hours. Every day you wait is a day someone else can file the name first.",
     },
   ]
 

@@ -1,31 +1,30 @@
-"use client"
+import { PublishedFaq } from "@/components/published-faq"
+import type { FaqItem } from "@/lib/seo"
 
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "../components/ui/accordion"
+const faqItems: FaqItem[] = [
+  {
+    question: "Can I trademark my name as an influencer or athlete?",
+    answer:
+      "Yes, if the name functions as a brand for goods or services — merch, media, a camp, a sponsorship. A trademark protects that name as a brand used in commerce and can help platforms and courts act against impersonation. It is not ownership of your face or voice. Publicity and likeness rights are separate. Filing early matters because rights date from the filing date, and registration typically takes months.",
+  },
+  {
+    question: "What can I do if AI is using my voice or face without my permission?",
+    answer:
+      "A trademark helps when someone uses your name as a brand, including a fake sponsorship that trades on that name. A cloned voice or a generated face is not automatically trademark infringement. Those claims sit in publicity and likeness law, plus whatever the platform's rules allow. Licensed attorneys usually file within 24 hours. Registration typically takes months — about 8–12 months in the United States. Your rights date from the filing date.",
+  },
+  {
+    question: "What is NIL and why do athletes need trademark protection?",
+    answer:
+      "NIL stands for Name, Image & Likeness — being paid for your identity. Since the NCAA changed its rules in 2021, college athletes can sign sponsorship deals. An NIL deal is a contract. A trademark is a brand right in a name used with specific goods or services. They are not the same, and a trademark does not replace publicity rights.",
+  },
+  {
+    question: "How does trademark registration protect me from AI deepfakes?",
+    answer:
+      "A registration helps when a deepfake or a fake endorsement uses your name or logo as a brand. It does not turn every AI video or voice clone into trademark infringement, and it is not ownership of your face or voice. It is one tool platforms and courts can act on. It is not a shield against every misuse.",
+  },
+]
 
 export function FAQ() {
-  const faqItems = [
-    {
-      question: "Can I trademark my name as an influencer or athlete?",
-      answer:
-        "Yes — and you should do it as early as possible. Your name is your most valuable asset. Trademarking it gives you exclusive rights to use it commercially, prevents others from registering it first, and gives you legal standing to demand takedowns of AI-generated content, fake sponsorships, or anyone using your name without permission.",
-    },
-    {
-      question: "What can I do if AI is using my voice or face without my permission?",
-      answer:
-        "A registered trademark is one of your strongest legal tools. It gives you grounds to file DMCA takedowns, demand platform removals, and pursue legal action against anyone commercially exploiting your identity. Without a trademark, your options are much more limited. We file within 24 hours so you're protected fast.",
-    },
-    {
-      question: "What is NIL and why do athletes need trademark protection?",
-      answer:
-        "NIL stands for Name, Image & Likeness — the right to profit from your own identity. Since the NCAA changed its rules in 2021, college athletes can sign sponsorship deals, but those deals are only as strong as your legal protection. Trademarking your name means no one else can register it, monetize it, or use AI to fake endorsements in your name.",
-    },
-    {
-      question: "How does trademark registration protect me from AI deepfakes?",
-      answer:
-        "When your name or brand is trademarked, any commercial use of it — including AI-generated videos, voice clones, or fake endorsements — constitutes trademark infringement. This gives you the legal basis to issue cease and desist letters, demand platform takedowns, and sue for damages. It's not a perfect shield, but it's the strongest legal tool available right now.",
-    },
-  ]
-
   return (
     <div className="py-24 md:py-32 bg-white">
       <div className="container mx-auto px-4">
@@ -34,16 +33,11 @@ export function FAQ() {
           Questions, answered.
         </h2>
         <p className="text-center text-gray-500 font-light mb-14 max-w-xl mx-auto">
-          Everything creators, athletes, and artists need to know about protecting their identity.
+          Everything creators, athletes, and artists need to know about protecting their name as a brand.
         </p>
-        <Accordion type="single" collapsible className="w-full max-w-2xl mx-auto">
-          {faqItems.map((item, index) => (
-            <AccordionItem key={index} value={`item-${index}`}>
-              <AccordionTrigger>{item.question}</AccordionTrigger>
-              <AccordionContent>{item.answer}</AccordionContent>
-            </AccordionItem>
-          ))}
-        </Accordion>
+        <div className="w-full max-w-2xl mx-auto">
+          <PublishedFaq items={faqItems} />
+        </div>
       </div>
     </div>
   )
