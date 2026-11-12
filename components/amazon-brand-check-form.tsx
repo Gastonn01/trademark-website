@@ -9,6 +9,7 @@ export function AmazonBrandCheckForm() {
   const [status, setStatus] = useState<"idle" | "sending" | "done">("idle")
   const [error, setError] = useState("")
   const requestId = useRef<string | null>(null)
+  const startedAtRef = useRef(Date.now())
 
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -45,6 +46,7 @@ export function AmazonBrandCheckForm() {
 
   const field = "mt-2 w-full rounded-lg border border-gray-300 bg-white p-3 text-primary"
   return <form onSubmit={submit} className="rounded-2xl bg-white p-6 md:p-9 shadow-lg text-primary">
+    <input type="hidden" name="startedAt" value={startedAtRef.current} />
     <h3 className="font-serif text-3xl mb-2">Start with your brand name.</h3>
     <p className="text-sm text-gray-600 mb-6">Request a free preliminary review. No payment details needed.</p>
     <div className="grid gap-5">

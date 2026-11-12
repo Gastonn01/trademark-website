@@ -3,6 +3,7 @@
 import type React from "react"
 
 import { useState, useRef, useEffect } from "react"
+import { SpamGuardFields } from "@/components/spam-guard-fields"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { MessageCircle, X, Send, Loader2 } from "lucide-react"
@@ -36,6 +37,8 @@ export function TrademarkFAQBot() {
 
   const messagesEndRef = useRef<HTMLDivElement>(null)
   const inputRef = useRef<HTMLInputElement>(null)
+  const hpRef = useRef<HTMLInputElement>(null)
+  const startedAtRef = useRef(Date.now())
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
@@ -69,6 +72,8 @@ export function TrademarkFAQBot() {
         body: JSON.stringify({
           ...contactForm,
           conversationHistory,
+          hp: hpRef.current?.value ?? "",
+          startedAt: startedAtRef.current,
         }),
       })
 
@@ -235,13 +240,16 @@ export function TrademarkFAQBot() {
 
         {collectingContact ? (
           <form onSubmit={handleContactSubmit} className="p-4 border-t space-y-3">
-            <Input
-              placeholder="Your name"
-              value={contactForm.name}
-              onChange={(e) => setContactForm((prev) => ({ ...prev, name: e.target.value }))}
-              required
-              className="text-sm"
-            />
+            <div className="relative">
+              <SpamGuardFields startedAt={startedAtRef.current} hpRef={hpRef} />
+              <Input
+                placeholder="Your name"
+                value={contactForm.name}
+                onChange={(e) => setContactForm((prev) => ({ ...prev, name: e.target.value }))}
+                required
+                className="text-sm"
+              />
+            </div>
             <Input
               type="email"
               placeholder="Your email"

@@ -1,11 +1,18 @@
 import { NextResponse } from "next/server"
 import { v4 as uuidv4 } from "uuid"
 import { getSupabaseClient } from "@/lib/supabase"
+import { submissionSpamReason } from "@/lib/spam-guard"
 
 export async function POST(req: Request) {
   try {
     const body = await req.json()
-    const { name, email, platform, handle, followers, niche } = body
+    const { name, email, platform, handle, followers, niche, hp, startedAt } = body ?? {}
+
+    const spamReason = submissionSpamReason(hp, startedAt)
+    if (spamReason) {
+      console.log("[spam-guard] dropping affiliate signup silently:", spamReason)
+      return NextResponse.json({ message: "Signup received" })
+    }
 
     if (!name || !email || !handle) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 })

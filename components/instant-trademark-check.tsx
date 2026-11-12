@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
+import { SpamGuardFields } from "@/components/spam-guard-fields"
 import Link from "next/link"
 import { Search, Loader2, ShieldCheck, AlertTriangle, ArrowRight, Globe, Youtube } from "lucide-react"
 
@@ -39,6 +40,8 @@ export function InstantTrademarkCheck() {
   const [reportEmail, setReportEmail] = useState("")
   const [reportSending, setReportSending] = useState(false)
   const [reportSent, setReportSent] = useState(false)
+  const hpRef = useRef<HTMLInputElement>(null)
+  const startedAtRef = useRef(Date.now())
 
   // One-field lead: reuses the existing free-search submission pipeline
   // (Resend email to the team + Supabase), tagged as "instant-report".
@@ -54,6 +57,8 @@ export function InstantTrademarkCheck() {
       fd.append("instantVerdict", result.status)
       fd.append("instantMessage", result.message)
       fd.append("instantDetail", result.detail)
+      fd.append("hp", hpRef.current?.value || "")
+      fd.append("startedAt", String(startedAtRef.current))
       await fetch("/api/submit-free-search", { method: "POST", body: fd })
       setReportSent(true)
     } catch {
@@ -248,12 +253,13 @@ export function InstantTrademarkCheck() {
                 {/* Light lead capture: one field for visitors who won't do the full form */}
                 {!reportSent ? (
                   <form
-                    className="mt-5 pt-4 border-t border-gray-200/70"
+                    className="relative mt-5 pt-4 border-t border-gray-200/70"
                     onSubmit={(e) => {
                       e.preventDefault()
                       sendReport()
                     }}
                   >
+                    <SpamGuardFields startedAt={startedAtRef.current} hpRef={hpRef} />
                     <p className="text-xs font-semibold text-primary mb-2">
                       Or get the full report by email — free
                     </p>

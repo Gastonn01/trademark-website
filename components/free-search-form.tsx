@@ -247,6 +247,7 @@ function FreeSearchFormBody({
   // (enforcement lead from the instant checker)
   const intentParam = searchParams?.get("intent") || ""
   const hpRef = useRef<HTMLInputElement>(null)
+  const startedAtRef = useRef(Date.now())
   const [audienceType, setAudienceType] = useState<string>("")
   const [step, setStep] = useState(0)
   const totalSteps = 3
@@ -452,6 +453,7 @@ function FreeSearchFormBody({
       formDataToSend.append("formType", "free-search")
       formDataToSend.append("searchId", searchId)
       formDataToSend.append("hp", hpRef.current?.value || "")
+      formDataToSend.append("startedAt", String(startedAtRef.current))
       if (intentParam) formDataToSend.append("intent", intentParam)
 
       // Add all form fields to formData

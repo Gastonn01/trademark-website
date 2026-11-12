@@ -1,12 +1,24 @@
 import { type NextRequest, NextResponse } from "next/server"
 import { saveSearchData } from "@/lib/supabase"
 import { resend } from "@/lib/runtime-clients"
+import { submissionSpamReason } from "@/lib/spam-guard"
 
 export async function POST(request: NextRequest) {
   try {
     console.log("Submit form API called")
 
     const body = await request.json()
+
+    const spamReason = submissionSpamReason(body?.hp, body?.startedAt)
+    if (spamReason) {
+      console.log("[spam-guard] dropping submit-form silently:", spamReason)
+      return NextResponse.json({
+        success: true,
+        message: "Form submitted successfully",
+        searchId: crypto.randomUUID(),
+      })
+    }
+
     console.log("Received form data:", body)
 
     // Validate required fields
