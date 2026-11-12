@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import { Resend } from "resend"
+import { submissionSpamReason } from "@/lib/spam-guard"
 
 let resend: Resend | null = null
 try {
@@ -12,7 +13,16 @@ try {
 
 export async function POST(request: Request) {
   try {
-    const { name, email, message, conversationHistory } = await request.json()
+    const { name, email, message, conversationHistory, hp, startedAt } = await request.json()
+
+    const spamReason = submissionSpamReason(hp, startedAt)
+    if (spamReason) {
+      console.log("[spam-guard] dropping chatbot contact silently:", spamReason)
+      return NextResponse.json({
+        success: true,
+        message: "Your inquiry has been sent to our team. We'll respond within a few hours!",
+      })
+    }
 
     if (!name || !email || !message) {
       return NextResponse.json({ error: "Name, email, and message are required" }, { status: 400 })

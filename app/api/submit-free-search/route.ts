@@ -6,7 +6,7 @@ import { runIdentityCheck } from "@/lib/identity-check"
 import { renderCloneScanReportHtml } from "@/lib/clone-scan-report"
 import { classesForCategory } from "@/lib/nice-classes"
 import { checkContentSimilarity } from "@/lib/content-similarity"
-import { isHoneypotTripped, looksLikeGibberish, withinSubmissionRateLimit } from "@/lib/spam-guard"
+import { isHoneypotTripped, isSubmittedTooFast, looksLikeGibberish, withinSubmissionRateLimit } from "@/lib/spam-guard"
 
 export const runtime = "nodejs"
 export const maxDuration = 45 // EUIPO/USPTO/Gemini/Apify/YouTube-transcript checks can take several seconds combined
@@ -49,11 +49,16 @@ export async function POST(req: Request) {
       return successResponse(uuidv4())
     }
 
+    if (isSubmittedTooFast(formData.get("startedAt"))) {
+      console.log("[spam-guard] submission too fast, dropping silently")
+      return successResponse(uuidv4())
+    }
+
     // Create a searchData object with all form values
     const searchData: { [key: string]: any } = {}
 
     for (const [key, value] of formData.entries()) {
-      if (key !== "files" && key !== "formType" && key !== "searchId" && key !== "logo" && key !== "hp" && typeof value === "string") {
+      if (key !== "files" && key !== "formType" && key !== "searchId" && key !== "logo" && key !== "hp" && key !== "startedAt" && typeof value === "string") {
         searchData[key] = value
       }
     }

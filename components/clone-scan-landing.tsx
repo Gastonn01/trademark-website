@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import type React from "react"
 import { motion } from "framer-motion"
 import { ArrowRight, CheckCircle2 } from "lucide-react"
@@ -246,6 +246,7 @@ const labelCls = "block text-sm font-medium text-primary mb-1.5"
 export function CloneScanLanding({ lang }: { lang: Lang }) {
   const t = copy[lang]
   const [status, setStatus] = useState<"idle" | "sending" | "done">("idle")
+  const startedAtRef = useRef(Date.now())
   const [remaining, setRemaining] = useState<number | null>(null)
 
   useEffect(() => {
@@ -474,6 +475,7 @@ export function CloneScanLanding({ lang }: { lang: Lang }) {
                 aria-hidden="true"
                 className="absolute -left-[9999px] w-px h-px opacity-0"
               />
+              <input type="hidden" name="startedAt" value={startedAtRef.current} />
               <div className="grid md:grid-cols-2 gap-5">
                 <div>
                   <label htmlFor="brandName" className={labelCls}>

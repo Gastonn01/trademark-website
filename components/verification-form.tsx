@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useState, useEffect, useMemo } from "react"
+import { useState, useEffect, useMemo, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -17,6 +17,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { countryPricingData, getTopCountries, getCountriesByRegion } from "@/lib/pricing-data"
 import { useCurrency } from "@/hooks/use-currency"
 import { getCurrencySymbol } from "@/lib/currency-converter"
+import { SpamGuardFields } from "@/components/spam-guard-fields"
 
 interface FormData {
   trademarkType: string
@@ -296,6 +297,8 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
   const [files, setFiles] = useState<File[]>([])
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
+  const hpRef = useRef<HTMLInputElement>(null)
+  const startedAtRef = useRef(Date.now())
 
   // Pre-fill form with initial data
   useEffect(() => {
@@ -412,6 +415,8 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
 
     try {
       const formDataToSend = new FormData()
+      formDataToSend.append("hp", hpRef.current?.value ?? "")
+      formDataToSend.append("startedAt", String(startedAtRef.current))
       formDataToSend.append("formType", "verification")
       formDataToSend.append("trademarkType", formData.trademarkType)
       formDataToSend.append("trademarkName", formData.trademarkName)
@@ -458,7 +463,8 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
   const stepTitles = ["Trademark Details", "Countries", "Classes", "Contact Info"]
 
   return (
-    <div className="container mx-auto px-4 py-12">
+    <div className="relative container mx-auto px-4 py-12">
+      <SpamGuardFields startedAt={startedAtRef.current} hpRef={hpRef} />
       <div className="max-w-7xl mx-auto px-4 py-12">
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">Complete Your Registration</h1>

@@ -1,12 +1,14 @@
 "use client"
 
-import { useState } from "react"
+import { useRef, useState } from "react"
+import { SpamGuardFields } from "@/components/spam-guard-fields"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 
 export function AffiliateSignupForm() {
   const [status, setStatus] = useState<"idle" | "submitting" | "done" | "error">("idle")
+  const startedAtRef = useRef(Date.now())
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -38,7 +40,8 @@ export function AffiliateSignupForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5 max-w-lg">
-      <div>
+      <div className="relative">
+        <SpamGuardFields startedAt={startedAtRef.current} />
         <Label htmlFor="name">Name</Label>
         <Input id="name" name="name" required className="mt-1" />
       </div>

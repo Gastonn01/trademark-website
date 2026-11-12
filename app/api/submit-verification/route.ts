@@ -3,10 +3,21 @@ import { put } from "@vercel/blob"
 import { v4 as uuidv4 } from "uuid"
 import { saveSearchData } from "@/lib/supabase"
 import { resend } from "@/lib/runtime-clients"
+import { submissionSpamReason } from "@/lib/spam-guard"
 
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData()
+
+    const spamReason = submissionSpamReason(formData.get("hp"), formData.get("startedAt"))
+    if (spamReason) {
+      console.log("[spam-guard] dropping verification submission silently:", spamReason)
+      return NextResponse.json({
+        success: true,
+        message: "Verification request submitted successfully",
+        referenceId: `TM-${Date.now()}`,
+      })
+    }
 
     // Extract form data
     const trademarkName = formData.get("trademarkName") as string

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import { Resend } from "resend"
+import { looksLikeAutomatedContact, submissionSpamReason } from "@/lib/spam-guard"
 
 // Initialize Resend with error handling
 let resend: Resend | null = null
@@ -17,21 +18,23 @@ export async function POST(request: Request) {
   console.log("📧 Contact form submission received at:", new Date().toISOString())
 
   try {
-    if (!process.env.RESEND_API_KEY) {
-      console.error("❌ RESEND_API_KEY not configured")
-      return NextResponse.json(
-        {
-          error: "Email service not configured",
-          message: "RESEND_API_KEY environment variable is not set",
-        },
-        { status: 500 },
-      )
+    const body = await request.json()
+    const { name, email, subject, message, phone, hp, startedAt } = body ?? {}
+
+    // Bots get the same success payload as a real send, and no email goes out.
+    const spamReason =
+      submissionSpamReason(hp, startedAt) ??
+      (looksLikeAutomatedContact({ name, subject, message }) ? "heuristic" : null)
+    if (spamReason) {
+      console.log("[spam-guard] dropping contact submission silently:", spamReason)
+      return NextResponse.json({
+        success: true,
+        message: "Your message has been sent successfully. We will get back to you soon!",
+        timestamp: new Date().toISOString(),
+      })
     }
 
-    const body = await request.json()
-    console.log("📝 Contact form data:", JSON.stringify(body, null, 2))
-
-    const { name, email, subject, message, phone } = body
+    console.log("📝 Contact form data:", JSON.stringify({ name, email, subject, message, phone }, null, 2))
 
     // Validate required fields
     if (!name || !email || !message) {
@@ -48,7 +51,7 @@ export async function POST(request: Request) {
 
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    if (!emailRegex.test(email)) {
+    if (typeof email !== "string" || !emailRegex.test(email)) {
       console.error("❌ Invalid email format:", email)
       return NextResponse.json(
         {
@@ -57,6 +60,17 @@ export async function POST(request: Request) {
           received: email,
         },
         { status: 400 },
+      )
+    }
+
+    if (!process.env.RESEND_API_KEY) {
+      console.error("❌ RESEND_API_KEY not configured")
+      return NextResponse.json(
+        {
+          error: "Email service not configured",
+          message: "RESEND_API_KEY environment variable is not set",
+        },
+        { status: 500 },
       )
     }
 
