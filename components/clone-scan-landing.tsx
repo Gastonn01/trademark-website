@@ -1,11 +1,13 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
+import { useRouter } from "next/navigation"
 import type React from "react"
 import { motion } from "framer-motion"
 import { ArrowRight, CheckCircle2 } from "lucide-react"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { BUSINESS_CATEGORIES } from "@/lib/nice-classes"
+import { FUNNEL_PATH, trackFunnel } from "@/lib/funnel"
 
 const fade = {
   initial: { opacity: 0, y: 20 },
@@ -245,6 +247,7 @@ const labelCls = "block text-sm font-medium text-primary mb-1.5"
 
 export function CloneScanLanding({ lang }: { lang: Lang }) {
   const t = copy[lang]
+  const router = useRouter()
   const [status, setStatus] = useState<"idle" | "sending" | "done">("idle")
   const startedAtRef = useRef(Date.now())
   const [remaining, setRemaining] = useState<number | null>(null)
@@ -294,7 +297,11 @@ export function CloneScanLanding({ lang }: { lang: Lang }) {
     } catch {
       // Route always succeeds server-side; network errors shouldn't strand the user
     }
-    setStatus("done")
+    trackFunnel("clone_scan_submitted")
+    const thanks = new URLSearchParams()
+    if (lang === "es") thanks.set("lang", "es")
+    const query = thanks.toString()
+    router.push(query ? `${FUNNEL_PATH.cloneScanSubmitted}?${query}` : FUNNEL_PATH.cloneScanSubmitted)
   }
 
   return (

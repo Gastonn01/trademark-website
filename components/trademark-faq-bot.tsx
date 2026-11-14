@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { MessageCircle, X, Send, Loader2 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { trackFunnel } from "@/lib/funnel"
 
 interface Message {
   role: "user" | "assistant"
@@ -78,6 +79,7 @@ export function TrademarkFAQBot() {
       })
 
       if (response.ok) {
+        trackFunnel("chat_contact_submitted")
         setMessages((prev) => [
           ...prev,
           {

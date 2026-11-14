@@ -3,6 +3,7 @@
 import type React from "react"
 
 import { useRef, useState } from "react"
+import { useRouter } from "next/navigation"
 import { SpamGuardFields } from "@/components/spam-guard-fields"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -10,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import Link from "next/link"
 import { Mail, Clock, Send, CheckCircle, AlertCircle, Calendar } from "lucide-react"
+import { FUNNEL_PATH, trackFunnel } from "@/lib/funnel"
 
 export function ContactContent() {
   const [formData, setFormData] = useState({
@@ -22,6 +24,7 @@ export function ContactContent() {
   const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle")
   const [errorMessage, setErrorMessage] = useState("")
   const startedAtRef = useRef(Date.now())
+  const router = useRouter()
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -50,8 +53,9 @@ export function ContactContent() {
       const result = await response.json()
 
       if (response.ok) {
-        setSubmitStatus("success")
-        setFormData({ name: "", email: "", subject: "", message: "" })
+        trackFunnel("contact_submitted")
+        router.push(FUNNEL_PATH.contactSubmitted)
+        return
       } else {
         setSubmitStatus("error")
         setErrorMessage(result.error || "Failed to send message")

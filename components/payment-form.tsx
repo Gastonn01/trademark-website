@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Loader2, CheckCircle, AlertCircle } from "lucide-react"
+import { FUNNEL_PATH, trackFunnel } from "@/lib/funnel"
 
 interface PaymentFormProps {
   amount: number
@@ -85,7 +86,8 @@ export function PaymentForm({ amount, formData, currency = "EUR" }: PaymentFormP
 
         // Navigate to confirmation page
         setTimeout(() => {
-          router.push(`/payment-confirmation?status=success&payment_intent=${paymentIntent.id}`)
+          trackFunnel("payment_succeeded")
+          router.push(`${FUNNEL_PATH.paymentSucceeded}?status=success&payment_intent=${paymentIntent.id}`)
         }, 1500)
       }
     } catch (err: any) {

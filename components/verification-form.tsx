@@ -18,6 +18,7 @@ import { countryPricingData, getTopCountries, getCountriesByRegion } from "@/lib
 import { useCurrency } from "@/hooks/use-currency"
 import { getCurrencySymbol } from "@/lib/currency-converter"
 import { SpamGuardFields } from "@/components/spam-guard-fields"
+import { FUNNEL_PATH, trackFunnel } from "@/lib/funnel"
 
 interface FormData {
   trademarkType: string
@@ -449,7 +450,8 @@ const VerificationFormContent: React.FC<VerificationFormContentProps> = ({ isLoa
       const result = await response.json()
 
       if (response.ok && result.success) {
-        router.push("/thank-you-verification")
+        trackFunnel("verification_submitted")
+        router.push(FUNNEL_PATH.verificationSubmitted)
       } else {
         setSubmitError(result.message || "There was an error submitting your form. Please try again.")
       }
