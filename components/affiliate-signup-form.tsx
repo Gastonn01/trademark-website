@@ -1,14 +1,17 @@
 "use client"
 
 import { useRef, useState } from "react"
+import { useRouter } from "next/navigation"
 import { SpamGuardFields } from "@/components/spam-guard-fields"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
+import { FUNNEL_PATH, trackFunnel } from "@/lib/funnel"
 
 export function AffiliateSignupForm() {
   const [status, setStatus] = useState<"idle" | "submitting" | "done" | "error">("idle")
   const startedAtRef = useRef(Date.now())
+  const router = useRouter()
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -23,7 +26,8 @@ export function AffiliateSignupForm() {
         body: JSON.stringify(data),
       })
       if (!res.ok) throw new Error("failed")
-      setStatus("done")
+      trackFunnel("affiliate_submitted")
+      router.push(FUNNEL_PATH.affiliateSubmitted)
     } catch {
       setStatus("error")
     }

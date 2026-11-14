@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react"
 import { SpamGuardFields } from "@/components/spam-guard-fields"
+import { trackFunnel } from "@/lib/funnel"
 import Link from "next/link"
 import { Search, Loader2, ShieldCheck, AlertTriangle, ArrowRight, Globe, Youtube } from "lucide-react"
 
@@ -60,6 +61,7 @@ export function InstantTrademarkCheck() {
       fd.append("hp", hpRef.current?.value || "")
       fd.append("startedAt", String(startedAtRef.current))
       await fetch("/api/submit-free-search", { method: "POST", body: fd })
+      trackFunnel("instant_report_submitted")
       setReportSent(true)
     } catch {
       setReportSent(true) // the API is fire-and-forget; don't block the visitor

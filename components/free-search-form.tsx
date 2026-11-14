@@ -3,7 +3,7 @@
 import type React from "react"
 
 import { Suspense, useState, useEffect, useMemo, useRef } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -12,6 +12,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Textarea } from "@/components/ui/textarea"
 import { CountrySelectCard } from "@/components/country-select-card"
 import { trackLeadSubmission } from "@/components/gtm-tracker"
+import { FUNNEL_PATH, isAudience, trackFunnel } from "@/lib/funnel"
 import { Upload, CheckCircle, ChevronDown, ChevronUp, AlertCircle, Shield, Clock, Award, Trophy, Mic, Tv, Building2 } from "lucide-react"
 import { v4 as uuidv4 } from "uuid"
 import { countryPricingData } from "@/lib/pricing-data"
@@ -242,6 +243,9 @@ function FreeSearchFormBody({
   searchParams: { get: (key: string) => string | null }
 }) {
   const router = useRouter()
+  const pathname = usePathname()
+  const isStartedRoute = pathname === FUNNEL_PATH.nameCheckStarted
+  const [routeReady, setRouteReady] = useState(!isStartedRoute)
   const { currency } = useCurrency() // Use global currency hook
   // "defend" = visitor found their own name registered by someone else
   // (enforcement lead from the instant checker)
@@ -328,6 +332,58 @@ function FreeSearchFormBody({
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [step])
+
+  // /free-search/started is the measurable "name check started" pageview.
+  // A name from the CTA and an audience query are applied after mount so the
+  // server and client render the same first paint.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const q = (params.get("q") || "").slice(0, 80)
+    const audienceParam = params.get("audience")
+    const audience = isAudience(audienceParam) ? audienceParam : ""
+    const option = audienceOptions.find((item) => item.id === audience)
+    if (q || option?.goodsAndServices) {
+      setFormData((prev) => ({
+        ...prev,
+        ...(q ? { trademarkName: q } : {}),
+        ...(option?.goodsAndServices
+          ? { trademarkType: "word", goodsAndServices: option.goodsAndServices }
+          : {}),
+      }))
+    }
+    if (audience) setAudienceType(audience)
+    if (isStartedRoute && audience) setStep(1)
+    if (isStartedRoute) trackFunnel("name_check_started")
+    setRouteReady(true)
+  }, [isStartedRoute])
+
+  function openStartedStep(audienceId: string) {
+    const selected = audienceOptions.find((option) => option.id === audienceId)
+    const applyAudience = () => {
+      setAudienceType(audienceId)
+      if (selected?.goodsAndServices) {
+        setFormData((prev) => ({
+          ...prev,
+          trademarkType: "word",
+          goodsAndServices: selected.goodsAndServices,
+        }))
+      }
+    }
+    if (isStartedRoute) {
+      applyAudience()
+      setStep(1)
+      window.scrollTo({ top: 0, behavior: "smooth" })
+      return
+    }
+    const params = new URLSearchParams(window.location.search)
+    params.set("audience", audienceId)
+    router.push(`${FUNNEL_PATH.nameCheckStarted}?${params.toString()}`)
+  }
+
+  function finishNameCheck() {
+    trackFunnel("name_check_submitted")
+    router.push(FUNNEL_PATH.nameCheckSubmitted)
+  }
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
@@ -443,7 +499,7 @@ function FreeSearchFormBody({
         // Show success message and redirect
         setSuccessMessage("Form submitted successfully in preview mode!")
         setTimeout(() => {
-          router.push("/thank-you")
+          finishNameCheck()
         }, 1500)
         return
       }
@@ -505,7 +561,7 @@ function FreeSearchFormBody({
         // Show success message and redirect
         setSuccessMessage("Form submitted successfully!")
         setTimeout(() => {
-          router.push("/thank-you")
+          finishNameCheck()
         }, 1500)
       } catch (error) {
         console.error("Error submitting form:", error)
@@ -514,7 +570,7 @@ function FreeSearchFormBody({
         trackLeadSubmission("free_search")
         setSuccessMessage("Your submission has been saved. Thank you!")
         setTimeout(() => {
-          router.push("/thank-you")
+          finishNameCheck()
         }, 1500)
       }
     } catch (error) {
@@ -524,7 +580,7 @@ function FreeSearchFormBody({
       trackLeadSubmission("free_search")
       setSuccessMessage("Your request has been recorded. Thank you for your submission!")
       setTimeout(() => {
-        router.push("/thank-you")
+        finishNameCheck()
       }, 1500)
     } finally {
       setIsSubmitting(false)
@@ -541,6 +597,15 @@ function FreeSearchFormBody({
   }, [selectedCountries, currency])
 
   const currencySymbol = getCurrencySymbol(currency) // Use getCurrencySymbol helper
+
+  if (!routeReady) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 pt-24 pb-16">
+        <p className="label-caps text-accent mb-4">Free trademark search</p>
+        <h1 className="font-serif text-4xl md:text-5xl text-primary tracking-tight">Check if your name is protected</h1>
+      </div>
+    )
+  }
 
   return (
     <div id="free-search-form" className="max-w-7xl mx-auto px-4 pt-24 pb-16 scroll-mt-16">
@@ -645,12 +710,7 @@ function FreeSearchFormBody({
                 disabled={!audienceType}
                 onClick={() => {
                   if (!audienceType) return
-                  const selected = audienceOptions.find(o => o.id === audienceType)
-                  if (selected?.goodsAndServices) {
-                    setFormData(prev => ({ ...prev, trademarkType: "word", goodsAndServices: selected.goodsAndServices }))
-                  }
-                  setStep(1)
-                  window.scrollTo({ top: 0, behavior: "smooth" })
+                  openStartedStep(audienceType)
                 }}
               >
                 {audienceType ? `Continue as ${audienceOptions.find(o => o.id === audienceType)?.title} →` : "Select who you are to continue"}
@@ -661,11 +721,7 @@ function FreeSearchFormBody({
                 <button
                   type="button"
                   className="underline text-gray-700 hover:text-gray-900"
-                  onClick={() => {
-                    setAudienceType("business")
-                    setStep(1)
-                    window.scrollTo({ top: 0, behavior: "smooth" })
-                  }}
+                  onClick={() => openStartedStep("business")}
                 >
                   Start here and we&apos;ll guide you
                 </button>

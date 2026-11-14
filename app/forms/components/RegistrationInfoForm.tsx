@@ -13,6 +13,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Badge } from "@/components/ui/badge"
 import { Loader2, CheckCircle, AlertCircle } from "lucide-react"
+import { FUNNEL_PATH, trackFunnel } from "@/lib/funnel"
 
 const countries = [
   "United States",
@@ -228,7 +229,8 @@ export function RegistrationInfoForm() {
 
       // Redirect to thank you page after a short delay
       setTimeout(() => {
-        router.push("/thank-you")
+        trackFunnel("registration_details_submitted")
+        router.push(FUNNEL_PATH.registrationSubmitted)
       }, 2000)
     } catch (err) {
       setError(err instanceof Error ? err.message : "An error occurred")

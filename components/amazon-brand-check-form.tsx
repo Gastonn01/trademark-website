@@ -2,14 +2,17 @@
 
 import { useRef, useState } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { trackLeadSubmission } from "@/components/gtm-tracker"
 import { isAnalyticsExcluded } from "@/lib/analytics-preference"
+import { FUNNEL_PATH, trackFunnel } from "@/lib/funnel"
 
 export function AmazonBrandCheckForm() {
   const [status, setStatus] = useState<"idle" | "sending" | "done">("idle")
   const [error, setError] = useState("")
   const requestId = useRef<string | null>(null)
   const startedAtRef = useRef(Date.now())
+  const router = useRouter()
 
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -35,7 +38,8 @@ export function AmazonBrandCheckForm() {
       const response = await fetch("/api/submit-free-search", { method: "POST", body: data })
       if (!response.ok) throw new Error("We couldn't save your request. Please try again.")
       trackLeadSubmission("amazon_launch")
-      setStatus("done")
+      trackFunnel("amazon_review_submitted")
+      router.push(FUNNEL_PATH.amazonReviewSubmitted)
     } catch {
       setError("We couldn't confirm your request. Please try again or use our contact page.")
       setStatus("idle")
