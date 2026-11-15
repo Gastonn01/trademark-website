@@ -1,8 +1,9 @@
 "use client"
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState, type FormEvent } from "react"
 import { SpamGuardFields } from "@/components/spam-guard-fields"
 import { trackFunnel } from "@/lib/funnel"
+import { NAME_CHECK_EMAIL_INTENT, isValidEmail, leadForName, writeNameCheckLead } from "@/lib/name-check-lead"
 import Link from "next/link"
 import { Search, Loader2, ShieldCheck, AlertTriangle, ArrowRight, Globe, Youtube } from "lucide-react"
 
@@ -38,42 +39,17 @@ export function InstantTrademarkCheck() {
   const [step, setStep] = useState(0)
   const [result, setResult] = useState<Result | null>(null)
   const [error, setError] = useState<string | null>(null)
-  const [reportEmail, setReportEmail] = useState("")
-  const [reportSending, setReportSending] = useState(false)
-  const [reportSent, setReportSent] = useState(false)
+  const [pendingName, setPendingName] = useState<string | null>(null)
+  const [email, setEmail] = useState("")
+  const [emailError, setEmailError] = useState("")
+  const [emailSending, setEmailSending] = useState(false)
   const hpRef = useRef<HTMLInputElement>(null)
   const startedAtRef = useRef(Date.now())
-
-  // One-field lead: reuses the existing free-search submission pipeline
-  // (Resend email to the team + Supabase), tagged as "instant-report".
-  async function sendReport() {
-    if (!result || !reportEmail.trim() || reportSending) return
-    setReportSending(true)
-    try {
-      const fd = new FormData()
-      fd.append("formType", "free-search")
-      fd.append("intent", "instant-report")
-      fd.append("trademarkName", result.name)
-      fd.append("email", reportEmail.trim())
-      fd.append("instantVerdict", result.status)
-      fd.append("instantMessage", result.message)
-      fd.append("instantDetail", result.detail)
-      fd.append("hp", hpRef.current?.value || "")
-      fd.append("startedAt", String(startedAtRef.current))
-      await fetch("/api/submit-free-search", { method: "POST", body: fd })
-      trackFunnel("instant_report_submitted")
-      setReportSent(true)
-    } catch {
-      setReportSent(true) // the API is fire-and-forget; don't block the visitor
-    } finally {
-      setReportSending(false)
-    }
-  }
 
   async function runCheck(overrideName?: string) {
     const q = (overrideName ?? name).trim()
     if (!q || loading) return
-    setLoading(true); setResult(null); setError(null); setStep(0); setReportSent(false)
+    setLoading(true); setResult(null); setError(null); setStep(0); setPendingName(null)
     const stepTimer = setInterval(() => setStep((s) => Math.min(s + 1, SCAN_STEPS.length - 1)), 650)
     const started = Date.now()
     try {
@@ -100,33 +76,95 @@ export function InstantTrademarkCheck() {
   const runCheckRef = useRef(runCheck)
   runCheckRef.current = runCheck
 
-  // The hero search bar hands off here: scroll into view and run the scan.
+  function requestCheck(overrideName?: string) {
+    const q = (overrideName ?? name).trim().slice(0, 80)
+    if (!q || loading || emailSending) return
+    setName(q)
+    setResult(null)
+    setError(null)
+    if (leadForName(q)) {
+      void runCheckRef.current(q)
+      return
+    }
+    setPendingName(q)
+  }
+
+  async function submitEmail(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    const q = (pendingName || name).trim().slice(0, 80)
+    const trimmed = email.trim()
+    if (!q) return
+    if (!isValidEmail(trimmed)) {
+      setEmailError("Enter a valid email address.")
+      return
+    }
+    setEmailSending(true)
+    setEmailError("")
+    const elapsed = Date.now() - startedAtRef.current
+    if (elapsed < 3000) {
+      await new Promise((resolve) => setTimeout(resolve, 3000 - elapsed))
+    }
+    const body = new FormData()
+    body.append("formType", "free-search")
+    body.append("intent", NAME_CHECK_EMAIL_INTENT)
+    body.append("trademarkName", q)
+    body.append("email", trimmed)
+    body.append("referrer", document.referrer.slice(0, 500))
+    body.append("sourcePath", "/")
+    body.append("landingPage", "/#instant-check")
+    body.append("submittedAt", new Date().toISOString())
+    body.append("hp", hpRef.current?.value || "")
+    body.append("startedAt", String(startedAtRef.current))
+    body.append("searchId", crypto.randomUUID())
+    try {
+      const response = await fetch("/api/submit-free-search", { method: "POST", body })
+      const payload = (await response.json().catch(() => null)) as { error?: string } | null
+      if (!response.ok) {
+        setEmailError(payload?.error || "We couldn't save your email. Please try again.")
+        setEmailSending(false)
+        return
+      }
+    } catch {
+      setEmailError("We couldn't save your email. Please try again.")
+      setEmailSending(false)
+      return
+    }
+    writeNameCheckLead({ email: trimmed, name: q, audience: "", at: new Date().toISOString() })
+    trackFunnel("name_check_email_submitted")
+    setEmailSending(false)
+    await runCheckRef.current(q)
+  }
+
+  // Older homepage search handed the name here. Keep the scroll, but do not scan
+  // until an email for that name has been saved.
   useEffect(() => {
     const handler = (e: Event) => {
-      const value = String((e as CustomEvent).detail ?? "").trim()
+      const value = String((e as CustomEvent).detail ?? "").trim().slice(0, 80)
       const el = document.getElementById("instant-check")
       if (el) {
         const top = el.getBoundingClientRect().top + window.scrollY - 40
         window.scrollTo({ top, behavior: "smooth" })
       }
-      if (value) {
-        setName(value)
-        runCheckRef.current(value)
-      }
+      if (!value) return
+      setName(value)
+      setResult(null)
+      setError(null)
+      if (leadForName(value)) void runCheckRef.current(value)
+      else setPendingName(value)
     }
     window.addEventListener("jp:instant-check", handler)
     return () => window.removeEventListener("jp:instant-check", handler)
   }, [])
 
   return (
-    <section id="instant-check" className="py-20 md:py-28 bg-[#F7F5F1]">
+    <section id="instant-check" className="py-10 md:py-28 bg-[#F7F5F1]">
       <div className="container mx-auto px-4 max-w-2xl">
-        <div className="text-center mb-10">
+        <div className="text-center mb-4 md:mb-10">
           <p className="label-caps text-accent mb-5">Instant check</p>
           <h2 className="font-serif text-4xl md:text-5xl tracking-tight text-primary mb-4">
             Is your name already taken?
           </h2>
-          <p className="text-gray-500 font-light">Run an instant preliminary trademark scan. Free, no sign-up.</p>
+          <p className="text-gray-500 font-light">Add your email first. The preliminary scan runs after that.</p>
         </div>
 
         <div className="bg-white rounded-full shadow-xl p-1.5 flex flex-col sm:flex-row gap-1.5">
@@ -135,20 +173,54 @@ export function InstantTrademarkCheck() {
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && runCheck()}
+              onKeyDown={(e) => e.key === "Enter" && requestCheck()}
               placeholder="Type any name, brand, or handle"
-              className="flex-1 bg-transparent outline-none text-primary placeholder:text-gray-400 min-w-0"
+              className="flex-1 bg-transparent outline-none text-base text-primary placeholder:text-gray-400 min-w-0"
               maxLength={80}
             />
           </div>
           <button
-            onClick={() => runCheck()}
-            disabled={loading || !name.trim()}
+            onClick={() => requestCheck()}
+            disabled={loading || emailSending || !name.trim()}
             className="inline-flex items-center justify-center px-8 py-3 text-sm font-semibold text-primary bg-accent hover:brightness-105 disabled:opacity-50 rounded-full transition-all whitespace-nowrap"
           >
             {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : "Check now"}
           </button>
         </div>
+
+        {pendingName && !loading && !result && (
+          <form onSubmit={submitEmail} className="relative mt-4 md:mt-6 bg-white rounded-2xl border border-gray-200 p-4 sm:p-6 text-left">
+            <SpamGuardFields startedAt={startedAtRef.current} hpRef={hpRef} />
+            <p className="text-sm text-gray-600 mb-3">We'll send your result to this email.</p>
+            <p className="text-sm font-medium text-primary mb-4">{pendingName}</p>
+            <label htmlFor="instant-check-email" className="block text-sm font-medium text-primary">
+              Email
+              <input
+                id="instant-check-email"
+                type="email"
+                inputMode="email"
+                autoComplete="email"
+                autoCapitalize="none"
+                autoCorrect="off"
+                spellCheck={false}
+                required
+                maxLength={254}
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                placeholder="you@email.com"
+                className="mt-1.5 w-full rounded-full border border-gray-200 bg-white px-5 py-3 text-base text-primary outline-none focus:border-accent"
+              />
+            </label>
+            {emailError ? <p role="alert" className="text-sm text-red-700 mt-3">{emailError}</p> : null}
+            <button
+              type="submit"
+              disabled={emailSending}
+              className="mt-4 w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 text-sm font-semibold text-primary bg-accent hover:brightness-105 disabled:opacity-60 rounded-full"
+            >
+              {emailSending ? "Sending…" : "Show my result"}
+            </button>
+          </form>
+        )}
 
         {loading && (
           <div className="mt-6 bg-white rounded-xl border border-gray-200 p-5 flex items-center gap-3">
@@ -229,14 +301,14 @@ export function InstantTrademarkCheck() {
                 {conflict ? (
                   <div className="flex flex-col sm:flex-row gap-3">
                     <Link
-                      href={`/free-search?q=${encodeURIComponent(result.name)}`}
+                      href={`/free-search/details?q=${encodeURIComponent(result.name)}`}
                       className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-primary hover:bg-primary/90 text-white text-sm font-semibold rounded-full transition-all"
                     >
                       See which classes are still open for you
                       <ArrowRight className="h-4 w-4" />
                     </Link>
                     <Link
-                      href={`/free-search?q=${encodeURIComponent(result.name)}&intent=defend`}
+                      href={`/free-search/details?q=${encodeURIComponent(result.name)}&intent=defend`}
                       className="inline-flex items-center justify-center gap-2 px-6 py-3 border border-primary/30 hover:border-primary text-primary text-sm font-semibold rounded-full transition-all"
                     >
                       That&apos;s my name — help me fight it
@@ -244,7 +316,7 @@ export function InstantTrademarkCheck() {
                   </div>
                 ) : (
                   <Link
-                    href={`/free-search?q=${encodeURIComponent(result.name)}`}
+                    href={`/free-search/details?q=${encodeURIComponent(result.name)}`}
                     className="inline-flex items-center gap-2 px-6 py-3 bg-primary hover:bg-primary/90 text-white text-sm font-semibold rounded-full transition-all"
                   >
                     Lock it in before someone else does — free search
@@ -252,51 +324,15 @@ export function InstantTrademarkCheck() {
                   </Link>
                 )}
 
-                {/* Light lead capture: one field for visitors who won't do the full form */}
-                {!reportSent ? (
-                  <form
-                    className="relative mt-5 pt-4 border-t border-gray-200/70"
-                    onSubmit={(e) => {
-                      e.preventDefault()
-                      sendReport()
-                    }}
-                  >
-                    <SpamGuardFields startedAt={startedAtRef.current} hpRef={hpRef} />
-                    <p className="text-xs font-semibold text-primary mb-2">
-                      Or get the full report by email — free
-                    </p>
-                    <div className="flex flex-col sm:flex-row gap-2">
-                      <input
-                        type="email"
-                        required
-                        value={reportEmail}
-                        onChange={(e) => setReportEmail(e.target.value)}
-                        placeholder="you@email.com"
-                        className="flex-1 px-4 py-2.5 text-sm bg-white border border-gray-200 rounded-full outline-none focus:border-accent min-w-0"
-                      />
-                      <button
-                        type="submit"
-                        disabled={reportSending || !reportEmail.trim()}
-                        className="px-5 py-2.5 text-sm font-semibold text-primary bg-accent hover:brightness-105 disabled:opacity-50 rounded-full transition-all whitespace-nowrap"
-                      >
-                        {reportSending ? "Sending…" : "Email my report"}
-                      </button>
-                    </div>
-                  </form>
-                ) : (
-                  <p className="mt-5 pt-4 border-t border-gray-200/70 text-sm text-green-700 font-medium">
-                    ✓ Done — our attorneys will email your full report shortly.
-                  </p>
-                )}
                 <p className="text-xs text-gray-500 mt-4">{result.disclaimer}</p>
               </div>
             </div>
           </div>
         )}
 
-        {!result && !loading && (
+        {!result && !loading && !pendingName && (
           <p className="text-center text-xs text-gray-400 mt-4">
-            Try a famous brand to see how it works — then try your own name.
+            The preliminary scan runs only after your email is saved.
           </p>
         )}
       </div>

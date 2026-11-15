@@ -13,6 +13,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { CountrySelectCard } from "@/components/country-select-card"
 import { trackLeadSubmission } from "@/components/gtm-tracker"
 import { FUNNEL_PATH, isAudience, trackFunnel } from "@/lib/funnel"
+import { leadForName } from "@/lib/name-check-lead"
 import { Upload, CheckCircle, ChevronDown, ChevronUp, AlertCircle, Shield, Clock, Award, Trophy, Mic, Tv, Building2 } from "lucide-react"
 import { v4 as uuidv4 } from "uuid"
 import { countryPricingData } from "@/lib/pricing-data"
@@ -244,8 +245,8 @@ function FreeSearchFormBody({
 }) {
   const router = useRouter()
   const pathname = usePathname()
-  const isStartedRoute = pathname === FUNNEL_PATH.nameCheckStarted
-  const [routeReady, setRouteReady] = useState(!isStartedRoute)
+  const isDetailsRoute = pathname === FUNNEL_PATH.nameCheckDetails
+  const [routeReady, setRouteReady] = useState(!isDetailsRoute)
   const { currency } = useCurrency() // Use global currency hook
   // "defend" = visitor found their own name registered by someone else
   // (enforcement lead from the instant checker)
@@ -333,29 +334,33 @@ function FreeSearchFormBody({
     window.scrollTo(0, 0)
   }, [step])
 
-  // /free-search/started is the measurable "name check started" pageview.
-  // A name from the CTA and an audience query are applied after mount so the
-  // server and client render the same first paint.
+  // The details route is only usable after the email step saved a lead.
+  // Query values are applied after mount so the server and client first paint match.
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     const q = (params.get("q") || "").slice(0, 80)
     const audienceParam = params.get("audience")
     const audience = isAudience(audienceParam) ? audienceParam : ""
     const option = audienceOptions.find((item) => item.id === audience)
-    if (q || option?.goodsAndServices) {
+    const lead = q ? leadForName(q) : null
+    if (isDetailsRoute && !lead) {
+      router.replace(`${FUNNEL_PATH.nameCheckEmail}?${params.toString()}`)
+      return
+    }
+    if (q || option?.goodsAndServices || lead) {
       setFormData((prev) => ({
         ...prev,
         ...(q ? { trademarkName: q } : {}),
+        ...(lead ? { email: lead.email } : {}),
         ...(option?.goodsAndServices
           ? { trademarkType: "word", goodsAndServices: option.goodsAndServices }
           : {}),
       }))
     }
     if (audience) setAudienceType(audience)
-    if (isStartedRoute && audience) setStep(1)
-    if (isStartedRoute) trackFunnel("name_check_started")
+    if (lead && audience) setStep(1)
     setRouteReady(true)
-  }, [isStartedRoute])
+  }, [isDetailsRoute, router])
 
   function openStartedStep(audienceId: string) {
     const selected = audienceOptions.find((option) => option.id === audienceId)
@@ -369,14 +374,16 @@ function FreeSearchFormBody({
         }))
       }
     }
-    if (isStartedRoute) {
+    const params = new URLSearchParams(window.location.search)
+    params.set("audience", audienceId)
+    const q = (params.get("q") || formData.trademarkName || "").trim().slice(0, 80)
+    if (q) params.set("q", q)
+    if (q && leadForName(q)) {
       applyAudience()
       setStep(1)
       window.scrollTo({ top: 0, behavior: "smooth" })
       return
     }
-    const params = new URLSearchParams(window.location.search)
-    params.set("audience", audienceId)
     router.push(`${FUNNEL_PATH.nameCheckStarted}?${params.toString()}`)
   }
 
@@ -511,6 +518,7 @@ function FreeSearchFormBody({
       formDataToSend.append("hp", hpRef.current?.value || "")
       formDataToSend.append("startedAt", String(startedAtRef.current))
       if (intentParam) formDataToSend.append("intent", intentParam)
+      if (audienceType) formDataToSend.append("audience", audienceType)
 
       // Add all form fields to formData
       Object.entries(formData).forEach(([key, value]) => {
@@ -1204,6 +1212,7 @@ function FreeSearchFormBody({
                       aria-required="true"
                       pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$"
                     />
+                    <p className="text-sm text-gray-500 mt-2">We'll send your result to this email.</p>
                   </div>
                 </div>
 

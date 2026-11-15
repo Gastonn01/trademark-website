@@ -3,6 +3,8 @@ import { isAnalyticsExcluded } from "@/lib/analytics-preference"
 /** Distinct paths so each step is a pageview in Vercel Web Analytics. */
 export const FUNNEL_PATH = {
   nameCheckStarted: "/free-search/started",
+  nameCheckEmail: "/free-search/email",
+  nameCheckDetails: "/free-search/details",
   nameCheckSubmitted: "/thank-you/name-check",
   contactSubmitted: "/thank-you/contact",
   bookACallScheduled: "/thank-you/book-a-call",
@@ -32,12 +34,19 @@ export function audienceFromHref(href: string | undefined): Audience | undefined
 }
 
 /** Typed name opens the name-check form. An empty name only opens the form. */
-export function nameCheckStartedHref(name: string, audience?: string | null) {
+export function nameCheckStartedHref(
+  name: string,
+  audience?: string | null,
+  from?: string | null,
+  lang?: string | null,
+) {
   const q = name.trim().slice(0, 80)
   if (!q) return "/free-search"
   const params = new URLSearchParams()
   params.set("q", q)
   if (isAudience(audience)) params.set("audience", audience)
+  if (from && from.startsWith("/") && from.length <= 200) params.set("from", from)
+  if (lang === "es") params.set("lang", "es")
   return `${FUNNEL_PATH.nameCheckStarted}?${params.toString()}`
 }
 

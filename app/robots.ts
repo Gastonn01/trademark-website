@@ -8,6 +8,8 @@ const DISALLOW = [
   "/free-search?*",
   "/free-search/?*",
   "/free-search/started",
+  "/free-search/email",
+  "/free-search/details",
   "/thank-you/name-check",
   "/thank-you/contact",
   "/thank-you/book-a-call",

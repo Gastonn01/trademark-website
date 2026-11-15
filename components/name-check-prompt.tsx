@@ -46,7 +46,7 @@ export function NameCheckPrompt({
 
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    router.push(nameCheckStartedHref(name, audience))
+    router.push(nameCheckStartedHref(name, audience, window.location.pathname, lang))
   }
 
   const field = (
