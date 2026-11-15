@@ -22,6 +22,8 @@ const EXCLUDED = new Set([
   "/thank-you/registration",
   "/thank-you/payment",
   "/free-search/started",
+  "/free-search/email",
+  "/free-search/details",
   "/pricing",
   "/blog/register-trademark-european-union",
   "/blog/trademark-registration-china",

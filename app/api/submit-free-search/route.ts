@@ -7,6 +7,7 @@ import { renderCloneScanReportHtml } from "@/lib/clone-scan-report"
 import { classesForCategory } from "@/lib/nice-classes"
 import { checkContentSimilarity } from "@/lib/content-similarity"
 import { isHoneypotTripped, isSubmittedTooFast, looksLikeGibberish, withinSubmissionRateLimit } from "@/lib/spam-guard"
+import { NAME_CHECK_EMAIL_INTENT, isValidEmail } from "@/lib/name-check-lead"
 
 export const runtime = "nodejs"
 export const maxDuration = 45 // EUIPO/USPTO/Gemini/Apify/YouTube-transcript checks can take several seconds combined
@@ -61,6 +62,17 @@ export async function POST(req: Request) {
       if (key !== "files" && key !== "formType" && key !== "searchId" && key !== "logo" && key !== "hp" && key !== "startedAt" && typeof value === "string") {
         searchData[key] = value
       }
+    }
+
+    if (searchData.intent === NAME_CHECK_EMAIL_INTENT) {
+      const email = String(searchData.email || "").trim()
+      const checkedName = String(searchData.trademarkName || "").trim()
+      if (!checkedName || !isValidEmail(email)) {
+        return NextResponse.json({ error: "Enter the name and a valid email address." }, { status: 400 })
+      }
+      searchData.email = email
+      searchData.trademarkName = checkedName
+      if (!searchData.submittedAt) searchData.submittedAt = new Date().toISOString()
     }
 
     if (searchData.intent === "amazon-brand-registry" && (
