@@ -83,11 +83,13 @@ export function articleJsonLd({
   description,
   path,
   datePublished,
+  dateModified,
 }: {
   headline: string
   description: string
   path: string
   datePublished: string
+  dateModified?: string
 }) {
   const url = `${SITE_URL}${path}`
   return {
@@ -96,7 +98,7 @@ export function articleJsonLd({
     headline,
     description,
     datePublished,
-    dateModified: datePublished,
+    dateModified: dateModified ?? datePublished,
     mainEntityOfPage: url,
     url,
     author: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },

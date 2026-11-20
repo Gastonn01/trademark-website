@@ -343,7 +343,12 @@ export function AthletesLanding() {
               </li>
               <li>
                 <Link href="/blog/lebron-james-bron-ai-likeness-cease-and-desist" className="text-accent font-semibold hover:underline">
-                  LeBron James’s team told Bron AI to stop using his likeness →
+                  LeBron James sues the Bron app after a cease-and-desist →
+                </Link>
+              </li>
+              <li>
+                <Link href="/blog/google-ads-ai-public-figure-impersonation" className="text-accent font-semibold hover:underline">
+                  Google Ads and AI impersonation of athletes →
                 </Link>
               </li>
             </ul>

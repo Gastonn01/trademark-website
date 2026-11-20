@@ -322,6 +322,21 @@ export function CreatorsLanding() {
                   Protecting your voice and likeness from AI deepfakes →
                 </Link>
               </li>
+              <li>
+                <Link href="/blog/paris-hilton-defiance-act-ai-likeness" className="text-accent font-semibold hover:underline">
+                  Paris Hilton and the Defiance Act →
+                </Link>
+              </li>
+              <li>
+                <Link href="/blog/voicemod-cyn-voice-allanah-fitzgerald" className="text-accent font-semibold hover:underline">
+                  Voicemod’s Cyn voice and Allanah Fitzgerald →
+                </Link>
+              </li>
+              <li>
+                <Link href="/blog/stolen-faces-tiktok-instagram-ai-likeness" className="text-accent font-semibold hover:underline">
+                  Stolen faces on TikTok and Instagram →
+                </Link>
+              </li>
             </ul>
           </div>
         </div>

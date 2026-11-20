@@ -235,7 +235,27 @@ export default function VoiceLikenessDeepfakeGuide() {
           <Link href="/blog/elvis-eminem-suno-ai-music-lawsuits">Elvis and Eminem rightsholders sue Suno</Link>
         </li>
         <li>
-          <Link href="/blog/lebron-james-bron-ai-likeness-cease-and-desist">Bron AI cease-and-desist report</Link>
+          <Link href="/blog/lebron-james-bron-ai-likeness-cease-and-desist">
+            LeBron James sues the Bron app
+          </Link>
+        </li>
+        <li>
+          <Link href="/blog/voicemod-cyn-voice-allanah-fitzgerald">Voicemod’s Cyn voice and Allanah Fitzgerald</Link>
+        </li>
+        <li>
+          <Link href="/blog/paris-hilton-defiance-act-ai-likeness">Paris Hilton and the Defiance Act</Link>
+        </li>
+        <li>
+          <Link href="/blog/spotify-artist-profile-protection">Spotify Artist Profile Protection</Link>
+        </li>
+        <li>
+          <Link href="/blog/john-park-mcdonalds-rap-ai-music">John Park’s McDonald’s Order Rap</Link>
+        </li>
+        <li>
+          <Link href="/blog/google-ads-ai-public-figure-impersonation">Google Ads and AI public-figure impersonation</Link>
+        </li>
+        <li>
+          <Link href="/blog/stolen-faces-tiktok-instagram-ai-likeness">Stolen faces on TikTok and Instagram</Link>
         </li>
         <li>
           <Link href="/blog/how-creators-protect-name-brand-and-likeness">Creator name, brand, and likeness</Link>
