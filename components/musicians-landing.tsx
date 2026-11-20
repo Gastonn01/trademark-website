@@ -148,6 +148,18 @@ export function MusiciansLanding() {
                 Elvis and Eminem rightsholders sue Suno →
               </Link>
               <Link
+                href="/blog/spotify-artist-profile-protection"
+                className="inline-flex items-center gap-2 text-accent hover:brightness-110 font-semibold transition-all text-sm"
+              >
+                Spotify Artist Profile Protection and tracks under your name →
+              </Link>
+              <Link
+                href="/blog/john-park-mcdonalds-rap-ai-music"
+                className="inline-flex items-center gap-2 text-accent hover:brightness-110 font-semibold transition-all text-sm"
+              >
+                John Park’s McDonald’s Order Rap showed up under another name →
+              </Link>
+              <Link
                 href="/blog/how-to-trademark-a-username-or-brand-name"
                 className="inline-flex items-center gap-2 text-accent hover:brightness-110 font-semibold transition-all text-sm"
               >

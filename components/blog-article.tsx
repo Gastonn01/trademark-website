@@ -16,6 +16,7 @@ export function BlogArticle({
   path,
   description,
   datePublished,
+  dateModified,
   faqs,
   ctaHref = "/free-search",
   children,
@@ -26,6 +27,7 @@ export function BlogArticle({
   path: string
   description: string
   datePublished: string
+  dateModified?: string
   faqs?: FaqItem[]
   ctaHref?: string
   ctaLabel?: string
@@ -35,7 +37,7 @@ export function BlogArticle({
   return (
     <main className="bg-white min-h-screen">
       <NavBar />
-      <JsonLd data={articleJsonLd({ headline: title, description, path, datePublished })} />
+      <JsonLd data={articleJsonLd({ headline: title, description, path, datePublished, dateModified })} />
       {faqs && faqs.length > 0 ? <JsonLd data={faqPageJsonLd(faqs)} /> : null}
       <article className="container mx-auto px-4 py-4 md:py-16 max-w-3xl">
         <p className="text-sm font-semibold uppercase tracking-wider text-accent mb-2 md:mb-4">{kicker}</p>

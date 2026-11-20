@@ -29,8 +29,14 @@ export const metadata: Metadata = {
 function getBlogPosts() {
   // Define all blog post slugs (directories that exist)
   const allSlugs = [
-    "elvis-eminem-suno-ai-music-lawsuits",
     "lebron-james-bron-ai-likeness-cease-and-desist",
+    "paris-hilton-defiance-act-ai-likeness",
+    "spotify-artist-profile-protection",
+    "voicemod-cyn-voice-allanah-fitzgerald",
+    "google-ads-ai-public-figure-impersonation",
+    "stolen-faces-tiktok-instagram-ai-likeness",
+    "john-park-mcdonalds-rap-ai-music",
+    "elvis-eminem-suno-ai-music-lawsuits",
     "how-creators-protect-name-brand-and-likeness",
     "athlete-nil-name-image-likeness-protection",
     "protect-voice-and-likeness-from-ai-deepfakes",
@@ -188,6 +194,12 @@ function getBlogPosts() {
   dateMap["athlete-nil-name-image-likeness-protection"] = new Date()
   dateMap["how-creators-protect-name-brand-and-likeness"] = new Date()
   dateMap["lebron-james-bron-ai-likeness-cease-and-desist"] = new Date()
+  dateMap["paris-hilton-defiance-act-ai-likeness"] = new Date()
+  dateMap["spotify-artist-profile-protection"] = new Date()
+  dateMap["voicemod-cyn-voice-allanah-fitzgerald"] = new Date()
+  dateMap["google-ads-ai-public-figure-impersonation"] = new Date()
+  dateMap["stolen-faces-tiktok-instagram-ai-likeness"] = new Date()
+  dateMap["john-park-mcdonalds-rap-ai-music"] = new Date()
   dateMap["elvis-eminem-suno-ai-music-lawsuits"] = new Date()
 
   const formatDate = (date: Date): string => {
@@ -278,10 +290,46 @@ function getBlogPosts() {
       image: "/images/ai-voice-cloning-drake.png",
     },
     "lebron-james-bron-ai-likeness-cease-and-desist": {
-      title: "LeBron James’s Team Told Bron AI to Stop Using His Likeness",
+      title: "LeBron James Sues the Bron App After a Cease-and-Desist Over His Likeness",
       description:
-        "Front Office Sports reported cease-and-desist letters from LeBron James’s team and Luka Dončić’s camp to the AI betting app Bron AI.",
-      image: "https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=600&h=400&fit=crop",
+        "The Los Angeles Times reported that LeBron James and LBJ Trademarks LLC sued the Bron app’s maker after cease-and-desist letters Front Office Sports reported.",
+      image: "/courtroom-gavel-and-legal-documents-on-wooden-desk.jpg",
+    },
+    "paris-hilton-defiance-act-ai-likeness": {
+      title: "Paris Hilton and the Defiance Act Fight Over AI Deepfakes",
+      description:
+        "CNBC reported that Paris Hilton pressed the House to pass the Defiance Act after Loti AI found more than 100,000 explicit deepfakes of her.",
+      image: "/abstract-legal-pattern.png",
+    },
+    "spotify-artist-profile-protection": {
+      title: "Spotify Artist Profile Protection and AI Tracks Under Your Name",
+      description:
+        "Music Business Worldwide reported Spotify’s Artist Profile Protection rollout, which lets artists remove their name from releases that are not theirs.",
+      image: "/digital-brand-protection-trademark-registration-ai.jpg",
+    },
+    "voicemod-cyn-voice-allanah-fitzgerald": {
+      title: "Voicemod’s Cyn Voice: Allanah Fitzgerald Says She Was Never Asked",
+      description:
+        "Voice Over Herald reported that Allanah Fitzgerald, who voices Cyn, said Voicemod offered a Cyn voice changer she never approved.",
+      image: "/artificial-intelligence-neural-network-digital-tec.jpg",
+    },
+    "google-ads-ai-public-figure-impersonation": {
+      title: "Google Ads and AI Impersonation of Athletes, Creators, and Musicians",
+      description:
+        "PPC Land reported Google’s clarification: ads that use AI to impersonate public figures are banned, even when the ad says it was made with AI.",
+      image: "/images/ai-logos-brand-identity.jpg",
+    },
+    "stolen-faces-tiktok-instagram-ai-likeness": {
+      title: "Stolen Faces: A TikTok and Instagram Network Using Real Creators",
+      description:
+        "The Globe and Mail reported a McGill study of 293 TikTok and Instagram accounts that reused real creators’ faces in AI videos.",
+      image: "/images/gpt5-ai-trademark-neural-network.jpg",
+    },
+    "john-park-mcdonalds-rap-ai-music": {
+      title: "John Park’s McDonald’s Order Rap Showed Up Under Another Name",
+      description:
+        "SBS News reported that John Park’s unreleased McDonald’s Order Rap was uploaded to Spotify and YouTube Music under another artist’s name.",
+      image: "/artificial-intelligence-neural-network-digital-tec.jpg",
     },
     "elvis-eminem-suno-ai-music-lawsuits": {
       title: "Elvis and Eminem Rightsholders Sue the AI Music Generator Suno",
